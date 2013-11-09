@@ -1,0 +1,27 @@
+# Changes
+# 0.0.1 Sat 26 Oct 2013 13:34:48 EST
+# Initial working version
+# 0.0.2 Sat 26 Oct 2013 16:47:54 EST
+# Added uptime, timezone, install cluster and eeprom information
+# 0.0.3 Sat 26 Oct 2013 17:22:47 EST
+# Split reporting into separate reports
+# 0.0.4 Mon 28 Oct 2013 19:21:46 EST
+# Added code to check array of files in tar archive before extracting to speed up code
+# 0.0.5 Wed  6 Nov 2013 19:21:58 EST
+# Added initial security check code
+# 0.0.6 Thu  7 Nov 2013 13:24:07 EST
+# Added inetd service check
+# 0.0.7 Fri  8 Nov 2013 08:49:05 EST
+# Added Live Upgrade support
+# 0.0.8 Fri  8 Nov 2013 13:14:20 EST
+# Cleaned up output routine
+# 0.0.9 Fri  8 Nov 2013 13:54:03 EST
+# Added kernel module support
+# 0.1.0 Fri  8 Nov 2013 22:44:50 EST
+# Added package information
+# 0.1.1 Fri  8 Nov 2013 23:23:06 EST
+# Added patch information
+# 0.1.2 Sat  9 Nov 2013 09:25:12 EST
+# Added code to mask identifiable data
+# 0.1.3 Sun 10 Nov 2013 09:24:01 EST
+# Code clean up
