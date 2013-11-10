@@ -35,7 +35,7 @@ Examples
 Show memory information:
 
 
-	$ ./parsec.rb -s hostname -R host 
+	$ parsec.rb -s hostname -R host 
 
 	+--------------+----------+
 	|   Memory Information    |
@@ -62,7 +62,7 @@ Show memory information:
 
 Show IO information:
 
-	$ ./parsec.rb -s hostname -R io -m
+	$ parsec.rb -s hostname -R io -m
 
 	+--------------------+------------------------------------------------------------------------------+
 	|                                          IO Information                                           |
@@ -312,7 +312,7 @@ Show IO information:
 	
 Show Host information:
 	
-	$ ./parsec.rb -s hostname -R host -m
+	$ parsec.rb -s hostname -R host -m
 
 	+------------------+------------------------------+
 	|                Host Information                 |
@@ -397,7 +397,7 @@ Show Host information:
 
 Show CPU information:
 
-	$ ./parsec.rb -s hostname -R cpu
+	$ parsec.rb -s hostname -R cpu
 
 	+--------------+-----------------+
 	|        CPU Information         |
