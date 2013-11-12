@@ -1,7 +1,7 @@
 Parsec
 ======
 
-A ruby script to parse and explorer file and extract information.
+A ruby script to parse a Sun Oracle Solaris explorer file and extract information.
 There is some reporting capability being built into the script.
 
 Some of the features included:
