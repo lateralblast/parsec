@@ -24,37 +24,20 @@ This software is licensed as CC-BA (Creative Commons By Attrbution)
 
 http://creativecommons.org/licenses/by/4.0/legalcode
 
-Usage
------
 
-```
-$ parsec -[abcdehmvACDEHIKMOSVZf:s:w:R:o:]
+Documentation
+-------------
 
--h: Print help
--f: Specify Explorer file to process
--s: Specify System to process
-    (Filename will be determined if it exists)
--A: Print all configuration information (default)
--E: Print EEPROM configuration information
--I: Print IO configuration information
--H: Print Host information
--C: Print CPU configuration information
--R: Print configuration information for a specific component
--m: Mask data (hostnames etc)
-```
-
-Wiki
-----
-
-https://github.com/richardatlateralblast/parsec/wiki
+- [Usage](https://github.com/richardatlateralblast/parsec/wiki/2.-Usage)
+- [Wiki](https://github.com/richardatlateralblast/parsec/wiki)
 
 Examples
 --------
 
-- [Memory](https://github.com/richardatlateralblast/parsec/3.1-Memory)
-- [IO](https://github.com/richardatlateralblast/parsec/3.2-IO)
-- [Host](https://github.com/richardatlateralblast/parsec/3.3-Host)
-- [CPU](https://github.com/richardatlateralblast/parsec/3.4-CPU)
+- [Memory](https://github.com/richardatlateralblast/parsec/wiki/3.1-Memory)
+- [IO](https://github.com/richardatlateralblast/parsec/wiki/3.2-IO)
+- [Host](https://github.com/richardatlateralblast/parsec/wiki/3.3-Host)
+- [CPU](https://github.com/richardatlateralblast/parsec/wiki/3.4-CPU)
 
 
 
