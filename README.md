@@ -51,10 +51,10 @@ https://github.com/richardatlateralblast/parsec/wiki
 Examples
 --------
 
-- [https://github.com/richardatlateralblast/parsec/3.1-Memory](3.1-Memory)
-- [https://github.com/richardatlateralblast/parsec/3.2-IO](3.2-IO)
-- [https://github.com/richardatlateralblast/parsec/3.3-Host](3.3-Host)
-- [https://github.com/richardatlateralblast/parsec/3.4-CPU](3.4-CPU)
+- [3.1-Memory](https://github.com/richardatlateralblast/parsec/3.1-Memory)
+- [3.2-IO](https://github.com/richardatlateralblast/parsec/3.2-IO)
+- [3.3-Host](https://github.com/richardatlateralblast/parsec/3.3-Host)
+- [3.4-CPU](https://github.com/richardatlateralblast/parsec/3.4-CPU)
 
 
 
