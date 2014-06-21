@@ -28,7 +28,7 @@ http://creativecommons.org/licenses/by/4.0/legalcode
 Documentation
 -------------
 
-- [Usage](https://github.com/richardatlateralblast/parsec/wiki/2.-Usage)
+- [Usage](https://github.com/richardatlateralblast/parsec/wiki/2.-Usage.md)
 - [Wiki](https://github.com/richardatlateralblast/parsec/wiki)
 
 Examples
