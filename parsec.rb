@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.1.4
+# Version:      0.1.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -27,7 +27,7 @@ options = "abcdehlmvACDEHIKMOSVZd:f:s:w:R:o:"
 
 # Load methods
 
-if Dir.exists?("./methods")
+if Dir.exist?("./methods")
   file_list = Dir.entries("./methods")
   for file in file_list
     if file =~ /rb$/
@@ -98,8 +98,8 @@ end
 # Print usage
 
 def print_usage(options)
-  code_name    = get_code_name()
-  code_ver = get_code_ver()
+  code_name = get_code_name()
+  code_ver  = get_code_ver()
   puts
   puts code_name+" v. "+code_ver
   puts
@@ -132,7 +132,7 @@ end
 
 def info_file_to_array(file_name)
   info_file = $base_dir+"/information/"+file_name
-  if File.exists?(info_file)
+  if File.exist?(info_file)
     file_array = IO.readlines info_file
   end
   return file_array
@@ -141,7 +141,7 @@ end
 # Get available disk firmware version
 
 def get_avail_disk_fw(disk_model)
-  file_name = "disk_fw"
+  file_name = "disk_firmware"
   fw_info   = info_file_to_array(file_name)
   return fw_info
 end
@@ -149,7 +149,7 @@ end
 # Get available Emulex HBA firmware version
 
 def get_avail_em_fw()
-  file_name = "em_fw"
+  file_name = "emulex_firmware"
   fw_info   = info_file_to_array(file_name)
   return fw_info
 end
@@ -157,7 +157,7 @@ end
 # Get available Qlogic HBA firmware version
 
 def get_avail_ql_fw()
-  file_name = "ql_fw"
+  file_name = "qlogic_firmware"
   fw_info   = info_file_to_array(file_name)
   return fw_info
 end
@@ -198,8 +198,8 @@ def process_avail_ql_fw(table,ql_model,ql_fw)
         fw_line    = fw_line.split(/,/)
         avail_fw   = fw_line[1]
         readme_url = fw_line[2]
-        curr_ver = Versionomy.parse(ql_fw)
-        avail_ver   = Versionomy.parse(avail_fw)
+        curr_ver   = Versionomy.parse(ql_fw)
+        avail_ver  = Versionomy.parse(avail_fw)
         if avail_ver > curr_ver
           avail_fw = avail_fw+" (Newer)"
           table    = handle_output("row","Available Firmware",avail_fw,table)
@@ -241,19 +241,19 @@ end
 # Get file date
 
 def get_extracted_file_date(file_name)
-  exp_name  = File.basename($exp_file,".tar.gz")
-  extracted_file = $work_dir+"/"+exp_name+file_name
-  if !File.exists?(extracted_file)
-    extract_exp_file(extracted_file)
+  exp_name = File.basename($exp_file,".tar.gz")
+  ext_file = $work_dir+"/"+exp_name+file_name
+  if !File.exist?(ext_file)
+    extract_exp_file(ext_file)
   end
-  file_date = File.mtime(extracted_file)
+  file_date = File.mtime(ext_file)
   return(file_date)
 end
 
 # Extract a file from the the explorer .tar.gz
 
 def extract_exp_file(file_to_extract)
-  if File.exists?($exp_file)
+  if File.exist?($exp_file)
     command = "cd #{$work_dir} ; tar -xpzf #{$exp_file} #{file_to_extract} > /dev/null 2>&1"
     if !$exp_file_list[1]
       $exp_file_list = `tar -tzf #{$exp_file}`
@@ -273,15 +273,32 @@ end
 # Checks to see if file has already been extracted
 
 def exp_file_to_array(file_name)
-  file_array     = []
-  exp_name  = File.basename($exp_file,".tar.gz")
-  extracted_file = $work_dir+"/"+exp_name+file_name
-  if !File.exists?(extracted_file)
-    file_to_extract = exp_name+file_name
-    extract_exp_file(file_to_extract)
+  file_array = []
+  exp_name   = File.basename($exp_file,".tar.gz")
+  ext_file   = $work_dir+"/"+exp_name+file_name
+  if !File.exist?(ext_file)
+    if !File.symlink?(ext_file)
+      arc_file = exp_name+file_name
+      extract_exp_file(arc_file)
+    end
   end
-  if File.exists?(extracted_file)
-    file_array = IO.readlines extracted_file
+  if File.exist?(ext_file) or File.symlink?(ext_file)
+    link_test = %x[file "#{ext_file}"].chomp
+    if link_test.match(/broken symbolic link to/)
+      link_file = link_test.split(/broken symbolic link to /)[1]
+      if link_file.match(/^\.\//)
+        link_file = link_file.gsub(/\./,"")
+        dir_name  = File.dirname(file_name)
+      else
+        dir_name = ""
+      end
+      ext_file  = $work_dir+"/"+exp_name+dir_name+link_file
+      if !File.exist?(ext_file)
+        arc_file = exp_name+dir_name+link_file
+        extract_exp_file(arc_file)
+      end
+    end
+    file_array = IO.readlines ext_file
   else
     if $verbose == 1
       puts "File #{file_name} does not exist"
@@ -1887,13 +1904,15 @@ def get_avail_obp_ver(model_name)
   avail_obp = ""
   if model_name.match(/^M[3-9]/)
     file_name = "xscf_firmware"
-    fw_info   = info_file_to_array(file_name)
-    fw_info.each do |line|
-      line.chomp
-      data = line.split(/,/)
-      if data[0] == model_name
-        avail_obp = data[1].split(/ /)[5]
-      end
+  else
+    file_name = "system_firmware"
+  end
+  fw_info   = info_file_to_array(file_name)
+  fw_info.each do |line|
+    line.chomp
+    data = line.split(/,/)
+    if data[0] == model_name
+      avail_obp = data[1].split(/ /)[5]
     end
   end
   return avail_obp
@@ -2241,6 +2260,13 @@ def process_sys_info()
   table = handle_output("end","","",table)
 end
 
+def process_obp_info()
+  table = handle_output("title","OBP Information","","")
+  table = process_sys_model(table)
+  table = process_obp_ver(table)
+  table = handle_output("end","","",table)
+end
+
 # Get eeprom information
 
 def get_eeprom_info()
@@ -2275,6 +2301,9 @@ end
 # Do configuration report
 
 def config_report(report,report_type)
+  if report_type.match(/all|obp/)
+    process_obp_info()
+  end
   if report_type.match(/all|host/)
     process_host_info()
   end
@@ -2853,7 +2882,7 @@ end
 def clean_up()
   exp_name = File.basename($exp_file,".tar.gz")
   exp_dir  = $work_dir+"/"+exp_name
-  if Dir.exists?(exp_dir)
+  if Dir.exist?(exp_dir)
     FileUtils.rm_rf(exp_dir)
   end
   return
@@ -2961,7 +2990,7 @@ end
 
 if opt["f"]
   $exp_file = opt["f"]
-  if !File.exists?($exp_file)
+  if !File.exist?($exp_file)
     puts
     puts "Explorer File: #{$exp_file} does not exist"
     exit
@@ -2978,7 +3007,7 @@ else
   end
   $exp_dir  = $base_dir.chomp()
   $exp_dir  = $exp_dir+"/explorers"
-  file_list = Dir.entries($exp_dir)
+  file_list = Dir.entries($exp_dir).reject{|entry| entry.match(/\._/)}
   $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
   $exp_file = $exp_file[0].to_s
   if !$exp_file.match(/[A-z]/)

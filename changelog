@@ -27,3 +27,7 @@
 # Code clean up
 # 0.1.4: Sun 22 Jun 2014 21:41:30 EST
 # Added explorer listing and cleaned up code
+# 0.1.5: Sun 22 Jun 2014 22:36:17 EST
+# Added OBP function
+# 0.1.6: Mon 23 Jun 2014 05:03:39 EST
+# Added code to extract symlinks from explorer
