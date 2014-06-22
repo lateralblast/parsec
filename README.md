@@ -34,10 +34,10 @@ Documentation
 Examples
 --------
 
-- [Memory](https://github.com/richardatlateralblast/parsec/wiki/3.1-Memory)
-- [IO](https://github.com/richardatlateralblast/parsec/wiki/3.2-IO)
-- [Host](https://github.com/richardatlateralblast/parsec/wiki/3.3-Host)
-- [CPU](https://github.com/richardatlateralblast/parsec/wiki/3.4-CPU)
+- [Memory](https://github.com/richardatlateralblast/parsec/wiki/4.1-Memory)
+- [IO](https://github.com/richardatlateralblast/parsec/wiki/4.2-IO)
+- [Host](https://github.com/richardatlateralblast/parsec/wiki/4.3-Host)
+- [CPU](https://github.com/richardatlateralblast/parsec/wiki/4.4-CPU)
 
 
 
