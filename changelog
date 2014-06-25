@@ -33,3 +33,5 @@
 # Added code to extract symlinks from explorer
 # 0.1.7: Mon 23 Jun 2014 05:27:56 EST
 # Fixed bugs with OBP version reporting
+# 0.1.8: Thu 26 Jun 2014 08:28:25 EST
+# Fixed option handling

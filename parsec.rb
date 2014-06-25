@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.1.7
+# Version:      0.1.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -3027,47 +3027,69 @@ end
 
 if opt["A"]
   report_type = "all"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["I"]
   report_type = "io"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["D"]
   report_type = "disk"
   $do_disks = 1
+  config_report(report,report_type)
+  exit
 end
 
 if opt["O"]
   report_type = "os"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["E"]
   report_type = "eeprom"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["S"]
   report_type = "system"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["Z"]
   report_type = "zones"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["K"]
   report_type = "kernel"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["M"]
   report_type = "memory"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["C"]
   report_type = "cpu"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["H"]
   report_type = "host"
+  config_report(report,report_type)
+  exit
 end
 
 if opt["R"]
