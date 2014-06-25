@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.1.6
+# Version:      0.1.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -1921,19 +1921,17 @@ end
 # Process OBP version.
 
 def process_obp_ver(table)
-  obp_ver = get_obp_ver()
-  if $host_info["Model"].match(/M[3-9]/)
-    model_name = $host_info["Model"].split(/ /)[5]
-    curr_obp   = obp_ver.split(/ /)[1]
-  end
-  avail_obp = get_avail_obp_ver(model_name)
-  curr_ver  = Versionomy.parse(curr_obp)
-  avail_ver = Versionomy.parse(avail_obp)
+  curr_obp   = get_obp_ver()
+  curr_obp   = curr_obp.split(/ /)[1]
+  model_name = $host_info["Model"].split(/ /)[-1]
+  avail_obp  = get_avail_obp_ver(model_name)
+  curr_ver   = Versionomy.parse(curr_obp)
+  avail_ver  = Versionomy.parse(avail_obp)
   if avail_ver > curr_ver
     avail_obp = avail_obp+" (Newer)"
   end
   avail_obp = "OBP "+avail_obp
-  table     = handle_output("row","OBP Version",obp_ver,table)
+  table     = handle_output("row","OBP Version",curr_obp,table)
   table     = handle_output("row","Available OBP Version",avail_obp,table)
   return table
 end

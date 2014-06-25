@@ -31,3 +31,5 @@
 # Added OBP function
 # 0.1.6: Mon 23 Jun 2014 05:03:39 EST
 # Added code to extract symlinks from explorer
+# 0.1.7: Mon 23 Jun 2014 05:27:56 EST
+# Fixed bugs with OBP version reporting
