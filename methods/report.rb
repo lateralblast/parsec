@@ -121,9 +121,41 @@ end
 # Compare versions
 
 def compare_ver(curr_fw,avail_fw)
-  versions  = [ curr_fw, avail_fw ]
-  latest_fw = versions.map{ |v| (v.split '.').collect(&:to_i) }.max.join '.'
-  return latest_fw
+  ord_avail_fw = []
+  counter      = 0
+  avail_fw     = avail_fw.split(".")
+  while counter < avail_fw.length
+    digit = avail_fw[counter]
+    if digit.match(/[A-z]/)
+      ord_avail_fw[counter] = digit.ord
+    else
+      ord_avail_fw[counter] = digit
+    end
+    counter = counter+1
+  end
+  ord_avail_fw = ord_avail_fw.join(".")
+  avail_fw     = avail_fw.join(".")
+  ord_curr_fw  = []
+  counter      = 0
+  curr_fw      = curr_fw.split(".")
+  while counter < curr_fw.length
+    digit = curr_fw[counter]
+    if digit.match(/[A-z]/)
+      ord_curr_fw[counter] = digit.ord
+    else
+      ord_curr_fw[counter] = digit
+    end
+    counter = counter+1
+  end
+  ord_curr_fw  = ord_curr_fw.join(".")
+  curr_fw      = curr_fw.join(".")
+  versions     = [ ord_curr_fw, ord_avail_fw ]
+  latest_fw    = versions.map{ |v| (v.split '.').collect(&:to_i) }.max.join '.'
+  if latest_fw == ord_curr_fw
+    return curr_fw
+  else
+    return avail_fw
+  end
 end
 # Generic output routine which formats text appropriately.
 

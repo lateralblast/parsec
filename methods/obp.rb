@@ -33,12 +33,14 @@ def process_obp_ver(table)
   curr_obp   = get_obp_ver()
   curr_obp   = curr_obp.split(/ /)[1]
   model_name = $host_info["Model"].split(/ /)[-1]
+  if model_name == "Server"
+    model_name = $host_info["Model"].split(/ /)[-2]
+  end
   avail_obp  = get_avail_obp_ver(model_name)
   latest_obp = compare_ver(curr_obp,avail_obp)
   if latest_obp == avail_obp
     avail_obp = avail_obp+" (Newer)"
   end
-  avail_obp = "OBP "+avail_obp
   table     = handle_output("row","OBP Version",curr_obp,table)
   table     = handle_output("row","Available OBP Version",avail_obp,table)
   return table
