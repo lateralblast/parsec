@@ -15,7 +15,7 @@ def process_io_info()
   counter   = 0
   io_count  = 0
   sys_model = get_sys_model()
-  io_length = io_info.select{|line| line.match(/^[0-9]|^pci/)}.length
+  length    = io_info.length
   io_info.each do |line|
     #puts line
     counter = counter+1
@@ -87,9 +87,9 @@ def process_io_info()
         end
       end
       table = process_ctlr_info(table,io_name,io_path,ctlr_no)
-    end
-    if line.match(/^[0-9]|^pci/) and io_count != io_length-2
+    if counter < length-3
       table = handle_output("line","","",table)
+    end
     end
   end
   table = handle_output("end","","",table)

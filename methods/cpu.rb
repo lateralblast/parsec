@@ -60,7 +60,10 @@ def process_cpu_info()
   table     = handle_output("title","CPU Information","","")
   cpu_info  = get_cpu_info()
   sys_model = get_sys_model()
+  length    = cpu_info.length
+  counter   = 0
   cpu_info.each do |line|
+    counter      = counter+1
     sys_board_no = "1"
     cpu_no       = ""
     if line.match(/[0-9][0-9]/)
@@ -111,6 +114,9 @@ def process_cpu_info()
       table = handle_output("row","Cache",cpu_cache,table)
       table = handle_output("row","IDs",cpu_list,table)
       table = handle_output("row","Type",cpu_type,table)
+      if counter < length-1
+        table = handle_output("line","","",table)
+      end
     end
   end
   table = handle_output("end","","",table)

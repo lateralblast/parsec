@@ -41,3 +41,5 @@
 # Fixed Fcode determination for QLogic HBAs
 # 0.2.1: Thu 26 Jun 2014 15:48:29 EST
 # Split code out to make management easier
+# 0.2.2: Thu 26 Jun 2014 16:40:33 EST
+# Fixed tables for IO and CPU
