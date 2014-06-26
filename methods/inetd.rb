@@ -51,3 +51,35 @@ $inetd_services=[
   "100424",
   "100422"
 ]
+
+# Process Security (inetd)
+
+def process_inetd()
+  file_name  = "/etc/inetd.conf"
+  file_array = exp_file_to_array(file_name)
+  if file_array
+    puts
+    title = "Security Settings ("+file_name+")"
+    table = Terminal::Table.new :title => title, :headings => ['Service', 'Current','Recommended','Complies']
+    file_array.each do |line|
+      if !line.match(/^#/) and line.match(/[A-z]|[0-9]/)
+        service       = line.split(/\s+/)[0]
+        service_check = $inetd_services.select{|service_check| service_check.match(/^#{service}/)}
+        if service_check.to_s.match(/#{service}/)
+          curr_val = "Enabled"
+          rec_val  = "Disabled"
+          comment  = "*No*"
+        else
+          curr_val = "Enabled"
+          rec_val  = "N/A"
+          comment  = "N/A"
+        end
+        row = [service,curr_val,rec_val,comment]
+        table.add_row(row)
+      end
+    end
+    puts table
+    puts
+  end
+  return
+end

@@ -39,3 +39,5 @@
 # Replaced versionomy module as it doesn't handle long version strings
 # 0.2.0: Thu 26 Jun 2014 14:27:45 EST
 # Fixed Fcode determination for QLogic HBAs
+# 0.2.1: Thu 26 Jun 2014 15:48:29 EST
+# Split code out to make management easier

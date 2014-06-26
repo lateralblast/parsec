@@ -1,0 +1,121 @@
+# OS related information
+
+# Search uname info
+
+def search_uname(field)
+  file_name   = "/sysconfig/uname-a.out"
+  file_array  = exp_file_to_array(file_name)
+  uname_array = file_array[0]
+  uname_array = uname_array.split(" ")
+  os_name     = uname_array[field]
+  return os_name
+end
+
+# Get OS name
+
+def get_os_name()
+  os_name = search_uname(0)
+  return os_name
+end
+
+def process_os_name(table)
+  os_name = get_os_name()
+  table   = handle_output("row","OS Name",os_name,table)
+  return table
+end
+
+# Get  OS version
+
+def get_os_ver()
+  os_ver = search_uname(2)
+  return os_ver
+end
+
+def process_os_ver(table)
+  os_ver = get_os_ver()
+  table  = handle_output("row","OS Version",os_ver,table)
+  return table
+end
+# Get OS build
+
+def get_os_build()
+  os_build = search_release(3)
+  return os_build
+end
+
+def process_os_build(table)
+  os_build = get_os_build()
+  table    = handle_output("row","OS Build",os_build,table)
+  return table
+end
+
+# Get OS date
+
+def get_os_date()
+  os_date = search_release(2)
+  return os_date
+end
+
+def process_os_date(table)
+  os_date = get_os_date()
+  table   = handle_output("row","OS Release",os_date,table)
+  return table
+end
+
+# Process the OS release information.
+
+def get_os_update()
+  os_ver   = get_os_ver()
+  os_date  = get_os_date()
+  os_build = get_os_build()
+  if os_build.match(/_u/)
+    os_update = os_build.split(/_/)[1].gsub(/[A-z]/,'')
+  end
+  if os_ver.match("10")
+    case os_date
+    when "1/06"
+      os_update = "1"
+    when "6/06"
+      os_update = "2"
+    when "11/06"
+      os_update = "3"
+    when "8/07"
+      os_update = "4"
+    when "5/08"
+      os_update = "5"
+    when "10/08"
+      os_update = "6"
+    when "5/09"
+      os_update = "7"
+    when "10/09"
+      os_update = "8"
+    when "9/10"
+      os_update = "9"
+    when "1/06"
+      os_update = "10"
+    when "1/06"
+      os_update = "11"
+    end
+  end
+  return os_update
+end
+
+def process_os_update(table)
+  os_update = get_os_update()
+  table     = handle_output("row","OS Update",os_update,table)
+  return table
+end
+
+# Search release info
+
+def search_release(field)
+  file_name     = "/etc/release"
+  file_array    = exp_file_to_array(file_name)
+  release_array = file_array[0]
+  if release_array.match(/HW/)
+    field = field+1
+  end
+  release_array = release_array.split(" ")
+  search_result = release_array[field].to_s
+  return search_result
+end

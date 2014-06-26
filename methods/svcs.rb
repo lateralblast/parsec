@@ -1,3 +1,5 @@
+# Services related code
+
 $manifest_services=[
   "svc:/network/rpc/cde-ttdbserver:tcp",
   "svc:/network/rpc/cde-calendar-manager:default",
@@ -150,3 +152,8 @@ $manifest_services=[
   "lrc:/etc/rc3_d/S16boot_server"
 ]
 
+def get_manifests_services()
+  file_name  = "/sysconfig/svcs-av.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
