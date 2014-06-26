@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.1.8
+# Version:      0.2.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -21,7 +21,6 @@ require 'getopt/std'
 require 'pathname'
 require 'hex_string'
 require 'terminal-table'
-require 'versionomy'
 
 options = "abcdehlmvACDEHIKMOSVZd:f:s:w:R:o:"
 
@@ -198,9 +197,8 @@ def process_avail_ql_fw(table,ql_model,ql_fw)
         fw_line    = fw_line.split(/,/)
         avail_fw   = fw_line[1]
         readme_url = fw_line[2]
-        curr_ver   = Versionomy.parse(ql_fw)
-        avail_ver  = Versionomy.parse(avail_fw)
-        if avail_ver > curr_ver
+        latest_fw = compare_ver(ql_fw,avail_fw)
+        if latest_fw == avail_fw
           avail_fw = avail_fw+" (Newer)"
           table    = handle_output("row","Available Firmware",avail_fw,table)
           table    = handle_output("row","Firmware Download",readme_url,table)
@@ -209,6 +207,14 @@ def process_avail_ql_fw(table,ql_model,ql_fw)
     end
   end
   return table
+end
+
+# Copare versions
+
+def compare_ver(curr_fw,avail_fw)
+  versions  = [ curr_fw, avail_fw ]
+  latest_fw = versions.map{ |v| (v.split '.').collect(&:to_i) }.max.join '.'
+  return latest_fw
 end
 
 # Process available Qlogic GBA firmware version
@@ -225,9 +231,8 @@ def process_avail_em_fw(table,em_model,em_fw)
         fw_line    = fw_line.split(/,/)
         avail_fw   = fw_line[1].split(/ /)[3]
         readme_url = fw_line[2]
-        curr_ver = Versionomy.parse(em_fw)
-        avail_ver   = Versionomy.parse(avail_fw)
-        if avail_ver > curr_ver
+        latest_fw  = compare_ver(em_fw,avail_fw)
+        if latest_ver == avail_fw
           avail_fw = avail_fw+" (Newer)"
           table    = handle_output("row","Available Firmware",avail_fw,table)
           table    = handle_output("row","Firmware Download",readme_url,table)
@@ -366,6 +371,9 @@ def get_hba_fcode(io_path)
   fc_info    = fc_info.grep(/#{io_path}\/fp/)
   fc_info    = fc_info.join.split(/\n/)[1]
   fc_ver     = fc_info.split(/:/)[1].gsub(/\s+/,'')
+  if fc_ver.match(/SPARC/)
+    fc_ver = fc_info.split(/:/)[2].split(/ \s+/)[0].gsub(/\s+/,'')
+  end
   return fc_ver
 end
 
@@ -374,7 +382,7 @@ end
 def get_ctlr_info(io_path,ctlr_no)
   # Handle FC devices
   os_ver = get_os_ver()
-  if io_path.match(/emlxs/)
+  if io_path.match(/emlxs|qlc/)
     fc_info = get_fc_info()
     if os_ver.match(/10|11/)
       ctlr_path = "/dev/cfg/"+ctlr_no
@@ -394,7 +402,11 @@ def get_hba_bcode(io_path,ctlr_no)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info = get_ctlr_info(io_path,ctlr_no)
-  bcode_ver = ctlr_info.grep(/Boot/)[0].split(/Boot:/)[1].split(/ /)[0]
+  if ctlr_info.grep(/BIOS/)
+    bcode_ver = ctlr_info.grep(/BIOS/)[0].split(/BIOS: /)[1].split(/;/)[0].gsub(/ /,"")
+  else
+    bcode_ver = ctlr_info.grep(/Boot/)[0].split(/Boot: /)[1].split(/ \s+/)[0]
+  end
   return bcode_ver
 end
 
@@ -618,15 +630,19 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
     fcode_ver     = get_hba_fcode(io_path)
     table         = handle_output("row","FCode",fcode_ver,table)
     hba_part_info = $hba_part_list[io_name]
-    hba_part_info = hba_part_info.split(/,/)
-    hba_part_no   = hba_part_info[0]
-    hba_part_desc = hba_part_info[1]
-    table         = handle_output("row","Part Number",hba_part_no,table)
+    if hba_part_info
+      hba_part_info = hba_part_info.split(/,/)
+      hba_part_no   = hba_part_info[0]
+      hba_part_desc = hba_part_info[1]
+      table         = handle_output("row","Part Number",hba_part_no,table)
+    else
+      table         = handle_output("row","Part Number",io_name,table)
+    end
     if io_path.match(/emlxs/)
       table = process_avail_em_fw(table,io_name,hba_fw_ver)
     end
     if io_path.match(/qlc/)
-      table = process_avail_qlogic_firemware(table,hba_part_no,hba_fw_ver)
+      table = process_avail_ql_fw(table,hba_part_no,hba_fw_ver)
     end
     table = handle_output("row","Part Description",hba_part_desc,table)
   end
@@ -694,7 +710,7 @@ end
 def get_ctlr_no(io_path)
   ctlr_no = ""
   # Handle FC devices
-  if io_path.match(/emlxs|scsi/)
+  if io_path.match(/emlxs|scsi|qlc/)
     # Get controller name by searching dev list for IO path
     # We do this as the kernel driver in path_to_inst is fp
     # whereas the controller is cX in everything else
@@ -1181,7 +1197,7 @@ def process_io_info()
           if_hostname = get_if_hostname(aggr_name)
         else
           if_name = drv_name+inst_no
-          if $maked == 0
+          if $masked == 0
             table = handle_output("row","Interface",if_name,table)
           else
             table = handle_output("row","Interface","xxxxxxxx",table)
@@ -1925,9 +1941,8 @@ def process_obp_ver(table)
   curr_obp   = curr_obp.split(/ /)[1]
   model_name = $host_info["Model"].split(/ /)[-1]
   avail_obp  = get_avail_obp_ver(model_name)
-  curr_ver   = Versionomy.parse(curr_obp)
-  avail_ver  = Versionomy.parse(avail_obp)
-  if avail_ver > curr_ver
+  latest_obp = compare_ver(curr_obp,avail_obp)
+  if latest_obp == avail_obp
     avail_obp = avail_obp+" (Newer)"
   end
   avail_obp = "OBP "+avail_obp

@@ -35,3 +35,7 @@
 # Fixed bugs with OBP version reporting
 # 0.1.8: Thu 26 Jun 2014 08:28:25 EST
 # Fixed option handling
+# 0.1.9: Thu 26 Jun 2014 13:32:14 EST
+# Replaced versionomy module as it doesn't handle long version strings
+# 0.2.0: Thu 26 Jun 2014 14:27:45 EST
+# Fixed Fcode determination for QLogic HBAs
