@@ -1,4 +1,4 @@
-![alt tag](https://raw.githubusercontent.com/lateralblast/parsec/master/sparc_t5.jpg)
+![alt tag](https://raw.githubusercontent.com/lateralblast/parsec/master/sparc_t5.png)
 
 PARSEC
 ======
