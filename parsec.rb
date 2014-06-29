@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.2.3
+# Version:      0.2.5
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -23,6 +23,27 @@ require 'hex_string'
 require 'terminal-table'
 
 options = "abcdehlmvACDEHIKMOSVZd:f:s:w:R:o:"
+
+# Set up some script related variables
+
+$methods_dir     = ""
+$information_dir = ""
+$firmware_dir    = ""
+
+[ "methods", "information", "firmware" ].each do |test_dir|
+  required_dir = eval("$#{test_dir}_dir")
+  if !required_dir.match(/[A-z]/)
+    script_dir = File.basename($0)
+    if !script_dir.match(/\//)
+      script_dir = Dir.pwd
+    end
+    required_dir = script_dir+"/"+test_dir
+    if !File.directory?(required_dir) or File.symlink?(required_dir)
+      puts "Cannot locate "+test_dir+" directory"
+      exit
+    end
+  end
+end
 
 # Load methods
 
@@ -103,6 +124,7 @@ def print_usage(options)
   puts "-m: Mask data (hostnames etc)"
   puts "-d: Set Explorer directory"
   puts "-l: List explorers"
+  puts "-a: Process all explorers"
   puts
   puts "Example (Display CPUs):"
   puts
@@ -140,7 +162,7 @@ if opt["l"]
   exit
 end
 
-if opt["a"] or opt["d"]
+if opt["d"]
   $do_disks = 1
 end
 
@@ -166,23 +188,29 @@ if opt["f"]
     exit
   end
 else
-  if !opt["s"]
+  if !opt["s"] and !opt["a"]
     puts
     puts "Explorer file or home name not specified"
     print_usage(options)
   end
-  host_name = opt["s"]
   if  !opt["b"] and !$base_dir.match(/[A-z]/)
     $base_dir = Dir.pwd
   end
   $exp_dir  = $base_dir.chomp()
   $exp_dir  = $exp_dir+"/explorers"
   file_list = Dir.entries($exp_dir).reject{|entry| entry.match(/\._/)}
-  $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
-  $exp_file = $exp_file[0].to_s
-  if !$exp_file.match(/[A-z]/)
-    puts "Explorer for "+host_name+" does not exist in "+$exp_dir
-    exit
+  if opt["s"]
+    host_names[0] = opt["s"]
+  else
+    host_names = file_list
+  end
+  host_names.each do |host_name|
+    $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
+    $exp_file = $exp_file[0].to_s
+    if !$exp_file.match(/[A-z]/)
+      puts "Explorer for "+host_name+" does not exist in "+$exp_dir
+      exit
+    end
   end
   $exp_file = $exp_dir+"/"+$exp_file
 end

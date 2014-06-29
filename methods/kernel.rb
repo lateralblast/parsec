@@ -31,8 +31,20 @@ def get_kernel_ver()
   return kernel_ver
 end
 
+def get_ips_kernel_ver()
+  file_name  = "/patch+pkg/pkg_listing_ips"
+  file_array = exp_file_to_array(file_name)
+  kernel_ver = file_array.grep(/system\/kernel\/platform/)[0].split(/ \s+/)[1]
+  return kernel_ver
+end
+
 def process_kernel_ver(table)
-  kernel_ver = get_kernel_ver()
+  os_ver     = get_os_ver()
+  if os_ver == "5.11"
+    kernel_ver = get_ips_kernel_ver()
+  else
+    kernel_ver = get_kernel_ver()
+  end
   table      = handle_output("row","Kernel Version",kernel_ver,table)
   return table
 end

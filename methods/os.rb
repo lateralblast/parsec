@@ -39,7 +39,12 @@ end
 # Get OS build
 
 def get_os_build()
-  os_build = search_release(3)
+  os_date = get_os_date()
+  if os_date.match(/^11/)
+    os_build = os_date.split(".")[1]
+  else
+    os_build = search_release(3)
+  end
   return os_build
 end
 
@@ -62,39 +67,52 @@ def process_os_date(table)
   return table
 end
 
+# Get Solaris 11 updated version from IPS package information
+
+def get_ips_build()
+  file_name  = "/patch+pkg/pkg_listing_ips"
+  file_array = exp_file_to_array(file_name)
+  ips_build  = file_array.grep(/system\/kernel\/platform/)[0].split(/ \s+/)[1].split(/-/)[1]
+  return ips_build
+end
+
 # Process the OS release information.
 
 def get_os_update()
   os_ver   = get_os_ver()
-  os_date  = get_os_date()
-  os_build = get_os_build()
-  if os_build.match(/_u/)
-    os_update = os_build.split(/_/)[1].gsub(/[A-z]/,'')
-  end
-  if os_ver.match("10")
-    case os_date
-    when "1/06"
-      os_update = "1"
-    when "6/06"
-      os_update = "2"
-    when "11/06"
-      os_update = "3"
-    when "8/07"
-      os_update = "4"
-    when "5/08"
-      os_update = "5"
-    when "10/08"
-      os_update = "6"
-    when "5/09"
-      os_update = "7"
-    when "10/09"
-      os_update = "8"
-    when "9/10"
-      os_update = "9"
-    when "1/06"
-      os_update = "10"
-    when "1/06"
-      os_update = "11"
+  if os_ver == "5.11"
+    os_update = get_ips_build()
+  else
+    os_date  = get_os_date()
+    os_build = get_os_build()
+    if os_build.match(/_u/)
+      os_update = os_build.split(/_/)[1].gsub(/[A-z]/,'')
+    end
+    if os_ver.match("10")
+      case os_date
+      when "1/06"
+        os_update = "1"
+      when "6/06"
+        os_update = "2"
+      when "11/06"
+        os_update = "3"
+      when "8/07"
+        os_update = "4"
+      when "5/08"
+        os_update = "5"
+      when "10/08"
+        os_update = "6"
+      when "5/09"
+        os_update = "7"
+      when "10/09"
+        os_update = "8"
+      when "9/10"
+        os_update = "9"
+      when "1/06"
+        os_update = "10"
+      when "1/06"
+        os_update = "11"
+      end
     end
   end
   return os_update

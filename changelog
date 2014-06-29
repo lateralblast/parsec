@@ -45,3 +45,7 @@
 # Fixed tables for IO and CPU
 # 0.2.3: Fri 27 Jun 2014 08:09:41 EST
 # Fixed version comparing code
+# 0.2.4: Sat 28 Jun 2014 09:41:23 EST
+# Added code to check methods, information, and firmware directory exist
+# 0.2.5: Sun 29 Jun 2014 15:32:38 EST
+# Added support for determining XCP version on M10-4S

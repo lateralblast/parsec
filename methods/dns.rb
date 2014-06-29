@@ -12,7 +12,7 @@ end
 
 def get_dns_domain()
   dns_info   = get_dns_info()
-  dns_domain = dns_info.grep(/^domain/).join.gsub(/\n/,'').gsub(/domain /,' ').gsub(/^ /,'')
+  dns_domain = dns_info.grep(/^domain/).join.gsub(/\n/,"").gsub(/domain /,"").gsub(/\t| \s+/," ").gsub(/^ /,"").gsub(/ \s+/," ")
   return dns_domain
 end
 
@@ -20,7 +20,7 @@ end
 
 def get_dns_server()
   dns_info   = get_dns_info()
-  dns_server = dns_info.grep(/^nameserver/).join.gsub(/\n/,'').gsub(/nameserver /,' ').gsub(/^ /,'')
+  dns_server = dns_info.grep(/^nameserver/).join.gsub(/\n/,"").gsub(/nameserver/,"").gsub(/\t| \s+/," ").gsub(/^ /,"").gsub(/ \s+/," ")
   return dns_server
 end
 
@@ -28,7 +28,7 @@ end
 
 def get_dns_search()
   dns_info   = get_dns_info()
-  dns_search = dns_info.grep(/^search/).join.gsub(/\n/,'').gsub(/search /,' ').gsub(/^ /,'')
+  dns_search = dns_info.grep(/^search/).join.gsub(/\n/,"").gsub(/search/,"").gsub(/\t| \s+/," ").gsub(/^ /,"").gsub(/ \s+/," ")
   return dns_search
 end
 

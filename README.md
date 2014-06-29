@@ -1,7 +1,7 @@
 PARSEC
 ======
 
-Parse, Analyse, and Report on Solaris Explorer Configuration
+Parse, Analyse, and Report on Solaris Explorer Configuration/Content
 
 Introduction
 ------------
@@ -9,11 +9,12 @@ Introduction
 A ruby script to parse a Sun Oracle Solaris explorer file and extract information.
 There is some reporting capability being built into the script.
 
-Some of the features included:
+Some of the features include:
 
 - Map IO paths and disk
 - Determine part numbers where possible
 - Report on firmware versions
+  - Report if newer version is available
 - Security checks for defaults and kernel parameters
 - Mask customer information, WWNs, etc
 
@@ -28,8 +29,15 @@ http://creativecommons.org/licenses/by/4.0/legalcode
 Documentation
 -------------
 
-- [Usage](https://github.com/richardatlateralblast/parsec/wiki/2.-Usage)
 - [Wiki](https://github.com/richardatlateralblast/parsec/wiki)
+- [Features]((https://github.com/richardatlateralblast/parsec/wiki/1.-Features)
+- [Usage](https://github.com/richardatlateralblast/parsec/wiki/2.-Usage)
+- [Requirements]((https://github.com/richardatlateralblast/parsec/wiki/6.-Requirements)
+
+Getting Started
+---------------
+
+- [Getting started with Parsec](https://github.com/richardatlateralblast/parsec/wiki/3.-Getting-Started)
 
 Examples
 --------
@@ -39,8 +47,34 @@ Examples
 - [Host](https://github.com/richardatlateralblast/parsec/wiki/4.3-Host)
 - [CPU](https://github.com/richardatlateralblast/parsec/wiki/4.4-CPU)
 
+Requirements
+------------
 
+Ruby Gems:
 
+- rubygems
+- fileutils
+- getopt/std
+- pathname
+- hex_string
+- terminal-table
 
+A base set of firmware information is provided. This information is created using firith.
+In order to keep this information up to date, a MOS (My Oracle Support) account is required.
+
+In order to work, parsec requires three directories:
+
+- methods
+  - where the parsec modules are located
+  - cloning parsec from git will get these
+- information
+  - where firmware and other information is location
+  - parsec comes with some base information which can be updated using the firith script
+  - see the [Getting started with Parsec](https://github.com/richardatlateralblast/parsec/wiki/3.-Getting-Started) wiki
+- firmware
+  - the actual firmware
+  - required for some machines to obtain further information
+  - can be the repository generated from the firith script
+  - see the [Getting started with Parsec](https://github.com/richardatlateralblast/parsec/wiki/3.-Getting-Started) wiki
 
 
