@@ -32,9 +32,9 @@ Documentation
 -------------
 
 - [Wiki](https://github.com/lateralblast/parsec/wiki)
-- [Features]((https://github.com/lateralblast/parsec/wiki/1.-Features)
+- [Features](https://github.com/lateralblast/parsec/wiki/1.-Features)
 - [Usage](https://github.com/lateralblast/parsec/wiki/2.-Usage)
-- [Requirements]((https://github.com/lateralblast/parsec/wiki/6.-Requirements)
+- [Requirements](https://github.com/lateralblast/parsec/wiki/6.-Requirements)
 
 Getting Started
 ---------------
