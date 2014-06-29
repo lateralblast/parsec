@@ -1,3 +1,5 @@
+![alt tag](https://raw.githubusercontent.com/lateralblast/parsec/master/sparc_t5.jpg)
+
 PARSEC
 ======
 
@@ -29,23 +31,23 @@ http://creativecommons.org/licenses/by/4.0/legalcode
 Documentation
 -------------
 
-- [Wiki](https://github.com/richardatlateralblast/parsec/wiki)
-- [Features]((https://github.com/richardatlateralblast/parsec/wiki/1.-Features)
-- [Usage](https://github.com/richardatlateralblast/parsec/wiki/2.-Usage)
-- [Requirements]((https://github.com/richardatlateralblast/parsec/wiki/6.-Requirements)
+- [Wiki](https://github.com/lateralblast/parsec/wiki)
+- [Features]((https://github.com/lateralblast/parsec/wiki/1.-Features)
+- [Usage](https://github.com/lateralblast/parsec/wiki/2.-Usage)
+- [Requirements]((https://github.com/lateralblast/parsec/wiki/6.-Requirements)
 
 Getting Started
 ---------------
 
-- [Getting started with Parsec](https://github.com/richardatlateralblast/parsec/wiki/3.-Getting-Started)
+- [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started)
 
 Examples
 --------
 
-- [Memory](https://github.com/richardatlateralblast/parsec/wiki/4.1-Memory)
-- [IO](https://github.com/richardatlateralblast/parsec/wiki/4.2-IO)
-- [Host](https://github.com/richardatlateralblast/parsec/wiki/4.3-Host)
-- [CPU](https://github.com/richardatlateralblast/parsec/wiki/4.4-CPU)
+- [Memory](https://github.com/lateralblast/parsec/wiki/4.1-Memory)
+- [IO](https://github.com/lateralblast/parsec/wiki/4.2-IO)
+- [Host](https://github.com/lateralblast/parsec/wiki/4.3-Host)
+- [CPU](https://github.com/lateralblast/parsec/wiki/4.4-CPU)
 
 Requirements
 ------------
@@ -70,11 +72,11 @@ In order to work, parsec requires three directories:
 - information
   - where firmware and other information is location
   - parsec comes with some base information which can be updated using the firith script
-  - see the [Getting started with Parsec](https://github.com/richardatlateralblast/parsec/wiki/3.-Getting-Started) wiki
+  - see the [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started) wiki
 - firmware
   - the actual firmware
   - required for some machines to obtain further information
   - can be the repository generated from the firith script
-  - see the [Getting started with Parsec](https://github.com/richardatlateralblast/parsec/wiki/3.-Getting-Started) wiki
+  - see the [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started) wiki
 
 
