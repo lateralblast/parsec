@@ -31,7 +31,12 @@ def get_avail_obp_ver(model_name)
     data = line.split(/,/)
     if data[0] == model_name
       avail_obp = data[1]
-      avail_obp = avail_obp.split(/OBP /)[1].split(/ /)[0]
+      if avail_obp.match(/OBP/)
+        avail_obp = avail_obp.split(/OBP /)[1].split(/ /)[0]
+      end
+      if avail_obp.match(/XCP/) and !avail_obp.match(/OBP/)
+        avail_obp = avail_obp.split(/ /)[5]
+      end
     end
   end
   return avail_obp
@@ -52,7 +57,9 @@ def get_avail_xcp_ver(model_name)
     data = line.split(/,/)
     if data[0] == model_name
       avail_xcp = data[1]
-      avail_xcp = avail_xcp.split(/XCP /)[1].split(/ /)[0]
+      if avail_xcp.match(/XCP/)
+        avail_xcp = avail_xcp.split(/XCP /)[1].split(/ /)[0]
+      end
     end
   end
   return avail_xcp

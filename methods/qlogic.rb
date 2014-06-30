@@ -17,14 +17,16 @@ def process_avail_ql_fw(table,ql_model,ql_fw)
   if fw_info
     fw_info.each do |fw_line|
       if fw_line.match(/^#{uc_ql_model}/)
-        fw_line    = fw_line.split(/,/)
-        avail_fw   = fw_line[1]
-        readme_url = fw_line[2]
+        fw_line      = fw_line.split(/,/)
+        avail_fw     = fw_line[1].split(/ /)[-1]
+        readme_url   = fw_line[3]
+        download_url = fw_line[4]
         latest_fw = compare_ver(ql_fw,avail_fw)
         if latest_fw == avail_fw
           avail_fw = avail_fw+" (Newer)"
-          table    = handle_output("row","Available Firmware",avail_fw,table)
-          table    = handle_output("row","Firmware Download",readme_url,table)
+          table    = handle_output("row","Available Fcode",avail_fw,table)
+          table    = handle_output("row","Firmware Documentation",readme_url,table)
+          table    = handle_output("row","Firmware Download",download_url,table)
         end
       end
     end
