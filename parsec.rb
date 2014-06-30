@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.2.5
+# Version:      0.2.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -200,6 +200,7 @@ else
   $exp_dir  = $exp_dir+"/explorers"
   file_list = Dir.entries($exp_dir).reject{|entry| entry.match(/\._/)}
   if opt["s"]
+    host_names    = []
     host_names[0] = opt["s"]
   else
     host_names = file_list

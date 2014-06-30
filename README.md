@@ -73,7 +73,7 @@ In order to work, parsec requires three directories:
   - where firmware and other information is location
   - parsec comes with some base information which can be updated using the firith script
   - see the [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started) wiki
-- firmware
+- firmware (under development)
   - the actual firmware
   - required for some machines to obtain further information
   - can be the repository generated from the firith script

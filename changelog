@@ -49,3 +49,7 @@
 # Added code to check methods, information, and firmware directory exist
 # 0.2.5: Sun 29 Jun 2014 15:32:38 EST
 # Added support for determining XCP version on M10-4S
+# 0.2.6: Sun 29 Jun 2014 18:06:58 EST
+# Fixed bug with -s option
+# 0.2.7: Mon 30 Jun 2014 11:39:07 EST
+# Fixed available OBP determination

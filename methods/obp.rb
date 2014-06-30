@@ -31,7 +31,7 @@ def get_avail_obp_ver(model_name)
     data = line.split(/,/)
     if data[0] == model_name
       avail_obp = data[1]
-      avail_obp = avail_obp.split(/OBP /)[1]
+      avail_obp = avail_obp.split(/OBP /)[1].split(/ /)[0]
     end
   end
   return avail_obp
