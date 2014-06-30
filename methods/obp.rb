@@ -25,9 +25,9 @@ def get_avail_obp_ver(model_name)
   else
     file_name = "system_firmware"
   end
-  fw_info   = info_file_to_array(file_name)
-  fw_info.each do |line|
-    line.chomp
+  fw_info = info_file_to_array(file_name)
+  if fw_info.to_s.match(/#{model_name}/)
+    line = fw_info.grep(/#{model_name}/)[0]
     data = line.split(/,/)
     if data[0] == model_name
       avail_obp = data[1]
@@ -47,8 +47,8 @@ def get_avail_xcp_ver(model_name)
     file_name = "system_firmware"
   end
   fw_info   = info_file_to_array(file_name)
-  fw_info.each do |line|
-    line.chomp
+  if fw_info.to_s.match(/#{model_name}/)
+    line = fw_info.grep(/#{model_name}/)[0]
     data = line.split(/,/)
     if data[0] == model_name
       avail_xcp = data[1]
