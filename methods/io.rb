@@ -19,7 +19,7 @@ def process_io_info()
   io_info.each do |line|
     #puts line
     counter = counter+1
-    if line.match(/^[0-9]|^pci/)
+    if line.match(/^[0-9]|^pci|^MB/)
       io_count     = io_count+1
       io_line      = line.chomp
       io_line      = line.split(/\s+/)
@@ -28,10 +28,16 @@ def process_io_info()
         table   = handle_output("row","IOU",sys_board_no,table)
         io_type = io_line[1]
       else
-        io_type  = io_line[0]
-        io_speed = io_line[1]
-        table    = handle_output("row","Speed",io_speed,table)
-        io_type  = io_line[0]
+        if sys_model.match(/T[0-9]/)
+          io_type  = io_line[1]
+          io_name  = io_line[2]
+          io_speed = io_line[-1]
+        else
+          io_type  = io_line[0]
+          io_speed = io_line[1]
+          table    = handle_output("row","Speed",io_speed,table)
+          io_type  = io_line[0]
+        end
       end
       table   = handle_output("row","Type",io_type,table)
       io_name = io_line[-1]
@@ -44,7 +50,11 @@ def process_io_info()
       if sys_model.match(/M[3-9]0/)
         io_slot = get_io_slot(io_path,io_type,sys_model)
       else
-        io_slot = io_line[2]
+        if sys_model.meatch(/T[0-9]/)
+          io_slot = io_line[0]
+        else
+          io_slot = io_line[2]
+        end
       end
       table   = handle_output("row","Slot",io_slot,table)
       ctlr_no = get_ctlr_no(io_path)

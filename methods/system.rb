@@ -51,6 +51,8 @@ def process_sys_info()
   table = handle_output("title","System Information","","")
   table = process_sys_model(table)
   table = process_obp_ver(table)
+  table = process_ilom_ver(table)
+  table = process_ldom_ver(table)
   table = process_sys_mem(table)
   table = handle_output("end","","",table)
 end

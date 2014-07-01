@@ -1,5 +1,14 @@
 # Memory related code
 
+# Get Total memory
+
+def get_total_mem()
+  file_name  = "/sysconfig/prtdiag-v.out"
+  file_array = exp_file_to_array(file_name)
+  total_mem  = file_array.grep(/^0x0/)[0].split(/\s+/)[1..2].join(" ")
+  return total_mem
+end
+
 # Get the System memory
 
 def get_sys_mem()
@@ -16,8 +25,15 @@ end
 # Process System Memory
 
 def process_sys_mem(table)
-  sys_mem = get_sys_mem()
-  table   = handle_output("row","Memory",sys_mem,table)
+  model_name = get_model_name()
+  sys_mem    = get_sys_mem()
+  if model_name.match(/^T/)
+    total_mem = get_total_mem()
+    table     = handle_output("row","Domain Memory",sys_mem,table)
+    table     = handle_output("row","System Memory",total_mem,table)
+  else
+    table     = handle_output("row","Memory",sys_mem,table)
+  end
   return table
 end
 
@@ -31,13 +47,40 @@ end
 # Process Memory information
 
 def process_mem_info()
-  table     = handle_output("title","Memory Information","","")
-  mem_info  = get_mem_info()
-  sys_model = get_sys_model()
+  table          = handle_output("title","Memory Information","","")
+  mem_info       = get_mem_info()
+  sys_model      = get_sys_model()
+  length         = mem_info.grep(/[0-9]|[A-z]/).length
+  counter        = 0
+  previous       = ""
+  mem_interleave = ""
   mem_info.each do |line|
-    if line.match(/[0-9][0-9]/)
+    if line.match(/[0-9][0-9]|D[0-9]$/)
+      counter      = counter+1
       sys_board_no = "1"
       mem_line     = line.split(/\s+/)
+      if sys_model.match(/T[0-9]/)
+        mem_group = mem_line[-1]
+        if sys_model.match(/T5[1,2][2,4]/)
+          mem_dimms = "1"
+        end
+        if line.match(/^[0-9]/)
+          mem_interleave = mem_line[3]
+          mem_size       = mem_line[4..5].join(" ")
+          mem_dimm_size  = mem_size
+        else
+          if line.match(/GB/)
+            mem_size       = mem_line[1..2].join(" ")
+            mem_dimm_size  = mem_size
+          else
+            if line.match(/MB/)
+              mem_group      = mem_line[-1]
+              mem_size       = previous.split(/\s+/)[-3..-2].join(" ")
+              mem_dimm_size  = mem_size
+            end
+          end
+        end
+      end
       if sys_model.match(/M[3-9]0/)
         sys_board_no   = mem_line[1]
         mem_group      = mem_line[2]
@@ -89,6 +132,10 @@ def process_mem_info()
         table = handle_output("row","DIMM Size",mem_dimm_size,table)
         table = handle_output("row","Mirror",mem_mirror,table)
         table = handle_output("row","Interleave",mem_interleave,table)
+        if counter < length-2
+          table = handle_output("line","","",table)
+        end
+        previous = line
       end
     end
   end

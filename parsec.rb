@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.2.8
+# Version:      0.2.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -22,7 +22,7 @@ require 'pathname'
 require 'hex_string'
 require 'terminal-table'
 
-options = "abcdehlmvACDEHIKMOSVZd:f:s:w:R:o:"
+options = "abcdehlmvACDEHIKLMOSVZd:f:s:w:R:o:"
 
 # Set up some script related variables
 
@@ -65,6 +65,7 @@ $verbose       = 0
 $base_dir      = ""
 $do_disks      = 0
 $host_info     = {}
+$sys_config    = {}
 $exp_file_list = []
 $masked        = 0
 
@@ -81,6 +82,7 @@ report["password"] = "Report on Password settings"
 report["host"]     = "Report on Host information"
 report["memory"]   = "Report on Memory information"
 report["cpu"]      = "Report on CPU information"
+report["ldom"]     = "Report on LDom information"
 #report[""]=""
 
 # Get code name and version
@@ -119,6 +121,7 @@ def print_usage(options)
   puts "-E: Print EEPROM configuration information"
   puts "-I: Print IO configuration information"
   puts "-H: Print Host information"
+  puts "-L: Print LDom information"
   puts "-C: Print CPU configuration information"
   puts "-R: Print configuration information for a specific component"
   puts "-m: Mask data (hostnames etc)"
@@ -289,6 +292,12 @@ end
 
 if opt["H"]
   report_type = "host"
+  config_report(report,report_type)
+  exit
+end
+
+if opt["L"]
+  report_type = "ldoms"
   config_report(report,report_type)
   exit
 end

@@ -24,74 +24,55 @@ end
 # Do configuration report
 
 def config_report(report,report_type)
-  if report_type.match(/all|obp/)
+  case report_type
+  when /all|obp/
     process_obp_info()
-  end
-  if report_type.match(/all|host/)
+  when /all|host/
     process_host_info()
-  end
-  if report_type.match(/all|eeprom/)
+  when /all|eeprom/
     process_eeprom_info()
-  end
-  if report_type.match(/all|os/)
+  when /all|os/
     process_coreadm_info()
-  end
-  if report_type.match(/all|os/)
+  when /all|os/
     process_dumpadm_info()
-  end
-  if report_type.match(/all|os/)
+  when /all|os/
     process_exp_info()
-  end
-  if report_type.match(/all|os/)
+  when /all|os/
     process_sys_info()
-  end
-  if report_type.match(/all|cpu/)
+  when /all|cpu/
     process_cpu_info()
-  end
-  if report_type.match(/all|memory/)
+  when /all|memory/
     process_mem_info()
-  end
-  if report_type.match(/all|io|disk/)
+  when /all|io|disk/
     process_io_info()
-  end
-  if report_type.match(/all|kernel/)
+  when /all|kernel/
     process_etc_sys_info()
-  end
-  if report_type.match(/all|zones/)
+  when /all|zones/
     process_zones()
-  end
-  if report_type.match(/all|security|system|passwd|login|sendmail|inetinit|su|inetd|cront|keyserv|telnetd|power|suspend|sshd/)
+  when /all|security|system|passwd|login|sendmail|inetinit|su|inetd|cront|keyserv|telnetd|power|suspend|sshd/
     process_security(report_type)
-  end
-  if report_type.match(/all|security|inetd/)
+  when /all|security|inetd/
     process_inetd()
-  end
-  if report_type.match(/all|fs/)
+  when /all|fs/
     process_file_systems()
-  end
-  if report_type.match(/all|services/)
+  when /all|services/
     process_services()
-  end
-  if report_type.match(/all|lu/)
+  when /all|lu/
     process_lu_info()
-  end
-  if report_type.match(/all|locale/)
+  when /all|locale/
     process_locale_info()
-  end
-  if report_type.match(/all|modinfo/)
+  when /all|modinfo/
     process_mod_info()
-  end
-  if report_type.match(/all|package/)
+  when /all|package/
     process_pkg_info()
-  end
-  if report_type.match(/all|patch/)
+  when /all|patch/
     process_patch_info()
-  end
-  if report_type.match(/all|tcp/)
+  when /all|tcp/
     process_ip_info("tcp")
-  end
-  if report_type.match(/all|udp/)
+  when /all|udp/
     process_ip_info("udp")
+  when /all|ldom/
+    process_ldom_info()
   end
   puts
   return

@@ -44,6 +44,9 @@ def get_os_build()
     os_build = os_date.split(".")[1]
   else
     os_build = search_release(3)
+    if os_build.match(/\//)
+      os_build = search_release(4)
+    end
   end
   return os_build
 end
@@ -108,9 +111,9 @@ def get_os_update()
         os_update = "8"
       when "9/10"
         os_update = "9"
-      when "1/06"
+      when "8/11"
         os_update = "10"
-      when "1/06"
+      when "1/13"
         os_update = "11"
       end
     end

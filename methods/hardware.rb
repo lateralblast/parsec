@@ -1,5 +1,17 @@
 # Hardeare related code
 
+# Get FRU information
+
+def get_fru_info(model_name)
+  if model_name.match(/^T/)
+    file_name = "/Tx1000/showfru"
+    fru_info  = exp_file_to_array(file_name)
+  end
+  return fru_info
+end
+
+# Process FRU information
+
 # Get Architecture
 
 def get_arch_name()
@@ -54,23 +66,6 @@ def handle_prtdiag_io(line,sys_model)
   if sys_model.match(/V440/)
   end
   return io_type
-end
-
-# Get the System model
-
-def get_sys_model()
-  file_name  = "/sysconfig/prtdiag-v.out"
-  file_array = exp_file_to_array(file_name)
-  sys_model  = file_array.grep(/^System Configuration:/)
-  sys_model  = sys_model[0]
-  sys_model  = sys_model.split(": ")
-  sys_model  = sys_model[1]
-  sys_model  = sys_model.chomp
-  sys_model  = sys_model.gsub("sun4u","")
-  sys_model  = sys_model.gsub("sun4v","")
-  sys_model  = sys_model.gsub(/^ /,"")
-  sys_model  = sys_model.gsub(/\s+/," ")
-  return sys_model
 end
 
 # Search prtdiag

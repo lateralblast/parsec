@@ -40,10 +40,10 @@ def get_hba_bcode(io_path,ctlr_no)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info = get_ctlr_info(io_path,ctlr_no)
-  if ctlr_info.grep(/BIOS/)
+  if ctlr_info.to_s.match(/BIOS:/)
     bcode_ver = ctlr_info.grep(/BIOS/)[0].split(/BIOS: /)[1].split(/;/)[0].gsub(/ /,"")
   else
-    bcode_ver = ctlr_info.grep(/Boot/)[0].split(/Boot: /)[1].split(/ \s+/)[0]
+    bcode_ver = ctlr_info.grep(/Boot/)[0].split(/Boot:/)[1].split(/ /)[0].gsub(/ /,"")
   end
   return bcode_ver
 end

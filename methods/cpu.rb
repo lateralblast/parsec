@@ -57,16 +57,38 @@ end
 # Process CPU information
 
 def process_cpu_info()
-  table     = handle_output("title","CPU Information","","")
-  cpu_info  = get_cpu_info()
-  sys_model = get_sys_model()
-  length    = cpu_info.length
-  counter   = 0
+  model_name   = get_model_name()
+  thread_ratio = 1
+  if model_name.match(/^M|^T/)
+    case model_name
+    when /T2|T3-|T5[0-9]/
+      thread_ratio = 8
+    when /T1|T4-|T5-/
+      thread_ratio = 4
+    end
+    table = handle_output("title","Domain CPU Information","","")
+  else
+    table = handle_output("title","CPU Information","","")
+  end
+  cpu_info     = get_cpu_info()
+  sys_model    = get_sys_model()
+  length       = cpu_info.length
+  counter      = 0
+  thread_count = 0
   cpu_info.each do |line|
     counter      = counter+1
     sys_board_no = "1"
     cpu_no       = ""
     if line.match(/[0-9][0-9]/)
+      if sys_model.match(/T[0-9]/)
+        if line.match(/^[0-9]/)
+          cpu_line   = line.split(/\s+/)
+          cpu_thread = cpu_line[0]
+          cpu_speed  = cpu_line[1..2].join(" ")
+          cpu_type   = cpu_line[3]
+          cpu_status = cpu_line[4]
+        end
+      end
       if sys_model.match(/V4/)
         if line.match(/^[0-9]/)
           cpu_line  = line.split(/\s+/)
@@ -108,6 +130,12 @@ def process_cpu_info()
         end
       end
       table = handle_output("row","System Board",sys_board_no,table)
+      if sys_model.match(/T[0-9]/)
+        core_no = (thread_count / thread_ratio)
+        table   = handle_output("row","Core",core_no,table)
+        table   = handle_output("row","Thread",cpu_thread,table)
+        thread_count = thread_count+1
+      end
       table = handle_output("row","Socket",cpu_no,table)
       table = handle_output("row","Mask",cpu_mask,table)
       table = handle_output("row","Speed",cpu_speed,table)

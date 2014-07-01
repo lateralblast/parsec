@@ -70,11 +70,7 @@ end
 def process_obp_ver(table)
   curr_obp   = get_obp_ver()
   curr_obp   = curr_obp.split(/ /)[1]
-  model_name = $host_info["Model"].split(/ /)[-1]
-  if model_name == "Server"
-    model_name = $host_info["Model"].split(/ /)[-2]
-  end
-
+  model_name = get_model_name()
   if model_name.match(/^M10-/)
     curr_xcp   = get_xcp_ver()
     avail_xcp  = get_avail_xcp_ver(model_name)
@@ -82,9 +78,9 @@ def process_obp_ver(table)
     if latest_xcp == avail_xcp
       avail_xcp = avail_xcp+" (Newer)"
     end
-    table   = handle_output("row","Installed XCP Version",curr_xcp,table)
-    table   = handle_output("row","Available XCP Version",avail_xcp,table)
-    table   = handle_output("row","Installed OBP Version",curr_obp,table)
+    table = handle_output("row","Installed XCP Version",curr_xcp,table)
+    table = handle_output("row","Available XCP Version",avail_xcp,table)
+    table = handle_output("row","Installed OBP Version",curr_obp,table)
   else
     avail_obp  = get_avail_obp_ver(model_name)
     latest_obp = compare_ver(curr_obp,avail_obp)
@@ -100,9 +96,16 @@ end
 # Get OBP version.
 
 def get_obp_ver()
-  file_name  = "/sysconfig/prtconf-V.out"
-  file_array = exp_file_to_array(file_name)
-  obp_ver    = file_array.to_s.chomp
+  model_name = get_model_name()
+  if model_name.match(/T3/)
+    file_name = "/sysconfig/prtdiag-v.out"
+    file_array = exp_file_to_array(file_name)
+    obp_ver    = file_array.grep(/^OBP/)[0]
+  else
+    file_name  = "/sysconfig/prtconf-V.out"
+    file_array = exp_file_to_array(file_name)
+    obp_ver    = file_array.to_s.chomp
+  end
   return obp_ver
 end
 
