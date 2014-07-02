@@ -48,6 +48,7 @@ Examples
 - [IO](https://github.com/lateralblast/parsec/wiki/4.2-IO)
 - [Host](https://github.com/lateralblast/parsec/wiki/4.3-Host)
 - [CPU](https://github.com/lateralblast/parsec/wiki/4.4-CPU)
+- [LDOMs](https://github.com/lateralblast/parsec/wiki/4.5-LDoms)
 
 Requirements
 ------------
@@ -61,7 +62,8 @@ Ruby Gems:
 - hex_string
 - terminal-table
 
-A base set of firmware information is provided. This information is created using firith.
+A base set of firmware information is provided.
+This information is created using [oort](https://github.com/lateralblast/oort).
 In order to keep this information up to date, a MOS (My Oracle Support) account is required.
 
 In order to work, parsec requires three directories:
