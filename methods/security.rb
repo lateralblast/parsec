@@ -8,6 +8,7 @@ def process_security(report_type)
   row        = ""
   file_array = ""
   comment    = ""
+  puts
   $defaults.each do |item|
     found      = 0
     items      = item.split(/,/)

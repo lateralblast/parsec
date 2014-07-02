@@ -59,3 +59,5 @@
 # Added initial T series and LDom support
 # 0.3.0: Tue  1 Jul 2014 15:40:48 EST
 # Improved LDom support
+# 0.3.1: Wed  2 Jul 2014 11:44:20 EST
+# Added masking for LDom configuration
