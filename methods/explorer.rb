@@ -28,6 +28,20 @@ def get_extracted_file_date(file_name)
   return(file_date)
 end
 
+def check_exp_file_exists(file_name)
+  if !$exp_file_list[0]
+    $exp_file_list = %x[cd #{$work_dir} ; tar -tzf #{$exp_file}].split("\n")
+  end
+  check_file = $exp_file_list.grep(/#{file_name}/)
+  if check_file
+    return file_name
+  else
+    check_file = ""
+    return check_file
+  end
+end
+
+
 # Extract a file from the the explorer .tar.gz
 
 def extract_exp_file(file_to_extract)

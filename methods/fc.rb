@@ -6,9 +6,10 @@
 # about a controller is in an array element
 
 def get_fc_info()
-  os_ver     = get_os_ver()
-  model_name = get_model_name()
-  if model_name.match(/T[1,2]/)
+  os_ver      = get_os_ver()
+  model_name  = get_model_name()
+  hw_cfg_file = get_hw_cfg_file()
+  if hw_cfg_file.match(/prtpicl/)
     file_name  = "/sysconfig/prtpicl-v.out"
     file_array = exp_file_to_array(file_name)
     fc_info    = file_array.join.split(/\(scsi-fcp/)[1..-1].join.split(/is-io\(/)[0].split(/\(scsi-fcp/)

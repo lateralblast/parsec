@@ -65,4 +65,6 @@
 # Added T2000 support and fixed bugs
 # 0.3.3: Thu  3 Jul 2014 15:13:05 EST
 # Added V120 support
+# 0.3.4: Fri  4 Jul 2014 09:51:30 EST
+# Added support for internal FC-AL on V series
 

@@ -57,11 +57,12 @@ end
 
 def get_ctlr_info(io_path,ctlr_no)
   # Handle FC devices
-  model_name = get_model_name()
-  os_ver     = get_os_ver()
-  if io_path.match(/emlxs|qlc/)
+  model_name  = get_model_name()
+  os_ver      = get_os_ver()
+  hw_cfg_file = get_hw_cfg_file()
+  if io_path.match(/emlxs|qlc|fibre-channel/)
     fc_info = get_fc_info()
-    if os_ver.match(/10|11/) and !model_name.match(/T[1,2]/)
+    if os_ver.match(/10|11/) and hw_cfg_file.match(/prtdiag/)
       ctlr_path = "/dev/cfg/"+ctlr_no
       fc_info   = fc_info.grep(/#{ctlr_path}/)
     else
@@ -75,16 +76,17 @@ end
 # Processes fcinfo into an array
 
 def process_ctlr_info(table,io_name,io_path,ctlr_no)
-  ctlr_info  = get_ctlr_info(io_path,ctlr_no)
-  os_ver     = get_os_ver()
-  model_name = get_model_name()
+  ctlr_info   = get_ctlr_info(io_path,ctlr_no)
+  os_ver      = get_os_ver()
+  model_name  = get_model_name()
+  hw_cfg_file = get_hw_cfg_file()
   # Handle FC devices
   no_ports = ""
   fc_speed = ""
   pci_str  = ""
-  if io_path.match(/emlxs|qlc/)
+  if io_path.match(/emlxs|qlc|fibre-channel/)
     if os_ver.match(/10|11/)
-      if !model_name.match(/T[1,2]/)
+      if !hw_cfg_file.match(/prtpicl/)
         hba_serial = get_hba_serial(io_path,ctlr_no)
         if $masked == 0
           table = handle_output("row","Serial",hba_serial,table)
@@ -99,7 +101,7 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
         table = handle_output("row","Node WWN","XXXXXXXX",table)
       end
       hba_state     = get_hba_state(io_path,ctlr_no)
-      if !model_name.match(/T[1,2]/)
+      if !hw_cfg_file.match(/prtpicl/)
         table         = handle_output("row","State",hba_state,table)
         hba_type      = get_hba_type(io_path,ctlr_no)
         table         = handle_output("row","Type",hba_type,table)
@@ -110,7 +112,7 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
       end
       hba_current   = get_hba_current(io_path,ctlr_no)
       table         = handle_output("row","Current Speed",hba_current,table)
-      if !model_name.match(/T[1,2]/)
+      if !hw_cfg_file.match(/prtpicl/)
         hba_supported = get_hba_supported(io_path,ctlr_no)
         table         = handle_output("row","Supported Speeds",hba_supported,table)
       end
@@ -118,7 +120,7 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
       table         = handle_output("row","Firmware Version",hba_fw_ver,table)
       hba_drv_name  = get_hba_drv_name(io_path,ctlr_no)
       table         = handle_output("row","Driver Name",hba_drv_name,table)
-      if !model_name.match(/T[1,2]/)
+      if !hw_cfg_file.match(/prtpicl/)
         hba_drv_ver   = get_hba_drv_ver(io_path,ctlr_no)
         table         = handle_output("row","Driver Version",hba_drv_ver,table)
         hba_link_fail = get_hba_link_fail(io_path,ctlr_no)
@@ -149,7 +151,7 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
     if io_path.match(/emlxs/)
       table = process_avail_em_fw(table,io_name,hba_fw_ver)
     end
-    if io_path.match(/qlc/)
+    if io_path.match(/qlc|fibre-channel/)
       table = process_avail_ql_fw(table,hba_part_no,hba_fw_ver)
     end
     table = handle_output("row","Part Description",hba_part_desc,table)

@@ -21,8 +21,13 @@ def get_hba_bcode(io_path,ctlr_no)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info = get_ctlr_info(io_path,ctlr_no)
-  if ctlr_info.to_s.match(/BIOS:/)
+  case ctlr_info.to_s
+  when /ISP2200/
+    bcode_ver = ctlr_info.grep(/BIOS/)[0].split(/Driver: /)[1].split(/ /)[0]
+  when /BIOS:/
     bcode_ver = ctlr_info.grep(/BIOS/)[0].split(/BIOS: /)[1].split(/;/)[0].gsub(/ /,"")
+  when /fcode:/
+    bcode_ver = ctlr_info.grep(/BIOS/)[0].split(/fcode: /)[1].split(/;/)[0].gsub(/ /,"")
   else
     bcode_ver = ctlr_info.grep(/Boot/)[0].split(/Boot:/)[1].split(/ /)[0].gsub(/ /,"")
   end
@@ -32,12 +37,12 @@ end
 # Get HBA Current Speed
 
 def get_hba_current(io_path,ctlr_no)
-  model_name = get_model_name()
+  hw_cfg_file = get_hw_cfg_file()
   if !ctlr_no.match(/^c/)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info   = get_ctlr_info(io_path,ctlr_no)
-  if model_name.match(/T[1,2]/)
+  if hw_cfg_file.match(/prtpicl/)
     hba_current = ctlr_info.grep(/link-speed/)[0].split(/:link-speed/)[1].gsub(/\s+/,"")
   else
     hba_current = ctlr_info.grep(/Current Speed/)[0].split(/: /)[1]
@@ -59,12 +64,12 @@ end
 # Get HBA Firmware version
 
 def get_hba_fw_ver(io_path,ctlr_no)
-  model_name = get_model_name()
+  hw_cfg_file = get_hw_cfg_file()
   if !ctlr_no.match(/^c/)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info  = get_ctlr_info(io_path,ctlr_no)
-  if model_name.match(/T[1,2]/)
+  if hw_cfg_file.match(/prtpicl/)
     hba_fw_ver = ctlr_info.grep(/fcode-version/)[0].split(/:fcode-version/)[1].gsub(/\s+/,"")
   else
     hba_fw_ver = ctlr_info.grep(/Firmware Version/)[0].split(/: /)[1]
@@ -86,12 +91,12 @@ end
 # Get HBA Driver name
 
 def get_hba_drv_name(io_path,ctlr_no)
-  model_name = get_model_name()
+  hw_cfg_file = get_hw_cfg_file()
   if !ctlr_no.match(/^c/)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info    = get_ctlr_info(io_path,ctlr_no)
-  if model_name.match(/T[1,2]/)
+  if hw_cfg_file.match(/prtpicl/)
     hba_drv_name = ctlr_info.grep(/driver-name/)[0].split(/:driver-name/)[1].gsub(/\s+/,"")
   else
     hba_drv_name = ctlr_info.grep(/Driver Name/)[0].split(/: /)[1]
@@ -124,12 +129,12 @@ end
 # Get HBA Type
 
 def get_hba_wwn(io_path,ctlr_no)
-  model_name = get_model_name()
+  hw_cfg_file = get_hw_cfg_file()
   if !ctlr_no.match(/^c/)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info = get_ctlr_info(io_path,ctlr_no)
-  if model_name.match(/T[1,2]/)
+  if hw_cfg_file.match(/prtpicl/)
     hba_wwn   = ctlr_info.grep(/node_wwn/)[0].split(/:node_wwn/)[1].gsub(/\s+/,"")
   else
     hba_wwn   = ctlr_info.grep(/Node WWN/)[0].split(/: /)[1]
@@ -220,11 +225,21 @@ def get_hba_fcode(io_path)
   file_name  = "/disks/luxadm_fcode_download_-p.out"
   file_array = exp_file_to_array(file_name)
   fc_info    = file_array.join.split("Opening Device: ")
-  fc_info    = fc_info.grep(/#{io_path}\/fp/)
+  if io_path.match(/fibre-channel/)
+    fc_info    = fc_info.grep(/FC-AL/)
+  else
+    fc_info    = fc_info.grep(/#{io_path}\/fp/)
+  end
   fc_info    = fc_info.join.split(/\n/)[1]
-  fc_ver     = fc_info.split(/:/)[1].gsub(/\s+/,'')
-  if fc_ver.match(/SPARC/)
-    fc_ver = fc_info.split(/:/)[2].split(/ \s+/)[0].gsub(/\s+/,'')
+  fc_ver     = fc_info.split(/:/)[1]
+  if fc_ver.match(/Host/)
+    fc_ver = fc_info.split(/:/)[2].gsub(/^\s+/,'').split(/ /)[0]
+  else
+    if fc_ver.match(/SPARC/)
+      fc_ver = fc_info.split(/:/)[2].split(/ \s+/)[0].gsub(/\s+/,'')
+    else
+      fc_ver     = fc_info.split(/:/)[1].gsub(/\s+/,'')
+    end
   end
   return fc_ver
 end

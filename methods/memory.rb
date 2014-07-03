@@ -54,6 +54,7 @@ def process_mem_info()
   counter        = 0
   previous       = ""
   mem_interleave = ""
+  mem_count      = 0
   mem_info.each do |line|
     if line.match(/[0-9][0-9]|D[0-9]$/)
       counter      = counter+1
@@ -80,6 +81,14 @@ def process_mem_info()
             end
           end
         end
+      end
+      if sys_model.match(/480R/)
+        sys_board_no   = mem_line[1]
+        mem_controller = mem_line[2]
+        mem_bank       = mem_line[3]
+        mem_size       = mem_line[4]
+        mem_dimm_size  = mem_line[5]
+        mem_interleave = mem_line[6]
       end
       if sys_model.match(/M[3-9]0/)
         sys_board_no   = mem_line[1]
@@ -124,15 +133,38 @@ def process_mem_info()
         end
       end
       if mem_size
-        table = handle_output("row","System Board",sys_board_no,table)
-        table = handle_output("row","Group(s)",mem_group,table)
-        table = handle_output("row","Size",mem_size,table)
-        table = handle_output("row","Status",mem_status,table)
-        table = handle_output("row","DIMMs",mem_dimms,table)
-        table = handle_output("row","DIMM Size",mem_dimm_size,table)
-        table = handle_output("row","Mirror",mem_mirror,table)
-        table = handle_output("row","Interleave",mem_interleave,table)
-        if counter < length-2
+        if sys_board_no
+          table = handle_output("row","System Board",sys_board_no,table)
+        end
+        if mem_controller
+          table = handle_output("row","Memory Controller",mem_controller,table)
+        end
+        if mem_bank
+          table = handle_output("row","Memory Bank",mem_bank,table)
+        end
+        if mem_group
+          table = handle_output("row","Group(s)",mem_group,table)
+        end
+        if mem_size
+          table = handle_output("row","Size",mem_size,table)
+        end
+        if mem_status
+          table = handle_output("row","Status",mem_status,table)
+        end
+        if mem_dimms
+          table = handle_output("row","DIMMs",mem_dimms,table)
+        end
+        if mem_dimm_size
+          table = handle_output("row","DIMM Size",mem_dimm_size,table)
+        end
+        if mem_mirror
+          table = handle_output("row","Mirror",mem_mirror,table)
+        end
+        if mem_interleave
+          table = handle_output("row","Interleave",mem_interleave,table)
+        end
+        mem_count = mem_count+1
+        if counter < length-3 and mem_count >= 1
           table = handle_output("line","","",table)
         end
         previous = line

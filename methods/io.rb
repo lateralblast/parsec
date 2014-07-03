@@ -5,7 +5,14 @@
 def get_io_path(io_device,counter)
   file_name  = "/etc/path_to_inst"
   file_array = exp_file_to_array(file_name)
-  io_path    = file_array.grep(/"#{io_device}"/)[counter].split(/ /)[0].gsub(/"/,"")
+  if io_device.match(/,/)
+    io_device = io_device.split(/,/)
+    io_search = io_device[0]
+    io_device = io_device[1]
+    io_path   = file_array.grep(/#{io_search}/).grep(/"#{io_device}"/)[counter].split(/ /)[0].gsub(/"/,"")
+  else
+    io_path = file_array.grep(/"#{io_device}"/)[counter].split(/ /)[0].gsub(/"/,"")
+  end
   return io_path
 end
 
@@ -16,7 +23,7 @@ def get_io_info()
   case model_name
   when /T2/
     io_info = search_prtdiag_info("IO Configuration")
-  when /V1/
+  when /V1|480R/
     io_info = search_prtdiag_info("IO Cards")
   else
     io_info = search_prtdiag_info("IO Devices")
@@ -89,11 +96,20 @@ def process_io_info()
   counter    = 0
   io_count   = 0
   sys_model  = get_sys_model()
-  length     = io_info.length
+  length     = io_info.grep(/[0-9]|[A-z]/).length
   dev_count  = {}
+  if sys_model.match(/480|880|490|890|280/)
+    io_name = "2200"
+    device  = "qlc"
+    count   = 0
+    io_path = get_io_path(device,count)
+    ctlr_no = "c1"
+    table = process_ctlr_info(table,io_name,io_path,ctlr_no)
+    table = handle_output("line","","",table)
+  end
   io_info.each do |line|
-    counter = counter+1
     if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD|PCI/)
+      counter = counter+1
       # Fixed squashed output
       line         = line.gsub(/PCIE3PCIE/,"PCIE3 PCI3")
       line         = line.gsub(/USBPCIX/,"USB PCIX")
@@ -102,8 +118,27 @@ def process_io_info()
       io_line      = line.split(/\s+/)
       sys_board_no = io_line[0]
       case sys_model
-      when /T[0-9]/
-        io_slot = io_line[0]
+      when /480R|880R/
+        io_type   = io_line[0]
+        io_port   = io_line[1]
+        io_bus    = io_line[2]
+        io_slot   = io_line[3]
+        io_speed  = io_line[4]
+        io_status = io_line[6]
+        io_path   = io_line[-1]
+        if io_path.match(/qlc/)
+          io_name = io_path.split(/,/)[2].split(/\./)[0]
+          io_name = "ISP"+io_name.to_s
+          device  = io_path.split(/\-/)[0]
+          if !dev_count[device]
+            temp_count = 0
+            dev_count[device] = temp_count+1
+          else
+            temp_count = dev_count[device]
+            dev_count[device] = temp_count+1
+          end
+          io_path = get_io_path(device,temp_count)
+        end
       when /V1/
         sys_board_no = io_line[1]
         io_type      = io_line[2]
@@ -137,10 +172,13 @@ def process_io_info()
         end
       when /M[3-9]0/
         io_name = io_line[-1]
-        table   = handle_output("row","IOU",sys_board_no,table)
+        if sys_board_no
+          table   = handle_output("row","IOU",sys_board_no,table)
+        end
         io_type = io_line[1]
         io_slot = get_io_slot(io_path,io_type,sys_model)
       when /T[3-5]-/
+        io_slot  = io_line[0]
         io_type  = io_line[1].gsub(/PCI3/,"PCIE")
         io_speed = io_line[-1]
         sys_board_no = io_line[0].split(/\//)[2]
@@ -181,22 +219,41 @@ def process_io_info()
         io_type  = io_line[0]
         io_slot = io_line[2]
       end
-      table   = handle_output("row","Type",io_type,table)
-      table   = handle_output("row","Name",io_name,table)
-      if model_name.match(/T2/)
-        io_path = io_line[3]
-      else
-        if !model_name.match(/V1/)
-          io_path = io_info[counter]
+      if io_type
+        table = handle_output("row","Type",io_type,table)
+      end
+      if io_port
+        table = handle_output("row","Port",io_port,table)
+      end
+      if io_bus
+        table = handle_output("row","Bus",io_bus,table)
+      end
+      if io_status
+        table = handle_output("row","Bus",io_status,table)
+      end
+      if io_name
+        table = handle_output("row","Name",io_name,table)
+      end
+      if !model_name.match(/480R/)
+        if model_name.match(/T2/)
+          io_path = io_line[3]
+        else
+          if !model_name.match(/V1/)
+            io_path = io_info[counter]
+          end
         end
       end
-      if !model_name.match(/V1/)
+      if !model_name.match(/V1|480R/)
         io_path = io_path.to_s
         io_path = io_path.gsub(/\s+/,'')
         io_path = io_path.gsub(/okay/,'')
       end
-      table   = handle_output("row","Path",io_path,table)
-      table   = handle_output("row","Slot",io_slot,table)
+      if io_path
+        table = handle_output("row","Path",io_path,table)
+      end
+      if io_slot
+        table = handle_output("row","Slot",io_slot,table)
+      end
       ctlr_no = get_ctlr_no(io_path)
       if ctlr_no.match(/[0-9]/)
         table = handle_output("row","Controller",ctlr_no,table)
@@ -210,13 +267,17 @@ def process_io_info()
           (dev_name,drv_name,inst_no) = process_drv_info(io_path)
         end
       end
-      table = handle_output("row","Driver",drv_name,table)
-      table = handle_output("row","Instance",inst_no,table)
+      if drv_name
+        table = handle_output("row","Driver",drv_name,table)
+      end
+      if inst_no
+        table = handle_output("row","Instance",inst_no,table)
+      end
       if io_path.match(/network/)
         port_no   = io_path[-1]
         table     = handle_output("row","Port",port_no,table)
         aggr_name = process_aggr_info(dev_name)
-        if aggr_name.match(/[A-z]/)
+        if aggr_name
           table = handle_output("row","Aggregate",aggr_name,table)
           if_hostname = get_if_hostname(aggr_name)
         else
@@ -228,7 +289,7 @@ def process_io_info()
           end
           if_hostname = get_if_hostname(if_name)
         end
-        if if_hostname.match(/[A-z]/)
+        if if_hostname
           if $masked == 0
             table = handle_output("row","Hostname",if_hostname,table)
           else
@@ -244,10 +305,11 @@ def process_io_info()
           end
         end
       end
+#      puts table,io_name,io_path,ctlr_no
       table = process_ctlr_info(table,io_name,io_path,ctlr_no)
-    if counter < length-3
-      table = handle_output("line","","",table)
-    end
+      if counter < length-3
+        table = handle_output("line","","",table)
+      end
     end
   end
   table = handle_output("end","","",table)

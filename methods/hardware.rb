@@ -1,5 +1,17 @@
 # Hardeare related code
 
+# Get hardware config file
+# prtfiag or prtpicl
+
+def get_hw_cfg_file()
+  [ "prtdiag-v.out", "prtpicl-v.out" ].each do |file_name|
+    hw_cfg_file = check_exp_file_exists(file_name)
+    if hw_cfg_file == file_name
+      return hw_cfg_file
+    end
+  end
+end
+
 # Get FRU information
 
 def get_fru_info(model_name)
