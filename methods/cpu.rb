@@ -89,6 +89,20 @@ def process_cpu_info()
           cpu_status = cpu_line[4]
         end
       end
+      if sys_model.match(/V1/)
+        if line.match(/^ [0-9]/)
+          cpu_line     = line.split(/\s+/)
+          sys_board_no = cpu_line[1]
+          cpu_no       = cpu_line[2]
+          cpu_module   = cpu_line[3]
+          cpu_speed    = cpu_line[4]+" MHz"
+          cpu_cache    = cpu_line[5]
+          cpu_mask     = cpu_line[7]
+          cpu_type     = get_sys_model()
+          cpu_list     = cpu_no
+          cpu_type     = cpu_type.split(/\(/)[1].split(/ /)[0]
+        end
+      end
       if sys_model.match(/V4/)
         if line.match(/^[0-9]/)
           cpu_line  = line.split(/\s+/)
@@ -136,13 +150,16 @@ def process_cpu_info()
         table   = handle_output("row","Thread",cpu_thread,table)
         thread_count = thread_count+1
       end
+      if cpu_module
+        table = handle_output("row","Module",cpu_module,table)
+      end
       table = handle_output("row","Socket",cpu_no,table)
       table = handle_output("row","Mask",cpu_mask,table)
       table = handle_output("row","Speed",cpu_speed,table)
       table = handle_output("row","Cache",cpu_cache,table)
       table = handle_output("row","IDs",cpu_list,table)
       table = handle_output("row","Type",cpu_type,table)
-      if counter < length-1
+      if counter < length-2
         table = handle_output("line","","",table)
       end
     end

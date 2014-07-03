@@ -93,6 +93,8 @@ def get_os_update()
     end
     if os_ver.match("10")
       case os_date
+      when "3/05"
+        os_update = "0"
       when "1/06"
         os_update = "1"
       when "6/06"

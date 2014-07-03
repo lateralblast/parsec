@@ -63,4 +63,6 @@
 # Added masking for LDom configuration
 # 0.3.2: Thu  3 Jul 2014 10:27:49 EST
 # Added T2000 support and fixed bugs
+# 0.3.3: Thu  3 Jul 2014 15:13:05 EST
+# Added V120 support
 

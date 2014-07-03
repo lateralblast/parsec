@@ -13,6 +13,9 @@ end
 
 def process_drv_info(io_path)
   drv_info = get_drv_info(io_path)
+  if io_path == "scsi-glm"
+    io_path = "glm"
+  end
   if io_path.match(/emlxs/)
     io_path = io_path+"/fp@0,0"
   end

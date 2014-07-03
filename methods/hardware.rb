@@ -42,6 +42,11 @@ def get_chassis_serial()
   else
     serial_number = file_array[0].to_s
   end
+  if !serial_number.match(/[0-9]/)
+    file_name  = "/sysconfig/env.out"
+    file_array = exp_file_to_array(file_name)
+    serial_number = file_array.grep(/EXP_SERIAL/)[0].split(/\=/)[1]
+  end
   return serial_number
 end
 
