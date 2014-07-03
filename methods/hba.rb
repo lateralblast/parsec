@@ -1,24 +1,5 @@
 # HBA related code
 
-# Get FC device information and put it in an array
-# Information is in a multi line form so split it
-# on the HBA Port WWN string so all the information
-# about a controller is in an array element
-
-def get_fc_info()
-  os_ver = get_os_ver()
-  if os_ver.match(/10|11/)
-    file_name  = "/sysconfig/fcinfo.out"
-    file_array = exp_file_to_array(file_name)
-    fc_info    = file_array.join.split("HBA Port WWN: ")
-  else
-    file_name  = "/disks/luxadm_fcode_download_-p.out"
-    file_array = exp_file_to_array(file_name)
-    fc_info    = file_array.join.split("Opening Device: ")
-  end
-  return fc_info
-end
-
 # Get no of ports
 
 def get_hba_port_no(io_name)
@@ -51,11 +32,16 @@ end
 # Get HBA Current Speed
 
 def get_hba_current(io_path,ctlr_no)
+  model_name = get_model_name()
   if !ctlr_no.match(/^c/)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info   = get_ctlr_info(io_path,ctlr_no)
-  hba_current = ctlr_info.grep(/Current Speed/)[0].split(/: /)[1]
+  if model_name.match(/T[1,2]/)
+    hba_current = ctlr_info.grep(/link-speed/)[0].split(/:link-speed/)[1].gsub(/\s+/,"")
+  else
+    hba_current = ctlr_info.grep(/Current Speed/)[0].split(/: /)[1]
+  end
   return hba_current
 end
 
@@ -73,11 +59,16 @@ end
 # Get HBA Firmware version
 
 def get_hba_fw_ver(io_path,ctlr_no)
+  model_name = get_model_name()
   if !ctlr_no.match(/^c/)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info  = get_ctlr_info(io_path,ctlr_no)
-  hba_fw_ver = ctlr_info.grep(/Firmware Version/)[0].split(/: /)[1]
+  if model_name.match(/T[1,2]/)
+    hba_fw_ver = ctlr_info.grep(/fcode-version/)[0].split(/:fcode-version/)[1].gsub(/\s+/,"")
+  else
+    hba_fw_ver = ctlr_info.grep(/Firmware Version/)[0].split(/: /)[1]
+  end
   return hba_fw_ver
 end
 
@@ -95,11 +86,16 @@ end
 # Get HBA Driver name
 
 def get_hba_drv_name(io_path,ctlr_no)
+  model_name = get_model_name()
   if !ctlr_no.match(/^c/)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info    = get_ctlr_info(io_path,ctlr_no)
-  hba_drv_name = ctlr_info.grep(/Driver Name/)[0].split(/: /)[1]
+  if model_name.match(/T[1,2]/)
+    hba_drv_name = ctlr_info.grep(/driver-name/)[0].split(/:driver-name/)[1].gsub(/\s+/,"")
+  else
+    hba_drv_name = ctlr_info.grep(/Driver Name/)[0].split(/: /)[1]
+  end
   return hba_drv_name
 end
 
@@ -128,11 +124,16 @@ end
 # Get HBA Type
 
 def get_hba_wwn(io_path,ctlr_no)
+  model_name = get_model_name()
   if !ctlr_no.match(/^c/)
     ctlr_no = get_ctlr_no(io_path)
   end
   ctlr_info = get_ctlr_info(io_path,ctlr_no)
-  hba_wwn   = ctlr_info.grep(/Node WWN/)[0].split(/: /)[1]
+  if model_name.match(/T[1,2]/)
+    hba_wwn   = ctlr_info.grep(/node_wwn/)[0].split(/:node_wwn/)[1].gsub(/\s+/,"")
+  else
+    hba_wwn   = ctlr_info.grep(/Node WWN/)[0].split(/: /)[1]
+  end
   return hba_wwn
 end
 

@@ -3,6 +3,7 @@
 def process_host_info()
   table = handle_output("title","Host Information","","")
   table = process_host_name(table)
+  table = process_model_name(table)
   table = process_time_zone(table)
   table = process_host_id(table)
   table = process_chassis_serial(table)
@@ -16,7 +17,7 @@ def process_host_info()
   table = process_os_build(table)
   table = process_sys_boot(table)
   table = process_sys_uptime(table)
-  #table = process_install_cluster(table)
+  table = process_install_cluster(table)
   table = handle_output("end","","",table)
 end
 

@@ -20,13 +20,15 @@ def process_avail_em_fw(table,em_model,em_fw)
     fw_info.each do |fw_line|
       if fw_line.match(/^#{uc_em_model}/)
         fw_line    = fw_line.split(/,/)
-        avail_fw   = fw_line[1].split(/ /)[3]
-        readme_url = fw_line[2]
+        avail_fw   = fw_line[2].split(/Fcode/)[1].split(/ /)[1].gsub(/ /,"").gsub(/\(/,"")
+        readme_url = fw_line[3]
         latest_fw  = compare_ver(em_fw,avail_fw)
-        if latest_ver == avail_fw
+        if latest_fw == avail_fw
           avail_fw = avail_fw+" (Newer)"
           table    = handle_output("row","Available Firmware",avail_fw,table)
-          table    = handle_output("row","Firmware Download",readme_url,table)
+          if readme_url
+            table    = handle_output("row","Firmware Download",readme_url,table)
+          end
         end
       end
     end

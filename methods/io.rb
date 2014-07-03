@@ -3,9 +3,70 @@
 # Get IO information
 
 def get_io_info()
-  io_info = search_prtdiag_info("IO Devices")
+  model_name = get_model_name()
+  if model_name.match(/T2/)
+    io_info = search_prtdiag_info("IO Configuration")
+  else
+    io_info = search_prtdiag_info("IO Devices")
+  end
   return io_info
 end
+
+# Some example M5000 output
+
+=begin
+    IO                                                Lane/Frq
+LSB Type  LPID   RvID,DvID,VnID       BDF       State Act,  Max   Name                           Model
+--- ----- ----   ------------------   --------- ----- ----------- ------------------------------ --------------------
+    Logical Path
+    ------------
+00  PCIe  0      bc, 8532, 10b5       2,  0,  0  okay     8,    8  pci-pciexclass,060400          N/A
+    /pci@0,600000/pci@0
+
+00  PCIe  0      bc, 8532, 10b5       3,  8,  0  okay     8,    8  pci-pciexclass,060400          N/A
+    /pci@0,600000/pci@0/pci@8
+
+00  PCIe  0      bc, 8532, 10b5       3,  9,  0  okay     4,    8  pci-pciexclass,060400          N/A
+    /pci@0,600000/pci@0/pci@9
+
+00  PCIx  0       8,  125, 1033       4,  0,  0  okay   100,  133  pci-pciexclass,060400          N/A
+    /pci@0,600000/pci@0/pci@8/pci@0
+
+00  PCIx  0       8,  125, 1033       4,  0,  1  okay    --,  133  pci-pciexclass,060400          N/A
+    /pci@0,600000/pci@0/pci@8/pci@0,1
+
+00  PCIx  0       2,   50, 1000       5,  1,  0  okay    --,  133  scsi-pci1000,50                LSI,1064
+    /pci@0,600000/pci@0/pci@8/pci@0/scsi@1
+=end
+
+# Some example T3-1 output
+
+=begin
+/SYS/MB/SASHBA0   PCIE  scsi-pciex1000,72                 LSI,2008     5.0GTx8
+                        /pci@400/pci@1/pci@0/pci@4/scsi@0
+/SYS/MB/SASHBA1   PCIE  scsi-pciex1000,72                 LSI,2008     5.0GTx8
+                        /pci@400/pci@2/pci@0/pci@4/scsi@0
+/SYS/MB/NET0      PCIE  network-pciex8086,10c9                         2.5GTx4
+                        /pci@400/pci@2/pci@0/pci@6/network@0
+/SYS/MB/NET1      PCIE  network-pciex8086,10c9                         2.5GTx4
+                        /pci@400/pci@2/pci@0/pci@6/network@0,1
+/SYS/MB/NET2      PCIE  network-pciex8086,10c9                         2.5GTx4
+                        /pci@400/pci@2/pci@0/pci@7/network@0
+/SYS/MB/NET3      PCIE  network-pciex8086,10c9                         2.5GTx4
+                        /pci@400/pci@2/pci@0/pci@7/network@0,1
+/SYS/MB/RISER0/PCIE3PCIE  SUNW,qlc-pciex1077,2532           QLE2562      5.0GTx4
+                        /pci@400/pci@2/pci@0/pci@c/SUNW,qlc@0
+/SYS/MB/RISER0/PCIE3PCIE  SUNW,qlc-pciex1077,2532           QLE2562      5.0GTx4
+                        /pci@400/pci@2/pci@0/pci@c/SUNW,qlc@0,1
+/SYS/MB/VIDEO     PCIX  display-pci1a03,2000                           --
+                        /pci@400/pci@2/pci@0/pci@0/pci@0/display@0
+/SYS/MB/PCIE-IO/USBPCIX  usb-pciclass,0c0310                            --
+                        /pci@400/pci@2/pci@0/pci@f/pci@0/usb@0
+/SYS/MB/PCIE-IO/USBPCIX  usb-pciclass,0c0310                            --
+                        /pci@400/pci@2/pci@0/pci@f/pci@0/usb@0,1
+/SYS/MB/PCIE-IO/USBPCIX  usb-pciclass,0c0320                            --
+                        /pci@400/pci@2/pci@0/pci@f/pci@0/usb@0,2
+=end
 
 # Process IO information
 
@@ -17,32 +78,63 @@ def process_io_info()
   sys_model = get_sys_model()
   length    = io_info.length
   io_info.each do |line|
-    #puts line
     counter = counter+1
-    if line.match(/^[0-9]|^pci|^MB/)
+    if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD/)
+      # Fixed squashed output
+      line         = line.gsub(/PCIE3PCIE/,"PCIE3 PCI3")
+      line         = line.gsub(/USBPCIX/,"USB PCIX")
       io_count     = io_count+1
       io_line      = line.chomp
       io_line      = line.split(/\s+/)
       sys_board_no = io_line[0]
-      if sys_model.match(/M[3-9]0/)
+      case sys_model
+      when /M[3-9]0/
+        io_name = io_line[-1]
         table   = handle_output("row","IOU",sys_board_no,table)
         io_type = io_line[1]
-      else
-        if sys_model.match(/T[0-9]/)
-          io_type  = io_line[1]
-          io_name  = io_line[2]
-          io_speed = io_line[-1]
+      when /T[3-5]-/
+        io_type  = io_line[1].gsub(/PCI3/,"PCIE")
+        io_speed = io_line[-1]
+        sys_board_no = io_line[0].split(/\//)[2]
+        if line.match(/LSI|qlc|emlx/)
+          io_name = io_line[-2]
         else
-          io_type  = io_line[0]
-          io_speed = io_line[1]
-          table    = handle_output("row","Speed",io_speed,table)
-          io_type  = io_line[0]
+          io_name = "N/A"
         end
+      when /T5[0-9]/
+        io_type = io_line[1].gsub(/PCI3/,"PCIE")
+        io_slot = io_line[0]
+        if line.match(/LSI|qlc|emlx/)
+          io_name = io_line[-1]
+        else
+          io_name = "N/A"
+        end
+        sys_board_no = io_line[0].split(/\//)[0]
+      when /T2/
+        io_type = io_line[1]
+        io_slot = io_line[0]
+        if line.match(/LSI|qlc|emlx/)
+          io_name = io_line[-1]
+          if io_name.match(/[0-9]LP/)
+            io_name = io_name.split(/LP/)[1]
+            io_name = "LP"+io_name
+          end
+        else
+          io_name = "N/A"
+        end
+      else
+        io_type  = io_line[0]
+        io_speed = io_line[1]
+        table    = handle_output("row","Speed",io_speed,table)
+        io_type  = io_line[0]
       end
       table   = handle_output("row","Type",io_type,table)
-      io_name = io_line[-1]
       table   = handle_output("row","Name",io_name,table)
-      io_path = io_info[counter]
+      if sys_model.match(/T2/)
+        io_path = io_line[3]
+      else
+        io_path = io_info[counter]
+      end
       io_path = io_path.to_s
       io_path = io_path.gsub(/\s+/,'')
       io_path = io_path.gsub(/okay/,'')
@@ -50,7 +142,7 @@ def process_io_info()
       if sys_model.match(/M[3-9]0/)
         io_slot = get_io_slot(io_path,io_type,sys_model)
       else
-        if sys_model.meatch(/T[0-9]/)
+        if sys_model.match(/T[0-9]/)
           io_slot = io_line[0]
         else
           io_slot = io_line[2]

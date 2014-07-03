@@ -12,6 +12,13 @@ end
 
 # Process FRU information
 
+def process_fru_info(table)
+  model_name = get_model_name()
+  fru_info   = get_fru_info(model_name)
+
+  return table
+end
+
 # Get Architecture
 
 def get_arch_name()
@@ -36,6 +43,14 @@ def get_chassis_serial()
     serial_number = file_array[0].to_s
   end
   return serial_number
+end
+
+# Process Model Name
+
+def process_model_name(table)
+  model_name = get_model_name()
+  table      = handle_output("row","Model",model_name,table)
+  return table
 end
 
 # Process chassis serial number
