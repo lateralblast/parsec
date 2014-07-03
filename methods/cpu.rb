@@ -155,7 +155,7 @@ def process_cpu_info()
       table = handle_output("row","System Board",sys_board_no,table)
       if sys_model.match(/T[0-9]/)
         core_no = (thread_count / thread_ratio)
-        if cpu_core
+        if cpu_no
           table = handle_output("row","Core",core_no,table)
         end
         if cpu_thread
