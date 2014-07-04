@@ -67,4 +67,6 @@
 # Added V120 support
 # 0.3.4: Fri  4 Jul 2014 09:51:30 EST
 # Added support for internal FC-AL on V series
+# 0.3.5: Fri  4 Jul 2014 10:25:59 EST
+# Fixed output for T5120
 

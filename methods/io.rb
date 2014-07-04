@@ -96,7 +96,10 @@ def process_io_info()
   counter    = 0
   io_count   = 0
   sys_model  = get_sys_model()
-  length     = io_info.grep(/[0-9]|[A-z]/).length
+  length     = io_info.grep(/[0-9]/).length
+  if !model_name.match(/480R|T2|V1/)
+    length = length/2
+  end
   dev_count  = {}
   if sys_model.match(/480|880|490|890|280/)
     io_name = "2200"
@@ -107,9 +110,11 @@ def process_io_info()
     table = process_ctlr_info(table,io_name,io_path,ctlr_no)
     table = handle_output("line","","",table)
   end
+  line_count = 0
   io_info.each do |line|
-    if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD|PCI/)
-      counter = counter+1
+    counter = counter+1
+    if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD|PCI/) and !line.match(/Status/)
+      line_count  = line_count+1
       # Fixed squashed output
       line         = line.gsub(/PCIE3PCIE/,"PCIE3 PCI3")
       line         = line.gsub(/USBPCIX/,"USB PCIX")
@@ -187,7 +192,7 @@ def process_io_info()
         else
           io_name = "N/A"
         end
-      when /T5[0-9]/
+      when /T5[0-9][0-9]/
         io_type = io_line[1].gsub(/PCI3/,"PCIE")
         io_slot = io_line[0]
         if line.match(/LSI|qlc|emlx/)
@@ -197,7 +202,8 @@ def process_io_info()
             io_speed = io_line[-1]
           end
         else
-          io_name = "N/A"
+          io_speed = io_line[-1]
+          io_name  = "N/A"
         end
         sys_board_no = io_line[0].split(/\//)[0]
       when /T2/
@@ -307,7 +313,7 @@ def process_io_info()
       end
 #      puts table,io_name,io_path,ctlr_no
       table = process_ctlr_info(table,io_name,io_path,ctlr_no)
-      if counter < length-3
+      if line_count < length-3
         table = handle_output("line","","",table)
       end
     end
