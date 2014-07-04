@@ -78,17 +78,27 @@ def process_obp_ver(table)
     if latest_xcp == avail_xcp
       avail_xcp = avail_xcp+" (Newer)"
     end
-    table = handle_output("row","Installed XCP Version",curr_xcp,table)
-    table = handle_output("row","Available XCP Version",avail_xcp,table)
-    table = handle_output("row","Installed OBP Version",curr_obp,table)
+    if curr_xcp
+      table = handle_output("row","Installed XCP Version",curr_xcp,table)
+    end
+    if avail_xcp
+      table = handle_output("row","Available XCP Version",avail_xcp,table)
+    end
+    if curr_obp
+      table = handle_output("row","Installed OBP Version",curr_obp,table)
+    end
   else
     avail_obp  = get_avail_obp_ver(model_name)
     latest_obp = compare_ver(curr_obp,avail_obp)
     if latest_obp == avail_obp
       avail_obp = avail_obp+" (Newer)"
     end
-    table = handle_output("row","Installed OBP Version",curr_obp,table)
-    table = handle_output("row","Available OBP Version",avail_obp,table)
+    if curr_obp
+      table = handle_output("row","Installed OBP Version",curr_obp,table)
+    end
+    if avail_obp
+      table = handle_output("row","Available OBP Version",avail_obp,table)
+    end
   end
   return table
 end

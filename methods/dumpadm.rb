@@ -18,10 +18,14 @@ def process_dumpadm_info()
     param         = param.gsub(/^\s+/,'')
     if param.match(/directory/)
       if $masked == 0
-        table = handle_output("row",param,value,table)
+        if value
+          table = handle_output("row",param,value,table)
+        end
       end
     else
-      table = handle_output("row",param,value,table)
+      if value
+        table = handle_output("row",param,value,table)
+      end
     end
   end
   table = handle_output("end","","",table)

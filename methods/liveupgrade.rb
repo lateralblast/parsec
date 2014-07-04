@@ -72,7 +72,7 @@ def process_lu_info()
         lu_slice = lu_dev
         end
         if lu_check == "0"
-          lu_name= l u_mount
+          lu_name= lu_mount
         end
         if lu_check == "2"
           if $masked == 1 and lu_fs != "swap" and lu_mount != "/rpool"

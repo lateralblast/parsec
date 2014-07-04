@@ -4,6 +4,7 @@ def process_host_info()
   table = handle_output("title","Host Information","","")
   table = process_host_name(table)
   table = process_model_name(table)
+  table = process_sys_mem(table)
   table = process_time_zone(table)
   table = process_host_id(table)
   table = process_chassis_serial(table)
@@ -50,7 +51,9 @@ end
 def process_host_name(table)
   host_name = get_host_name()
   if $masked == 0
-    table = handle_output("row","Hostname",host_name,table)
+    if host_name
+      table = handle_output("row","Hostname",host_name,table)
+    end
   else
     table = handle_output("row","Hostname","explorer-host",table)
   end

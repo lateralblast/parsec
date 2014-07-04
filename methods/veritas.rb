@@ -47,20 +47,30 @@ def process_vx_dev_info(table,disk_name)
         vx_paths = vx_info.split(/\s+/)
         vx_block = vx_paths[0].split(/\=/)[1]
         vx_raw   = vx_paths[1].split(/\=/)[1]
-        table    = handle_output("row","Veritas Block Device",vx_block,table)
-        table    = handle_output("row","Veritas Raw Device",vx_raw,table)
+        if vx_block
+          table = handle_output("row","Veritas Block Device",vx_block,table)
+        end
+        if vx_raw
+          table = handle_output("row","Veritas Raw Device",vx_raw,table)
+        end
       end
       if vx_line[0].match(/^iosize/)
         vx_iosize = vx_info.split(/\s+/)
         vx_min    = vx_iosize[0].split(/\=/)[1]+" "+vx_iosize[1]
         vx_max    = vx_iosize[2].split(/\=/)[1]+" "+vx_iosize[3]
-        table     = handle_output("row","Veritas Minimum IO Size",vx_min,table)
-        table     = handle_output("row","Veritas Maximum IO Size",vx_max,table)
+        if vx_min
+          table = handle_output("row","Veritas Minimum IO Size",vx_min,table)
+        end
+        if vx_max
+          table = handle_output("row","Veritas Maximum IO Size",vx_max,table)
+        end
       end
       if vx_line[0].match(/^guid/)
         vx_info = vx_info.gsub(/\{/,'')
         vx_info = vx_info.gsub(/\}/,'')
-        table   = handle_output("row","Veritas GUID",vx_info,table)
+        if vx_info
+          table = handle_output("row","Veritas GUID",vx_info,table)
+        end
       end
       if vx_line[0].match(/^uuid/)
         table = handle_output("row","Veritas UUID",vx_info,table)
@@ -70,7 +80,9 @@ def process_vx_dev_info(table,disk_name)
         if vx_info.match(/2/)
           vx_alt_path = vx_dev_info[counter+2].split(/\s+/)[0]
           vx_alt_path = "/dev/vx/dmp/"+vx_alt_path
-          table       = handle_output("row","Veritas Alternate Path",vx_alt_path,table)
+          if vx_alt_path
+            table = handle_output("row","Veritas Alternate Path",vx_alt_path,table)
+          end
         end
       end
       if vx_line[0].match(/^version/)

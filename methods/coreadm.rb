@@ -15,8 +15,10 @@ def process_coreadm_info()
   coreadm_info = get_coreadm_info()
   coreadm_info.each do |line|
     (param,value) = line.split(": ")
-    param         = param.gsub(/^\s+/,'')
-    table         = handle_output("row",param,value,table)
+    if param and value
+      param = param.gsub(/^\s+/,'')
+      table = handle_output("row",param,value,table)
+    end
   end
   table = handle_output("end","","",table)
   return

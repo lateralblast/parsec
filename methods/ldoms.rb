@@ -124,7 +124,9 @@ def process_logical_domains()
           table  = handle_output("line","","",table)
           item   = dom_info[0]
           value  = "Value"
-          table  = handle_output("row",item,value,table)
+          if value
+            table  = handle_output("row",item,value,table)
+          end
           table  = handle_output("line","","",table)
         end
       end
@@ -218,7 +220,9 @@ def process_logical_domains()
                 end
               end
             end
-            table = handle_output("row",item,value,table)
+            if value
+              table = handle_output("row",item,value,table)
+            end
           end
         end
       end
@@ -232,7 +236,9 @@ def process_logical_domains()
           item   = line.downcase.capitalize
         end
         value  = "Value"
-        table  = handle_output("row",item,value,table)
+        if value
+          table  = handle_output("row",item,value,table)
+        end
         table  = handle_output("line","","",table)
       else
         output = 0

@@ -59,48 +59,80 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
         end
       end
       hba_wwn = get_hba_wwn(io_path,ctlr_no)
-      if $masked == 0
-        table = handle_output("row","Node WWN",hba_wwn,table)
-      else
-        table = handle_output("row","Node WWN","XXXXXXXX",table)
+      if hba_wwn
+        if $masked == 0
+          table = handle_output("row","Node WWN",hba_wwn,table)
+        else
+          table = handle_output("row","Node WWN","XXXXXXXX",table)
+        end
       end
-      hba_state     = get_hba_state(io_path,ctlr_no)
+      hba_state = get_hba_state(io_path,ctlr_no)
       if !hw_cfg_file.match(/prtpicl/)
-        table         = handle_output("row","State",hba_state,table)
-        hba_type      = get_hba_type(io_path,ctlr_no)
-        table         = handle_output("row","Type",hba_type,table)
-        bcode_ver     = get_hba_bcode(io_path,ctlr_no)
-        table         = handle_output("row","BCode",bcode_ver,table)
+        if hba_state
+          table = handle_output("row","State",hba_state,table)
+        end
+        hba_type = get_hba_type(io_path,ctlr_no)
+        if hba_type
+          table = handle_output("row","Type",hba_type,table)
+        end
+        bcode_ver = get_hba_bcode(io_path,ctlr_no)
+        if bcode_ver
+          table = handle_output("row","BCode",bcode_ver,table)
+        end
       else
-        table         = handle_output("row","Type","PCI",table)
+        table = handle_output("row","Type","PCI",table)
       end
-      hba_current   = get_hba_current(io_path,ctlr_no)
-      table         = handle_output("row","Current Speed",hba_current,table)
+      hba_current = get_hba_current(io_path,ctlr_no)
+      if hba_current
+        table = handle_output("row","Current Speed",hba_current,table)
+      end
       if !hw_cfg_file.match(/prtpicl/)
         hba_supported = get_hba_supported(io_path,ctlr_no)
-        table         = handle_output("row","Supported Speeds",hba_supported,table)
+        if hba_supported
+          table = handle_output("row","Supported Speeds",hba_supported,table)
+        end
       end
-      hba_fw_ver    = get_hba_fw_ver(io_path,ctlr_no)
-      table         = handle_output("row","Firmware Version",hba_fw_ver,table)
-      hba_drv_name  = get_hba_drv_name(io_path,ctlr_no)
-      table         = handle_output("row","Driver Name",hba_drv_name,table)
+      hba_fw_ver = get_hba_fw_ver(io_path,ctlr_no)
+      if hba_fw_ver
+        table = handle_output("row","Firmware Version",hba_fw_ver,table)
+      end
+      hba_drv_name = get_hba_drv_name(io_path,ctlr_no)
+      if hba_drv_name
+        table = handle_output("row","Driver Name",hba_drv_name,table)
+      end
       if !hw_cfg_file.match(/prtpicl/)
-        hba_drv_ver   = get_hba_drv_ver(io_path,ctlr_no)
-        table         = handle_output("row","Driver Version",hba_drv_ver,table)
+        hba_drv_ver = get_hba_drv_ver(io_path,ctlr_no)
+        if hba_drv_ver
+          table = handle_output("row","Driver Version",hba_drv_ver,table)
+        end
         hba_link_fail = get_hba_link_fail(io_path,ctlr_no)
-        table         = handle_output("row","Link Failures",hba_link_fail,table)
+        if hba_link_fail
+          table = handle_output("row","Link Failures",hba_link_fail,table)
+        end
         hba_sync_loss = get_hba_sync_loss(io_path,ctlr_no)
-        table         = handle_output("row","Sync Losses",hba_sync_loss,table)
+        if hba_sync_loss
+          table = handle_output("row","Sync Losses",hba_sync_loss,table)
+        end
         hba_sig_loss  = get_hba_sig_loss(io_path,ctlr_no)
-        table         = handle_output("row","Signal Losses",hba_sig_loss,table)
+        if hba_sig_loss
+          table = handle_output("row","Signal Losses",hba_sig_loss,table)
+        end
         hba_proto_err = get_hba_proto_err(io_path,ctlr_no)
-        table         = handle_output("row","Protocol Errors",hba_proto_err,table)
-        hba_inv_tx    = get_hba_inv_tx(io_path,ctlr_no)
-        table         = handle_output("row","Invalid Tx Words",hba_inv_tx,table)
-        hba_inv_crc   = get_hba_inv_crc(io_path,ctlr_no)
-        table         = handle_output("row","Invalid CRC",hba_inv_crc,table)
-        fcode_ver     = get_hba_fcode(io_path)
-        table         = handle_output("row","FCode",fcode_ver,table)
+        if hba_proto_err
+          table = handle_output("row","Protocol Errors",hba_proto_err,table)
+        end
+        hba_inv_tx = get_hba_inv_tx(io_path,ctlr_no)
+        if hba_inv_tx
+          table = handle_output("row","Invalid Tx Words",hba_inv_tx,table)
+        end
+        hba_inv_crc = get_hba_inv_crc(io_path,ctlr_no)
+        if hba_inv_crc
+          table = handle_output("row","Invalid CRC",hba_inv_crc,table)
+        end
+        fcode_ver = get_hba_fcode(io_path)
+        if fcode_ver
+          table = handle_output("row","FCode",fcode_ver,table)
+        end
       end
     end
     hba_part_info = $hba_part_list[io_name]
@@ -108,17 +140,27 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
       hba_part_info = hba_part_info.split(/,/)
       hba_part_no   = hba_part_info[0]
       hba_part_desc = hba_part_info[1]
-      table         = handle_output("row","Part Number",hba_part_no,table)
+      if hba_part_no
+        table = handle_output("row","Part Number",hba_part_no,table)
+      end
     else
-      table         = handle_output("row","Part Number",io_name,table)
+      if io_name
+        table = handle_output("row","Part Number",io_name,table)
+      end
     end
     if io_path.match(/emlxs/)
-      table = process_avail_em_fw(table,io_name,hba_fw_ver)
+      if hba_fw_ver
+        table = process_avail_em_fw(table,io_name,hba_fw_ver)
+      end
     end
     if io_path.match(/qlc|fibre-channel/)
-      table = process_avail_ql_fw(table,hba_part_no,hba_fw_ver)
+      if hba_fw_ver
+        table = process_avail_ql_fw(table,hba_part_no,hba_fw_ver)
+      end
     end
-    table = handle_output("row","Part Description",hba_part_desc,table)
+    if hba_part_desc
+      table = handle_output("row","Part Description",hba_part_desc,table)
+    end
   end
   if io_path.match(/emlxs|qlc|scsi/)
     if $do_disks == 1

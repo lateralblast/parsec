@@ -7,9 +7,12 @@ def get_ilom_ver(model_name)
   if model_name.match(/^T/)
     file_name  = "/Tx000/showplatform_-v"
     file_array = exp_file_to_array(file_name)
-    ilom_info  = file_array.grep(/^Version/)[0].split(/ /)
-    ilom_ver   = ilom_info[1]
-    ilom_rev   = ilom_info[2]
+    ilom_info  = file_array.grep(/^Version/)[0]
+    if ilom_info
+      ilom_info = ilom_info.split(/ /)
+      ilom_ver   = ilom_info[1]
+      ilom_rev   = ilom_info[2]
+    end
   end
   return ilom_ver,ilom_rev
 end
@@ -20,14 +23,16 @@ def process_ilom_ver(table)
   model_name = get_model_name()
   if model_name.match(/^T/)
     (ilom_ver,ilom_rev) = get_ilom_ver(model_name)
-    table = handle_output("row","Installed ILOM Version",ilom_ver,table)
-    table = handle_output("row","Installed ILOM Build",ilom_rev,table)
-    avail_ilom  = get_avail_ilom_ver(model_name)
-    latest_ilom = compare_ver(ilom_ver,avail_ilom)
-    if latest_ilom == avail_ilom
-      avail_ilom = avail_ilom+" (Newer)"
+    if ilom_ver
+      table = handle_output("row","Installed ILOM Version",ilom_ver,table)
+      table = handle_output("row","Installed ILOM Build",ilom_rev,table)
+      avail_ilom  = get_avail_ilom_ver(model_name)
+      latest_ilom = compare_ver(ilom_ver,avail_ilom)
+      if latest_ilom == avail_ilom
+        avail_ilom = avail_ilom+" (Newer)"
+      end
+      table = handle_output("row","Available ILOM Version",avail_ilom,table)
     end
-    table = handle_output("row","Available ILOM Version",avail_ilom,table)
   end
   return table
 end

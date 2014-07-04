@@ -18,7 +18,9 @@ end
 def process_time_zone(table)
   time_zone = get_time_zone()
   if $masked == 0
-    table = handle_output("row","Timezone",time_zone,table)
+    if time_zone
+      table = handle_output("row","Timezone",time_zone,table)
+    end
   else
     table = handle_output("row","Timezone","Country/State",table)
   end

@@ -24,54 +24,76 @@ end
 # Do configuration report
 
 def config_report(report,report_type)
-  case report_type
-  when /all|obp/
+  if report_type.match(/all|obp/)
     process_obp_info()
-  when /all|host/
+  end
+  if report_type.match(/all|host/)
     process_host_info()
-  when /all|eeprom/
+  end
+  if report_type.match(/all|eeprom/)
     process_eeprom_info()
-  when /all|os/
+  end
+  if report_type.match(/all|os/)
     process_coreadm_info()
-  when /all|os/
+  end
+  if report_type.match(/all|os/)
     process_dumpadm_info()
-  when /all|os/
+  end
+  if report_type.match(/all|os/)
     process_exp_info()
-  when /all|os/
+  end
+  if report_type.match(/all|os/)
     process_sys_info()
-  when /all|cpu/
+  end
+  if report_type.match(/all|cpu/)
     process_cpu_info()
-  when /all|memory/
+  end
+  if report_type.match(/all|memory/)
     process_mem_info()
-  when /all|io|disk/
+  end
+  if report_type.match(/all|io|disk/)
     process_io_info()
-  when /all|kernel/
+  end
+  if report_type.match(/all|kernel/)
     process_etc_sys_info()
-  when /all|zones/
+  end
+  if report_type.match(/all|zones/)
     process_zones()
-  when /all|security|system|passwd|login|sendmail|inetinit|su|inetd|cront|keyserv|telnetd|power|suspend|sshd/
+  end
+  if report_type.match(/all|security|system|passwd|login|sendmail|inetinit|su|inetd|cront|keyserv|telnetd|power|suspend|sshd/)
     process_security(report_type)
-  when /all|security|inetd/
+  end
+  if report_type.match(/all|security|inetd/)
     process_inetd()
-  when /all|fs/
+  end
+  if report_type.match(/all|fs/)
     process_file_systems()
-  when /all|services/
+  end
+  if report_type.match(/all|services/)
     process_services()
-  when /all|lu/
+  end
+  if report_type.match(/all|lu/)
     process_lu_info()
-  when /all|locale/
+  end
+  if report_type.match(/all|locale/)
     process_locale_info()
-  when /all|modinfo/
+  end
+  if report_type.match(/all|modinfo/)
     process_mod_info()
-  when /all|package/
+  end
+  if report_type.match(/all|package/)
     process_pkg_info()
-  when /all|patch/
+  end
+  if report_type.match(/all|patch/)
     process_patch_info()
-  when /all|tcp/
+  end
+  if report_type.match(/all|tcp/)
     process_ip_info("tcp")
-  when /all|udp/
+  end
+  if report_type.match(/all|udp/)
     process_ip_info("udp")
-  when /all|ldom/
+  end
+  if report_type.match(/all|ldom/)
     process_ldom_info()
   end
   puts
@@ -185,7 +207,9 @@ def process_file_name(table)
   file_name = Pathname.new($exp_file)
   file_name = file_name.basename.to_s
   if $masked == 0
-    table = handle_output("row","File",file_name,table)
+    if file_name
+      table = handle_output("row","File",file_name,table)
+    end
   else
     table = handle_output("row","File","explorer.tar.gz",table)
   end
@@ -195,7 +219,9 @@ end
 # Process explorer directory
 
 def process_dir_name(table)
-  table = handle_output("row","Directory",$exp_dir,table)
+  if $exp_dir
+    table = handle_output("row","Directory",$exp_dir,table)
+  end
   return table
 end
 
@@ -213,7 +239,9 @@ end
 
 def process_file_date(table)
   file_date = get_file_date()
-  table     = handle_output("row","Date",file_date,table)
+  if file_date
+    table = handle_output("row","Date",file_date,table)
+  end
   return table
 end
 
@@ -230,6 +258,8 @@ end
 
 def process_file_time(table)
   file_time = get_file_time()
-  table     = handle_output("row","Time",file_time,table)
+  if file_time
+    table = handle_output("row","Time",file_time,table)
+  end
   return table
 end

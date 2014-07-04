@@ -18,7 +18,9 @@ def process_sys_boot(table)
   file_year = file_date.to_s.split(/ /)[0].split(/-/)[0].chomp
   boot_time = boot_time+" "+file_year
   if $masked == 0
-    table = handle_output("row","Boot Time",boot_time,table)
+    if boot_time
+      table = handle_output("row","Boot Time",boot_time,table)
+    end
   else
     date  = %x[date].chomp
     table = handle_output("row","Boot Time",date,table)
@@ -40,7 +42,9 @@ def process_sys_uptime(table)
   system_uptime = get_sys_uptime()
   system_uptime = system_uptime[0].split(/,/)[0..1].join(" ").gsub(/\s+/,' ').gsub(/^\s+/,'')
   if $masked == 0
-    table = handle_output("row","System Uptime",system_uptime,table)
+    if system_uptime
+      table = handle_output("row","System Uptime",system_uptime,table)
+    end
   else
     table = handle_output("row","System Uptime","1 day(s)",table)
   end
@@ -85,7 +89,9 @@ def process_etc_sys_info()
         item_val  = line[1].gsub(/^ /,'')
       end
       if item_name.to_s.match(/[A-z]/)
-        table = handle_output("row",item_name,item_val,table)
+        if item_val
+          table = handle_output("row",item_name,item_val,table)
+        end
       end
     end
   end

@@ -5,7 +5,12 @@
 def get_total_mem()
   file_name  = "/sysconfig/prtdiag-v.out"
   file_array = exp_file_to_array(file_name)
-  total_mem  = file_array.grep(/^0x0/)[0].split(/\s+/)[1..2].join(" ")
+  total_mem  = file_array.grep(/^0x0/)[0]
+  if total_mem
+    total_mem = total_mem.split(/\s+/)[1..2].join(" ")
+  else
+    total_mem = get_sys_mem()
+  end
   return total_mem
 end
 
@@ -29,10 +34,16 @@ def process_sys_mem(table)
   sys_mem    = get_sys_mem()
   if model_name.match(/^T/)
     total_mem = get_total_mem()
-    table     = handle_output("row","Domain Memory",sys_mem,table)
-    table     = handle_output("row","System Memory",total_mem,table)
+    if sys_mem
+      table = handle_output("row","Domain Memory",sys_mem,table)
+    end
+    if total_mem
+      table = handle_output("row","System Memory",total_mem,table)
+    end
   else
-    table     = handle_output("row","Memory",sys_mem,table)
+    if sys_mem
+      table = handle_output("row","Memory",sys_mem,table)
+    end
   end
   return table
 end
@@ -50,7 +61,9 @@ def process_mem_info()
   table          = handle_output("title","Memory Information","","")
   sys_model      = get_sys_model()
   sys_mem        = get_sys_mem()
-  table          = handle_output("row","System Memory",sys_mem,table)
+  if sys_mem
+    table = handle_output("row","System Memory",sys_mem,table)
+  end
   if !sys_model.match(/V120/)
     table = handle_output("line","","",table)
   end

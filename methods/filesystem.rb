@@ -61,8 +61,12 @@ def process_vfstab_info(table,search)
         mount_point = "/tmp"
       end
       if $masked == 0
-        table = handle_output("row","Mount Point",mount_point,table)
-        table = handle_output("row","Filesystem",file_system,table)
+        if mount_point
+          table = handle_output("row","Mount Point",mount_point,table)
+        end
+        if file_system
+          table = handle_output("row","Filesystem",file_system,table)
+        end
       else
         table = handle_output("row","Mount Point","/mount",table)
         table = handle_output("row","Filesystem",file_system,table)

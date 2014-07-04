@@ -40,7 +40,9 @@ end
 
 def process_arch_name(table)
   arch_name = get_arch_name()
-  table     = handle_output("row","Architecture",arch_name,table)
+  if arch_name
+    table = handle_output("row","Architecture",arch_name,table)
+  end
   return table
 end
 
@@ -66,7 +68,9 @@ end
 
 def process_model_name(table)
   model_name = get_model_name()
-  table      = handle_output("row","Model",model_name,table)
+  if model_name
+    table = handle_output("row","Model",model_name,table)
+  end
   return table
 end
 
@@ -75,7 +79,9 @@ end
 def process_chassis_serial(table)
   serial_number = get_chassis_serial()
   if $masked == 0
-    table = handle_output("row","Serial",serial_number,table)
+    if serial_number
+      table = handle_output("row","Serial",serial_number,table)
+    end
   else
     table = handle_output("row","Serial","XXXXXXXX",table)
   end
@@ -126,6 +132,8 @@ end
 
 def process_sys_model(table)
   sys_model = get_sys_model()
-  table     = handle_output("row","Model",sys_model,table)
+  if sys_model
+    table = handle_output("row","Model",sys_model,table)
+  end
   return table
 end

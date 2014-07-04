@@ -19,10 +19,14 @@ def process_eeprom_info()
       (parameter,value) = line.split(/\=/)
       if parameter.match(/nvram/)
         if $masked == 0
-          table = handle_output("row",parameter,value,table)
+          if value
+            table = handle_output("row",parameter,value,table)
+          end
         end
       else
-        table = handle_output("row",parameter,value,table)
+        if value
+          table = handle_output("row",parameter,value,table)
+        end
       end
     end
   end

@@ -36,20 +36,30 @@ def process_disk_info(table,disk_name)
     if !disk_id.match(/#{disk_name}/)
       disk_id=disk_data[0].split(/\s+/)[0]
     end
-    table       = handle_output("row","Disk",disk_id,table)
+    if disk_id
+      table = handle_output("row","Disk",disk_id,table)
+    end
     disk_vendor = disk_data[4].split(/ Product/)[0].gsub(/\s+/,'')
-    table       = handle_output("row","Vendor",disk_vendor,table)
+    if disk_vendor
+      table = handle_output("row","Vendor",disk_vendor,table)
+    end
     disk_model  = disk_data[5].split(/ Revision/)[0].gsub(/^\s+/,'').gsub(/\s+/,' ')
-    table       = handle_output("row","Model",disk_model,table)
+    if disk_model
+      table = handle_output("row","Model",disk_model,table)
+    end
     if disk_model.match(/CD|DVD/)
       disk_serial = "N/A"
     else
       disk_serial = disk_data[7].split(/ Size/)[0].gsub(/\s+/,'')
       disk_path   = get_disk_path(disk_id)
-      table       = handle_output("row","Path",disk_path,table)
+      if disk_path
+        table = handle_output("row","Path",disk_path,table)
+      end
     end
     disk_fw = disk_data[6].split(/ Serial/)[0].gsub(/\s+/,'')
-    table   = handle_output("row","Installed Firmware",disk_fw,table)
+    if disk_fw
+      table = handle_output("row","Installed Firmware",disk_fw,table)
+    end
     # Remove SUN* from Disk Model
     # E.g. ST914602SSUN146G -> ST914602S
     if disk_model.match(/SUN/)
@@ -58,15 +68,17 @@ def process_disk_info(table,disk_name)
     if !disk_fw.match(/0000/)
       table = process_avail_disk_fw(table,disk_model,disk_fw)
     end
-    if disk_serial.match(/[0-9]/)
+    if disk_serial
       if $masked == 0
         table = handle_output("row","Serial",disk_serial,table)
       else
         table = handle_output("row","Serial","XXXXXXXX",table)
       end
     end
-    disk_size  = disk_data[8].split(/ </)[0].gsub(/\s+/,'')
-    table      = handle_output("row","Size",disk_size,table)
+    disk_size = disk_data[8].split(/ </)[0].gsub(/\s+/,'')
+    if disk_size
+      table = handle_output("row","Size",disk_size,table)
+    end
     disk_index = get_disk_index(disk_id)
     process_disk_sd_info(table,disk_index)
     process_disk_meta_db(table,disk_id)

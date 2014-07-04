@@ -141,7 +141,9 @@ end
 def process_customer_name(table)
   customer_name = get_customer_name()
   if $masked == 0
-    table = handle_output("row","Customer",customer_name,table)
+    if customer_name
+      table = handle_output("row","Customer",customer_name,table)
+    end
   else
     table = handle_output("row","Customer","Company X",table)
   end
@@ -157,7 +159,9 @@ end
 
 def process_contract_id(table)
   contract_id = get_contract_id()
-  table       = handle_output("row","Contract ID",contract_id,table)
+  if contract_id
+    table = handle_output("row","Contract ID",contract_id,table)
+  end
   return table
 end
 
@@ -171,7 +175,9 @@ end
 def process_exp_user(table)
   exp_user = get_exp_user()
   if $masked == 0
-    table = handle_output("row","User",exp_user,table)
+    if exp_user
+      table = handle_output("row","User",exp_user,table)
+    end
   else
     table = handle_output("row","User","Customer X",table)
   end
@@ -188,7 +194,9 @@ end
 def process_exp_email(table)
   exp_email = get_exp_email()
   if $masked == 0
-    table = handle_output("row","Email",exp_email,table)
+    if exp_email
+      table = handle_output("row","Email",exp_email,table)
+    end
   else
     table = handle_output("row","Email","customre@company.com",table)
   end
@@ -205,7 +213,9 @@ end
 def process_exp_phone(table)
   exp_phone = get_exp_phone()
   if $masked == 0
-    table = handle_output("row","Phone",exp_phone,table)
+    if exp_phone
+      table = handle_output("row","Phone",exp_phone,table)
+    end
   else
     table = handle_output("row","Phone","XXX-XXXX-XXXX",table)
   end
@@ -222,7 +232,9 @@ end
 def process_exp_country(table)
   exp_country = get_exp_country()
   if $masked == 0
-    table = handle_output("row","Country",exp_country,table)
+    if exp_country
+      table = handle_output("row","Country",exp_country,table)
+    end
   else
     table = handle_output("row","Country","Country",table)
   end
@@ -238,7 +250,9 @@ end
 
 def process_exp_modules(table)
   exp_modules = get_exp_modules()
-  table       = handle_output("row","Modules",exp_modules,tables)
+  if exp_modules
+    table = handle_output("row","Modules",exp_modules,tables)
+  end
   return table
 end
 
