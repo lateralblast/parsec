@@ -4,7 +4,6 @@
 # http://docs.oracle.com/cd/E19415-01/E21618-01/App_devPaths.html
 
 def get_io_slot(io_path,io_type,sys_model)
-  ctlr_no = get_ctlr_no(io_path)
   io_unit = io_path.split("/")
   io_unit = io_unit[1].to_s
   if io_unit.match(/0\,6/)

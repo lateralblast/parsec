@@ -12,7 +12,7 @@ def process_services()
       items   = line.split(/\s+/)
       state   = items[0]
       service = items[4]
-      line    = $manifest_services.select{|line| line.match(/^#{service}/)}
+      line    = $manifest_services.select{|item| item.match(/^#{service}/)}
       if service.match(/^lrc/)
         type = "Legacy"
       else

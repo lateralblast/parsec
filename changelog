@@ -71,4 +71,6 @@
 # Fixed output for T5120
 # 0.3.6: Fri  4 Jul 2014 12:23:43 EST
 # Fixed output for M3000
+# 0.3.7: Fri  4 Jul 2014 14:53:37 EST
+# Cleaned up memory code
 

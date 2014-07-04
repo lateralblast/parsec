@@ -52,7 +52,6 @@ def process_lu_info()
   end
   file_array = get_lu_tab()
   lu_name    = ""
-  lu_boot    = ""
   lu_fs      = ""
   lu_slice   = ""
   if file_array

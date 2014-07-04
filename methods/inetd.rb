@@ -64,7 +64,7 @@ def process_inetd()
     file_array.each do |line|
       if !line.match(/^#/) and line.match(/[A-z]|[0-9]/)
         service       = line.split(/\s+/)[0]
-        service_check = $inetd_services.select{|service_check| service_check.match(/^#{service}/)}
+        service_check = $inetd_services.select{|service_name| service_name.match(/^#{service}/)}
         if service_check.to_s.match(/#{service}/)
           curr_val = "Enabled"
           rec_val  = "Disabled"

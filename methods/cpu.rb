@@ -43,7 +43,6 @@ def get_cpu_type(cpu_id)
         cpu_type = cpu_type.split(",")
         cpu_type = cpu_type[1]
         cpu_type = cpu_type.gsub("'","")
-        cpu_mask = cpu_type[5]
       end
     end
     if line.match(/cpuid:/)
@@ -168,6 +167,9 @@ def process_cpu_info()
       end
       if cpu_no
         table = handle_output("row","Socket",cpu_no,table)
+      end
+      if cpu_status
+        table = handle_output("row","Status",cpu_status,table)
       end
       if cpu_mask
         table = handle_output("row","Mask",cpu_mask,table)

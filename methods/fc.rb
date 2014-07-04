@@ -7,7 +7,6 @@
 
 def get_fc_info()
   os_ver      = get_os_ver()
-  model_name  = get_model_name()
   hw_cfg_file = get_hw_cfg_file()
   if hw_cfg_file.match(/prtpicl/)
     file_name  = "/sysconfig/prtpicl-v.out"

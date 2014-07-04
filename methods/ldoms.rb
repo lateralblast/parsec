@@ -205,16 +205,16 @@ def process_logical_domains()
               end
             end
             if item == "Volume" and $masked == 1
-              mask_vols.each do |vol_name, temp_name|
-                if value.match(/#{vol_name}/)
-                  value = value.gsub(/#{vol_name}/,temp_name)
+              mask_vols.each do |mask_vol, temp_vol|
+                if value.match(/#{mask_vol}/)
+                  value = value.gsub(/#{mask_vol}/,temp_vol)
                 end
               end
             end
             if item == "Group" and $masked == 1
-              mask_groups.each do |group_name, temp_name|
-                if value.match(/#{group_name}/)
-                  value = value.gsub(/#{group_name}/,temp_name)
+              mask_groups.each do |mask_group, temp_group|
+                if value.match(/#{mask_group}/)
+                  value = value.gsub(/#{mask_group}/,temp_group)
                 end
               end
             end

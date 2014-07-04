@@ -86,7 +86,7 @@ def process_mod_info()
         else
           mod_info = ""
         end
-        mod_status = load_array.select{|mod_status| mod_status.match(/ #{mod_name}/)}
+        mod_status = load_array.select{|mod_state| mod_state.match(/ #{mod_name}/)}
         mod_status = mod_status[0].gsub(/^\s+/,'')
         if mod_status
           mod_status = mod_status.split(/\s+/)[3]

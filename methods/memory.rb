@@ -48,36 +48,50 @@ end
 
 def process_mem_info()
   table          = handle_output("title","Memory Information","","")
-  mem_info       = get_mem_info()
   sys_model      = get_sys_model()
+  sys_mem        = get_sys_mem()
+  table          = handle_output("row","System Memory",sys_mem,table)
+  if !sys_model.match(/V120/)
+    table = handle_output("line","","",table)
+  end
+  mem_info       = get_mem_info()
   length         = mem_info.grep(/[0-9]/).length
   counter        = 0
   previous       = ""
   mem_interleave = ""
   mem_count      = 0
+  total_mem      = ""
+  dimm_size      = ""
   mem_info.each do |line|
     if line.match(/[0-9][0-9]|D[0-9]$/)
-      counter      = counter+1
-      sys_board_no = "1"
-      mem_line     = line.split(/\s+/)
+      counter       = counter+1
+      sys_board_no  = "1"
+      mem_line      = line.split(/\s+/)
       if sys_model.match(/T[0-9]/)
         mem_group = mem_line[-1]
         if sys_model.match(/T5[1,2][2,4]/)
           mem_dimms = "1"
         end
         if line.match(/^[0-9]/)
+          total_mem      = mem_line[1]
+          dimm_size      = total_mem.to_i/length
           mem_interleave = mem_line[3]
-          mem_size       = mem_line[4..5].join(" ")
-          mem_dimm_size  = mem_size
+          mem_size       = dimm_size.to_s+" GB"
+          mem_dimm_size  = dimm_size.to_s+" GB"
         else
           if line.match(/GB/)
-            mem_size       = mem_line[1..2].join(" ")
-            mem_dimm_size  = mem_size
+            mem_size      = dimm_size.to_s+" GB"
+            mem_dimm_size = dimm_size.to_s+" GB"
           else
             if line.match(/MB/)
-              mem_group      = mem_line[-1]
-              mem_size       = previous.split(/\s+/)[-3..-2].join(" ")
-              mem_dimm_size  = mem_size
+              mem_group = mem_line[-1]
+              if previous.match(/GB/)
+                mem_size      = dimm_size.to_s+" GB"
+                mem_dimm_size = dimm_size.to_s+" GB"
+              else
+                mem_size      = dimm_size.to_s+" GB"
+                mem_dimm_size = dimm_size.to_s+" GB"
+              end
             end
           end
         end
@@ -132,7 +146,7 @@ def process_mem_info()
           mem_group = mem_group_list
         end
       end
-      if mem_size
+      if mem_size or mem_group
         if sys_board_no
           table = handle_output("row","System Board",sys_board_no,table)
         end

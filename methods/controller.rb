@@ -27,7 +27,6 @@ end
 
 def get_ctlr_info(io_path,ctlr_no)
   # Handle FC devices
-  model_name  = get_model_name()
   os_ver      = get_os_ver()
   hw_cfg_file = get_hw_cfg_file()
   if io_path.match(/emlxs|qlc|fibre-channel/)
@@ -46,14 +45,9 @@ end
 # Processes fcinfo into an array
 
 def process_ctlr_info(table,io_name,io_path,ctlr_no)
-  ctlr_info   = get_ctlr_info(io_path,ctlr_no)
   os_ver      = get_os_ver()
-  model_name  = get_model_name()
   hw_cfg_file = get_hw_cfg_file()
   # Handle FC devices
-  no_ports = ""
-  fc_speed = ""
-  pci_str  = ""
   if io_path.match(/emlxs|qlc|fibre-channel/)
     if os_ver.match(/10|11/)
       if !hw_cfg_file.match(/prtpicl/)

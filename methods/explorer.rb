@@ -116,11 +116,6 @@ def get_exp_ver()
   return exp_ver
 end
 
-def get_customer_name()
-  file_name  = "/defaults"
-  file_array = exp_file_to_array(file_name)
-end
-
 def search_exp_defaults(search_val)
   file_name  = "/defaults"
   file_array = exp_file_to_array(file_name)
