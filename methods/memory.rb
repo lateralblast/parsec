@@ -50,7 +50,7 @@ def process_mem_info()
   table          = handle_output("title","Memory Information","","")
   mem_info       = get_mem_info()
   sys_model      = get_sys_model()
-  length         = mem_info.grep(/[0-9]|[A-z]/).length
+  length         = mem_info.grep(/[0-9]/).length
   counter        = 0
   previous       = ""
   mem_interleave = ""
@@ -164,7 +164,7 @@ def process_mem_info()
           table = handle_output("row","Interleave",mem_interleave,table)
         end
         mem_count = mem_count+1
-        if counter < length-3 and mem_count >= 1
+        if counter < length and mem_count >= 1
           table = handle_output("line","","",table)
         end
         previous = line

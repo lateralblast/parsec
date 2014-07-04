@@ -1,47 +1,17 @@
 # Controller related code
 
-# Get the IO slot number.
-# http://docs.oracle.com/cd/E19415-01/E21618-01/App_devPaths.html
-
-def get_io_slot(io_path,io_type,sys_model)
-  ctlr_no = get_ctlr_no(io_path)
-  io_unit = io_path.split("/")
-  io_unit = io_unit[1].to_s
-  if io_unit.match(/0\,6/)
-    if io_type.match(/PCIx/)
-      io_slot = 0
-    else
-      io_slot = 1
-    end
-  end
-  if io_unit.match(/1\,7/)
-    io_slot = 2
-  end
-  if io_unit.match(/2\,6/)
-    io_slot = 3
-  end
-  if io_unit.match(/3\,7/)
-    io_slot = 4
-  end
-  return io_slot.to_s
-end
-
 # Get the controller number.
 # Use information in the IO path name to get information.
 
 def get_ctlr_no(io_path)
-  ctlr_no = ""
-  # Handle FC devices
-  if io_path.match(/emlxs|scsi|qlc/)
-    # Get controller name by searching dev list for IO path
-    # We do this as the kernel driver in path_to_inst is fp
-    # whereas the controller is cX in everything else
-    file_name  = "/disks/ls-l_dev_cfg.out"
-    file_array = exp_file_to_array(file_name)
-    ctlr_no    = file_array.grep(/#{io_path}/)
-    ctlr_no    = ctlr_no.to_s.split(" ")
-    ctlr_no    = ctlr_no[8].to_s
-  end
+  # Get controller name by searching dev list for IO path
+  # We do this as the kernel driver in path_to_inst is fp
+  # whereas the controller is cX in everything else
+  file_name  = "/disks/ls-l_dev_cfg.out"
+  file_array = exp_file_to_array(file_name)
+  ctlr_no    = file_array.grep(/#{io_path}/)
+  ctlr_no    = ctlr_no.to_s.split(" ")
+  ctlr_no    = ctlr_no[8].to_s
   return ctlr_no
 end
 

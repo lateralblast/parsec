@@ -1,5 +1,31 @@
 # IO related code
 
+# Get the IO slot number.
+# http://docs.oracle.com/cd/E19415-01/E21618-01/App_devPaths.html
+
+def get_io_slot(io_path,io_type,sys_model)
+  ctlr_no = get_ctlr_no(io_path)
+  io_unit = io_path.split("/")
+  io_unit = io_unit[1].to_s
+  if io_unit.match(/0\,6/)
+    if io_type.match(/PCIx/)
+      io_slot = 0
+    else
+      io_slot = 1
+    end
+  end
+  if io_unit.match(/1\,7/)
+    io_slot = 2
+  end
+  if io_unit.match(/2\,6/)
+    io_slot = 3
+  end
+  if io_unit.match(/3\,7/)
+    io_slot = 4
+  end
+  return io_slot.to_s
+end
+
 # Get IO path
 
 def get_io_path(io_device,counter)
@@ -181,6 +207,7 @@ def process_io_info()
           table   = handle_output("row","IOU",sys_board_no,table)
         end
         io_type = io_line[1]
+        io_path = io_info[counter].gsub(/\s+/,"")
         io_slot = get_io_slot(io_path,io_type,sys_model)
       when /T[3-5]-/
         io_slot  = io_line[0]
