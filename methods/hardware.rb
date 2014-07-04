@@ -12,25 +12,6 @@ def get_hw_cfg_file()
   end
 end
 
-# Get FRU information
-
-def get_fru_info(model_name)
-  if model_name.match(/^T/)
-    file_name = "/Tx1000/showfru"
-    fru_info  = exp_file_to_array(file_name)
-  end
-  return fru_info
-end
-
-# Process FRU information
-
-def process_fru_info(table)
-  model_name = get_model_name()
-  fru_info   = get_fru_info(model_name)
-
-  return table
-end
-
 # Get Architecture
 
 def get_arch_name()
