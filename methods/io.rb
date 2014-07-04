@@ -313,7 +313,7 @@ def process_io_info()
       end
 #      puts table,io_name,io_path,ctlr_no
       table = process_ctlr_info(table,io_name,io_path,ctlr_no)
-      if line_count < length-3
+      if line_count < length
         table = handle_output("line","","",table)
       end
     end
