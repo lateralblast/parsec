@@ -261,7 +261,7 @@ end
 def list_explorers()
   counter = 0
   if Dir.exist?($exp_dir) or File.symlink?($exp_dir)
-    exp_list=Dir.entries($exp_dir)
+    exp_list=Dir.entries($exp_dir).sort
     if exp_list.grep(/^explorer/)
       title = "Explorers in "+$exp_dir+":"
       table = Terminal::Table.new :title => title, :headings => ['Hostname', 'Date','Host ID','File']
