@@ -46,7 +46,7 @@ Examples
 
 Hardware Examples:
 
-- [Memory](https://github.com/lateralblast/parsec/wiki/4.1.1-Memory)
+- [Memory](https://github.com/lateralblast/parsec/wiki/4.1.1.-Memory)
 - [IO](https://github.com/lateralblast/parsec/wiki/4.1.2.-IO)
 - [Power](https://github.com/lateralblast/parsec/wiki/4.1.3.-Power)
 - [Suspend](https://github.com/lateralblast/parsec/wiki/4.1.4.-Suspend)
