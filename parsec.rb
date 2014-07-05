@@ -85,7 +85,7 @@ report["cpu"]      = "Report on CPU information"
 report["ldom"]     = "Report on LDom information"
 #report[""]=""
 
-# Get code name and version
+# Get script name
 
 def get_code_name
   code_name = $0
@@ -94,6 +94,8 @@ def get_code_name
   code_name = code_name.gsub(".rb","")
   return code_name
 end
+
+# Get version of script
 
 def get_code_ver
   code_ver = IO.readlines($0)
@@ -117,6 +119,9 @@ def print_usage(options)
   puts "-f: Specify Explorer file to process"
   puts "-s: Specify System to process"
   puts "    (Filename will be determined if it exists)"
+  puts
+  puts "Shortcuts:"
+  puts
   puts "-A: Print all configuration information (default)"
   puts "-E: Print EEPROM configuration information"
   puts "-I: Print IO configuration information"

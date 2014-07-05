@@ -33,13 +33,13 @@ def config_report(report,report_type)
   if report_type.match(/all|eeprom/)
     process_eeprom_info()
   end
-  if report_type.match(/all|os/)
+  if report_type.match(/all|os|coreadm/)
     process_coreadm_info()
   end
-  if report_type.match(/all|os/)
+  if report_type.match(/all|os|dumpadm/)
     process_dumpadm_info()
   end
-  if report_type.match(/all|os/)
+  if report_type.match(/all|os|explorer/)
     process_exp_info()
   end
   if report_type.match(/all|os/)
@@ -60,19 +60,19 @@ def config_report(report,report_type)
   if report_type.match(/all|zones/)
     process_zones()
   end
-  if report_type.match(/all|security|system|passwd|login|sendmail|inetinit|su|inetd|cront|keyserv|telnetd|power|suspend|sshd/)
+  if report_type.match(/all|security|system|passwd|password|login|sendmail|inetinit|su|inetd|cron|keyserv|telnetd|power|suspend|sshd/)
     process_security(report_type)
   end
   if report_type.match(/all|security|inetd/)
     process_inetd()
   end
-  if report_type.match(/all|fs/)
+  if report_type.match(/all|fs|filesystem/)
     process_file_systems()
   end
   if report_type.match(/all|services/)
     process_services()
   end
-  if report_type.match(/all|lu/)
+  if report_type.match(/all|lu|liveupgrade/)
     process_lu_info()
   end
   if report_type.match(/all|locale/)

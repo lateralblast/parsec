@@ -44,11 +44,60 @@ Getting Started
 Examples
 --------
 
-- [Memory](https://github.com/lateralblast/parsec/wiki/4.1-Memory)
-- [IO](https://github.com/lateralblast/parsec/wiki/4.2-IO)
-- [Host](https://github.com/lateralblast/parsec/wiki/4.3-Host)
-- [CPU](https://github.com/lateralblast/parsec/wiki/4.4-CPU)
-- [LDOMs](https://github.com/lateralblast/parsec/wiki/4.5-LDoms)
+Hardware Examples:
+
+- [Memory](https://github.com/lateralblast/parsec/wiki/4.1.1-Memory)
+- [IO](https://github.com/lateralblast/parsec/wiki/4.1.2.-IO)
+- [Power](https://github.com/lateralblast/parsec/wiki/4.1.3.-Power)
+- [Suspend](https://github.com/lateralblast/parsec/wiki/4.1.4.-Suspend)
+- [ILOM](https://github.com/lateralblast/parsec/wiki/4.1.5.-ILOM)
+- [Disks](https://github.com/lateralblast/parsec/wiki/4.1.6.-Disks)
+- [OBP](https://github.com/lateralblast/parsec/wiki/4.1.7.-OBP)
+- [FRU](https://github.com/lateralblast/parsec/wiki/4.1.8.-FRU)
+- [CPU](https://github.com/lateralblast/parsec/wiki/4.1.9.-CPU)
+
+Software Examples:
+
+- [Explorer](https://github.com/lateralblast/parsec/wiki/4.2.1.-Explorer)
+- [Coreadm](https://github.com/lateralblast/parsec/wiki/4.2.2.-Coreadm)
+- [Dumpadm](https://github.com/lateralblast/parsec/wiki/4.2.3.-Dumpadm)
+- [Packages](https://github.com/lateralblast/parsec/wiki/4.2.4.-Packages)
+- [Patches](https://github.com/lateralblast/parsec/wiki/4.2.5.-Patches)
+
+Network Examples:
+
+- [TCP](https://github.com/lateralblast/parsec/wiki/4.3.1.-TCP)
+- [UDP](https://github.com/lateralblast/parsec/wiki/4.3.2.-UDP)
+- [SSH](https://github.com/lateralblast/parsec/wiki/4.3.3.-SSH)
+- [Sendmail](https://github.com/lateralblast/parsec/wiki/4.3.4.-Sendmail)
+- [Telnet](https://github.com/lateralblast/parsec/wiki/4.3.5.-Telnet)
+
+Operating System Examples:
+
+- [Kernel](https://github.com/lateralblast/parsec/wiki/4.4.1.-Kernel)
+- [Modules](https://github.com/lateralblast/parsec/wiki/4.4.2.-Modules)
+- [Locale](https://github.com/lateralblast/parsec/wiki/4.4.3.-Locale)
+- [Filesystem](https://github.com/lateralblast/parsec/wiki/4.4.4.-Filesystem)
+- [LiveUpgrade](https://github.com/lateralblast/parsec/wiki/4.4.5.-LiveUpgrade)
+- [Services](https://github.com/lateralblast/parsec/wiki/4.4.6.-Services)
+- [Host](https://github.com/lateralblast/parsec/wiki/4.4.7.-Host)
+- [EEPROM](https://github.com/lateralblast/parsec/wiki/4.4.8.-EEPROM)
+
+Virtualisation Examples:
+
+- [LDoms](https://github.com/lateralblast/parsec/wiki/4.5.1.-LDoms)
+- [Zones](https://github.com/lateralblast/parsec/wiki/4.5.2.-Zones)
+
+Security Information:
+
+- [System](https://github.com/lateralblast/parsec/wiki/4.6.1.-System)
+- [Password](https://github.com/lateralblast/parsec/wiki/4.6.2.-Password)
+- [Login](https://github.com/lateralblast/parsec/wiki/4.6.3.Login)
+- [Inetd](https://github.com/lateralblast/parsec/wiki/4.6.4.-Inetd)
+- [Inetinit](https://github.com/lateralblast/parsec/wiki/4.6.5.-Inetinit)
+- [Su](https://github.com/lateralblast/parsec/wiki/4.6.6.-Su)
+- [Cron](https://github.com/lateralblast/parsec/wiki/4.6.7.-Cron)
+- [Keyserv](https://github.com/lateralblast/parsec/wiki/4.6.8.-Keyserv)
 
 Requirements
 ------------
