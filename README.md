@@ -20,6 +20,47 @@ Some of the features include:
 - Security checks for defaults and kernel parameters
 - Mask customer information, WWNs, etc
 
+The reporting options include:
+
+- Open Boot Prom information
+- Host information
+- EEPROM information
+- Operating Sytem information
+- Coreadm information
+- Dupadm information
+- Explorer information
+- CPU information
+- Memory information
+- IO Information (Controllers, HBAs etc)
+- Disk information
+- Kernel information
+- Zone information
+- All security information
+- Password information
+- System information
+- Login information
+- Sendmail information
+- Inetinit information
+- Su information
+- Inetd information
+- Cron information
+- keyserv information
+- Telnet information
+- Power information
+- Suspend information
+- SSH information
+- Filesystem information
+- Services information
+- LiveUpgrade information
+- Locale information
+- Module information
+- Package information
+- Patch information
+- TCP information
+- UDP information
+- LDom information
+- FRU information
+
 License
 -------
 

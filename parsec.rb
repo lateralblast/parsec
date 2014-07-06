@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.4.0
+# Version:      0.4.1
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -119,6 +119,58 @@ def print_usage(options)
   puts "-f: Specify Explorer file to process"
   puts "-s: Specify System to process"
   puts "    (Filename will be determined if it exists)"
+  puts "-m: Mask data (hostnames etc)"
+  puts "-d: Set Explorer directory"
+  puts "-l: List explorers"
+  puts "-a: Process all explorers"
+  puts
+  puts "Reporting:"
+  puts
+  puts "-R: Report/Print configuration information for a specific component:"
+  puts
+  puts "    all:        All information"
+  puts "    obp:        Open Boot Prom information"
+  puts "    host:       Host information"
+  puts "    eeprom:     EEPROM information"
+  puts "    os:         Operating Sytem information"
+  puts "    coreadm:    Coreadm information"
+  puts "    dumpadm:    Dupadm information"
+  puts "    explorer:   Explorer information"
+  puts "    cpu:        CPU information"
+  puts "    memory:     Memory information"
+  puts "    io:         IO Information (Controllers, HBAs etc)"
+  puts "    disk:       Disk information"
+  puts "    kernel:     Kernel information"
+  puts "    zones:      Zone information"
+  puts "    security:   All security information"
+  puts "    password:   Password information"
+  puts "    system:     System information"
+  puts "    login:      Login information"
+  puts "    sendmail:   Sendmail information"
+  puts "    inetinit:   Inetinit information"
+  puts "    su:         Su information"
+  puts "    inetd:      Inetd information"
+  puts "    cron:       Cron information"
+  puts "    keyserv:    keyserv information"
+  puts "    telnet:     Telnet information"
+  puts "    power:      Power information"
+  puts "    suspend:    Suspend information"
+  puts "    ssh:        SSH information"
+  puts "    fs:         Filesystem information"
+  puts "    services:   Services information"
+  puts "    lu:         LiveUpgrade information"
+  puts "    locale:     Locale information"
+  puts "    modinfo:    Module information"
+  puts "    package:    Package information"
+  puts "    patch:      Patch information"
+  puts "    tcp:        TCP information"
+  puts "    udp:        UDP information"
+  puts "    ldom:       LDom information"
+  puts "    fru:        FRU information"
+  puts
+  puts "Example (Display CPUs):"
+  puts
+  puts code_name+" -s hostanme -R cpu"
   puts
   puts "Shortcuts:"
   puts
@@ -128,15 +180,6 @@ def print_usage(options)
   puts "-H: Print Host information"
   puts "-L: Print LDom information"
   puts "-C: Print CPU configuration information"
-  puts "-R: Print configuration information for a specific component"
-  puts "-m: Mask data (hostnames etc)"
-  puts "-d: Set Explorer directory"
-  puts "-l: List explorers"
-  puts "-a: Process all explorers"
-  puts
-  puts "Example (Display CPUs):"
-  puts
-  puts code_name+" -s hostanme -R cpu"
   puts
   exit
 end
