@@ -163,12 +163,12 @@ In order to work, parsec requires three directories:
   - cloning parsec from git will get these
 - information
   - where firmware and other information is location
-  - parsec comes with some base information which can be updated using the firith script
+  - parsec comes with some base information which can be updated using the [oort](https://github.com/lateralblast/oort) script
   - see the [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started) wiki
 - firmware (under development)
   - the actual firmware
   - required for some machines to obtain further information
-  - can be the repository generated from the firith script
+  - can be the repository generated from the [oort](https://github.com/lateralblast/oort) script
   - see the [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started) wiki
 
 
