@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.4.1
+# Version:      0.4.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -38,8 +38,8 @@ $firmware_dir    = ""
       script_dir = Dir.pwd
     end
     required_dir = script_dir+"/"+test_dir
-    if !File.directory?(required_dir) or File.symlink?(required_dir)
-      puts "Cannot locate "+test_dir+" directory"
+    if !File.directory?(required_dir) and !File.symlink?(required_dir)
+      puts "Cannot locate "+test_dir+" directory ("+required_dir+")"
       exit
     end
   end
