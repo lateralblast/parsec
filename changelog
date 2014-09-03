@@ -87,4 +87,6 @@
 # Use pigz to speed up decompression if available
 # 0.4.4: Wed  3 Sep 2014 19:53:11 AEST
 # Improved firmware URL reporting
+# 0.4.5: Thu  4 Sep 2014 09:04:11 AEST
+# Improved OBP version determination
 
