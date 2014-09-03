@@ -85,4 +85,6 @@
 # Fixed directory check
 # 0.4.3: Wed  3 Sep 2014 16:54:08 AEST
 # Use pigz to speed up decompression if available
+# 0.4.4: Wed  3 Sep 2014 19:53:11 AEST
+# Improved firmware URL reporting
 

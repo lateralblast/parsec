@@ -30,10 +30,16 @@ def process_avail_ql_fw(table,ql_model,ql_fw)
           avail_fw = avail_fw+" (Newer)"
           table    = handle_output("row","Available Fcode",avail_fw,table)
           if fw_urls[0]
-            table = handle_output("row","Firmware Documentation",fw_urls[0],table)
+            counter = $io_fw_urls.length+1
+            number  = "[ "+counter.to_s+" ]"
+            table   = handle_output("row","Firmware Documentation",number,table)
+            $io_fw_urls.push(fw_urls[0])
           end
           if fw_urls[1]
-            table = handle_output("row","Firmware Download",fw_urls[1],table)
+            counter = $io_fw_urls.length+1
+            number  = "[ "+counter.to_s+" ]"
+            table   = handle_output("row","Firmware Download",number,table)
+            $io_fw_urls.push(fw_urls[1])
           end
         end
       end

@@ -1,5 +1,7 @@
 # IO related code
 
+$io_fw_urls = []
+
 # Get the IO slot number.
 # http://docs.oracle.com/cd/E19415-01/E21618-01/App_devPaths.html
 
@@ -345,5 +347,13 @@ def process_io_info()
     end
   end
   table = handle_output("end","","",table)
+  if $io_fw_urls[0]
+    puts
+    $io_fw_urls.each_with_index do |url, index|
+      ref = index+1
+      puts "["+ref.to_s+"] "+url
+    end
+    puts
+  end
   return
 end
