@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.4.2
+# Version:      0.4.3
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -22,7 +22,8 @@ require 'pathname'
 require 'hex_string'
 require 'terminal-table'
 
-options = "abcdehlmvACDEHIKLMOSVZd:f:s:w:R:o:"
+options   = "abcdehlmvACDEHIKLMOSVZd:f:s:w:R:o:"
+$pigz_bin = %x[which pigz].chomp
 
 # Set up some script related variables
 

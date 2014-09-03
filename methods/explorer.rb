@@ -30,7 +30,11 @@ end
 
 def check_exp_file_exists(file_name)
   if !$exp_file_list[0]
-    $exp_file_list = %x[cd #{$work_dir} ; tar -tzf #{$exp_file}].split("\n")
+    if $pigz_bin
+      $exp_file_list = %x[cd #{$work_dir} ; pigz -dc #{$exp_file} | tar -tf -].split("\n")
+    else
+      $exp_file_list = %x[cd #{$work_dir} ; tar -tzf #{$exp_file}].split("\n")
+    end
   end
   check_file = $exp_file_list.grep(/#{file_name}/)
   if check_file
@@ -46,9 +50,17 @@ end
 
 def extract_exp_file(file_to_extract)
   if File.exist?($exp_file)
-    command = "cd #{$work_dir} ; tar -xpzf #{$exp_file} #{file_to_extract} > /dev/null 2>&1"
+    if $pigz_bin
+      command = "cd #{$work_dir} ; pigz -dc #{$exp_file} | tar -xpf - #{file_to_extract} > /dev/null 2>&1"
+    else
+      command = "cd #{$work_dir} ; tar -xpzf #{$exp_file} #{file_to_extract} > /dev/null 2>&1"
+    end
     if !$exp_file_list[1]
-      $exp_file_list = `tar -tzf #{$exp_file}`
+      if $pigz_bin
+        $exp_file_list = `pigz -dc #{$exp_file} | tar -tf -`
+      else
+        $exp_file_list = `tar -tzf #{$exp_file}`
+      end
       $exp_file_list = $exp_file_list.split(/\n/)
     end
     if $exp_file_list.include?(file_to_extract)

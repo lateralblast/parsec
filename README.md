@@ -143,6 +143,10 @@ Security Information:
 Requirements
 ------------
 
+Tools:
+
+- Uses pigz if available
+
 Ruby Gems:
 
 - rubygems

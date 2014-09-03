@@ -83,4 +83,6 @@
 # Updated usage information
 # 0.4.2: Wed  3 Sep 2014 16:19:08 AEST
 # Fixed directory check
+# 0.4.3: Wed  3 Sep 2014 16:54:08 AEST
+# Use pigz to speed up decompression if available
 
