@@ -20,7 +20,7 @@ def process_security(report_type)
       if curr_name != file_name
         if curr_name != ""
           handle_output(table)
-          handle_output("")
+          handle_output("\n")
         end
         curr_name  = file_name
         title      = "Security Settings ("+file_name+")"
@@ -56,7 +56,7 @@ def process_security(report_type)
     end
     if item == $defaults.last
       handle_output(table)
-      handle_output("")
+      handle_output("\n")
     end
   end
   return

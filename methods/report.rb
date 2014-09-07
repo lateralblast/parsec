@@ -100,7 +100,7 @@ def config_report(report,report_type)
   if report_type.match(/all|fru/)
     process_fru_info()
   end
-  puts
+  handle_output("\n")
   return
 end
 
@@ -169,10 +169,13 @@ end
 
 def handle_output(output)
   if $output_mode == "text"
-    puts  output
+    put output
   end
   if $output_mode == "file"
-    $output_file.write(output)
+    file = File.open($output_file,"a")
+    file.write(output)
+    file.write("\n")
+    file.close()
   end
   return
 end
@@ -181,7 +184,7 @@ end
 
 def handle_table(type,title,row,table)
   if type.match(/title/)
-    puts
+    handle_output("\n")
     if row.to_s.match(/[A-z]/)
       table = Terminal::Table.new :title => title, :headings => row
     else

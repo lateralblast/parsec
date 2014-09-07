@@ -347,13 +347,13 @@ def process_io_info()
   end
   table = handle_table("end","","",table)
   if $io_fw_urls[0]
-    handle_output("")
+    handle_output("\n")
     $io_fw_urls.each_with_index do |url, index|
       ref    = index+1
       output = "["+ref.to_s+"] "+url
       handle_output(output)
     end
-    handle_output("")
+    handle_output("\n")
   end
   return
 end

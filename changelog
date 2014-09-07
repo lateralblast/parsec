@@ -91,4 +91,6 @@
 # Improved OBP version determination
 # 0.4.6: Sun  7 Sep 2014 10:40:34 AEST
 # Added initial support for multiple types of output
+# 0.4.7: Sun  7 Sep 2014 18:43:30 AEST
+# Cleaned up text file output
 

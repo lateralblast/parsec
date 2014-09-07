@@ -24,7 +24,7 @@ def process_lu_info()
   file_array = get_lu_status()
   lu_current = ""
   if file_array
-    handle_output("")
+    handle_output("\n")
     counter = 0
     title   = "Live Upgrade Status"
     row     = ['Name', 'Complete','Active Now','Active on Reboot']
@@ -55,7 +55,7 @@ def process_lu_info()
   lu_fs      = ""
   lu_slice   = ""
   if file_array
-    handle_output("")
+    handle_output("\n")
     title = "Live Upgrade Disk Layout"
     row   = ['Name', 'ID','Filesystem','Slice/Pool','Device']
     table = handle_table("title",title,row,"")

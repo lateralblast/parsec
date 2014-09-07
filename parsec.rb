@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.4.6
+# Version:      0.4.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -36,7 +36,7 @@ $table_font_size   = 9
 
 $output_mode = "text"
 
-options   = "abcdehlmvACDEHIKLMOPSTVZd:f:s:w:R:o:"
+options   = "abcdehlmvACDEFHIKLMOPSTVZd:f:s:w:R:o:"
 $pigz_bin = %x[which pigz].chomp
 
 # Set up some script related variables
@@ -140,6 +140,7 @@ def print_usage(options)
   puts "-a: Process all explorers"
   puts "-P: Output in PDF mode"
   puts "-T: Output in text mode (default)"
+  puts "-F: Output to file (in output directory)"
   puts
   puts "Reporting:"
   puts
@@ -212,14 +213,10 @@ end
 if opt["T"]
   $output_mode = "text"
 else
-  if opt["P"]
-    $output_mode = "pdf"
+  if opt["P"] or opt["o"] or opt["F"]
+    $output_mode = "file"
   else
-    if opt["o"]
-      $output_mode = "file"
-    else
-      $output_mode = "text"
-    end
+    $output_mode = "text"
   end
 end
 
@@ -300,21 +297,44 @@ else
   $exp_file = $exp_dir+"/"+$exp_file
 end
 
-if opt["P"]
-  $output_mode   = "file"
-  $output_file   = "/tmp/parsec.output"
-  hostname       = opt["s"]
-  document_title = "Oracle Explorer Report for "+host_name
-  customer_name  = ""
-  output_file    = "output/"+host_name+".pdf"
-  pdf            = Prawn::Document.new
-  File.open($output_file,"w")
+if opt["o"]
+  $output_file = opt["o"]
+  if $output_file.match(/\.pdf$|\.PDF$/)
+    $output_file = $output_file.gsub(/\.pdf$|\.PDF$/,"")
+  end
+  if !$output_file.match(/\.txt$/)
+    $output_file = $output_file+".txt"
+  end
+  output_dir = File.dirname($output_file)
+  if !File.directory?(output_dir)
+    Dir.mkdir(output_dir)
+  end
 end
 
-if opt["o"]
-  $output_mode = "file"
-  $output_file = opt["o"]
-  File.open($output_file,"w")
+if opt["P"] or opt["F"]
+  host_name      = opt["s"]
+  if !opt["o"]
+    $output_file = "output/"+host_name+".txt"
+    output_dir = File.dirname($output_file)
+    if !File.directory?(output_dir)
+      Dir.mkdir(output_dir)
+    end
+  end
+  if opt["P"]
+    document_title = "Oracle Explorer Report for "+host_name
+    customer_name  = ""
+    output_pdf     = "output/"+host_name+".pdf"
+    pdf            = Prawn::Document.new
+  end
+end
+
+if opt["o"] or opt["P"] or opt["F"]
+  if File.exist?($output_file)
+    File.delete($output_file)
+    FileUtils.touch($output_file)
+  else
+    FileUtils.touch($output_file)
+  end
 end
 
 # Set work directory
@@ -417,6 +437,11 @@ end
 
 if opt["h"]
   print_usage(options)
+end
+
+if opt["P"]
+  output_pdf = $output_file.gsub(/\.txt$/,".pdf")
+  generate_pdf(pdf,document_title,output_pdf,customer_name)
 end
 
 #clean_up()

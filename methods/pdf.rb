@@ -286,6 +286,90 @@ def create_code_box(pdf,x,y,text_file)
   return pdf
 end
 
-if $output_mode == "pdf"
-  generate_pdf(pdf,document_title,output_file,customer_name)
+def generate_pdf(pdf,document_title,output_pdf,file_name,customer_name)
+  input_file = $output_file
+  Prawn::Document.generate output_pdf do |pdf|
+    setup_fonts(pdf)
+    setup_colors
+    create_front_page(pdf,document_title,file_name,customer_name)
+    create_footers(pdf,document_title)
+    toc    = []
+    tcount = 0
+    lcount = 0
+    lines  = IO.readlines(input_file)
+    title  = ""
+    lines.each do |line|
+      next_line = lines[lcount+1]
+      sub_section_counter = 0
+      if tcount > 0
+        toc.push("#{section},#{pdf.page_count}")
+      end
+      # If top of table get title, create section head, and add to TOC
+      if line.match(/^+/) and next_line.match(/[A-z]/) and table == 0
+        tcount  = tcount+1
+        title   = next_line.split("|")[1].gsub(/^\s+|\s+$/,"")
+        section = title
+        pdf.start_new_page
+        pdf.fill_color = $dark_blue
+        pdf.text "#{section}", :size => $section_font_size, :inline_format => true
+        pdf.text "\n"
+        pdf.fill_color $black
+        table   = 1
+      end
+      # If reached end of table print it and reset table array
+      if line.match(/^+/) and !next_line.match(/[A-z]/) and table == 1
+        # Check to see if we've reached the bottom of the page
+        ttf_string_height = get_ttf_string_length(pdf,$table_font_size,"A")
+        # Allow for spacing within table, heading, space around table, and footer
+        table_length = table_data.length
+        table_height = table_length*ttf_string_height*8.5
+        current_ypos = pdf.y
+        # If the table is longer than the remaining space on the page put in on a new page
+        if current_ypos-table_height < 0 or current_ypos < 200
+          pdf.start_new_page
+        end
+        toc.push("#{section},#{pdf.page_count}")
+        pdf.fill_color = $blue
+        pdf.text table_title, :size => $default_font_size, :align => :justify
+        pdf.text "\n", :size => $default_font_size, :align => :justify
+        pdf.fill_color = $black
+        # If line is empty, ie space after table, render table
+        pdf.table(table_data) do
+          pdf.fill_color = $black
+          style(row(0), :background_color => $blue, :text_color => $white)
+          column(0..2).width=pdf.bounds.right/6
+          column(1..2).width=pdf.bounds.right/6*2.5
+        end
+        table = 0
+        title = ""
+        pdf.text "\n", :size => $default_font_size, :align => :justify
+        pdf.font_size($default_font_size)
+        table_data  = []
+        row_data    = []
+        section     = ""
+      end
+      # If not the start or end of the table get the contents of the cell and
+      # put them into an array
+      if table == 1 and !line.match(/^+/) and !line.match(/Item/) and !line.match(/#{title}/)
+        cells    = line.split("|")
+        cell_1   = cells[1]
+        cell_2   = cells[2]
+        if !cells[3]
+          row_data = [cell_1,cell_2]
+        else
+          cell_3 = cells[3]
+          if !cells[4]
+            row_data = [cell_1,cell_2,cell_3]
+          else
+            cell_4 = cells[4]
+            row_data = [cell_1,cell_2,cell_3,cell_4]
+          end
+        end
+        table_data.push(row_data)
+      end
+    end
+    create_table_contents(pdf,toc)
+    create_page_numbers(pdf)
+  end
+  return
 end

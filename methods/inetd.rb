@@ -58,7 +58,7 @@ def process_inetd()
   file_name  = "/etc/inetd.conf"
   file_array = exp_file_to_array(file_name)
   if file_array
-    handle_output("")
+    handle_output("\n")
     title = "Security Settings ("+file_name+")"
     table = Terminal::Table.new :title => title, :headings => ['Service', 'Current','Recommended','Complies']
     file_array.each do |line|
@@ -79,7 +79,7 @@ def process_inetd()
       end
     end
     handle_output(table)
-    handle_output("")
+    handle_output("\n")
   end
   return
 end
