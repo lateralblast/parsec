@@ -350,7 +350,7 @@ def process_io_info()
     handle_output("\n")
     $io_fw_urls.each_with_index do |url, index|
       ref    = index+1
-      output = "["+ref.to_s+"] "+url
+      output = "["+ref.to_s+"] "+url+"\n"
       handle_output(output)
     end
     handle_output("\n")

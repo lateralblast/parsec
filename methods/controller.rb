@@ -135,6 +135,15 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
         end
       end
     end
+    if io_path.match(/qlc/)
+      if io_name.match(/,/)
+        if io_name.match(/pciex/)
+          io_name = "QLE"+io_name.split(/,/)[-1]
+        else
+          io_name = "QLA"+io_name.split(/,/)[-1]
+        end
+      end
+    end
     hba_part_info = $hba_part_list[io_name]
     if hba_part_info
       hba_part_info = hba_part_info.split(/,/)

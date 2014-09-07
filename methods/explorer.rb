@@ -91,7 +91,7 @@ def exp_file_to_array(file_name)
     if link_test.match(/broken symbolic link to/)
       link_file = link_test.split(/broken symbolic link to /)[1]
       if link_file.match(/^\.\//)
-        link_file = link_file.gsub(/\./,"")
+        link_file = link_file.gsub(/^\./,"")
         dir_name  = File.dirname(file_name)
       else
         dir_name = ""
@@ -297,6 +297,7 @@ def list_explorers()
         end
       end
       handle_output(table)
+      handle("\n")
     end
   end
   return

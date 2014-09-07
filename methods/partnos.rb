@@ -32,6 +32,7 @@ $hba_part_list["QLA2460-S"]="SG-XPCI1FC-QF4,4Gb PCI-X Single FC Host Adapter,375
 $hba_part_list["QLA2462-S"]="SG-XPCI1FC-QF4,4Gb PCI-X Dual FC Host Adapter,375-3355,"
 $hba_part_list["QLA2340"]="SG-XPCI1FC-QL2,2Gb PCI-X Single FC Host Adapter,375-3383,"
 $hba_part_list["QLA2342"]="SG-XPCI2FC-QF2,2Gb PCI/PCI-X Dual FC Host Adapter,375-3108,6768"
+$hba_part_list["QLE2532"]="SG-XPCIE2FC-QF8-Z,8Gigabit/Sec PCI Express Dual FC Host Adapter,371-4325,"
 $hba_part_list["QLA2210F"]="SG-XPCI2FC-QF2,PCI Single FC Host Adapter,375-3030,6727"
 $hba_part_list["QLA2212F"]="SG-XPCI2FC-QF2,PCI Dual FC Host Adapter,375-3030,6727"
 $hba_part_list["QLA2200F"]="FC0310406,PCI Single FC Host Adapter,375-3019,6799"

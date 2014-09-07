@@ -35,8 +35,8 @@ def process_file_systems()
         table.add_row(row)
       end
     end
-    puts table
-    puts
+    handle_output(table)
+    handle_output("\n")
   end
   return
 end

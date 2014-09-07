@@ -44,7 +44,7 @@ def process_services()
       end
     end
   end
-  puts table
-  puts
+  handle_output(table)
+  handle_output("\n")
   return
 end

@@ -93,4 +93,6 @@
 # Added initial support for multiple types of output
 # 0.4.7: Sun  7 Sep 2014 18:43:30 AEST
 # Cleaned up text file output
+# 0.4.8: Mon  8 Sep 2014 04:00:18 AEST
+# Initial PDF report support and various bug fixes
 

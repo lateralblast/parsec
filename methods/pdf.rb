@@ -61,7 +61,7 @@ def create_font_page_header(pdf)
   # set font to Calibri
   pdf.font "Calibri"
   # put background image on page
-  pdf = create_front_page_background(pdf)
+  create_front_page_background(pdf)
   # put a white block across the top of the page
   create_bounding_box(pdf, pdf.bounds.left, pdf.bounds.height, pdf.bounds.width,
     $white, 0, pdf.bounds.width, 30, $white)
@@ -120,7 +120,7 @@ def create_font_page_title(pdf,document_title)
   return pdf
 end
 
-def create_front_page_footer(pdf,file_name)
+def create_front_page_footer(pdf,file_name,customer_name)
   # Set font to Calibri
   font_name = "Calibri"
   pdf.font font_name
@@ -128,29 +128,28 @@ def create_front_page_footer(pdf,file_name)
   # Get date
   time = Time.new
   # Set Document Date, Version, and Number
-  short_year      = time.year.to_s[2..3]
-  date_string     = "#{time.day}/#{time.month}/#{short_year}"
-  version_string  = "0.1"
-  dir_name        = `pwd`
-  dir_name        = Pathname.new(dir_name)
-  customer_name   = dir_name.basename.to_s.capitalize
-  dir_string      = dir_name.basename.to_s.chop.upcase
-  file_string     = file_name.upcase
-  document_string = dir_string+"-"+file_string
+  year    = time.year.to_s[2..3]
+  date    = "#{time.day}/#{time.month}/#{year}"
+  version = get_code_ver()
+  if customer_name.match(/[A-z]/)
+    file = customer_name+"/"+File.basename(file_name)
+  else
+    file = File.basename(file_name)
+  end
   # place while strip across bottom of page
-  pdf = create_bounding_box(pdf, pdf.bounds.left-5, pdf.bounds.bottom+font_size*2, pdf.bounds.width+5,
+  create_bounding_box(pdf, pdf.bounds.left-5, pdf.bounds.bottom+font_size*2, pdf.bounds.width+5,
     $white, 0, pdf.bounds.width+5, font_size*2+2, $white)
   # Place issue date in bottom left corner
   pdf.fill_color $black
-  text_string = "Date #{date_string}"
+  text_string = "Date #{date}"
   pdf.draw_text text_string, :at => [pdf.bounds.left,pdf.bounds.bottom+font_size], :size => font_size
   # Get size of text in pixel from TTF font so we can place text in middle of page
   # Place issue number in bottom middle
-  text_string       = "Version: #{version_string}"
+  text_string       = "Version: #{version}"
   ttf_string_length = get_ttf_string_length(pdf,font_size,text_string)
   pdf.draw_text text_string, :at => [(pdf.bounds.width-ttf_string_length)/2,pdf.bounds.bottom+font_size], :size => font_size
  # Place document number in bottom right
-  text_string       = "Document: #{document_string}"
+  text_string       = "Document: #{file}"
   ttf_string_length = get_ttf_string_length(pdf,font_size,text_string)
   pdf.draw_text text_string, :at => [pdf.bounds.right-ttf_string_length,pdf.bounds.bottom+font_size], :size => font_size
   return pdf
@@ -163,7 +162,7 @@ def create_front_page_preparedby(pdf,customer_name)
   login        = Etc.getlogin
   creator_name = Etc.getpwnam(login).gecos.split(/,/).first
   # put a blue box on the bottom of the page
-  pdf = create_bounding_box(pdf, pdf.bounds.left, pdf.bounds.bottom+200, pdf.bounds.width,
+  create_bounding_box(pdf, pdf.bounds.left, pdf.bounds.bottom+200, pdf.bounds.width,
     $cover_blue, 0, pdf.bounds.width, 175, $cover_blue)
   # create prepared for box
   font_size   = 30
@@ -192,13 +191,14 @@ end
 
 def create_front_page(pdf,document_title,file_name,customer_name)
   # create front page header
-  pdf = create_font_page_header(pdf)
+  create_font_page_header(pdf)
   # create a transparent bounding box in middle of cover and put text into it
-  pdf = create_font_page_title(pdf,document_title)
+  create_font_page_title(pdf,document_title)
   # create prepared by box
-  pdf = create_front_page_preparedby(pdf,customer_name)
+  create_front_page_preparedby(pdf,customer_name)
   # create front page footer
-  pdf = create_front_page_footer(pdf,file_name)
+  create_front_page_footer(pdf,file_name,customer_name)
+  return pdf
 end
 
 def create_footers(pdf,document_title)
@@ -286,87 +286,155 @@ def create_code_box(pdf,x,y,text_file)
   return pdf
 end
 
-def generate_pdf(pdf,document_title,output_pdf,file_name,customer_name)
+def generate_pdf(pdf,document_title,output_pdf,customer_name)
   input_file = $output_file
+  setup_colors()
   Prawn::Document.generate output_pdf do |pdf|
     setup_fonts(pdf)
-    setup_colors
-    create_front_page(pdf,document_title,file_name,customer_name)
-    create_footers(pdf,document_title)
+    file   = File.basename(output_pdf)
+    pdf    = create_front_page(pdf,document_title,file,customer_name)
+    pdf    = create_footers(pdf,document_title)
     toc    = []
-    tcount = 0
     lcount = 0
     lines  = IO.readlines(input_file)
     title  = ""
+    table  = 0
+    model  = ""
+    section     = ""
+    table_data  = []
+    table_row   = []
+    table_title = ""
     lines.each do |line|
       next_line = lines[lcount+1]
       sub_section_counter = 0
-      if tcount > 0
-        toc.push("#{section},#{pdf.page_count}")
-      end
       # If top of table get title, create section head, and add to TOC
-      if line.match(/^+/) and next_line.match(/[A-z]/) and table == 0
-        tcount  = tcount+1
+      if line.match(/^\+/) and next_line.match(/[A-z]/) and table == 0
         title   = next_line.split("|")[1].gsub(/^\s+|\s+$/,"")
         section = title
+        toc.push("#{section},#{pdf.page_count}")
         pdf.start_new_page
         pdf.fill_color = $dark_blue
         pdf.text "#{section}", :size => $section_font_size, :inline_format => true
         pdf.text "\n"
         pdf.fill_color $black
-        table   = 1
+        table = 1
       end
       # If reached end of table print it and reset table array
-      if line.match(/^+/) and !next_line.match(/[A-z]/) and table == 1
+      if line.match(/^\+/) and !next_line.match(/[A-z]/) and table == 1
         # Check to see if we've reached the bottom of the page
         ttf_string_height = get_ttf_string_length(pdf,$table_font_size,"A")
         # Allow for spacing within table, heading, space around table, and footer
         table_length = table_data.length
-        table_height = table_length*ttf_string_height*8.5
+        table_height = table_length*(ttf_string_height+10)
         current_ypos = pdf.y
         # If the table is longer than the remaining space on the page put in on a new page
-        if current_ypos-table_height < 0 or current_ypos < 200
+        if current_ypos-table_height < 0 or current_ypos < 30
           pdf.start_new_page
         end
-        toc.push("#{section},#{pdf.page_count}")
+        pdf.font_size($table_font_size)
         pdf.fill_color = $blue
-        pdf.text table_title, :size => $default_font_size, :align => :justify
-        pdf.text "\n", :size => $default_font_size, :align => :justify
+        pdf.text table_title, :size => $table_font_size, :align => :justify
+        pdf.text "\n", :size => $table_font_size, :align => :justify
         pdf.fill_color = $black
         # If line is empty, ie space after table, render table
         pdf.table(table_data) do
           pdf.fill_color = $black
           style(row(0), :background_color => $blue, :text_color => $white)
-          column(0..2).width=pdf.bounds.right/6
-          column(1..2).width=pdf.bounds.right/6*2.5
+#          column(0..2).width=pdf.bounds.right/6
+#          column(1..2).width=pdf.bounds.right/6*2.5
         end
         table = 0
         title = ""
         pdf.text "\n", :size => $default_font_size, :align => :justify
         pdf.font_size($default_font_size)
-        table_data  = []
-        row_data    = []
-        section     = ""
+        table_data = []
+        row_data   = []
+        # If we are handling host information, insert hardware information
+        if section.match(/Host Information/)
+          toc.push("Model Information,#{pdf.page_count}")
+          pdf.start_new_page
+          pdf.fill_color = $dark_blue
+          pdf.text "Model Information", :size => $section_font_size, :inline_format => true
+          pdf.text "\n"
+          pdf.fill_color $black
+          if model.match(/T[3,4]-1/)
+            model = model.gsub(/-/,"_")
+          end
+          case model
+          when /[M,T][3-9][0-9][0-9][0-9]/
+            header = "SE_"+model
+          when /[X,T]6[0-9][0-9][0-9]/
+            header = "SunBlade"+model
+          when /T[3,4][-,_]|M[10,5,6][-,_]/
+            header = "SPARC_"+model
+          when /T[1,2][0-9][0-9][0-9]|^V|X[2,4][0-9][0-9][0-9]/
+            header = "SunFire"+model
+          else
+            header = model
+          end
+          image_names = [ "Front", "Front Open", "Top", "Left Open", "Right Open", "Rear", "Rear Open" ]
+          image_names.each do |image_name|
+            image_file = $image_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_zoom.jpg"
+            if File.exist?(image_file)
+              scale = 1
+              image_size   = FastImage.size(image_file)
+              image_width  = image_size[0]
+              page_width   = pdf.bounds.width
+              image_height = image_size[1]
+              page_height  = pdf.bounds.height
+              if image_height > page_height
+                scale = (page_height-100) / image_height
+              else
+                if image_width > page_width
+                  scale = page_width / image_width
+                end
+              end
+              pdf.image image_file, :position => :center, :vposition => :center, :scale => scale
+              text_string = "View: "+image_name
+              text_width  = get_ttf_string_length(pdf,$default_font_size,text_string)
+              x_pos = page_width/2 - text_width/2
+              y_pos = page_height/2 - image_height*scale/2 - 30
+              pdf.draw_text(text_string, :at => [ x_pos, y_pos ] )
+              current_ypos = pdf.y
+              toc.push("#{text_string},#{pdf.page_count}")
+              if current_ypos-table_height < 0 or current_ypos < 30
+                pdf.start_new_page
+              end
+            end
+          end
+        end
+        section = ""
       end
       # If not the start or end of the table get the contents of the cell and
       # put them into an array
-      if table == 1 and !line.match(/^+/) and !line.match(/Item/) and !line.match(/#{title}/)
-        cells    = line.split("|")
-        cell_1   = cells[1]
-        cell_2   = cells[2]
-        if !cells[3]
-          row_data = [cell_1,cell_2]
+      if table == 1 and !line.match(/^\+/) and !line.match(/#{title}/)
+        cells  = line.split("\|")
+        cells  = cells[0..-2]
+        cell_1 = cells[1].gsub(/^\s+/,"").gsub(/\s+$/,"")
+        if !cells[2]
+          row_data = [cell_1]
         else
-          cell_3 = cells[3]
-          if !cells[4]
-            row_data = [cell_1,cell_2,cell_3]
+          cell_2 = cells[2].gsub(/^\s+/,"").gsub(/\s+$/,"")
+          if !cells[3]
+            row_data = [cell_1,cell_2]
           else
-            cell_4 = cells[4]
-            row_data = [cell_1,cell_2,cell_3,cell_4]
+            cell_3 = cells[3].gsub(/^\s+/,"").gsub(/\s+$/,"")
+            if !cells[4]
+              row_data = [cell_1,cell_2,cell_3]
+            else
+              cell_4 = cells[4].gsub(/^\s+/,"").gsub(/\s+$/,"")
+              row_data = [cell_1,cell_2,cell_3,cell_4]
+            end
           end
         end
         table_data.push(row_data)
+        if section.match(/Host Information/)
+          if cell_1.match(/Model/)
+            model = cell_2
+          end
+        end
       end
+      lcount = lcount+1
     end
     create_table_contents(pdf,toc)
     create_page_numbers(pdf)

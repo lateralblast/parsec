@@ -32,7 +32,7 @@ require 'enumerator'
 $default_font_size = 12
 $section_font_size = 28
 $heading_font_size = 18
-$table_font_size   = 9
+$table_font_size   = 10
 
 $output_mode = "text"
 
@@ -44,6 +44,7 @@ $pigz_bin = %x[which pigz].chomp
 $methods_dir     = ""
 $information_dir = ""
 $firmware_dir    = ""
+$image_dir       = Dir.pwd+"/images"
 
 [ "methods", "information", "firmware" ].each do |test_dir|
   required_dir = eval("$#{test_dir}_dir")
@@ -321,10 +322,9 @@ if opt["P"] or opt["F"]
     end
   end
   if opt["P"]
-    document_title = "Oracle Explorer Report for "+host_name
+    document_title = "Explorer: "+host_name
     customer_name  = ""
     output_pdf     = "output/"+host_name+".pdf"
-    pdf            = Prawn::Document.new
   end
 end
 
@@ -432,7 +432,6 @@ if opt["R"]
     end
     config_report(report,report_type)
   end
-  exit
 end
 
 if opt["h"]
@@ -440,6 +439,7 @@ if opt["h"]
 end
 
 if opt["P"]
+  pdf = Prawn::Document.new
   output_pdf = $output_file.gsub(/\.txt$/,".pdf")
   generate_pdf(pdf,document_title,output_pdf,customer_name)
 end

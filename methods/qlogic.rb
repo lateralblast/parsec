@@ -11,10 +11,10 @@ end
 # Process available Emulex HBA firmware version
 
 def process_avail_ql_fw(table,ql_model,ql_fw)
-  table        = handle_table("row","Installed Firmware",ql_fw,table)
-  fw_info      = get_avail_ql_fw()
-  uc_ql_model  = ql_model.upcase
-  fw_urls      = []
+  table       = handle_table("row","Installed Firmware",ql_fw,table)
+  fw_info     = get_avail_ql_fw()
+  uc_ql_model = ql_model.upcase
+  fw_urls     = []
   if fw_info
     fw_info.each do |fw_line|
       if fw_line.match(/^#{uc_ql_model}/)

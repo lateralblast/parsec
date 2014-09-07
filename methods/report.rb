@@ -169,7 +169,7 @@ end
 
 def handle_output(output)
   if $output_mode == "text"
-    put output
+    print output
   end
   if $output_mode == "file"
     file = File.open($output_file,"a")
@@ -193,6 +193,7 @@ def handle_table(type,title,row,table)
   end
   if type.match(/end/)
     handle_output(table)
+    handle_output("\n")
   end
   if type.match(/line/)
     table.add_separator
