@@ -11,7 +11,7 @@ end
 # Process dumpadm infomation
 
 def process_dumpadm_info()
-  table        = handle_output("title","Dumpadm Configuration","","")
+  table        = handle_table("title","Dumpadm Configuration","","")
   dumpadm_info = get_dumpadm_info()
   dumpadm_info.each do |line|
     (param,value) = line.split(": ")
@@ -19,15 +19,15 @@ def process_dumpadm_info()
     if param.match(/directory/)
       if $masked == 0
         if value
-          table = handle_output("row",param,value,table)
+          table = handle_table("row",param,value,table)
         end
       end
     else
       if value
-        table = handle_output("row",param,value,table)
+        table = handle_table("row",param,value,table)
       end
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   return
 end

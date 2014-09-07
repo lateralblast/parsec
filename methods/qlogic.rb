@@ -11,7 +11,7 @@ end
 # Process available Emulex HBA firmware version
 
 def process_avail_ql_fw(table,ql_model,ql_fw)
-  table        = handle_output("row","Installed Firmware",ql_fw,table)
+  table        = handle_table("row","Installed Firmware",ql_fw,table)
   fw_info      = get_avail_ql_fw()
   uc_ql_model  = ql_model.upcase
   fw_urls      = []
@@ -28,17 +28,17 @@ def process_avail_ql_fw(table,ql_model,ql_fw)
         latest_fw = compare_ver(ql_fw,avail_fw)
         if latest_fw == avail_fw
           avail_fw = avail_fw+" (Newer)"
-          table    = handle_output("row","Available Fcode",avail_fw,table)
+          table    = handle_table("row","Available Fcode",avail_fw,table)
           if fw_urls[0]
             counter = $io_fw_urls.length+1
             number  = "[ "+counter.to_s+" ]"
-            table   = handle_output("row","Firmware Documentation",number,table)
+            table   = handle_table("row","Firmware Documentation",number,table)
             $io_fw_urls.push(fw_urls[0])
           end
           if fw_urls[1]
             counter = $io_fw_urls.length+1
             number  = "[ "+counter.to_s+" ]"
-            table   = handle_output("row","Firmware Download",number,table)
+            table   = handle_table("row","Firmware Download",number,table)
             $io_fw_urls.push(fw_urls[1])
           end
         end

@@ -22,7 +22,7 @@ end
 def process_arch_name(table)
   arch_name = get_arch_name()
   if arch_name
-    table = handle_output("row","Architecture",arch_name,table)
+    table = handle_table("row","Architecture",arch_name,table)
   end
   return table
 end
@@ -50,7 +50,7 @@ end
 def process_model_name(table)
   model_name = get_model_name()
   if model_name
-    table = handle_output("row","Model",model_name,table)
+    table = handle_table("row","Model",model_name,table)
   end
   return table
 end
@@ -61,10 +61,10 @@ def process_chassis_serial(table)
   serial_number = get_chassis_serial()
   if $masked == 0
     if serial_number
-      table = handle_output("row","Serial",serial_number,table)
+      table = handle_table("row","Serial",serial_number,table)
     end
   else
-    table = handle_output("row","Serial","XXXXXXXX",table)
+    table = handle_table("row","Serial","XXXXXXXX",table)
   end
   return table
 end
@@ -78,8 +78,8 @@ def handle_prtdiag_io(line,sys_model)
     if hw_info[0].to_s.match(/^0/)
       io_unit = hw_info[0].to_s
       io_type = hw_info[1].to_s
-      handle_output("IOU",io_unit)
-      handle_output("Bus",io_type)
+      handle_table("IOU",io_unit)
+      handle_table("Bus",io_type)
     end
   end
   if sys_model.match(/V440/)
@@ -114,7 +114,7 @@ end
 def process_sys_model(table)
   sys_model = get_sys_model()
   if sys_model
-    table = handle_output("row","Model",sys_model,table)
+    table = handle_table("row","Model",sys_model,table)
   end
   return table
 end

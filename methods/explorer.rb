@@ -1,7 +1,7 @@
 # Explorer related code
 
 def process_exp_info()
-  table = handle_output("title","Explorer Information","","")
+  table = handle_table("title","Explorer Information","","")
   table = process_customer_name(table)
   table = process_contract_id(table)
   table = process_exp_user(table)
@@ -13,7 +13,7 @@ def process_exp_info()
   table = process_exp_ver(table)
   table = process_file_date(table)
   table = process_file_time(table)
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
 end
 
 # Get file date
@@ -115,7 +115,7 @@ end
 
 def process_exp_ver(table)
   exp_ver = get_exp_ver()
-  table = handle_output("row","STB Version",exp_ver,table)
+  table = handle_table("row","STB Version",exp_ver,table)
   return table
 end
 
@@ -154,10 +154,10 @@ def process_customer_name(table)
   customer_name = get_customer_name()
   if $masked == 0
     if customer_name
-      table = handle_output("row","Customer",customer_name,table)
+      table = handle_table("row","Customer",customer_name,table)
     end
   else
-    table = handle_output("row","Customer","Company X",table)
+    table = handle_table("row","Customer","Company X",table)
   end
   return table
 end
@@ -172,7 +172,7 @@ end
 def process_contract_id(table)
   contract_id = get_contract_id()
   if contract_id
-    table = handle_output("row","Contract ID",contract_id,table)
+    table = handle_table("row","Contract ID",contract_id,table)
   end
   return table
 end
@@ -188,10 +188,10 @@ def process_exp_user(table)
   exp_user = get_exp_user()
   if $masked == 0
     if exp_user
-      table = handle_output("row","User",exp_user,table)
+      table = handle_table("row","User",exp_user,table)
     end
   else
-    table = handle_output("row","User","Customer X",table)
+    table = handle_table("row","User","Customer X",table)
   end
   return table
 end
@@ -207,10 +207,10 @@ def process_exp_email(table)
   exp_email = get_exp_email()
   if $masked == 0
     if exp_email
-      table = handle_output("row","Email",exp_email,table)
+      table = handle_table("row","Email",exp_email,table)
     end
   else
-    table = handle_output("row","Email","customre@company.com",table)
+    table = handle_table("row","Email","customre@company.com",table)
   end
   return table
 end
@@ -226,10 +226,10 @@ def process_exp_phone(table)
   exp_phone = get_exp_phone()
   if $masked == 0
     if exp_phone
-      table = handle_output("row","Phone",exp_phone,table)
+      table = handle_table("row","Phone",exp_phone,table)
     end
   else
-    table = handle_output("row","Phone","XXX-XXXX-XXXX",table)
+    table = handle_table("row","Phone","XXX-XXXX-XXXX",table)
   end
   return table
 end
@@ -245,10 +245,10 @@ def process_exp_country(table)
   exp_country = get_exp_country()
   if $masked == 0
     if exp_country
-      table = handle_output("row","Country",exp_country,table)
+      table = handle_table("row","Country",exp_country,table)
     end
   else
-    table = handle_output("row","Country","Country",table)
+    table = handle_table("row","Country","Country",table)
   end
   return table
 end
@@ -263,7 +263,7 @@ end
 def process_exp_modules(table)
   exp_modules = get_exp_modules()
   if exp_modules
-    table = handle_output("row","Modules",exp_modules,tables)
+    table = handle_table("row","Modules",exp_modules,tables)
   end
   return table
 end
@@ -296,7 +296,7 @@ def list_explorers()
           table.add_row(table_row)
         end
       end
-      puts table
+      handle_output(table)
     end
   end
   return

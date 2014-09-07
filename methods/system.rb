@@ -19,11 +19,11 @@ def process_sys_boot(table)
   boot_time = boot_time+" "+file_year
   if $masked == 0
     if boot_time
-      table = handle_output("row","Boot Time",boot_time,table)
+      table = handle_table("row","Boot Time",boot_time,table)
     end
   else
     date  = %x[date].chomp
-    table = handle_output("row","Boot Time",date,table)
+    table = handle_table("row","Boot Time",date,table)
   end
   return table
 end
@@ -43,22 +43,22 @@ def process_sys_uptime(table)
   system_uptime = system_uptime[0].split(/,/)[0..1].join(" ").gsub(/\s+/,' ').gsub(/^\s+/,'')
   if $masked == 0
     if system_uptime
-      table = handle_output("row","System Uptime",system_uptime,table)
+      table = handle_table("row","System Uptime",system_uptime,table)
     end
   else
-    table = handle_output("row","System Uptime","1 day(s)",table)
+    table = handle_table("row","System Uptime","1 day(s)",table)
   end
   return table
 end
 
 def process_sys_info()
-  table = handle_output("title","System Information","","")
+  table = handle_table("title","System Information","","")
   table = process_sys_model(table)
   table = process_obp_ver(table)
   table = process_ilom_ver(table)
   table = process_ldom_ver(table)
   table = process_sys_mem(table)
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
 end
 
 # Get /etc/system info
@@ -72,7 +72,7 @@ end
 # Process /etc/system info
 
 def process_etc_sys_info()
-  table        = handle_output("title","Kernel Parameter Information","","")
+  table        = handle_table("title","Kernel Parameter Information","","")
   etc_sys_info = get_etc_sys_info()
   etc_sys_info.each do |line|
     line = line.chomp
@@ -90,11 +90,11 @@ def process_etc_sys_info()
       end
       if item_name.to_s.match(/[A-z]/)
         if item_val
-          table = handle_output("row",item_name,item_val,table)
+          table = handle_table("row",item_name,item_val,table)
         end
       end
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   return
 end

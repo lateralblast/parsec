@@ -3,12 +3,12 @@
 # Process the Zone information.
 
 def process_zones()
-  table      = handle_output("title","Zone Information","","")
+  table      = handle_table("title","Zone Information","","")
   file_name  = "/sysconfig/zoneadm-list-iv.out"
   file_array = exp_file_to_array(file_name)
   file_array.each do |line|
-    table = handle_output("row","Zone",line,table)
+    table = handle_table("row","Zone",line,table)
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
 end
 

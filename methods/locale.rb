@@ -12,16 +12,16 @@ def process_locale_info()
   file_array = get_locale_info()
   if file_array
     title = "Locale Information"
-    table = handle_output("title",title,"","")
+    table = handle_table("title",title,"","")
     file_array.each do |line|
       items      = line.split(/\=/)
       locale_str = items[0]
       locale_val = items[1]
       locale_val = locale_val.gsub(/"/,'')
       row        = [locale_str,locale_val]
-      table      = handle_output("row","",row,table)
+      table      = handle_table("row","",row,table)
     end
-    table = handle_output("end","","",table)
+    table = handle_table("end","","",table)
   end
   return
 end

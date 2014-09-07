@@ -1,7 +1,7 @@
 # Host related code
 
 def process_host_info()
-  table = handle_output("title","Host Information","","")
+  table = handle_table("title","Host Information","","")
   table = process_host_name(table)
   table = process_model_name(table)
   table = process_sys_mem(table)
@@ -19,7 +19,7 @@ def process_host_info()
   table = process_sys_boot(table)
   table = process_sys_uptime(table)
   table = process_install_cluster(table)
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
 end
 
 # Get Sys/Host ID
@@ -32,9 +32,9 @@ end
 def process_host_id(table)
   host_id = get_host_id()
   if $masked == 0
-    table = handle_output("row","HostID",host_id,table)
+    table = handle_table("row","HostID",host_id,table)
   else
-    table = handle_output("row","HostID","XXXXXXXX",table)
+    table = handle_table("row","HostID","XXXXXXXX",table)
   end
   return table
 end
@@ -52,10 +52,10 @@ def process_host_name(table)
   host_name = get_host_name()
   if $masked == 0
     if host_name
-      table = handle_output("row","Hostname",host_name,table)
+      table = handle_table("row","Hostname",host_name,table)
     end
   else
-    table = handle_output("row","Hostname","explorer-host",table)
+    table = handle_table("row","Hostname","explorer-host",table)
   end
   return table
 end

@@ -155,6 +155,13 @@ Ruby Gems:
 - pathname
 - hex_string
 - terminal-table
+- prawn
+- prawn/table
+- pathname
+- etc
+- fastimage
+- unpack
+- enumerator
 
 A base set of firmware information is provided.
 This information is created using [oort](https://github.com/lateralblast/oort).

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.4.5
+# Version:      0.4.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -21,8 +21,22 @@ require 'getopt/std'
 require 'pathname'
 require 'hex_string'
 require 'terminal-table'
+require 'prawn'
+require 'prawn/table'
+require 'pathname'
+require 'etc'
+require 'fastimage'
+require 'unpack'
+require 'enumerator'
 
-options   = "abcdehlmvACDEHIKLMOSVZd:f:s:w:R:o:"
+$default_font_size = 12
+$section_font_size = 28
+$heading_font_size = 18
+$table_font_size   = 9
+
+$output_mode = "text"
+
+options   = "abcdehlmvACDEHIKLMOPSTVZd:f:s:w:R:o:"
 $pigz_bin = %x[which pigz].chomp
 
 # Set up some script related variables
@@ -124,6 +138,8 @@ def print_usage(options)
   puts "-d: Set Explorer directory"
   puts "-l: List explorers"
   puts "-a: Process all explorers"
+  puts "-P: Output in PDF mode"
+  puts "-T: Output in text mode (default)"
   puts
   puts "Reporting:"
   puts
@@ -189,6 +205,22 @@ begin
   opt = Getopt::Std.getopts(options)
 rescue
   print_usage(options)
+end
+
+# Output mode
+
+if opt["T"]
+  $output_mode = "text"
+else
+  if opt["P"]
+    $output_mode = "pdf"
+  else
+    if opt["o"]
+      $output_mode = "file"
+    else
+      $output_mode = "text"
+    end
+  end
 end
 
 # Mask data
@@ -266,6 +298,23 @@ else
     end
   end
   $exp_file = $exp_dir+"/"+$exp_file
+end
+
+if opt["P"]
+  $output_mode   = "file"
+  $output_file   = "/tmp/parsec.output"
+  hostname       = opt["s"]
+  document_title = "Oracle Explorer Report for "+host_name
+  customer_name  = ""
+  output_file    = "output/"+host_name+".pdf"
+  pdf            = Prawn::Document.new
+  File.open($output_file,"w")
+end
+
+if opt["o"]
+  $output_mode = "file"
+  $output_file = opt["o"]
+  File.open($output_file,"w")
 end
 
 # Set work directory

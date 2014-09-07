@@ -51,7 +51,7 @@ def process_kernel_ver(table)
   else
     kernel_ver = get_kernel_ver()
   end
-  table      = handle_output("row","Kernel Version",kernel_ver,table)
+  table      = handle_table("row","Kernel Version",kernel_ver,table)
   return table
 end
 
@@ -75,7 +75,7 @@ def process_mod_info()
   if file_array
     title = "Kernel Module Information"
     row   = ['Module','Information','Status']
-    table = handle_output("title",title,row,"")
+    table = handle_table("title",title,row,"")
     file_array.each do |line|
       if !line.match(/Loadaddr/)
         mod_info = line[29..-1]
@@ -94,10 +94,10 @@ def process_mod_info()
           mod_status = ""
         end
         row   = [mod_name,mod_info,mod_status]
-        table = handle_output("row","",row,table)
+        table = handle_table("row","",row,table)
       end
     end
-    table = handle_output("end","","",table)
+    table = handle_table("end","","",table)
   end
   return
 end

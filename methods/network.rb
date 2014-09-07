@@ -13,7 +13,7 @@ def process_ip_info(type)
   if file_array
     title = type.upcase+" Kernel Information"
     row   = ['Paramater','Value']
-    table = handle_output("title",title,row,"")
+    table = handle_table("title",title,row,"")
     file_array.each_with_index do |line,counter|
       if line.match(/\(/)
         param = line.split(/\(/)[0]
@@ -22,11 +22,11 @@ def process_ip_info(type)
         value = value.gsub(/\s+/,'')
         if value.match(/[0-9]/) and !value.match(/[A-z]/)
           row   = [param,value]
-          table = handle_output("row","",row,table)
+          table = handle_table("row","",row,table)
         end
       end
     end
-    table = handle_output("end","","",table)
+    table = handle_table("end","","",table)
   end
   return
 end

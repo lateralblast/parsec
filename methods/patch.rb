@@ -26,7 +26,7 @@ def process_patch_info()
   if file_array
     title = "Patch Information"
     row   = [ 'Patch', 'Install Date', 'Packages' ]
-    table = handle_output("title",title,row,"")
+    table = handle_table("title",title,row,"")
     file_array.each do |line|
       if line.match(/^d/)
         items      = line.split(/\s+/)
@@ -39,10 +39,10 @@ def process_patch_info()
           patch_pkgs = patch_pkgs.split(/, /)[0..1].join(", ")
         end
         row   = [ patch_no, patch_date, patch_pkgs ]
-        table = handle_output("row","",row,table)
+        table = handle_table("row","",row,table)
       end
     end
-    table = handle_output("end","","",table)
+    table = handle_table("end","","",table)
   end
   return
 end

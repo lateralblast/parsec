@@ -21,7 +21,7 @@ end
 def process_os_name(table)
   os_name = get_os_name()
   if os_name
-    table = handle_output("row","OS Name",os_name,table)
+    table = handle_table("row","OS Name",os_name,table)
   end
   return table
 end
@@ -36,7 +36,7 @@ end
 def process_os_ver(table)
   os_ver = get_os_ver()
   if os_ver
-    table = handle_output("row","OS Version",os_ver,table)
+    table = handle_table("row","OS Version",os_ver,table)
   end
   return table
 end
@@ -58,7 +58,7 @@ end
 def process_os_build(table)
   os_build = get_os_build()
   if os_build
-    table = handle_output("row","OS Build",os_build,table)
+    table = handle_table("row","OS Build",os_build,table)
   end
   return table
 end
@@ -73,7 +73,7 @@ end
 def process_os_date(table)
   os_date = get_os_date()
   if os_date
-    table = handle_output("row","OS Release",os_date,table)
+    table = handle_table("row","OS Release",os_date,table)
   end
   return table
 end
@@ -134,7 +134,7 @@ end
 def process_os_update(table)
   os_update = get_os_update()
   if os_update
-    table = handle_output("row","OS Update",os_update,table)
+    table = handle_table("row","OS Update",os_update,table)
   end
   return table
 end

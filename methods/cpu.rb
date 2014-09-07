@@ -15,7 +15,7 @@ end
 
 def process_core_no(table)
   core_no = get_core_no()
-  table   = handle_output("row","Cores",core_no,table)
+  table   = handle_table("row","Cores",core_no,table)
   return table
 end
 
@@ -65,9 +65,9 @@ def process_cpu_info()
     when /T1|T4-|T5-/
       thread_ratio = 4
     end
-    table = handle_output("title","Domain CPU Information","","")
+    table = handle_table("title","Domain CPU Information","","")
   else
-    table = handle_output("title","CPU Information","","")
+    table = handle_table("title","CPU Information","","")
   end
   cpu_info     = get_cpu_info()
   sys_model    = get_sys_model()
@@ -151,47 +151,47 @@ def process_cpu_info()
     #     cpu_family=get_cpu_family(cpu_mask)
         end
       end
-      table = handle_output("row","System Board",sys_board_no,table)
+      table = handle_table("row","System Board",sys_board_no,table)
       if sys_model.match(/T[0-9]/)
         core_no = (thread_count / thread_ratio)
         if cpu_no
-          table = handle_output("row","Core",core_no,table)
+          table = handle_table("row","Core",core_no,table)
         end
         if cpu_thread
-          table = handle_output("row","Thread",cpu_thread,table)
+          table = handle_table("row","Thread",cpu_thread,table)
         end
         thread_count = thread_count+1
       end
       if cpu_module
-        table = handle_output("row","Module",cpu_module,table)
+        table = handle_table("row","Module",cpu_module,table)
       end
       if cpu_no
-        table = handle_output("row","Socket",cpu_no,table)
+        table = handle_table("row","Socket",cpu_no,table)
       end
       if cpu_status
-        table = handle_output("row","Status",cpu_status,table)
+        table = handle_table("row","Status",cpu_status,table)
       end
       if cpu_mask
-        table = handle_output("row","Mask",cpu_mask,table)
+        table = handle_table("row","Mask",cpu_mask,table)
       end
       if cpu_speed
-        table = handle_output("row","Speed",cpu_speed,table)
+        table = handle_table("row","Speed",cpu_speed,table)
       end
       if cpu_cache
-        table = handle_output("row","Cache",cpu_cache,table)
+        table = handle_table("row","Cache",cpu_cache,table)
       end
       if cpu_list
-        table = handle_output("row","IDs",cpu_list,table)
+        table = handle_table("row","IDs",cpu_list,table)
       end
       if cpu_type
-        table = handle_output("row","Type",cpu_type,table)
+        table = handle_table("row","Type",cpu_type,table)
       end
       cpu_count = cpu_count+1
       if counter < length-1 and cpu_count >= 1
-        table = handle_output("line","","",table)
+        table = handle_table("line","","",table)
       end
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   return
 end

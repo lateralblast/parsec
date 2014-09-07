@@ -118,7 +118,7 @@ LSB Type  LPID   RvID,DvID,VnID       BDF       State Act,  Max   Name          
 
 def process_io_info()
   model_name = get_model_name()
-  table      = handle_output("title","IO Information","","")
+  table      = handle_table("title","IO Information","","")
   io_info    = get_io_info()
   counter    = 0
   io_count   = 0
@@ -135,7 +135,7 @@ def process_io_info()
     io_path = get_io_path(device,count)
     ctlr_no = "c1"
     table = process_ctlr_info(table,io_name,io_path,ctlr_no)
-    table = handle_output("line","","",table)
+    table = handle_table("line","","",table)
   end
   line_count = 0
   io_info.each do |line|
@@ -205,7 +205,7 @@ def process_io_info()
       when /M[3-9]0/
         io_name = io_line[-1]
         if sys_board_no
-          table   = handle_output("row","IOU",sys_board_no,table)
+          table   = handle_table("row","IOU",sys_board_no,table)
         end
         io_type = io_line[1]
         io_path = io_info[counter].gsub(/\s+/,"")
@@ -249,24 +249,24 @@ def process_io_info()
       else
         io_type  = io_line[0]
         io_speed = io_line[1]
-        table    = handle_output("row","Speed",io_speed,table)
+        table    = handle_table("row","Speed",io_speed,table)
         io_type  = io_line[0]
         io_slot = io_line[2]
       end
       if io_type
-        table = handle_output("row","Type",io_type,table)
+        table = handle_table("row","Type",io_type,table)
       end
       if io_port
-        table = handle_output("row","Port",io_port,table)
+        table = handle_table("row","Port",io_port,table)
       end
       if io_bus
-        table = handle_output("row","Bus",io_bus,table)
+        table = handle_table("row","Bus",io_bus,table)
       end
       if io_status
-        table = handle_output("row","Bus",io_status,table)
+        table = handle_table("row","Bus",io_status,table)
       end
       if io_name
-        table = handle_output("row","Name",io_name,table)
+        table = handle_table("row","Name",io_name,table)
       end
       if !model_name.match(/480R/)
         if model_name.match(/T2/)
@@ -283,14 +283,14 @@ def process_io_info()
         io_path = io_path.gsub(/okay/,'')
       end
       if io_path
-        table = handle_output("row","Path",io_path,table)
+        table = handle_table("row","Path",io_path,table)
       end
       if io_slot
-        table = handle_output("row","Slot",io_slot,table)
+        table = handle_table("row","Slot",io_slot,table)
       end
       ctlr_no = get_ctlr_no(io_path)
       if ctlr_no.match(/[0-9]/)
-        table = handle_output("row","Controller",ctlr_no,table)
+        table = handle_table("row","Controller",ctlr_no,table)
       end
       if io_path
         if model_name.match(/V1/)
@@ -302,58 +302,58 @@ def process_io_info()
         end
       end
       if drv_name
-        table = handle_output("row","Driver",drv_name,table)
+        table = handle_table("row","Driver",drv_name,table)
       end
       if inst_no
-        table = handle_output("row","Instance",inst_no,table)
+        table = handle_table("row","Instance",inst_no,table)
       end
       if io_path.match(/network/)
         port_no   = io_path[-1]
-        table     = handle_output("row","Port",port_no,table)
+        table     = handle_table("row","Port",port_no,table)
         aggr_name = process_aggr_info(dev_name)
         if aggr_name
-          table = handle_output("row","Aggregate",aggr_name,table)
+          table = handle_table("row","Aggregate",aggr_name,table)
           if_hostname = get_if_hostname(aggr_name)
         else
           if_name = drv_name+inst_no
           if $masked == 0
-            table = handle_output("row","Interface",if_name,table)
+            table = handle_table("row","Interface",if_name,table)
           else
-            table = handle_output("row","Interface","xxxxxxxx",table)
+            table = handle_table("row","Interface","xxxxxxxx",table)
           end
           if_hostname = get_if_hostname(if_name)
         end
         if if_hostname
           if $masked == 0
-            table = handle_output("row","Hostname",if_hostname,table)
+            table = handle_table("row","Hostname",if_hostname,table)
           else
-            table = handle_output("row","Hostname","xxxxxxxx",table)
+            table = handle_table("row","Hostname","xxxxxxxx",table)
           end
           if_ip = get_hostname_ip(if_hostname)
           if if_ip
             if $masked == 0
-              table = handle_output("row","IP",if_ip,table)
+              table = handle_table("row","IP",if_ip,table)
             else
-              table = handle_output("row","IP","XXX.XXX.XXX.XXX",table)
+              table = handle_table("row","IP","XXX.XXX.XXX.XXX",table)
             end
           end
         end
       end
-#      puts table,io_name,io_path,ctlr_no
       table = process_ctlr_info(table,io_name,io_path,ctlr_no)
       if line_count < length
-        table = handle_output("line","","",table)
+        table = handle_table("line","","",table)
       end
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   if $io_fw_urls[0]
-    puts
+    handle_output("")
     $io_fw_urls.each_with_index do |url, index|
-      ref = index+1
-      puts "["+ref.to_s+"] "+url
+      ref    = index+1
+      output = "["+ref.to_s+"] "+url
+      handle_output(output)
     end
-    puts
+    handle_output("")
   end
   return
 end

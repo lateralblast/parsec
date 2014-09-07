@@ -11,7 +11,7 @@ end
 # Process eeprom information
 
 def process_eeprom_info()
-  table      = handle_output("title","EEPROM Information","","")
+  table      = handle_table("title","EEPROM Information","","")
   file_array = get_eeprom_info()
   file_array.each do |line|
     line.chomp
@@ -20,16 +20,16 @@ def process_eeprom_info()
       if parameter.match(/nvram/)
         if $masked == 0
           if value
-            table = handle_output("row",parameter,value,table)
+            table = handle_table("row",parameter,value,table)
           end
         end
       else
         if value
-          table = handle_output("row",parameter,value,table)
+          table = handle_table("row",parameter,value,table)
         end
       end
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   return
 end

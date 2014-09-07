@@ -35,14 +35,14 @@ def process_sys_mem(table)
   if model_name.match(/^T/)
     total_mem = get_total_mem()
     if sys_mem
-      table = handle_output("row","Domain Memory",sys_mem,table)
+      table = handle_table("row","Domain Memory",sys_mem,table)
     end
     if total_mem
-      table = handle_output("row","System Memory",total_mem,table)
+      table = handle_table("row","System Memory",total_mem,table)
     end
   else
     if sys_mem
-      table = handle_output("row","Memory",sys_mem,table)
+      table = handle_table("row","Memory",sys_mem,table)
     end
   end
   return table
@@ -58,14 +58,14 @@ end
 # Process Memory information
 
 def process_mem_info()
-  table          = handle_output("title","Memory Information","","")
+  table          = handle_table("title","Memory Information","","")
   sys_model      = get_sys_model()
   sys_mem        = get_sys_mem()
   if sys_mem
-    table = handle_output("row","System Memory",sys_mem,table)
+    table = handle_table("row","System Memory",sys_mem,table)
   end
   if !sys_model.match(/V120/)
-    table = handle_output("line","","",table)
+    table = handle_table("line","","",table)
   end
   mem_info       = get_mem_info()
   length         = mem_info.grep(/[0-9]/).length
@@ -161,44 +161,44 @@ def process_mem_info()
       end
       if mem_size or mem_group
         if sys_board_no
-          table = handle_output("row","System Board",sys_board_no,table)
+          table = handle_table("row","System Board",sys_board_no,table)
         end
         if mem_controller
-          table = handle_output("row","Memory Controller",mem_controller,table)
+          table = handle_table("row","Memory Controller",mem_controller,table)
         end
         if mem_bank
-          table = handle_output("row","Memory Bank",mem_bank,table)
+          table = handle_table("row","Memory Bank",mem_bank,table)
         end
         if mem_group
-          table = handle_output("row","Group(s)",mem_group,table)
+          table = handle_table("row","Group(s)",mem_group,table)
         end
         if mem_size
-          table = handle_output("row","Size",mem_size,table)
+          table = handle_table("row","Size",mem_size,table)
         end
         if mem_status
-          table = handle_output("row","Status",mem_status,table)
+          table = handle_table("row","Status",mem_status,table)
         end
         if mem_dimms
-          table = handle_output("row","DIMMs",mem_dimms,table)
+          table = handle_table("row","DIMMs",mem_dimms,table)
         end
         if mem_dimm_size
-          table = handle_output("row","DIMM Size",mem_dimm_size,table)
+          table = handle_table("row","DIMM Size",mem_dimm_size,table)
         end
         if mem_mirror
-          table = handle_output("row","Mirror",mem_mirror,table)
+          table = handle_table("row","Mirror",mem_mirror,table)
         end
         if mem_interleave
-          table = handle_output("row","Interleave",mem_interleave,table)
+          table = handle_table("row","Interleave",mem_interleave,table)
         end
         mem_count = mem_count+1
         if counter < length and mem_count >= 1
-          table = handle_output("line","","",table)
+          table = handle_table("line","","",table)
         end
         previous = line
       end
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   return
 end
 

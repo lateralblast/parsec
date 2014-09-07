@@ -89,4 +89,6 @@
 # Improved firmware URL reporting
 # 0.4.5: Thu  4 Sep 2014 09:04:11 AEST
 # Improved OBP version determination
+# 0.4.6: Sun  7 Sep 2014 10:40:34 AEST
+# Added initial support for multiple types of output
 

@@ -37,15 +37,15 @@ def process_disk_info(table,disk_name)
       disk_id=disk_data[0].split(/\s+/)[0]
     end
     if disk_id
-      table = handle_output("row","Disk",disk_id,table)
+      table = handle_table("row","Disk",disk_id,table)
     end
     disk_vendor = disk_data[4].split(/ Product/)[0].gsub(/\s+/,'')
     if disk_vendor
-      table = handle_output("row","Vendor",disk_vendor,table)
+      table = handle_table("row","Vendor",disk_vendor,table)
     end
     disk_model  = disk_data[5].split(/ Revision/)[0].gsub(/^\s+/,'').gsub(/\s+/,' ')
     if disk_model
-      table = handle_output("row","Model",disk_model,table)
+      table = handle_table("row","Model",disk_model,table)
     end
     if disk_model.match(/CD|DVD/)
       disk_serial = "N/A"
@@ -53,12 +53,12 @@ def process_disk_info(table,disk_name)
       disk_serial = disk_data[7].split(/ Size/)[0].gsub(/\s+/,'')
       disk_path   = get_disk_path(disk_id)
       if disk_path
-        table = handle_output("row","Path",disk_path,table)
+        table = handle_table("row","Path",disk_path,table)
       end
     end
     disk_fw = disk_data[6].split(/ Serial/)[0].gsub(/\s+/,'')
     if disk_fw
-      table = handle_output("row","Installed Firmware",disk_fw,table)
+      table = handle_table("row","Installed Firmware",disk_fw,table)
     end
     # Remove SUN* from Disk Model
     # E.g. ST914602SSUN146G -> ST914602S
@@ -70,14 +70,14 @@ def process_disk_info(table,disk_name)
     end
     if disk_serial
       if $masked == 0
-        table = handle_output("row","Serial",disk_serial,table)
+        table = handle_table("row","Serial",disk_serial,table)
       else
-        table = handle_output("row","Serial","XXXXXXXX",table)
+        table = handle_table("row","Serial","XXXXXXXX",table)
       end
     end
     disk_size = disk_data[8].split(/ </)[0].gsub(/\s+/,'')
     if disk_size
-      table = handle_output("row","Size",disk_size,table)
+      table = handle_table("row","Size",disk_size,table)
     end
     disk_index = get_disk_index(disk_id)
     process_disk_sd_info(table,disk_index)
@@ -111,7 +111,7 @@ def handle_disk_sd_info(table,disk_data)
   if !disk_id.match(/^sd|^ssd/)
     disk_id = disk_data[0].split(/\s+/)[0]
   end
-  table = handle_output("row","SD Name",disk_id,table)
+  table = handle_table("row","SD Name",disk_id,table)
   return table
 end
 
@@ -163,9 +163,9 @@ def process_avail_disk_fw(table,disk_model,disk_fw)
         readme_url = fw_line[2]
         patch_url  = fw_line[3]
         if avail_fw > disk_fw
-          table = handle_output("row","Available Firmware",avail_fw,table)
-          table = handle_output("row","Firmware README",readme_url,table)
-          table = handle_output("row","Firmware Patch",patch_url,table)
+          table = handle_table("row","Available Firmware",avail_fw,table)
+          table = handle_table("row","Firmware README",readme_url,table)
+          table = handle_table("row","Firmware Patch",patch_url,table)
         end
       end
     end

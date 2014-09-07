@@ -24,11 +24,11 @@ def process_lu_info()
   file_array = get_lu_status()
   lu_current = ""
   if file_array
-    puts
+    handle_output("")
     counter = 0
     title   = "Live Upgrade Status"
     row     = ['Name', 'Complete','Active Now','Active on Reboot']
-    table   = handle_output("title",title,row,"")
+    table   = handle_table("title",title,row,"")
     file_array.each do |line|
       line        = line.chomp
       items       = line.split(/\s+/)
@@ -45,20 +45,20 @@ def process_lu_info()
           counter = counter+1
         end
         row   = [lu_name,is_complete,active_now,active_on_reboot]
-        table = handle_output("row","",row,table)
+        table = handle_table("row","",row,table)
       end
     end
-    table = handle_output("end","","",table)
+    table = handle_table("end","","",table)
   end
   file_array = get_lu_tab()
   lu_name    = ""
   lu_fs      = ""
   lu_slice   = ""
   if file_array
-    puts
+    handle_output("")
     title = "Live Upgrade Disk Layout"
     row   = ['Name', 'ID','Filesystem','Slice/Pool','Device']
-    table = handle_output("title",title,row,"")
+    table = handle_table("title",title,row,"")
     file_array.each do |line|
       if !line.match(/^#/)
         line     = line.chomp
@@ -94,20 +94,20 @@ def process_lu_info()
             end
           end
           row   = [lu_name,lu_id,lu_fs,lu_slice,lu_dev]
-          table = handle_output("row","",row,table)
+          table = handle_table("row","",row,table)
         end
       end
     end
-    table = handle_output("end","","",table)
+    table = handle_table("end","","",table)
   end
   if lu_current.match(/[A-z]/)
     file_array = get_lu_fs_info(lu_current)
     if file_array
-      puts
+      handle_output("")
       lu_id = 0
       title = "Live Upgrade Filesystem Information ("+lu_current+")"
       row   = ['Filesystem','Type','Mount']
-      table = handle_output("title",title,row,"")
+      table = handle_table("title",title,row,"")
       file_array.each do |line|
         line        = line.chomp
         items       = line.split(/\s+/)
@@ -133,11 +133,11 @@ def process_lu_info()
               lu_id = lu_id + 1
             end
             row   = [lu_fs_name,lu_fs_type,lu_fs_mount]
-            table = handle_output("row","",row,table)
+            table = handle_table("row","",row,table)
           end
         end
       end
-      table = handle_output("end","","",table)
+      table = handle_table("end","","",table)
     end
   end
   return

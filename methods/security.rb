@@ -8,7 +8,7 @@ def process_security(report_type)
   row        = ""
   file_array = ""
   comment    = ""
-  puts
+  handle_output("")
   $defaults.each do |item|
     found      = 0
     items      = item.split(/,/)
@@ -19,8 +19,8 @@ def process_security(report_type)
     if report_type.match(/all|security/) or file_name.match(/#{report_type}/)
       if curr_name != file_name
         if curr_name != ""
-          puts table
-          puts
+          handle_output(table)
+          handle_output("")
         end
         curr_name  = file_name
         title      = "Security Settings ("+file_name+")"
@@ -55,8 +55,8 @@ def process_security(report_type)
       end
     end
     if item == $defaults.last
-      puts table
-      puts
+      handle_output(table)
+      handle_output("")
     end
   end
   return

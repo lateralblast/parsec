@@ -24,14 +24,14 @@ def process_ilom_ver(table)
   if model_name.match(/^T/)
     (ilom_ver,ilom_rev) = get_ilom_ver(model_name)
     if ilom_ver
-      table = handle_output("row","Installed ILOM Version",ilom_ver,table)
-      table = handle_output("row","Installed ILOM Build",ilom_rev,table)
+      table = handle_table("row","Installed ILOM Version",ilom_ver,table)
+      table = handle_table("row","Installed ILOM Build",ilom_rev,table)
       avail_ilom  = get_avail_ilom_ver(model_name)
       latest_ilom = compare_ver(ilom_ver,avail_ilom)
       if latest_ilom == avail_ilom
         avail_ilom = avail_ilom+" (Newer)"
       end
-      table = handle_output("row","Available ILOM Version",avail_ilom,table)
+      table = handle_table("row","Available ILOM Version",avail_ilom,table)
     end
   end
   return table

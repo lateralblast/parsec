@@ -11,15 +11,15 @@ end
 # Process coreadm infomation
 
 def process_coreadm_info()
-  table        = handle_output("title","Coreadm Configuration","","")
+  table        = handle_table("title","Coreadm Configuration","","")
   coreadm_info = get_coreadm_info()
   coreadm_info.each do |line|
     (param,value) = line.split(": ")
     if param and value
       param = param.gsub(/^\s+/,'')
-      table = handle_output("row",param,value,table)
+      table = handle_table("row",param,value,table)
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   return
 end

@@ -15,14 +15,14 @@ def process_fru_info()
   length     = fru_info.grep(/^SYS/).length
   title      = "FRU Information"
   row        = [ 'Location', 'Name', 'Status' ]
-  table = handle_output("title",title,row,"")
+  table = handle_table("title",title,row,"")
   fru_info.each do |line|
     if line.match(/^SYS/)
       line  = line.gsub(/Not present/,"not-present")
       row   = line.split(/\s+/)
-      table = handle_output("row","",row,table)
+      table = handle_table("row","",row,table)
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   return
 end

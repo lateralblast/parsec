@@ -14,7 +14,7 @@ def process_install_cluster(table)
   install_cluster = get_install_cluster()
   install_cluster = install_cluster[0].split(/\=/)[1]
   if install_cluster
-    table = handle_output("row","Install Cluster",install_cluster,table)
+    table = handle_table("row","Install Cluster",install_cluster,table)
   end
   return table
 end
@@ -35,7 +35,7 @@ def process_pkg_info()
   if file_array
     title = "Package Information"
     row   = ['Package','Version','Install']
-    table = handle_output("title",title,row,"")
+    table = handle_table("title",title,row,"")
     file_array.each do |line|
       (prefix,info) = line.split(/: /)
       if prefix.match(/PKGINST/)
@@ -49,10 +49,10 @@ def process_pkg_info()
       end
       if prefix.match(/FILES/)
         row   = [pkg_name,pkg_ver,pkg_date]
-        table = handle_output("row","",row,table)
+        table = handle_table("row","",row,table)
       end
     end
-    table = handle_output("end","","",table)
+    table = handle_table("end","","",table)
   end
   return
 end

@@ -1,10 +1,10 @@
 # OBP related code
 
 def process_obp_info()
-  table = handle_output("title","OBP Information","","")
+  table = handle_table("title","OBP Information","","")
   table = process_sys_model(table)
   table = process_obp_ver(table)
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
 end
 
 # Get XCP version
@@ -79,13 +79,13 @@ def process_obp_ver(table)
       avail_xcp = avail_xcp+" (Newer)"
     end
     if curr_xcp
-      table = handle_output("row","Installed XCP Version",curr_xcp,table)
+      table = handle_table("row","Installed XCP Version",curr_xcp,table)
     end
     if avail_xcp
-      table = handle_output("row","Available XCP Version",avail_xcp,table)
+      table = handle_table("row","Available XCP Version",avail_xcp,table)
     end
     if curr_obp
-      table = handle_output("row","Installed OBP Version",curr_obp,table)
+      table = handle_table("row","Installed OBP Version",curr_obp,table)
     end
   else
     avail_obp  = get_avail_obp_ver(model_name)
@@ -94,10 +94,10 @@ def process_obp_ver(table)
       avail_obp = avail_obp+" (Newer)"
     end
     if curr_obp
-      table = handle_output("row","Installed OBP Version",curr_obp,table)
+      table = handle_table("row","Installed OBP Version",curr_obp,table)
     end
     if avail_obp
-      table = handle_output("row","Available OBP Version",avail_obp,table)
+      table = handle_table("row","Available OBP Version",avail_obp,table)
     end
   end
   return table

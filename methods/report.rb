@@ -164,9 +164,22 @@ def compare_ver(curr_fw,avail_fw)
     return avail_fw
   end
 end
+
+# Handle output
+
+def handle_output(output)
+  if $output_mode == "text"
+    puts  output
+  end
+  if $output_mode == "file"
+    $output_file.write(output)
+  end
+  return
+end
+
 # Generic output routine which formats text appropriately.
 
-def handle_output(type,title,row,table)
+def handle_table(type,title,row,table)
   if type.match(/title/)
     puts
     if row.to_s.match(/[A-z]/)
@@ -176,7 +189,7 @@ def handle_output(type,title,row,table)
     end
   end
   if type.match(/end/)
-    puts table
+    handle_output(table)
   end
   if type.match(/line/)
     table.add_separator
@@ -212,10 +225,10 @@ def process_file_name(table)
   file_name = file_name.basename.to_s
   if $masked == 0
     if file_name
-      table = handle_output("row","File",file_name,table)
+      table = handle_table("row","File",file_name,table)
     end
   else
-    table = handle_output("row","File","explorer.tar.gz",table)
+    table = handle_table("row","File","explorer.tar.gz",table)
   end
   return table
 end
@@ -224,7 +237,7 @@ end
 
 def process_dir_name(table)
   if $exp_dir
-    table = handle_output("row","Directory",$exp_dir,table)
+    table = handle_table("row","Directory",$exp_dir,table)
   end
   return table
 end
@@ -244,7 +257,7 @@ end
 def process_file_date(table)
   file_date = get_file_date()
   if file_date
-    table = handle_output("row","Date",file_date,table)
+    table = handle_table("row","Date",file_date,table)
   end
   return table
 end
@@ -263,7 +276,7 @@ end
 def process_file_time(table)
   file_time = get_file_time()
   if file_time
-    table = handle_output("row","Time",file_time,table)
+    table = handle_table("row","Time",file_time,table)
   end
   return table
 end

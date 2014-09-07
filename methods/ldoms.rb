@@ -49,17 +49,17 @@ def process_ldom_ver(table)
   model_name = get_model_name()
   if model_name.match(/^T/)
     (ldom_ver,hcp_ver,hmd_ver,cfg_ver,hyp_ver) = get_ldom_ver(model_name)
-    table       = handle_output("row","Hypervisor Control Protocol Version",hcp_ver,table)
-    table       = handle_output("row","Hypervisor MD Version",hmd_ver,table)
-    table       = handle_output("row","Hostconfig Version",cfg_ver,table)
-    table       = handle_output("row","Hypervisor Version",hyp_ver,table)
-    table       = handle_output("row","Installed LDom Version",ldom_ver,table)
+    table       = handle_table("row","Hypervisor Control Protocol Version",hcp_ver,table)
+    table       = handle_table("row","Hypervisor MD Version",hmd_ver,table)
+    table       = handle_table("row","Hostconfig Version",cfg_ver,table)
+    table       = handle_table("row","Hypervisor Version",hyp_ver,table)
+    table       = handle_table("row","Installed LDom Version",ldom_ver,table)
     avail_ldom  = get_avail_ldom_ver(model_name)
     latest_ldom = compare_ver(ldom_ver,avail_ldom)
     if latest_ldom == avail_ldom
       avail_ldom = avail_ldom+" (Newer)"
     end
-    table = handle_output("row","Available LDom Version",avail_ldom,table)
+    table = handle_table("row","Available LDom Version",avail_ldom,table)
   end
   return table
 end
@@ -108,7 +108,7 @@ def process_logical_domains()
       if dom_info[0].match(/^DOMAIN/)
         output = 1
         if counter != 0
-          table = handle_output("end","","",table)
+          table = handle_table("end","","",table)
         end
         counter  = counter+1
         dom_name = dom_info[1].split(/\=/)[1]
@@ -118,16 +118,16 @@ def process_logical_domains()
         end
         title    = "Logical Domain "+dom_name
         row      = ['Domain Items','Value']
-        table    = handle_output("title",title,row,"")
+        table    = handle_table("title",title,row,"")
       else
         if dom_info[0].match(/^[A-Z]/) and dom_info[0].match(/^V/)
-          table  = handle_output("line","","",table)
+          table  = handle_table("line","","",table)
           item   = dom_info[0]
           value  = "Value"
           if value
-            table  = handle_output("row",item,value,table)
+            table  = handle_table("row",item,value,table)
           end
-          table  = handle_output("line","","",table)
+          table  = handle_table("line","","",table)
         end
       end
       dom_info.each do |dom_value|
@@ -221,7 +221,7 @@ def process_logical_domains()
               end
             end
             if value
-              table = handle_output("row",item,value,table)
+              table = handle_table("row",item,value,table)
             end
           end
         end
@@ -229,7 +229,7 @@ def process_logical_domains()
     else
       if !line.match(/^VERSION|^VCPU|^MEMORY/)
         output = 1
-        table  = handle_output("line","","",table)
+        table  = handle_table("line","","",table)
         if line.match(/^IO|^MAU/)
           item   = line
         else
@@ -237,15 +237,15 @@ def process_logical_domains()
         end
         value  = "Value"
         if value
-          table  = handle_output("row",item,value,table)
+          table  = handle_table("row",item,value,table)
         end
-        table  = handle_output("line","","",table)
+        table  = handle_table("line","","",table)
       else
         output = 0
       end
     end
   end
-  table = handle_output("end","","",table)
+  table = handle_table("end","","",table)
   return
 end
 
@@ -256,7 +256,7 @@ def process_ldom_info()
   if model_name.match(/^T/)
     title   = "LDom Information"
     row     = ['Item','Value']
-    table   = handle_output("title",title,row,"")
+    table   = handle_table("title",title,row,"")
     table   = process_ldom_ver(table)
     counter = 0
     ldom_hosts = get_ldom_hosts()
@@ -266,9 +266,9 @@ def process_ldom_info()
       if $masked == 1
         ldom_host = ldom_no.downcase.gsub(/ /,"")
       end
-      table   = handle_output("row",ldom_no,ldom_host,table)
+      table   = handle_table("row",ldom_no,ldom_host,table)
     end
-    table = handle_output("end","","",table)
+    table = handle_table("end","","",table)
     process_logical_domains()
   end
   return
