@@ -321,16 +321,6 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
       end
       # If reached end of table print it and reset table array
       if line.match(/^\+/) and !next_line.match(/[A-z]/) and table == 1
-        # Check to see if we've reached the bottom of the page
-        ttf_string_height = get_ttf_string_length(pdf,$table_font_size,"A")
-        # Allow for spacing within table, heading, space around table, and footer
-        table_length = table_data.length
-        table_height = table_length*(ttf_string_height+10)
-        current_ypos = pdf.y
-        # If the table is longer than the remaining space on the page put in on a new page
-        if current_ypos-table_height < 0 or current_ypos < 30
-          pdf.start_new_page
-        end
         pdf.font_size($table_font_size)
         pdf.fill_color = $blue
         pdf.text table_title, :size => $table_font_size, :align => :justify
