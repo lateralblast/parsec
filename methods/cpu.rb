@@ -71,13 +71,13 @@ def process_cpu_info()
     title = "CPU Information"
     #table = handle_table("title","CPU Information","","")
   end
-  table      = Terminal::Table.new :title => title, :headings => [ 'Board', 'Module', 'Socket', 'Core', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs' ]
+  table      = Terminal::Table.new :title => title, :headings => [ 'Board, Module, Socket, Core, Thread', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs' ]
   cpu_info   = get_cpu_info()
   sys_model  = get_sys_model()
   length     = cpu_info.length
   t_count    = 0
   board_no   = "1"
-  cpu_no     = ""
+  cpu_no     = "1"
   core_no    = ""
   cpu_status = ""
   cpu_speed  = ""
@@ -163,7 +163,8 @@ def process_cpu_info()
         t_count = t_count+1
       end
       # 'Board', 'Module', 'Socket', 'Core', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs'
-      row = [ board_no, board_no, cpu_no, core_no, cpu_status, cpu_speed, cpu_mask, cp_cache, cpu_type, cpu_ids ]
+      cpu_info = board_no.to_s+", "+board_no.to_s+", "+cpu_no.to_s+", "+core_no.to_s+", "+cpu_thread.to_s
+      row = [ cpu_info, cpu_status, cpu_speed, cpu_mask, cp_cache, cpu_type, cpu_ids ]
       table.add_row(row)
     end
   end
