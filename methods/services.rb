@@ -7,7 +7,7 @@ def process_services()
   if file_array
     puts
     title = "Service"
-    table = Terminal::Table.new :title => title, :headings => ['Service', 'Status','Recommeded','Complies']
+    table = Terminal::Table.new :title => title, :headings => ['Service', 'Status','Recommended','Complies']
     file_array.each do |line|
       items   = line.split(/\s+/)
       state   = items[0]

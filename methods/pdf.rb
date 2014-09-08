@@ -22,20 +22,21 @@ end
 # http://www.computerhope.com/htmcolor.htm
 
 def setup_colors
-  $blue       = "0000FF"
-  $dark_blue  = "0000A0"
-  $cover_blue = "15317E"
-  $white      = "FFFFFF"
-  $black      = "000000"
-  $red        = "FF0000"
-  $green      = "00FF00"
-  $light_gray = "F2F2F2"
-  $gray       = "DDDDDD"
-  $dark_gray  = "333333"
-  $brown      = "A4441C"
-  $orange     = "F28157"
-  $light_gold = "FBFBBE"
-  $dark_gold  = "EBE389"
+  $blue        = "0000FF"
+  $dark_blue   = "0000A0"
+  $cover_blue  = "15317E"
+  $white       = "FFFFFF"
+  $black       = "000000"
+  $red         = "FF0000"
+  $light_green = "00FF00"
+  $green       = "009900"
+  $light_gray  = "F2F2F2"
+  $gray        = "DDDDDD"
+  $dark_gray   = "333333"
+  $brown       = "A4441C"
+  $orange      = "F28157"
+  $light_gold  = "FBFBBE"
+  $dark_gold   = "EBE389"
 end
 
 def create_bounding_box(pdf, bb_x, bb_y, bb_width,
@@ -322,12 +323,12 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
       # If reached end of table print it and reset table array
       if line.match(/^\+/) and !next_line.match(/[A-z]/) and table == 1
         pdf.font_size($table_font_size)
-        pdf.fill_color = $blue
-        pdf.text table_title, :size => $table_font_size, :align => :justify
-        pdf.text "\n", :size => $table_font_size, :align => :justify
+        #pdf.fill_color = $blue
+        #pdf.text table_title, :size => $table_font_size, :align => :justify
+        #pdf.text "\n", :size => $table_font_size, :align => :justify
         pdf.fill_color = $black
         # If line is empty, ie space after table, render table
-        pdf.table(table_data) do
+        pdf.table(table_data, :cell_style => { :inline_format => true } ) do
           pdf.fill_color = $black
           style(row(0), :background_color => $blue, :text_color => $white)
 #          column(0..2).width=pdf.bounds.right/6
@@ -387,9 +388,6 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
               pdf.draw_text(text_string, :at => [ x_pos, y_pos ] )
               current_ypos = pdf.y
               toc.push("#{text_string},#{pdf.page_count}")
-              if current_ypos-table_height < 0 or current_ypos < 30
-                pdf.start_new_page
-              end
             end
           end
         end
@@ -397,7 +395,14 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
       end
       # If not the start or end of the table get the contents of the cell and
       # put them into an array
-      if table == 1 and !line.match(/^\+/) and !line.match(/#{title}/)
+      if title.match(/\(/)
+        title_string = title.gsub(/\(|\)/,"")
+        line_string  = line.gsub(/\(|\)/,"")
+      else
+        title_string = title
+        line_string  = line
+      end
+      if table == 1 and !line.match(/^\+/) and !line_string.match(/#{title_string}/) or line.match(/Status/)
         cells  = line.split("\|")
         cells  = cells[0..-2]
         cell_1 = cells[1].gsub(/^\s+/,"").gsub(/\s+$/,"")
@@ -405,6 +410,9 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
           row_data = [cell_1]
         else
           cell_2 = cells[2].gsub(/^\s+/,"").gsub(/\s+$/,"")
+          if cell_2.match(/Newer/)
+            cell_2 = "<color rgb='#{$red}'>#{cell_2}</color>"
+          end
           if !cells[3]
             row_data = [cell_1,cell_2]
           else
@@ -413,6 +421,12 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
               row_data = [cell_1,cell_2,cell_3]
             else
               cell_4 = cells[4].gsub(/^\s+/,"").gsub(/\s+$/,"")
+              if cell_4.match(/\*No\*/)
+                cell_4 = "<color rgb='#{$red}'>No</color>"
+              end
+              if cell_4.match(/Yes/)
+                cell_4 = "<color rgb='#{$green}'>Yes</color>"
+              end
               row_data = [cell_1,cell_2,cell_3,cell_4]
             end
           end

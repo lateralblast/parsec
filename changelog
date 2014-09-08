@@ -95,4 +95,6 @@
 # Cleaned up text file output
 # 0.4.8: Mon  8 Sep 2014 04:00:18 AEST
 # Initial PDF report support and various bug fixes
+# 0.4.8: Mon  8 Sep 2014 15:12:10 AEST
+# Cleaned up PDF and CPU output
 
