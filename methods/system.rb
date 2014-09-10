@@ -51,7 +51,7 @@ def process_sys_uptime(table)
   return table
 end
 
-def process_sys_info()
+def process_system()
   table = handle_table("title","System Information","","")
   table = process_sys_model(table)
   table = process_obp_ver(table)
@@ -71,7 +71,7 @@ end
 
 # Process /etc/system info
 
-def process_etc_sys_info()
+def process_etc_system()
   table        = handle_table("title","Kernel Parameter Information","","")
   etc_sys_info = get_etc_sys_info()
   etc_sys_info.each do |line|

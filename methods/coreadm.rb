@@ -10,7 +10,7 @@ end
 
 # Process coreadm infomation
 
-def process_coreadm_info()
+def process_coreadm()
   table        = handle_table("title","Coreadm Configuration","","")
   coreadm_info = get_coreadm_info()
   coreadm_info.each do |line|

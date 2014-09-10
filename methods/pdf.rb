@@ -249,6 +249,7 @@ def create_table_contents(pdf,toc)
   font_size      = 28
   pdf.fill_color = $dark_blue
   pdf.text "Table of Contents\n", size: font_size
+  pdf.outline.page :title => "Table of Contents", :destination => 2
   pdf.text " ", size: font_size
   pdf.fill_color = $black
   font_size      = $default_font_size
@@ -260,14 +261,13 @@ def create_table_contents(pdf,toc)
     text_length = get_ttf_string_length(pdf,font_size,"#{page_title}  #{page_number}")
     free_space  = pdf.bounds.width-text_length
     no_dots     = free_space/dot_length
-    no_dots     = no_dots.to_i
+    no_dots     = no_dots.to_i-1
     dot_string  = "."*no_dots
-    text_string = "#{page_title} #{dot_string} #{page_number}"
-    text_length = get_ttf_string_length(pdf,font_size,text_string)
-    if text_length < 537.6
-      text_string = "#{page_title} #{dot_string}  #{page_number}"
-    end
-    pdf.text text_string, size: font_size, :align => :right
+    test_string = "#{page_title} #{dot_string} #{page_number}"
+    text_length = get_ttf_string_length(pdf,font_size,test_string)
+    text_string = "<link anchor='#{page_title}'>#{page_title}</link> #{dot_string} #{page_number}"
+    pdf.outline.page :title => page_title, :destination => page_number
+    pdf.text text_string, size: font_size, :align => :right, :inline_format => true
   end
   return pdf
 end
@@ -287,10 +287,114 @@ def create_code_box(pdf,x,y,text_file)
   return pdf
 end
 
+def line_to_cells(line,section)
+  mdeol    = ""
+  row_data = []
+  cells    = line.split("\|")
+  cells    = cells[0..-2]
+  cell_1   = cells[1].gsub(/^\s+/,"").gsub(/\s+$/,"")
+  if !cells[2]
+    row_data = [cell_1]
+  else
+    cell_2 = cells[2].gsub(/^\s+/,"").gsub(/\s+$/,"")
+    if cell_2.match(/Newer/)
+      cell_2 = "<color rgb='#{$red}'>#{cell_2}</color>"
+    end
+    if !cells[3]
+      row_data = [cell_1,cell_2]
+    else
+      cell_3 = cells[3].gsub(/^\s+/,"").gsub(/\s+$/,"")
+      if !cells[4]
+        row_data = [cell_1,cell_2,cell_3]
+      else
+        cell_4 = cells[4].gsub(/^\s+/,"").gsub(/\s+$/,"")
+        if cell_4.match(/\*No\*/)
+          cell_4 = "<color rgb='#{$red}'>No</color>"
+        end
+        if cell_4.match(/Yes/)
+          cell_4 = "<color rgb='#{$green}'>Yes</color>"
+        end
+        row_data = [cell_1,cell_2,cell_3,cell_4]
+      end
+    end
+  end
+  return row_data
+end
+
+def process_handbook_info(pdf,toc,model)
+  if !File.directory?($handbook_dir) and !File.symlink($handbook_dir)
+    return poc
+  end
+  toc.push("Support Information,#{pdf.page_count}")
+  pdf.start_new_page
+  pdf.fill_color = $dark_blue
+  pdf.text "Support Information", :size => $section_font_size, :inline_format => true
+  pdf.text "\n"
+  pdf.fill_color $black
+  header     = get_handbook_header(model)
+  html_files = Dir.entries($handbook_dir).grep(/#{header}/)
+  spec_file  = html_files.grep(/Specifications/)[0]
+  list_file  = html_files.grep(/Components/)[0]
+  if File.exist?(spec_file)
+    toc.push("System Support Information,#{pdf.page_count}")
+  end
+  return poc
+end
+
+def process_model_info(pdf,toc,model)
+  if !File.directory?($image_dir) and !File.symlink($image_dir)
+    return poc
+  end
+  toc.push("Model Information,#{pdf.page_count}")
+  pdf.start_new_page
+  pdf.fill_color = $dark_blue
+  pdf.text "Model Information", :size => $section_font_size, :inline_format => true
+  pdf.text "\n"
+  pdf.fill_color $black
+  header = get_image_header(model)
+  image_names = [ "Front", "Front Open", "Top", "Left Open", "Right Open", "Rear", "Rear Open" ]
+  image_names.each do |image_name|
+    image_file = $image_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_zoom.jpg"
+    if File.exist?(image_file)
+      scale = 1
+      image_size   = FastImage.size(image_file)
+      image_width  = image_size[0]
+      page_width   = pdf.bounds.width
+      image_height = image_size[1]
+      page_height  = pdf.bounds.height
+      if image_height > page_height
+        scale = (page_height-100) / image_height
+      else
+        if image_width > page_width
+          scale = page_width / image_width
+        end
+      end
+      pdf.image image_file, :position => :center, :vposition => :center, :scale => scale
+      text_string = "View: "+image_name
+      text_width  = get_ttf_string_length(pdf,$default_font_size,text_string)
+      x_pos = page_width/2 - text_width/2
+      y_pos = page_height/2 - image_height*scale/2 - 30
+      pdf.draw_text(text_string, :at => [ x_pos, y_pos ] )
+      pdf.add_dest(text_string,pdf.dest_fit(pdf.page))
+      current_ypos = pdf.y
+      toc.push("#{text_string},#{pdf.page_count-1}")
+    end
+  end
+  return toc
+end
+
 def generate_pdf(pdf,document_title,output_pdf,customer_name)
   input_file = $output_file
   setup_colors()
-  Prawn::Document.generate output_pdf do |pdf|
+  Prawn::Document.generate(output_pdf,:info => {
+    :Title        => document_title.gsub(/:/," for"),
+    :Author       => $company_name,
+    :Subject      => document_title,
+    :Keywords     => "Oracle Explorer",
+    :Creator      => $author_name,
+    :Producer     => $script_name,
+    :CreationDate => Time.now
+  }) do |pdf|
     setup_fonts(pdf)
     file   = File.basename(output_pdf)
     pdf    = create_front_page(pdf,document_title,file,customer_name)
@@ -308,6 +412,22 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
     lines.each do |line|
       next_line = lines[lcount+1]
       sub_section_counter = 0
+      if next_line
+        if next_line.match(/OBP Information/)
+          pdf.start_new_page
+        end
+      end
+      # Get Model number
+      if section.match(/Host Information/)
+        if line.match(/Model/)
+          cells  = line.split(/\|/)
+          cell_1 = cells[1]
+          cell_2 = cells[2]
+          if cell_1.match(/Model/)
+            model = cell_2.gsub(/^\s+|\s+$/,"")
+          end
+        end
+      end
       # If top of table get title, create section head, and add to TOC
       if line.match(/^\+/) and next_line.match(/[A-z]/) and table == 0
         title   = next_line.split("|")[1].gsub(/^\s+|\s+$/,"")
@@ -316,6 +436,7 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
         pdf.start_new_page
         pdf.fill_color = $dark_blue
         pdf.text "#{section}", :size => $section_font_size, :inline_format => true
+        pdf.add_dest(section,pdf.dest_fit(pdf.page))
         pdf.text "\n"
         pdf.fill_color $black
         table = 1
@@ -328,7 +449,7 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
         #pdf.text "\n", :size => $table_font_size, :align => :justify
         pdf.fill_color = $black
         # If line is empty, ie space after table, render table
-        pdf.table(table_data, :cell_style => { :inline_format => true } ) do
+        pdf.table(table_data, :cell_style => { :inline_format => true }, :width => pdf.bounds.width ) do
           pdf.fill_color = $black
           style(row(0), :background_color => $blue, :text_color => $white)
 #          column(0..2).width=pdf.bounds.right/6
@@ -342,54 +463,7 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
         row_data   = []
         # If we are handling host information, insert hardware information
         if section.match(/Host Information/)
-          toc.push("Model Information,#{pdf.page_count}")
-          pdf.start_new_page
-          pdf.fill_color = $dark_blue
-          pdf.text "Model Information", :size => $section_font_size, :inline_format => true
-          pdf.text "\n"
-          pdf.fill_color $black
-          if model.match(/T[3,4]-1/)
-            model = model.gsub(/-/,"_")
-          end
-          case model
-          when /[M,T][3-9][0-9][0-9][0-9]/
-            header = "SE_"+model
-          when /[X,T]6[0-9][0-9][0-9]/
-            header = "SunBlade"+model
-          when /T[3,4][-,_]|M[10,5,6][-,_]/
-            header = "SPARC_"+model
-          when /T[1,2][0-9][0-9][0-9]|^V|X[2,4][0-9][0-9][0-9]/
-            header = "SunFire"+model
-          else
-            header = model
-          end
-          image_names = [ "Front", "Front Open", "Top", "Left Open", "Right Open", "Rear", "Rear Open" ]
-          image_names.each do |image_name|
-            image_file = $image_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_zoom.jpg"
-            if File.exist?(image_file)
-              scale = 1
-              image_size   = FastImage.size(image_file)
-              image_width  = image_size[0]
-              page_width   = pdf.bounds.width
-              image_height = image_size[1]
-              page_height  = pdf.bounds.height
-              if image_height > page_height
-                scale = (page_height-100) / image_height
-              else
-                if image_width > page_width
-                  scale = page_width / image_width
-                end
-              end
-              pdf.image image_file, :position => :center, :vposition => :center, :scale => scale
-              text_string = "View: "+image_name
-              text_width  = get_ttf_string_length(pdf,$default_font_size,text_string)
-              x_pos = page_width/2 - text_width/2
-              y_pos = page_height/2 - image_height*scale/2 - 30
-              pdf.draw_text(text_string, :at => [ x_pos, y_pos ] )
-              current_ypos = pdf.y
-              toc.push("#{text_string},#{pdf.page_count}")
-            end
-          end
+          toc = process_model_info(pdf,toc,model)
         end
         section = ""
       end
@@ -402,44 +476,13 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
         title_string = title
         line_string  = line
       end
-      if table == 1 and !line.match(/^\+/) and !line_string.match(/#{title_string}/) or line.match(/Status/)
-        cells  = line.split("\|")
-        cells  = cells[0..-2]
-        cell_1 = cells[1].gsub(/^\s+/,"").gsub(/\s+$/,"")
-        if !cells[2]
-          row_data = [cell_1]
-        else
-          cell_2 = cells[2].gsub(/^\s+/,"").gsub(/\s+$/,"")
-          if cell_2.match(/Newer/)
-            cell_2 = "<color rgb='#{$red}'>#{cell_2}</color>"
-          end
-          if !cells[3]
-            row_data = [cell_1,cell_2]
-          else
-            cell_3 = cells[3].gsub(/^\s+/,"").gsub(/\s+$/,"")
-            if !cells[4]
-              row_data = [cell_1,cell_2,cell_3]
-            else
-              cell_4 = cells[4].gsub(/^\s+/,"").gsub(/\s+$/,"")
-              if cell_4.match(/\*No\*/)
-                cell_4 = "<color rgb='#{$red}'>No</color>"
-              end
-              if cell_4.match(/Yes/)
-                cell_4 = "<color rgb='#{$green}'>Yes</color>"
-              end
-              row_data = [cell_1,cell_2,cell_3,cell_4]
-            end
-          end
-        end
+      if table == 1 and !line.match(/^\+/) and !line_string.match(/#{title_string}/) or line.match(/Complies/)
+        row_data = line_to_cells(line,section)
         table_data.push(row_data)
-        if section.match(/Host Information/)
-          if cell_1.match(/Model/)
-            model = cell_2
-          end
-        end
       end
       lcount = lcount+1
     end
+    #toc = process_handbook(pdf,toc,model)
     create_table_contents(pdf,toc)
     create_page_numbers(pdf)
   end

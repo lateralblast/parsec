@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.4.8
+# Version:      0.4.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -28,11 +28,17 @@ require 'etc'
 require 'fastimage'
 require 'unpack'
 require 'enumerator'
+require 'nokogiri'
 
 $default_font_size = 12
 $section_font_size = 28
 $heading_font_size = 18
 $table_font_size   = 10
+
+# Detauks for PDF
+
+$company_name = "Lateral Blast Pty Ltd"
+$author_name  = "Richard Spindler"
 
 $output_mode = "text"
 
@@ -44,15 +50,17 @@ $pigz_bin = %x[which pigz].chomp
 $methods_dir     = ""
 $information_dir = ""
 $firmware_dir    = ""
-$image_dir       = Dir.pwd+"/images"
+
+script_dir = File.basename($0)
+if !script_dir.match(/\//)
+  script_dir = Dir.pwd
+end
+$image_dir    = script_dir+"/images"
+$handbook_dir = script_dir+"/handbook"
 
 [ "methods", "information", "firmware" ].each do |test_dir|
   required_dir = eval("$#{test_dir}_dir")
   if !required_dir.match(/[A-z]/)
-    script_dir = File.basename($0)
-    if !script_dir.match(/\//)
-      script_dir = Dir.pwd
-    end
     required_dir = script_dir+"/"+test_dir
     if !File.directory?(required_dir) and !File.symlink?(required_dir)
       puts "Cannot locate "+test_dir+" directory ("+required_dir+")"
@@ -103,7 +111,7 @@ report["ldom"]     = "Report on LDom information"
 
 # Get script name
 
-def get_code_name
+def get_code_name()
   code_name = $0
   code_name = Pathname.new(code_name)
   code_name = code_name.basename.to_s
@@ -111,9 +119,11 @@ def get_code_name
   return code_name
 end
 
+$script_name = get_code_name()
+
 # Get version of script
 
-def get_code_ver
+def get_code_ver()
   code_ver = IO.readlines($0)
   code_ver = code_ver.grep(/^# Version/)
   code_ver = code_ver[0].to_s.split(":")

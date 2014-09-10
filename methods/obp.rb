@@ -1,6 +1,6 @@
 # OBP related code
 
-def process_obp_info()
+def process_obp()
   table = handle_table("title","OBP Information","","")
   table = process_sys_model(table)
   table = process_obp_ver(table)

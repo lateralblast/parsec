@@ -8,7 +8,7 @@ def get_ip_info(type)
   return file_array
 end
 
-def process_ip_info(type)
+def process_network(type)
   file_array = get_ip_info(type)
   if file_array
     title = type.upcase+" Kernel Information"

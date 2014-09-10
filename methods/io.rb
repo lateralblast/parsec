@@ -116,7 +116,7 @@ LSB Type  LPID   RvID,DvID,VnID       BDF       State Act,  Max   Name          
 
 # Process IO information
 
-def process_io_info()
+def process_io()
   model_name = get_model_name()
   table      = handle_table("title","IO Information","","")
   io_info    = get_io_info()

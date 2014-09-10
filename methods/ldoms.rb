@@ -251,7 +251,7 @@ end
 
 # Process LDOM information
 
-def process_ldom_info()
+def process_ldom()
   model_name = get_model_name()
   if model_name.match(/^T/)
     title   = "LDom Information"

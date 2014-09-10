@@ -69,7 +69,7 @@ def get_mod_info()
   return file_array
 end
 
-def process_mod_info()
+def process_modules()
   file_array = get_mod_info()
   load_array = get_mod_load()
   if file_array

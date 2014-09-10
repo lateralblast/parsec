@@ -18,7 +18,7 @@ end
 
 # Process patch info
 
-def process_patch_info()
+def process_patches()
   file_array   = get_patch_dates()
   patch_info   = get_patch_info()
   patch_date   = ""

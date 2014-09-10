@@ -20,7 +20,7 @@ end
 
 # Process Live Upgrade info
 
-def process_lu_info()
+def process_liveupgrade()
   file_array = get_lu_status()
   lu_current = ""
   if file_array

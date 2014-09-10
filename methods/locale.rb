@@ -8,7 +8,7 @@ def get_locale_info()
   return file_array
 end
 
-def process_locale_info()
+def process_locale()
   file_array = get_locale_info()
   if file_array
     title = "Locale Information"

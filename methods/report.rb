@@ -25,37 +25,37 @@ end
 
 def config_report(report,report_type)
   if report_type.match(/all|obp/)
-    process_obp_info()
+    process_obp()
   end
   if report_type.match(/all|host/)
-    process_host_info()
+    process_host()
   end
   if report_type.match(/all|eeprom/)
-    process_eeprom_info()
+    process_eeprom()
   end
   if report_type.match(/all|os|coreadm/)
-    process_coreadm_info()
+    process_coreadm()
   end
   if report_type.match(/all|os|dumpadm/)
-    process_dumpadm_info()
+    process_dumpadm()
   end
   if report_type.match(/all|os|explorer/)
-    process_exp_info()
+    process_explorer()
   end
   if report_type.match(/all|os/)
-    process_sys_info()
+    process_system()
   end
   if report_type.match(/all|cpu/)
-    process_cpu_info()
+    process_cpu()
   end
   if report_type.match(/all|memory/)
-    process_mem_info()
+    process_memory()
   end
   if report_type.match(/all|io|disk/)
-    process_io_info()
+    process_io()
   end
   if report_type.match(/all|kernel/)
-    process_etc_sys_info()
+    process_etc_system()
   end
   if report_type.match(/all|zones/)
     process_zones()
@@ -74,31 +74,34 @@ def config_report(report,report_type)
     process_services()
   end
   if report_type.match(/all|lu|liveupgrade/)
-    process_lu_info()
+    process_liveupgrade()
   end
   if report_type.match(/all|locale/)
-    process_locale_info()
+    process_locale()
   end
   if report_type.match(/all|modinfo/)
-    process_mod_info()
+    process_modules()
   end
   if report_type.match(/all|package/)
-    process_pkg_info()
+    process_packages()
   end
   if report_type.match(/all|patch/)
-    process_patch_info()
+    process_patches()
   end
   if report_type.match(/all|tcp/)
-    process_ip_info("tcp")
+    process_network("tcp")
   end
   if report_type.match(/all|udp/)
-    process_ip_info("udp")
+    process_network("udp")
   end
   if report_type.match(/all|ldom/)
-    process_ldom_info()
+    process_ldom()
   end
   if report_type.match(/all|fru/)
-    process_fru_info()
+    process_fru()
+  end
+  if report_type.match(/all|handbook/)
+    process_handbook()
   end
   handle_output("\n")
   return

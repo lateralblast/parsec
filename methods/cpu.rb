@@ -55,7 +55,7 @@ end
 
 # Process CPU information
 
-def process_cpu_info()
+def process_cpu()
   model_name = get_model_name()
   t_ratio    = 1
   if model_name.match(/^M|^T/)

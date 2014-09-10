@@ -1,6 +1,6 @@
 # Host related code
 
-def process_host_info()
+def process_host()
   table = handle_table("title","Host Information","","")
   table = process_host_name(table)
   table = process_model_name(table)

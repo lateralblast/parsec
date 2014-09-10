@@ -9,7 +9,7 @@ end
 
 # Process FRU information
 
-def process_fru_info()
+def process_fru()
   model_name = get_model_name()
   fru_info   = get_fru_info(model_name)
   length     = fru_info.grep(/^SYS/).length

@@ -42,3 +42,42 @@ def get_model_name()
   end
   return model_name
 end
+
+# Get header for handbook file
+
+def get_handbook_header(model)
+  case model
+  when /[M,T][3-9][0-9][0-9][0-9]/
+    header = "Sun SPARC Enterprise "+model
+  when /[X,T]6[0-9][0-9][0-9]/
+    header = "SunBlade"+model
+  when /T[3,4][-,_]|M[10,5,6][-,_]/
+    header = "SPARC "+model
+  when /T[1,2][0-9][0-9][0-9]|^V|X[2,4][0-9][0-9][0-9]/
+    header = "Sun SPARC Enterprise "+model
+  else
+    header = model
+  end
+  return header
+end
+
+# Get header for image file
+
+def get_image_header(model)
+  if model.match(/T[3,4]-1/)
+    model = model.gsub(/-/,"_")
+  end
+  case model
+  when /[M,T][3-9][0-9][0-9][0-9]/
+    header = "SE_"+model
+  when /[X,T]6[0-9][0-9][0-9]/
+    header = "SunBlade"+model
+  when /T[3,4][-,_]|M[10,5,6][-,_]/
+    header = "SPARC_"+model
+  when /T[1,2][0-9][0-9][0-9]|^V|X[2,4][0-9][0-9][0-9]/
+    header = "SunFire"+model
+  else
+    header = model
+  end
+  return header
+end

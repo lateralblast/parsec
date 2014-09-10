@@ -1,6 +1,6 @@
 # Explorer related code
 
-def process_exp_info()
+def process_explorer()
   table = handle_table("title","Explorer Information","","")
   table = process_customer_name(table)
   table = process_contract_id(table)

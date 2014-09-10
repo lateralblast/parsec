@@ -10,7 +10,7 @@ end
 
 # Process dumpadm infomation
 
-def process_dumpadm_info()
+def process_dumpadm()
   table        = handle_table("title","Dumpadm Configuration","","")
   dumpadm_info = get_dumpadm_info()
   dumpadm_info.each do |line|

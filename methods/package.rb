@@ -27,7 +27,7 @@ def get_pkg_info()
   return file_array
 end
 
-def process_pkg_info()
+def process_packages()
   file_array = get_pkg_info()
   pkg_name   = ""
   pkg_ver    = ""

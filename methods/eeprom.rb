@@ -10,7 +10,7 @@ end
 
 # Process eeprom information
 
-def process_eeprom_info()
+def process_eeprom()
   table      = handle_table("title","EEPROM Information","","")
   file_array = get_eeprom_info()
   file_array.each do |line|

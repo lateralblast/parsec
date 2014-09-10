@@ -57,7 +57,7 @@ end
 
 # Process Memory information
 
-def process_mem_info()
+def process_memory()
   table          = handle_table("title","Memory Information","","")
   sys_model      = get_sys_model()
   sys_mem        = get_sys_mem()
