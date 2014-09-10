@@ -20,7 +20,7 @@ def process_handbook_info_file(info_file)
             url = node.css("a").to_s.split(/"/)[1]
             items[title].push(url)
           else
-            text = node.css("td")[1..-1].text.gsub(/\n/," ").gsub(/^\s+|\s+$/,"").gsub(/ \s+/,", ")
+            title = node.css("b").text.gsub(/^\n/,"").gsub(/:/,"").gsub(/\s+/," ").gsub(/\n/," ")
             items[title].push(text)
           end
         end
@@ -185,7 +185,8 @@ def process_handbook_list_file(list_file)
     if notes[0]
       notes.each do |note|
         if note.match(/^[0-9] |[0-9][0-9] /)
-          note = note.gsub(/^\n/,"")
+          note = note.gsub(/^\n/,"").gsub(/\.\s+$/,".")
+          note = note.gsub(/\./,".\n").gsub(/^\n/,"")
           handle_output("#{note}")
         end
       end
