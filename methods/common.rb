@@ -49,7 +49,7 @@ def get_handbook_header(model)
   case model
   when /[M,T][3-9][0-9][0-9][0-9]/
     header = "Sun SPARC Enterprise "+model
-  when /[X,T]6[0-9][0-9][0-9]/
+  when /[X6,X8,T6][0-9][0-9][0-9]/
     header = "SunBlade"+model
   when /T[3,4][-,_]|M[10,5,6][-,_]/
     header = "SPARC "+model
