@@ -4,7 +4,6 @@
 
 def process_handbook_info_file(info_file)
   if File.exist?(info_file)
-    table  = handle_table("title","System Support Information","","")
     doc    = Nokogiri::HTML(File.open(info_file))
     facts  = doc.css("table")[3]
     info   = facts.css("tr")[4..-1]
