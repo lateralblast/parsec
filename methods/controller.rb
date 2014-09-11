@@ -52,19 +52,11 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
     if os_ver.match(/10|11/)
       if !hw_cfg_file.match(/prtpicl/)
         hba_serial = get_hba_serial(io_path,ctlr_no)
-        if $masked == 0
-          table = handle_table("row","Serial",hba_serial,table)
-        else
-          table = handle_table("row","Serial","XXXXXXXX",table)
-        end
+        table = handle_table("row","Serial",hba_serial,table)
       end
       hba_wwn = get_hba_wwn(io_path,ctlr_no)
       if hba_wwn
-        if $masked == 0
-          table = handle_table("row","Node WWN",hba_wwn,table)
-        else
-          table = handle_table("row","Node WWN","XXXXXXXX",table)
-        end
+        table = handle_table("row","Node WWN",hba_wwn,table)
       end
       hba_state = get_hba_state(io_path,ctlr_no)
       if !hw_cfg_file.match(/prtpicl/)

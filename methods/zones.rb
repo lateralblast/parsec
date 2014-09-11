@@ -11,6 +11,10 @@ def process_zones()
     if !line.match(/STATUS/)
       line = line.gsub(/^\s+/,"")
       row  = line.split(/\s+/)
+      if $masked == 1
+        row[1] = "MASKED"
+        row[3] = "MASKED"
+      end
       table.add_row(row)
     end
   end

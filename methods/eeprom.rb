@@ -17,16 +17,8 @@ def process_eeprom()
     line.chomp
     if !line.match(/data not available/)
       (parameter,value) = line.split(/\=/)
-      if parameter.match(/nvram/)
-        if $masked == 0
-          if value
-            table = handle_table("row",parameter,value,table)
-          end
-        end
-      else
-        if value
-          table = handle_table("row",parameter,value,table)
-        end
+      if value
+        table = handle_table("row",parameter,value,table)
       end
     end
   end

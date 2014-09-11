@@ -69,11 +69,7 @@ def process_disk_info(table,disk_name)
       table = process_avail_disk_fw(table,disk_model,disk_fw)
     end
     if disk_serial
-      if $masked == 0
-        table = handle_table("row","Serial",disk_serial,table)
-      else
-        table = handle_table("row","Serial","XXXXXXXX",table)
-      end
+      table = handle_table("row","Serial",disk_serial,table)
     end
     disk_size = disk_data[8].split(/ </)[0].gsub(/\s+/,'')
     if disk_size

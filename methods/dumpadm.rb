@@ -16,16 +16,8 @@ def process_dumpadm()
   dumpadm_info.each do |line|
     (param,value) = line.split(": ")
     param         = param.gsub(/^\s+/,'')
-    if param.match(/directory/)
-      if $masked == 0
-        if value
-          table = handle_table("row",param,value,table)
-        end
-      end
-    else
-      if value
-        table = handle_table("row",param,value,table)
-      end
+    if value
+      table = handle_table("row",param,value,table)
     end
   end
   table = handle_table("end","","",table)

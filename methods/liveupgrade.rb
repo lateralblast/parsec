@@ -40,10 +40,6 @@ def process_liveupgrade()
           lu_current = lu_name
         end
         active_on_reboot = items[3]
-        if $masked == 1
-          lu_name = "luname#{counter}"
-          counter = counter+1
-        end
         row   = [lu_name,is_complete,active_now,active_on_reboot]
         table = handle_table("row","",row,table)
       end

@@ -48,6 +48,11 @@ def process_packages()
         pkg_date = info
       end
       if prefix.match(/FILES/)
+        if $masked == 1
+          if !pkg_name.match(/^CSW|^SUNW|^splunk|^SMC|^SME|^FJ|^TSI|^VRTS|^SYM/)
+            pkg_name = "MASKED"
+          end
+        end
         row   = [pkg_name,pkg_ver,pkg_date]
         table = handle_table("row","",row,table)
       end

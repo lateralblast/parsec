@@ -202,6 +202,11 @@ def handle_table(type,title,row,table)
     table.add_separator
   end
   if type.match(/row/)
+    if $masked == 1
+      if title.match(/Serial|WWN|Domain|Name|directory|nvram|Customer|Contract|User|Email|Phone|Country|Host Name|Host ID|Volume|UUID|MAC|IP|Group|[T,t]ime|[D,d]ate/)
+        row = "MASKED"
+      end
+    end
     if title.match(/[A-z]/)
       row = [title,row]
     end

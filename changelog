@@ -105,4 +105,6 @@
 # More Handbook handling improvements
 # 0.5.2: Thu 11 Sep 2014 14:13:31 AEST
 # Added support for parsing Facter output
+# 0.5.3: Thu 11 Sep 2014 14:58:35 AEST
+# Migrated most of masking code into output routine and fixed bugs with HBA handling
 

@@ -13,33 +13,35 @@ end
 def process_avail_ql_fw(table,ql_model,ql_fw)
   table       = handle_table("row","Installed Firmware",ql_fw,table)
   fw_info     = get_avail_ql_fw()
-  uc_ql_model = ql_model.upcase
-  fw_urls     = []
-  if fw_info
-    fw_info.each do |fw_line|
-      if fw_line.match(/^#{uc_ql_model}/)
-        fw_line      = fw_line.split(/,/)
-        avail_fw     = fw_line[1].split(/ /)[-1]
-        fw_line.each do |item|
-          if item.match(/http/)
-            fw_urls.push(item)
+  if ql_model
+    uc_ql_model = ql_model.upcase
+    fw_urls     = []
+    if fw_info
+      fw_info.each do |fw_line|
+        if fw_line.match(/^#{uc_ql_model}/)
+          fw_line      = fw_line.split(/,/)
+          avail_fw     = fw_line[1].split(/ /)[-1]
+          fw_line.each do |item|
+            if item.match(/http/)
+              fw_urls.push(item)
+            end
           end
-        end
-        latest_fw = compare_ver(ql_fw,avail_fw)
-        if latest_fw == avail_fw
-          avail_fw = avail_fw+" (Newer)"
-          table    = handle_table("row","Available Fcode",avail_fw,table)
-          if fw_urls[0]
-            counter = $io_fw_urls.length+1
-            number  = "[ "+counter.to_s+" ]"
-            table   = handle_table("row","Firmware Documentation",number,table)
-            $io_fw_urls.push(fw_urls[0])
-          end
-          if fw_urls[1]
-            counter = $io_fw_urls.length+1
-            number  = "[ "+counter.to_s+" ]"
-            table   = handle_table("row","Firmware Download",number,table)
-            $io_fw_urls.push(fw_urls[1])
+          latest_fw = compare_ver(ql_fw,avail_fw)
+          if latest_fw == avail_fw
+            avail_fw = avail_fw+" (Newer)"
+            table    = handle_table("row","Available Fcode",avail_fw,table)
+            if fw_urls[0]
+              counter = $io_fw_urls.length+1
+              number  = "[ "+counter.to_s+" ]"
+              table   = handle_table("row","Firmware Documentation",number,table)
+              $io_fw_urls.push(fw_urls[0])
+            end
+            if fw_urls[1]
+              counter = $io_fw_urls.length+1
+              number  = "[ "+counter.to_s+" ]"
+              table   = handle_table("row","Firmware Download",number,table)
+              $io_fw_urls.push(fw_urls[1])
+            end
           end
         end
       end

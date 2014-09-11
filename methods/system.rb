@@ -17,13 +17,8 @@ def process_sys_boot(table)
   file_date = get_extracted_file_date("/sysconfig/who-b.out")
   file_year = file_date.to_s.split(/ /)[0].split(/-/)[0].chomp
   boot_time = boot_time+" "+file_year
-  if $masked == 0
-    if boot_time
-      table = handle_table("row","Boot Time",boot_time,table)
-    end
-  else
-    date  = %x[date].chomp
-    table = handle_table("row","Boot Time",date,table)
+  if boot_time
+    table = handle_table("row","Boot Time",boot_time,table)
   end
   return table
 end
@@ -41,12 +36,8 @@ end
 def process_sys_uptime(table)
   system_uptime = get_sys_uptime()
   system_uptime = system_uptime[0].split(/,/)[0..1].join(" ").gsub(/\s+/,' ').gsub(/^\s+/,'')
-  if $masked == 0
-    if system_uptime
-      table = handle_table("row","System Uptime",system_uptime,table)
-    end
-  else
-    table = handle_table("row","System Uptime","1 day(s)",table)
+  if system_uptime
+    table = handle_table("row","System Uptime",system_uptime,table)
   end
   return table
 end

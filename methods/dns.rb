@@ -38,20 +38,14 @@ def process_dns_info(table)
   dns_domain = get_dns_domain()
   dns_server = get_dns_server()
   dns_search = get_dns_search()
-  if $masked == 0
-    if dns_domain
-      table = handle_table("row","Domain",dns_domain,table)
-    end
-    if dns_server
-      table = handle_table("row","Name Server(s)",dns_server,table)
-    end
-    if dns_search
-      table = handle_table("row","Search Domain(s)",dns_search,table)
-    end
-  else
-    table = handle_table("row","Domain","domain",table)
-    table = handle_table("row","Name Server(s)","nameserver",table)
-    table = handle_table("row","Search Domain(s)","search",table)
+  if dns_domain
+    table = handle_table("row","Domain",dns_domain,table)
+  end
+  if dns_server
+    table = handle_table("row","Name Server(s)",dns_server,table)
+  end
+  if dns_search
+    table = handle_table("row","Search Domain(s)",dns_search,table)
   end
   return table
 end

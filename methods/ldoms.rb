@@ -112,10 +112,6 @@ def process_logical_domains()
         end
         counter  = counter+1
         dom_name = dom_info[1].split(/\=/)[1]
-        if $masked == 1
-          host_name = dom_name
-          dom_name  = "domain"+dom_count.to_s
-        end
         title    = "Logical Domain "+dom_name
         row      = ['Domain Items','Value']
         table    = handle_table("title",title,row,"")
@@ -167,59 +163,6 @@ def process_logical_domains()
                 value = value.to_s+" MB"
               end
             end
-            if item == "NVRAMRC" and $masked == 1
-              value = "cr"
-            end
-            if item == "MAC Address" and $masked == 1
-              value = "XX:XX:XX:XX:XX:XX"
-            end
-            if item == "Host ID" and $masked == 1
-              value = "XXXXXXXXXX"
-            end
-            if item == "UUID" and $masked == 1
-              value = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-            end
-            if item == "Volume" and $masked == 1
-              vol_name  = value
-              temp_name = "disk"+vol_count.to_s
-              value = value.gsub(/#{vol_name}/,temp_name)
-              if !mask_vols["#{vol_name}"]
-                mask_vols["#{vol_name}"] = temp_name
-                vol_count = vol_count+1
-              end
-            end
-            if item == "Group" and $masked == 1
-              group_name = value
-              temp_name  = "group"+group_count.to_s
-              value = value.gsub(/#{host_name}/,temp_name)
-              if !mask_groups["#{group_name}"]
-                mask_groups["#{group_name}"] = temp_name
-                group_count = group_count+1
-              end
-            end
-            if item == "Hostname" and $masked == 1
-              temp_name = "domain"+dom_count.to_s
-              host_name = value
-              value     = value.gsub(/#{host_name}/,temp_name)
-              if !mask_hosts["#{host_name}"]
-                mask_hosts["#{host_name}"] = temp_name
-                dom_count = dom_count+1
-              end
-            end
-            if item == "Volume" and $masked == 1
-              mask_vols.each do |mask_vol, temp_vol|
-                if value.match(/#{mask_vol}/)
-                  value = value.gsub(/#{mask_vol}/,temp_vol)
-                end
-              end
-            end
-            if item == "Group" and $masked == 1
-              mask_groups.each do |mask_group, temp_group|
-                if value.match(/#{mask_group}/)
-                  value = value.gsub(/#{mask_group}/,temp_group)
-                end
-              end
-            end
             if value
               table = handle_table("row",item,value,table)
             end
@@ -263,9 +206,6 @@ def process_ldom()
     ldom_hosts.each do |ldom_host|
       ldom_no = "Domain "+counter.to_s
       counter = counter+1
-      if $masked == 1
-        ldom_host = ldom_no.downcase.gsub(/ /,"")
-      end
       table   = handle_table("row",ldom_no,ldom_host,table)
     end
     table = handle_table("end","","",table)

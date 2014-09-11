@@ -231,15 +231,19 @@ def get_hba_fcode(io_path)
     fc_info    = fc_info.grep(/#{io_path}\/fp/)
   end
   fc_info    = fc_info.join.split(/\n/)[1]
-  fc_ver     = fc_info.split(/:/)[1]
-  if fc_ver.match(/Host/)
-    fc_ver = fc_info.split(/:/)[2].gsub(/^\s+/,'').split(/ /)[0]
-  else
-    if fc_ver.match(/SPARC/)
-      fc_ver = fc_info.split(/:/)[2].split(/ \s+/)[0].gsub(/\s+/,'')
+  if fc_info
+    fc_ver     = fc_info.split(/:/)[1]
+    if fc_ver.match(/Host/)
+      fc_ver = fc_info.split(/:/)[2].gsub(/^\s+/,'').split(/ /)[0]
     else
-      fc_ver     = fc_info.split(/:/)[1].gsub(/\s+/,'')
+      if fc_ver.match(/SPARC/)
+        fc_ver = fc_info.split(/:/)[2].split(/ \s+/)[0].gsub(/\s+/,'')
+      else
+        fc_ver     = fc_info.split(/:/)[1].gsub(/\s+/,'')
+      end
     end
+  else
+    fc_ver = "Unknown"
   end
   return fc_ver
 end

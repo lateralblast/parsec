@@ -152,12 +152,8 @@ end
 
 def process_customer_name(table)
   customer_name = get_customer_name()
-  if $masked == 0
-    if customer_name
-      table = handle_table("row","Customer",customer_name,table)
-    end
-  else
-    table = handle_table("row","Customer","Company X",table)
+  if customer_name
+    table = handle_table("row","Customer",customer_name,table)
   end
   return table
 end
@@ -186,12 +182,8 @@ end
 
 def process_exp_user(table)
   exp_user = get_exp_user()
-  if $masked == 0
-    if exp_user
-      table = handle_table("row","User",exp_user,table)
-    end
-  else
-    table = handle_table("row","User","Customer X",table)
+  if exp_user
+    table = handle_table("row","User",exp_user,table)
   end
   return table
 end
@@ -205,12 +197,8 @@ end
 
 def process_exp_email(table)
   exp_email = get_exp_email()
-  if $masked == 0
-    if exp_email
-      table = handle_table("row","Email",exp_email,table)
-    end
-  else
-    table = handle_table("row","Email","customre@company.com",table)
+  if exp_email
+    table = handle_table("row","Email",exp_email,table)
   end
   return table
 end
@@ -224,12 +212,8 @@ end
 
 def process_exp_phone(table)
   exp_phone = get_exp_phone()
-  if $masked == 0
-    if exp_phone
-      table = handle_table("row","Phone",exp_phone,table)
-    end
-  else
-    table = handle_table("row","Phone","XXX-XXXX-XXXX",table)
+  if exp_phone
+    table = handle_table("row","Phone",exp_phone,table)
   end
   return table
 end
@@ -243,12 +227,8 @@ end
 
 def process_exp_country(table)
   exp_country = get_exp_country()
-  if $masked == 0
-    if exp_country
-      table = handle_table("row","Country",exp_country,table)
-    end
-  else
-    table = handle_table("row","Country","Country",table)
+  if exp_country
+    table = handle_table("row","Country",exp_country,table)
   end
   return table
 end
