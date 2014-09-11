@@ -20,7 +20,7 @@ def process_handbook_info_file(info_file)
             url = node.css("a").to_s.split(/"/)[1]
             items[title].push(url)
           else
-            title = node.css("b").text.gsub(/^\n/,"").gsub(/:/,"").gsub(/\s+/," ").gsub(/\n/," ")
+            text = node.css("b").text.gsub(/^\n/,"").gsub(/:/,"").gsub(/\s+/," ").gsub(/\n/," ")
             items[title].push(text)
           end
         end

@@ -297,7 +297,7 @@ def list_explorers()
         end
       end
       handle_output(table)
-      handle("\n")
+      handle_output("\n")
     end
   end
   return

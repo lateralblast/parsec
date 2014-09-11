@@ -103,4 +103,6 @@
 # Cleaned up Handbook output
 # 0.5.1: Wed 10 Sep 2014 21:09:31 AEST
 # More Handbook handling improvements
+# 0.5.2: Thu 11 Sep 2014 14:13:31 AEST
+# Added support for parsing Facter output
 

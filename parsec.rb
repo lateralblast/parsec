@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.5.1
+# Version:      0.5.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -42,7 +42,7 @@ $author_name  = "Richard Spindler"
 
 $output_mode = "text"
 
-options   = "abcdehlmvACDEFHIKLMOPSTVZd:f:s:w:R:o:"
+options   = "abcdefhlmvACDEFHIKLMOPSTVZd:i:s:w:R:o:"
 $pigz_bin = %x[which pigz].chomp
 
 # Set up some script related variables
@@ -57,6 +57,7 @@ if !script_dir.match(/\//)
 end
 $image_dir    = script_dir+"/images"
 $handbook_dir = script_dir+"/handbook"
+$fact_dir     = script_dir+"/facters"
 
 [ "methods", "information", "firmware" ].each do |test_dir|
   required_dir = eval("$#{test_dir}_dir")
@@ -142,7 +143,7 @@ def print_usage(options)
   puts "Usage: "+code_name+" -["+options+"]"
   puts
   puts "-h: Print help"
-  puts "-f: Specify Explorer file to process"
+  puts "-i: Specify Explorer file to process"
   puts "-s: Specify System to process"
   puts "    (Filename will be determined if it exists)"
   puts "-m: Mask data (hostnames etc)"
@@ -151,7 +152,7 @@ def print_usage(options)
   puts "-a: Process all explorers"
   puts "-P: Output in PDF mode"
   puts "-T: Output in text mode (default)"
-  puts "-F: Output to file (in output directory)"
+  puts "-O: Output to file (in output directory)"
   puts
   puts "Reporting:"
   puts
@@ -224,7 +225,7 @@ end
 if opt["T"]
   $output_mode = "text"
 else
-  if opt["P"] or opt["o"] or opt["F"]
+  if opt["P"] or opt["o"] or opt["O"]
     $output_mode = "file"
   else
     $output_mode = "text"
@@ -251,6 +252,7 @@ end
 
 if opt["l"]
   list_explorers()
+  list_facters()
   exit
 end
 
@@ -270,10 +272,25 @@ if opt["v"]
   puts "Operating in verbose mode"
 end
 
+# Handle Facter
+
+if opt["F"]
+  if opt["s"]
+    host_name = opt["s"]
+    file_name = ""
+  end
+  if opt["i"]
+    file_name = opt["i"]
+    host_name = ""
+  end
+  process_facter(host_name,file_name)
+  exit
+end
+
 # Handle filename and hostname options
 
-if opt["f"]
-  $exp_file = opt["f"]
+if opt["i"]
+  $exp_file = opt["i"]
   if !File.exist?($exp_file)
     puts
     puts "Explorer File: #{$exp_file} does not exist"
@@ -322,7 +339,7 @@ if opt["o"]
   end
 end
 
-if opt["P"] or opt["F"]
+if opt["P"] or opt["O"]
   host_name      = opt["s"]
   if !opt["o"]
     $output_file = "output/"+host_name+".txt"
@@ -338,7 +355,7 @@ if opt["P"] or opt["F"]
   end
 end
 
-if opt["o"] or opt["P"] or opt["F"]
+if opt["o"] or opt["P"] or opt["O"]
   if File.exist?($output_file)
     File.delete($output_file)
     FileUtils.touch($output_file)
@@ -435,7 +452,7 @@ if opt["R"]
   if opt["h"]
     report_help(report,report_type)
   else
-    if !opt["f"] and !opt["s"]
+    if !opt["i"] and !opt["s"]
       puts "Explorer file or home name not specified"
       print_usage(options)
       exit
