@@ -20,13 +20,14 @@ def process_handbook_info_file(info_file)
             url = node.css("a").to_s.split(/"/)[1]
             items[title].push(url)
           else
-            text = node.css("b").text.gsub(/^\n/,"").gsub(/:/,"").gsub(/\s+/," ").gsub(/\n/," ")
+            text = node.css("td")[1..-1].text.gsub(/^\n/,"").gsub(/^\s+|\s+$/,"").gsub(/ \s+/," ").gsub(/Oracle /,"")
+
             items[title].push(text)
           end
         end
       end
     end
-    table   = Terminal::Table.new :title => "Support Information", :headings => ['Item', 'Value']
+    table   = Terminal::Table.new :title => "Support Information", :headings => [ 'Item', 'Value' ]
     length  = titles.length
     index   = 0
     titles.each_with_index do |title,index|
@@ -51,108 +52,55 @@ end
 
 def process_handbook_spec_file(spec_file)
   if File.exist?(spec_file)
-    doc    = Nokogiri::HTML(File.open(spec_file))
-    facts  = doc.css("table")[3]
-    info   = facts.css("tr")
-    title  = ""
-    items  = {}
-    titles = []
-    info.each do |node|
-      if node.to_s.match(/name/)
-        title = node.css("b").text.gsub(/\n/," ").gsub(/:/,"").gsub(/\s+/," ")
-        titles.push(title)
-        items[title] = []
-      else
-        if title
-          if node.text.match(/[A-z]|[0-9]/)
-            items[title].push(node.text)
-          end
-        end
-      end
-    end
-    titles.each do |title|
-      table  = Terminal::Table.new :title => title, :headings => ['Item', 'Value']
-      length = items[title].length
-      items[title].each_with_index do |item,index|
-        data   = item.split("\n")
-        header = data[1].gsub(/^\s+/,"")
-        first  = data[2].gsub(/^\s+/,"")
-        if !first.match(/[A-z]|[0-9]/)
-          first = data[3].gsub(/^\s+/,"")
-          if !first.match(/[A-z]|[0-9]/)
-            first = data[4].gsub(/^\s+/,"")
-            info  = data[4..-1]
-          else
-            info = data[3..-1]
-          end
-        else
-          info = data[2..-1]
-        end
-        if !header.match(/Slot #/)
-          row = [header,first]
-          table.add_row(row)
-          info.each do |cell|
-            cell = cell.gsub(/\n/," ").gsub(/^\s+/,"")
-            if cell.match(/[0-9]|[A-z]/) and cell != first
-              if header.match(/PCI Expansion/)
-                if !cell.match(/^Slot #$|^Physical$|^Electrical$|[0-9]$/)
-                  row  = [ "", cell ]
-                  table.add_row(row)
-                end
+    doc     = Nokogiri::HTML(File.open(spec_file))
+    tables  = doc.css("table")
+    title   = ""
+    t_table = ""
+    item    = ""
+    value   = ""
+    counter = 0
+    tables.each do |table|
+      if !table.to_s.match(/Oracle System Handbook|Current Systems|Former STK Products|EOL Systems|Components|General Info|Cancel/)
+        rows  = table.css("td")
+        rows.each do |row|
+          t_row   = []
+          if row.to_s.match(/name/) and row.to_s.match(/sshtablecaption/) and !row.to_s.match(/label[A-z]/)
+            title = row.css("b").text.gsub(/\n/,"").gsub(/\s+/," ")
+            if title.match(/[A-z]/)
+              if t_table
+                handle_output(t_table)
+                handle_output("\n")
+              end
+              if title == "Rack Mounting" or title == "Power Supplies"
+                t_table = Terminal::Table.new :title => title
               else
-                row  = [ "", cell ]
-                table.add_row(row)
+                t_table = Terminal::Table.new :title => title, :headings => [ 'Item', 'Value' ]
+                counter = 0
               end
             end
-          end
-          if index < length-1
-            table.add_separator
-          end
-        end
-      end
-      handle_output(table)
-      handle_output("\n")
-      handle_output("\n")
-    end
-    handle_output("\n")
-  end
-  return
-end
-
-# Process handbook components file
-
-def process_handbook_list_file(list_file)
-  if File.exist?(list_file)
-    doc    = Nokogiri::HTML(File.open(list_file))
-    tables = doc.css("table")
-    title  = ""
-    items  = {}
-    titles = []
-    notes  = []
-    tables.each do |table|
-      nodes = table.css("tr")
-      nodes.each do |node|
-        if node.to_s.match(/name/)
-          title = node.css("a").text
-          if !title.match(/Oracle System Handbook|Cancel|Table Legend/) and title.match(/[A-z]/)
-            titles.push(title)
-            items[title] = []
-          end
-        else
-          if title
-            if !title.match(/Oracle System Handbook|Cancel|Table Legend/) and title.match(/[A-z]/)
-              node.css("td").each do |cell|
-                if !cell.text.match(/^Code$|^PreviousPart #$|^Manufacturing Part#$|^Description$/)
-                  if !cell.to_s.match(/ssh_note|colspan|ssh_exp/)
-                    if cell.to_s.match(/\<li\>/) and !cell.previous_element.to_s.match(/\<li\>/)
-                      items[title].push("-")
-                      items[title].push(cell.text)
-                    else
-                      items[title].push(cell.text)
+          else
+            if title
+              if title.match(/[A-z]/)
+                if row.to_s.match(/[A-z]/) and !row.to_s.match(/label[A-z]/)
+                  text = row.text.gsub(/^\n|\t/,"").gsub(/\s+/," ").gsub(/^\s+/,"")
+                  if !text.match(/^x4$|^x8$|^[0-9]$|^x16$/)
+                    length = text.length
+                    if length > 70
+                      text = text.gsub(/(.{1,78})(\s+|\Z)/, "\\1\n")
                     end
-                  else
-                    if cell.to_s.match(/colspan/)
-                      notes.push(cell.text)
+                    if counter == 0
+                      if !row.next_element.to_s.match(/[A-z]/) and title == "Rack Mounting" or title == "Power Supplies"
+                        t_row = [ text ]
+                        t_table.add_row(t_row)
+                      else
+                        item    = text
+                        counter = 1
+                      end
+                    else
+                      value   = text
+                      counter = 0
+                      t_row   = [ item, value ]
+                      t_table.add_row(t_row)
                     end
                   end
                 end
@@ -162,32 +110,110 @@ def process_handbook_list_file(list_file)
         end
       end
     end
-    titles.each do |title|
-      table = Terminal::Table.new :title => title, :headings => ['Option Part', 'Manufacturing Part', 'Description', 'Previous Part']
-      counter = 0
-      row     = []
-      items[title].each do |item|
-        if !item.match(/^\[F\]/)
-          item = item.gsub(/\n/,"")
-          item = item.gsub(/^\s+|\s+$/,"")
-          row.push(item)
-          counter = counter+1
-          if counter % 4 == 0
-            table.add_row(row)
-            row = []
+    if t_table
+      handle_output(t_table)
+      handle_output("\n")
+    end
+  end
+  return
+end
+
+# Process handbook components file
+
+def process_handbook_list_file(list_file)
+  if File.exist?(list_file)
+    doc     = Nokogiri::HTML(File.open(list_file))
+    tables  = doc.css("table")
+    title   = ""
+    notes   = []
+    t_table = ""
+    tables.each do |table|
+      rows = table.css("tr")
+      rows.each do |row|
+        counter = 0
+        if row.to_s.match(/name/)
+          title = row.css("a").text
+          if !title.match(/Oracle System Handbook|Cancel|Table Legend|Exploded View/) and title.match(/[A-z]/)
+            if t_table
+              handle_output(t_table)
+              handle_output("\n")
+            end
+            t_table = Terminal::Table.new :title => title, :headings => ['Option Part', 'Manufacturing Part', 'Description', 'Previous Part']
+            counter = 0
+          end
+        else
+          if title
+            if !title.match(/Oracle System Handbook|Cancel|Table Legend|Exploded View/) and title.match(/[A-z]/)
+              if !row.to_s.match(/Manufacturing Part#|Not Shown|Field Replaceable Unit/)
+                t_row = []
+                if counter > 1
+                  if t_table
+                    t_table.add_separator
+                  end
+                else
+                  counter = counter + 1
+                end
+                supported   = "-"
+                current     = "-"
+                description = "-"
+                previous    = "-"
+                row.css("td").each do |cell|
+                  case cell.to_s
+                  when /ssh_supported|ssh_xop|ssh_expcode/
+                    supported = cell.text.gsub(/\n/,"").gsub(/^\s+|\s+$/,"")
+                  when /ssh_mfpart|ssh_exppart/
+                    current = cell.text.gsub(/\n/,"").gsub(/^\s+|\s+$/,"")
+                  when /ssh_desc|ssh_expdesc/
+                    description = cell.text.gsub(/\n/,"").gsub(/^\s+|\s+$/,"")
+                  when /ssh_pre/
+                    previous = cell.text.gsub(/\n/,"").gsub(/^\s+|\s+$/,"")
+                  when /ssh_note/
+                    notes.push(cell.text)
+                  end
+                end
+                if t_table
+                  t_row = [ supported, current, description, previous ]
+                  if t_row.to_s.match(/[0-9]/)
+                    t_table.add_row(t_row)
+                  end
+                end
+              else
+                row.css("td").each do |cell|
+                  case cell.to_s
+                  when /ssh_note/
+                    notes.push(cell.text)
+                  end
+                end
+              end
+            else
+              row.css("td").each do |cell|
+                case cell.to_s
+                when /ssh_note/
+                  notes.push(cell.text)
+                end
+              end
+            end
           end
         end
       end
-      handle_output(table)
-      handle_output("\n")
+    end
+    if t_table
+      handle_output(t_table)
       handle_output("\n")
     end
     if notes[0]
       notes.each do |note|
         if note.match(/^[0-9] |[0-9][0-9] /)
-          note = note.gsub(/^\n/,"").gsub(/\.\s+$/,".")
-          note = note.gsub(/\./,".\n").gsub(/^\n/,"")
-          handle_output("#{note}")
+          note   = note.gsub(/^\n/,"")
+          length = note.length
+          if length > 75
+            note = note.gsub(/\. /,".\n")
+          end
+          length = note.length
+          if length > 75
+            note = note.gsub(/\, /,".\n")
+          end
+          handle_output(note)
         end
       end
       handle_output("\n")

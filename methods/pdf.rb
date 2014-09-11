@@ -476,7 +476,7 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
         title_string = title
         line_string  = line
       end
-      if table == 1 and !line.match(/^\+/) and !line_string.match(/#{title_string}/) or line.match(/Complies/)
+      if table == 1 and !line.match(/^\+/) and !line_string.match(/#{title_string}/) or line.match(/Complies|Power Supplies|Rack Mounting/)
         row_data = line_to_cells(line,section)
         table_data.push(row_data)
       end
