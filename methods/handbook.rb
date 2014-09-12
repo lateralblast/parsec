@@ -226,11 +226,31 @@ end
 
 def process_handbook()
   model      = get_model_name()
-  header     = get_handbook_header(model)
-  html_files = Dir.entries($handbook_dir).grep(/#{header}[ ,\.]/)
-  spec_file  = $handbook_dir+"/"+html_files.grep(/Specifications/)[0]
-  list_file  = $handbook_dir+"/"+html_files.grep(/Components/)[0]
-  info_file  = $handbook_dir+"/"+html_files.grep(/Systems/)[0]
+  test_file  = $handbook_dir+"/current.html"
+  if File.exist?(test_file)
+    header = get_handbook_header(model)
+    base_url  = "https://support.oracle.com/handbook_private/Systems"
+    model_dir = $handbook_dir+"/"+header
+    if !File.directory?(model_dir)
+      Dir.mkdir(model_dir)
+    end
+    model_url = base_url+"/"+header
+    info_file = model_dir+"/"+header+".html"
+    info_url  = model_url+"/"+header+".html"
+    spec_file = model_dir+"/spec.html"
+    spec_url  = model_url+"/spec.html"
+    list_file = model_dir+"/components.html"
+    list_url  = model_url+"/components.html"
+    get_download(info_url,info_file)
+    get_download(spec_url,spec_file)
+    get_download(list_url,list_file)
+  else
+    header = get_manual_handbook_header(model)
+    html_files = Dir.entries($handbook_dir).grep(/#{header}[ ,\.]/)
+    spec_file  = $handbook_dir+"/"+html_files.grep(/Specifications/)[0]
+    list_file  = $handbook_dir+"/"+html_files.grep(/Components/)[0]
+    info_file  = $handbook_dir+"/"+html_files.grep(/Systems/)[0]
+  end
   process_handbook_info_file(info_file)
   process_handbook_spec_file(spec_file)
   process_handbook_list_file(list_file)

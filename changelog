@@ -109,4 +109,6 @@
 # Migrated most of masking code into output routine and fixed bugs with HBA handling
 # 0.5.4: Fri 12 Sep 2014 09:29:38 AEST
 # Updated Handbook parsing code
+# 0.5.5: Fri 12 Sep 2014 15:02:00 AEST
+# Added support to download Handbook files
 
