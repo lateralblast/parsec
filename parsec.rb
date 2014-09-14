@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.5.5
+# Version:      0.5.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -29,6 +29,7 @@ require 'fastimage'
 require 'unpack'
 require 'enumerator'
 require 'nokogiri'
+require 'augeas'
 
 $default_font_size = 12
 $section_font_size = 28
@@ -42,7 +43,7 @@ $author_name  = "Richard Spindler"
 
 $output_mode = "text"
 
-options   = "abcdefhlmvACDEFHIKLMOPSTVZd:i:s:w:R:o:"
+options   = "abcdefhlmvACDEFHIKLMOPSTVZd:i:s:w:R:o:p:"
 $pigz_bin = %x[which pigz].chomp
 
 # Set up some script related variables
@@ -148,7 +149,9 @@ def print_usage(options)
   puts "    (Filename will be determined if it exists)"
   puts "-m: Mask data (hostnames etc)"
   puts "-d: Set Explorer directory"
-  puts "-l: List explorers"
+  puts "-l: List explorers, and facts for either puppet or ansible"
+  puts "-F: Report based on Puppet Facter output"
+  puts "-A: Report based on Ansible Fact output"
   puts "-a: Process all explorers"
   puts "-P: Output in PDF mode"
   puts "-T: Output in text mode (default)"
@@ -202,14 +205,16 @@ def print_usage(options)
   puts
   puts code_name+" -s hostanme -R cpu"
   puts
-  puts "Shortcuts:"
+  puts "Explorer shortcuts:"
   puts
-  puts "-A: Print all configuration information (default)"
+  puts "-Z: Print all configuration information (default)"
   puts "-E: Print EEPROM configuration information"
   puts "-I: Print IO configuration information"
-  puts "-H: Print Host information"
-  puts "-L: Print LDom information"
+  puts "-H: Print Host configuration information"
+  puts "-L: Print LDom configuration information"
   puts "-C: Print CPU configuration information"
+  puts "-S: Print OS configuration information"
+  puts "-Y: Print System configuration information"
   puts
   exit
 end
@@ -223,13 +228,31 @@ end
 # Output mode
 
 if opt["T"]
-  $output_mode = "text"
+  if opt["R"] or opt["A"] or opt["F"]
+    $output_mode = "text"
+  else
+    puts "Report type not specified"
+    puts "Must use -R, -A, or -F"
+    exit
+  end
 else
   if opt["P"] or opt["o"] or opt["O"]
-    $output_mode = "file"
+    if opt["R"] or opt["A"] or opt["F"]
+      $output_mode = "file"
+    else
+      puts "Report type not specified"
+      puts "Must use -R, -A, or -F"
+      exit
+    end
   else
     $output_mode = "text"
   end
+end
+
+# Get hostname
+
+if opt["s"]
+  host_name = opt["s"]
 end
 
 # Mask data
@@ -272,21 +295,6 @@ if opt["v"]
   puts "Operating in verbose mode"
 end
 
-# Handle Facter
-
-if opt["F"]
-  if opt["s"]
-    host_name = opt["s"]
-    file_name = ""
-  end
-  if opt["i"]
-    file_name = opt["i"]
-    host_name = ""
-  end
-  process_facter(host_name,file_name)
-  exit
-end
-
 # Handle filename and hostname options
 
 if opt["i"]
@@ -314,19 +322,30 @@ else
   else
     host_names = file_list
   end
-  host_names.each do |host_name|
-    $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
-    $exp_file = $exp_file[0].to_s
-    if !$exp_file.match(/[A-z]/)
-      puts "Explorer for "+host_name+" does not exist in "+$exp_dir
-      exit
+  if !opt["A"] and !opt["F"]
+    host_names.each do |host_name|
+      $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
+      $exp_file = $exp_file[0].to_s
+      if !$exp_file.match(/[A-z]/)
+        puts "Explorer for "+host_name+" does not exist in "+$exp_dir
+        exit
+      end
     end
+    $exp_file = $exp_dir+"/"+$exp_file
   end
-  $exp_file = $exp_dir+"/"+$exp_file
 end
 
 if opt["o"]
   $output_file = opt["o"]
+else
+  $output_file = "output/"+host_name+".txt"
+  output_dir = File.dirname($output_file)
+  if !File.directory?(output_dir)
+    Dir.mkdir(output_dir)
+  end
+end
+
+if opt["P"] or opt["O"]
   if $output_file.match(/\.pdf$|\.PDF$/)
     $output_file = $output_file.gsub(/\.pdf$|\.PDF$/,"")
   end
@@ -337,19 +356,16 @@ if opt["o"]
   if !File.directory?(output_dir)
     Dir.mkdir(output_dir)
   end
-end
-
-if opt["P"] or opt["O"]
-  host_name      = opt["s"]
-  if !opt["o"]
-    $output_file = "output/"+host_name+".txt"
-    output_dir = File.dirname($output_file)
-    if !File.directory?(output_dir)
-      Dir.mkdir(output_dir)
-    end
-  end
   if opt["P"]
-    document_title = "Explorer: "+host_name
+    if opt["R"]
+      document_title = "Explorer: "+host_name
+    end
+    if opt["A"]
+      document_title = "Ansible Facts: "+host_name
+    end
+    if opt["F"]
+      document_title = "Puppet Facts: "+host_name
+    end
     customer_name  = ""
     output_pdf     = "output/"+host_name+".pdf"
   end
@@ -374,7 +390,7 @@ else
   end
 end
 
-if opt["A"]
+if opt["Z"]
   report_type = "all"
   config_report(report,report_type)
   exit
@@ -393,7 +409,7 @@ if opt["D"]
   exit
 end
 
-if opt["O"]
+if opt["S"]
   report_type = "os"
   config_report(report,report_type)
   exit
@@ -405,7 +421,7 @@ if opt["E"]
   exit
 end
 
-if opt["S"]
+if opt["Y"]
   report_type = "system"
   config_report(report,report_type)
   exit
@@ -464,6 +480,26 @@ end
 if opt["h"]
   print_usage(options)
 end
+
+# Handle Facter
+
+if opt["F"] or opt["A"]
+  if opt["s"]
+    host_name = opt["s"]
+    file_name = ""
+  end
+  if opt["i"]
+    file_name = opt["i"]
+    host_name = ""
+  end
+  if opt["F"]
+    process_puppet_facter(host_name,file_name)
+  else
+    process_ansible_facter(host_name,file_name)
+  end
+end
+
+# Handle output of PDF
 
 if opt["P"]
   pdf = Prawn::Document.new

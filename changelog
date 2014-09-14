@@ -111,4 +111,6 @@
 # Updated Handbook parsing code
 # 0.5.5: Fri 12 Sep 2014 15:02:00 AEST
 # Added support to download Handbook files
+# 0.5.6: Sun 14 Sep 2014 23:42:35 AEST
+# Added initial Ansible and Puppet Fact reporting support
 

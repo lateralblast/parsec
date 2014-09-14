@@ -5,15 +5,32 @@ def list_facters()
   if File.directory?($fact_dir) or File.symlink?($fact_dir)
     fact_list=Dir.entries($fact_dir).sort
     if fact_list.to_s.match(/[A-z]/)
-      title = "Facters in "+$fact_dir+":"
+      title = "Puppet Facters in "+$fact_dir+":"
       table = Terminal::Table.new :title => title, :headings => ['Hostname', 'Date', 'File']
       fact_list.each do |fact_file|
         if fact_file.match(/[A-z]/)
           file_name = $fact_dir+"/"+fact_file
-          host_name = %x[cat #{file_name} |grep ^hostname |awk '{ print $3}']
-          date_info = File.mtime(file_name)
-          table_row = [ host_name, date_info, fact_file ]
-          table.add_row(table_row)
+          host_name = %x[cat #{file_name} |grep ^hostname |awk '{ print $3}'].chomp
+          if host_name.match(/[A-z]/)
+            date_info = File.mtime(file_name)
+            table_row = [ host_name, date_info, fact_file ]
+            table.add_row(table_row)
+          end
+        end
+      end
+      handle_output(table)
+      handle_output("\n")
+      title = "Ansible Facters in "+$fact_dir+":"
+      table = Terminal::Table.new :title => title, :headings => ['Hostname', 'Date', 'File']
+      fact_list.each do |fact_file|
+        if fact_file.match(/[A-z]/)
+          file_name = $fact_dir+"/"+fact_file
+          host_name = %x[cat #{file_name} |grep ansible_hostname |cut -f2 -d:].chomp.gsub(/ |"|,/,"")
+          if host_name.match(/[A-z]/)
+            date_info = File.mtime(file_name)
+            table_row = [ host_name, date_info, fact_file ]
+            table.add_row(table_row)
+          end
         end
       end
       handle_output(table)
@@ -23,7 +40,9 @@ def list_facters()
   return
 end
 
-def handle_facter_item(item)
+# Handle Puppet Fact names/items
+
+def handle_puppet_facter_item(item)
   strings = [ 'version', 'sitedir', 'address', 'release', 'system' ]
   strings.each do |string|
     if item.match(/[A-z]#{string}/)
@@ -59,7 +78,9 @@ def handle_facter_item(item)
   return item
 end
 
-def process_facter_configs(config)
+# Process each of the Puppet Facts
+
+def process_puppet_facter_configs(config)
   config.each do |title,facts|
     if title.match(/os/)
       table_title = title.upcase
@@ -83,7 +104,7 @@ def process_facter_configs(config)
           else
             item  = item.split(/#{header}/)[1]
           end
-          item = handle_facter_item(item)
+          item = handle_puppet_facter_item(item)
           row  = [item, value]
           table.add_row(row)
           temp  = header
@@ -93,7 +114,7 @@ def process_facter_configs(config)
         if item.match(/_/) and !item.match(/^mtu|^ipaddress|^macaddress/)
           item    = item.split(/_/)[1..-1].join(" ")
         end
-        item = handle_facter_item(item)
+        item = handle_puppet_facter_item(item)
         row  = [item, value]
         table.add_row(row)
         if current != previous and index < length-1
@@ -107,13 +128,20 @@ def process_facter_configs(config)
   end
 end
 
-def process_facter(host_name,file_name)
+# Process Puppet Fact file
+
+def process_puppet_facter(host_name,file_name)
   if file_name.match(/[A-z]/)
     if !File.exist?(file_name)
-      puts "Facter file: "+file_name+" does not exist"
+      puts "Puppet Fact file: "+file_name+" does not exist"
+      exit
     end
   else
     file_name = %x[grep -l "hostname => #{host_name}" #{$fact_dir}/*].split("\n")[0]
+  end
+  if !file_name
+    puts "Could not find Puppet Fact file for host: "+host_name
+    exit
   end
   if File.exist?(file_name)
     facts  = IO.readlines(file_name)
@@ -146,8 +174,179 @@ def process_facter(host_name,file_name)
         end
       end
     end
-    process_facter_configs(config)
+    process_puppet_facter_configs(config)
   else
     puts "Facter file does not exist for host: "+host_name
   end
+end
+
+# Handle facter item
+
+def process_ansible_item(item)
+  item    = item.gsub(/addresses/,"address").gsub(/ipv/,"IPv")
+  strings = [ 'version', 'sitedir', 'address', 'release', 'system' ]
+  strings.each do |string|
+    if item.match(/[A-z]#{string}/)
+      content = item.split(/#{string}/)
+      if content[1]
+        item = content[0]+" "+string+" "+content[1..-1].join(" ")
+      else
+        item = content[0]+" "+string
+      end
+    end
+  end
+  item = item.gsub(/_/," ")
+  if item.match(/^ansible|^facter/)
+    contents = item.split(/ /)[1..-1]
+  else
+    contents = item.split(/ /)
+  end
+  strings  = [ 'os', 'isa', 'smc', 'l2', 'l3', 'vm', 'fqdn', 'cpu', 'mb', 'ip', 'mac', 'mtu', 'rom', 'uuid', 'path', 'osx', 'sp' ]
+  copy     = contents
+  contents.each_with_index do |content,index|
+    strings.each do |string|
+      replace = string.upcase
+      case content
+      when /^#{string}$/
+        content = content.gsub(/#{string}/,replace)
+        copy[index] = content
+      end
+    end
+    if !content.match(/[A-Z]/) and !content.match(/[0-9]/)
+      copy[index] = content.capitalize
+    end
+  end
+  item = copy.join(" ")
+  item = item.gsub(/^\s+|\s+$/,"")
+  return item
+end
+
+
+# Process Ansible Facts
+
+def process_ansible_facter(host_name,file_name)
+  if file_name.match(/[A-z]/)
+    if !File.exist?(file_name)
+      puts "Ansible Fact file: "+file_name+" does not exist"
+      exit
+    end
+  else
+    file_name = %x[grep -l '"ansible_hostname": "#{host_name}"' #{$fact_dir}/*].split("\n")[0]
+  end
+  if !file_name
+    puts "Could not find Ansible Fact file for host: "+host_name
+    exit
+  end
+  if File.exist?(file_name)
+    info   = {}
+    lines  = IO.readlines(file_name)
+    values = []
+    array  = 0
+    type   = ""
+    item   = ""
+    info["network"] = []
+    info["system"]  = []
+    lines.each_with_index do |line,index|
+      if !line.match(/\{\}|\[\]|key|rsa|dsa/) and line.match(/[0-9]|[A-z]/)
+        line = line.chomp
+        if line.match(/": /)
+          item = line.split(/"/)[1].gsub(/\s+/,"")
+          item = process_ansible_item(item)
+        end
+        if line.match(/ansible|facter/) and !line.match(/ansible_facts/)
+          if item.match(/[0-9]/)
+            type = "network"
+          else
+            type = "system"
+          end
+        end
+        if type.match(/[A-z]/)
+          if line.match(/\{$|\[$/)
+            value = ""
+            row   = item+","+value
+            info[type].push(row)
+            if line.match(/\[$/)
+              array  = 1
+              values = []
+            end
+          else
+            if array == 1
+              value = line.gsub(/"|,/,"")
+              values.push(value)
+              if lines[index+1].match(/\],/)
+                value = values.join(" ").gsub(/\s+/," ").gsub(/^\s+|\s+$/,"")
+                if value.length > 70
+                  value = value.gsub(/ /,"\n")
+                end
+                array = 0
+                row   = item+", "+value
+                info[type].push(row)
+              end
+            else
+              if !line.match(/\],$/)
+                if line.match(/": /) and item != "Changed"
+                  value = line.split(/"/)[3]
+                  if value
+                    value = value.gsub(/"|,/,"")
+                    value = value.gsub(/\s+/,"").gsub(/^\s+|\s+$/,"")
+                    if item.match(/path|PATH/)
+                      value = value.gsub(/:/,":\n")
+                    end
+                    if value.length > 70
+                      value = value.gsub(/ /,"\n")
+                    end
+                    row   = item+","+value
+                    info[type].push(row)
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+    table  = Terminal::Table.new :title => "System Information", :headings => [ 'Item', 'Value' ]
+    length = info["system"].length
+    info["system"].each_with_index do |line,index|
+      (item,value) = line.split(",")
+      if value
+        value = value.gsub(/^\s+|^ /,"")
+        row = [ item, value ]
+        table.add_row(row)
+        if index < length-1
+          table.add_separator
+        end
+      end
+    end
+    handle_output(table)
+    handle_output("\n")
+    handle_output("\n")
+    table  = Terminal::Table.new :title => "Network Information", :headings => [ 'Item', 'Value' ]
+    length = info["network"].length
+    info["network"].each_with_index do |line,index|
+      (item,value) = line.split(",")
+      if item.match(/Device|[0-9]/) and value
+        value = value.gsub(/^\s+|^ /,"")
+        if index > 1
+          table.add_separator
+        end
+        row = [ item, value ]
+        table.add_row(row)
+        if item.match(/Device/)
+          if index < length-1
+            table.add_separator
+          end
+        end
+      else
+        if value
+          value = value.gsub(/^\s+|^ /,"")
+          row = [ item, value ]
+          table.add_row(row)
+        end
+      end
+    end
+    handle_output(table)
+    handle_output("\n")
+  end
+  return
 end
