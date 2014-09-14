@@ -29,7 +29,6 @@ require 'fastimage'
 require 'unpack'
 require 'enumerator'
 require 'nokogiri'
-require 'augeas'
 
 $default_font_size = 12
 $section_font_size = 28
