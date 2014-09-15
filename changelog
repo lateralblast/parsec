@@ -115,4 +115,6 @@
 # Added initial Ansible and Puppet Fact reporting support
 # 0.5.7: Mon 15 Sep 2014 21:20:14 AEST
 # Added dmidecode support
+# 0.5.8: Mon 15 Sep 2014 22:26:23 AEST
+# Added support for M10-4S IO and CPU and cleaned up CPU output
 

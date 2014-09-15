@@ -138,7 +138,7 @@ def process_io()
     table = handle_table("line","","",table)
   end
   line_count = 0
-  io_info.each do |line|
+  io_info.each_with_index do |line,index|
     counter = counter+1
     if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD|PCI/) and !line.match(/Status/)
       line_count  = line_count+1
@@ -210,6 +210,12 @@ def process_io()
         io_type = io_line[1]
         io_path = io_info[counter].gsub(/\s+/,"")
         io_slot = get_io_slot(io_path,io_type,sys_model)
+      when /M10-/
+        io_slot  = io_line[0]
+        io_type  = io_line[1]
+        io_name  = io_line[-2]
+        io_speed = io_line[-1]
+        io_path  = line[index+1].gsub(/^\s+|\s+$/,"")
       when /T[3-5]-/
         io_slot  = io_line[0]
         io_type  = io_line[1].gsub(/PCI3/,"PCIE")
