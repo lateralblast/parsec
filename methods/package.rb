@@ -37,24 +37,27 @@ def process_packages()
     row   = ['Package','Version','Install']
     table = handle_table("title",title,row,"")
     file_array.each do |line|
-      (prefix,info) = line.split(/: /)
-      if prefix.match(/PKGINST/)
-        pkg_name = info
-      end
-      if prefix.match(/VERSION/)
-        pkg_ver = info
-      end
-      if prefix.match(/INSTDATE/)
-        pkg_date = info
-      end
-      if prefix.match(/FILES/)
-        if $masked == 1
-          if !pkg_name.match(/^CSW|^SUNW|^splunk|^SMC|^SME|^FJ|^TSI|^VRTS|^SYM/)
-            pkg_name = "MASKED"
-          end
+      line = line.chomp
+      if line.match(/:/)
+        (prefix,info) = line.split(/: /)
+        if prefix.match(/PKGINST/)
+          pkg_name = info
         end
-        row   = [pkg_name,pkg_ver,pkg_date]
-        table = handle_table("row","",row,table)
+        if prefix.match(/VERSION/)
+          pkg_ver = info
+        end
+        if prefix.match(/INSTDATE/)
+          pkg_date = info
+        end
+        if prefix.match(/FILES|STATUS/)
+          if $masked == 1
+            if !pkg_name.match(/^CSW|^SUNW|^splunk|^SMC|^SME|^FJ|^TSI|^VRTS|^SYM|^TIV/)
+              pkg_name = "MASKED"
+            end
+          end
+          row   = [pkg_name,pkg_ver,pkg_date]
+          table = handle_table("row","",row,table)
+        end
       end
     end
     table = handle_table("end","","",table)

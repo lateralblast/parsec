@@ -18,6 +18,13 @@ def check_file_type(file_name)
   return
 end
 
+# Get OS version
+
+def get_os_version()
+  os_version = $host_info["OS Version"]
+  return os_version
+end
+
 # Get download
 
 def get_download(url,output_file)

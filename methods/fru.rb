@@ -21,6 +21,14 @@ def process_fru()
       line  = line.gsub(/Not present/,"not-present")
       row   = line.split(/\s+/)
       table = handle_table("row","",row,table)
+    else
+      if line.match(/SYS/)
+        line = line.gsub(/^\s+/,"")
+        location = "MB"
+        (name,status) = line.split(/\s+/)
+        row = [ location, name, status ]
+        table = handle_table("row","",row,table)
+      end
     end
   end
   table = handle_table("end","","",table)

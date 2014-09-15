@@ -117,4 +117,6 @@
 # Added dmidecode support
 # 0.5.8: Mon 15 Sep 2014 22:26:23 AEST
 # Added support for M10-4S IO and CPU and cleaned up CPU output
+# 0.5.9: Tue 16 Sep 2014 09:00:31 AEST
+# Fixed package list for Solaris 11
 
