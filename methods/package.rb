@@ -12,8 +12,8 @@ end
 
 def process_install_cluster(table)
   install_cluster = get_install_cluster()
-  install_cluster = install_cluster[0].split(/\=/)[1]
-  if install_cluster
+  if install_cluster[0]
+    install_cluster = install_cluster[0].split(/\=/)[1]
     table = handle_table("row","Install Cluster",install_cluster,table)
   end
   return table

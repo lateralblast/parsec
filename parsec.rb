@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.5.6
+# Version:      0.5.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -42,7 +42,7 @@ $author_name  = "Richard Spindler"
 
 $output_mode = "text"
 
-options   = "abcdefhlmvACDEFHIKLMOPSTVZd:i:s:w:R:o:p:"
+options   = "abcdefhlmvABCDEFHIKLMOPSTVZd:i:s:w:R:o:p:"
 $pigz_bin = %x[which pigz].chomp
 
 # Set up some script related variables
@@ -58,6 +58,7 @@ end
 $image_dir    = script_dir+"/images"
 $handbook_dir = script_dir+"/handbook"
 $fact_dir     = script_dir+"/facters"
+$decode_dir   = script_dir+"/dmidecode"
 
 [ "methods", "information", "firmware" ].each do |test_dir|
   required_dir = eval("$#{test_dir}_dir")
@@ -149,6 +150,7 @@ def print_usage(options)
   puts "-m: Mask data (hostnames etc)"
   puts "-d: Set Explorer directory"
   puts "-l: List explorers, and facts for either puppet or ansible"
+  puts "-B: Report based on DMI decode"
   puts "-F: Report based on Puppet Facter output"
   puts "-A: Report based on Ansible Fact output"
   puts "-a: Process all explorers"
@@ -227,20 +229,20 @@ end
 # Output mode
 
 if opt["T"]
-  if opt["R"] or opt["A"] or opt["F"]
+  if opt["R"] or opt["A"] or opt["F"] or opt["B"] or opt["Z"]
     $output_mode = "text"
   else
     puts "Report type not specified"
-    puts "Must use -R, -A, or -F"
+    puts "Must use -R, -A, -B, -Z, or -F"
     exit
   end
 else
   if opt["P"] or opt["o"] or opt["O"]
-    if opt["R"] or opt["A"] or opt["F"]
+    if opt["R"] or opt["A"] or opt["F"] or opt["B"] or opt["Z"]
       $output_mode = "file"
     else
       puts "Report type not specified"
-      puts "Must use -R, -A, or -F"
+      puts "Must use -R, -A, -B, -Z, or -F"
       exit
     end
   else
@@ -275,6 +277,7 @@ end
 if opt["l"]
   list_explorers()
   list_facters()
+  list_dmidecodes()
   exit
 end
 
@@ -321,7 +324,7 @@ else
   else
     host_names = file_list
   end
-  if !opt["A"] and !opt["F"]
+  if !opt["A"] and !opt["F"] and !opt["B"]
     host_names.each do |host_name|
       $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
       $exp_file = $exp_file[0].to_s
@@ -356,7 +359,7 @@ if opt["P"] or opt["O"]
     Dir.mkdir(output_dir)
   end
   if opt["P"]
-    if opt["R"]
+    if opt["R"] or opt["Z"]
       document_title = "Explorer: "+host_name
     end
     if opt["A"]
@@ -364,6 +367,9 @@ if opt["P"] or opt["O"]
     end
     if opt["F"]
       document_title = "Puppet Facts: "+host_name
+    end
+    if opt["B"]
+      document_title = "DMI decode: "+host_name
     end
     customer_name  = ""
     output_pdf     = "output/"+host_name+".pdf"
@@ -480,9 +486,9 @@ if opt["h"]
   print_usage(options)
 end
 
-# Handle Facter
+# Handle Facter / dmidecode
 
-if opt["F"] or opt["A"]
+if opt["F"] or opt["A"] or opt["B"]
   if opt["s"]
     host_name = opt["s"]
     file_name = ""
@@ -493,8 +499,12 @@ if opt["F"] or opt["A"]
   end
   if opt["F"]
     process_puppet_facter(host_name,file_name)
-  else
+  end
+  if opt["A"]
     process_ansible_facter(host_name,file_name)
+  end
+  if opt["B"]
+    process_dmidecode(host_name,file_name)
   end
 end
 
