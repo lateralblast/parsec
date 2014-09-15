@@ -19,6 +19,35 @@ def process_install_cluster(table)
   return table
 end
 
+# Get package history
+
+def get_pkg_history()
+  file_name = "/patch+pkg/pkg_history.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process package history
+
+def process_pkg_history()
+  file_array = get_pkg_history()
+  if file_array
+    title = "Package History"
+    row   = [ 'Operation', 'Client', 'Outcome', 'Date' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      if !line.match(/^START/)
+        (pkg_date,pkg_operation,pkg_client,pkg_outcome) = line.split(/\s+/)
+        row   = [ pkg_operation, pkg_client, pkg_outcome, pkg_date ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
 # Process package info
 
 def get_pkg_info()
@@ -34,7 +63,7 @@ def process_packages()
   pkg_date   = ""
   if file_array
     title = "Package Information"
-    row   = ['Package','Version','Install']
+    row   = [ 'Package', 'Version', 'Install' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
@@ -61,6 +90,10 @@ def process_packages()
       end
     end
     table = handle_table("end","","",table)
+  end
+  os_version = get_os_version()
+  if os_version == "5.11"
+    process_pkg_history()
   end
   return
 end

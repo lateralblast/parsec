@@ -119,4 +119,6 @@
 # Added support for M10-4S IO and CPU and cleaned up CPU output
 # 0.5.9: Tue 16 Sep 2014 09:00:31 AEST
 # Fixed package list for Solaris 11
+# 0.6.0: Tue 16 Sep 2014 09:14:36 AEST
+# Added package history for Solaris 11
 
