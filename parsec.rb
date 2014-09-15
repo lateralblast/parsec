@@ -42,7 +42,7 @@ $author_name  = "Richard Spindler"
 
 $output_mode = "text"
 
-options   = "abcdefhlmvABCDEFHIKLMOPSTVZd:i:s:w:R:o:p:"
+options   = "abcdefhlmvACDEFHIKLMOPSTVZd:i:s:w:R:o:p:"
 $pigz_bin = %x[which pigz].chomp
 
 # Set up some script related variables
@@ -58,7 +58,6 @@ end
 $image_dir    = script_dir+"/images"
 $handbook_dir = script_dir+"/handbook"
 $fact_dir     = script_dir+"/facters"
-$decode_dir   = script_dir+"/dmidecode"
 
 [ "methods", "information", "firmware" ].each do |test_dir|
   required_dir = eval("$#{test_dir}_dir")
@@ -152,7 +151,6 @@ def print_usage(options)
   puts "-l: List explorers, and facts for either puppet or ansible"
   puts "-F: Report based on Puppet Facter output"
   puts "-A: Report based on Ansible Fact output"
-  puts "-B: Report based on DMI decode output"
   puts "-a: Process all explorers"
   puts "-P: Output in PDF mode"
   puts "-T: Output in text mode (default)"
@@ -229,20 +227,20 @@ end
 # Output mode
 
 if opt["T"]
-  if opt["R"] or opt["A"] or opt["F"] or opt["B"]
+  if opt["R"] or opt["A"] or opt["F"]
     $output_mode = "text"
   else
     puts "Report type not specified"
-    puts "Must use -R, -A, -D, or -F"
+    puts "Must use -R, -A, or -F"
     exit
   end
 else
   if opt["P"] or opt["o"] or opt["O"]
-    if opt["R"] or opt["A"] or opt["F"] or opt["B"]
+    if opt["R"] or opt["A"] or opt["F"]
       $output_mode = "file"
     else
       puts "Report type not specified"
-      puts "Must use -R, -A, -D, or -F"
+      puts "Must use -R, -A, or -F"
       exit
     end
   else
@@ -277,7 +275,6 @@ end
 if opt["l"]
   list_explorers()
   list_facters()
-  list_dmidecodes()
   exit
 end
 
@@ -324,7 +321,7 @@ else
   else
     host_names = file_list
   end
-  if !opt["A"] and !opt["F"] and !opt["B"]
+  if !opt["A"] and !opt["F"]
     host_names.each do |host_name|
       $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
       $exp_file = $exp_file[0].to_s
@@ -367,9 +364,6 @@ if opt["P"] or opt["O"]
     end
     if opt["F"]
       document_title = "Puppet Facts: "+host_name
-    end
-    if opt["D"]
-      document_title = "DMI decode: "+host_name
     end
     customer_name  = ""
     output_pdf     = "output/"+host_name+".pdf"
@@ -486,21 +480,7 @@ if opt["h"]
   print_usage(options)
 end
 
-# Handle dmidecode
-
-if opt["B"]
-  if opt["s"]
-    host_name = opt["s"]
-    file_name = ""
-  end
-  if opt["i"]
-    file_name = opt["i"]
-    host_name = ""
-  end
-  process_dmidecode(host_name,file_name)
-end
-
-# Handle Facts (Ansible and Puppet)
+# Handle Facter
 
 if opt["F"] or opt["A"]
   if opt["s"]
