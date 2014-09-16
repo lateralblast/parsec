@@ -1,5 +1,34 @@
 # Disk related code
 
+# Get diskinfo information
+
+def get_diskinfo()
+  file_name = "/disks/diskinfo"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process diskinfo insformation
+
+def process_diskinfo()
+  file_array = get_diskinfo()
+  if file_array
+    source = ""
+    title  = "Disk Information"
+    row    = [ 'ID', 'Vendor / Product', 'Serial', 'Port' ]
+    table  = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      if line.match(/^c/)
+        row   = line.split(/\t/)
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
 # Get disk information
 
 def get_disk_info(disk_name)

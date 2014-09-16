@@ -33,13 +33,13 @@ def config_report(report,report_type)
   if report_type.match(/all|eeprom/)
     process_eeprom()
   end
-  if report_type.match(/all|os|coreadm/)
+  if report_type.match(/all|os|core/)
     process_coreadm()
   end
-  if report_type.match(/all|os|dumpadm/)
+  if report_type.match(/all|os|dump/)
     process_dumpadm()
   end
-  if report_type.match(/all|os|explorer/)
+  if report_type.match(/all|os|exp/)
     process_explorer()
   end
   if report_type.match(/all|os/)
@@ -48,8 +48,11 @@ def config_report(report,report_type)
   if report_type.match(/all|cpu/)
     process_cpu()
   end
-  if report_type.match(/all|memory/)
+  if report_type.match(/all|mem/)
     process_memory()
+  end
+  if report_type.match(/all|io|disk/)
+    process_diskinfo()
   end
   if report_type.match(/all|io|disk/)
     process_io()
@@ -57,7 +60,7 @@ def config_report(report,report_type)
   if report_type.match(/all|kernel/)
     process_etc_system()
   end
-  if report_type.match(/all|zones/)
+  if report_type.match(/all|zone/)
     process_zones()
   end
   if report_type.match(/all|security|system|passwd|password|login|sendmail|inetinit|su|inet|cron|keyserv|telnet|power|suspend|ssh/)

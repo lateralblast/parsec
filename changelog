@@ -129,3 +129,5 @@
 # Added crypto information for Solaris 11
 # 0.6.4: Tue 16 Sep 2014 16:09:50 AEST
 # Added cups information
+# 0.6.5: Tue 16 Sep 2014 16:57:00 AEST
+# Added diskinfo function
