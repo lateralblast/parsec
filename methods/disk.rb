@@ -20,7 +20,11 @@ def process_diskinfo()
     file_array.each do |line|
       line = line.chomp
       if line.match(/^c/)
-        row   = line.split(/\t/)
+        info  = line.split(/\t/)
+        if $masked == 1
+          info[2] = "Masked"
+        end
+        row   = info
         table = handle_table("row","",row,table)
       end
     end

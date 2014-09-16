@@ -133,3 +133,5 @@
 # Added diskinfo function
 # 0.6.6: Tue 16 Sep 2014 17:16:26 AEST
 # Added swap information
+# 0.6.7: Tue 16 Sep 2014 19:44:21 AEST
+# Added mount information
