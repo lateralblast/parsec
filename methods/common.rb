@@ -22,6 +22,9 @@ end
 
 def get_os_version()
   os_version = $host_info["OS Version"]
+  if !os_version
+    os_version = get_os_ver()
+  end
   return os_version
 end
 

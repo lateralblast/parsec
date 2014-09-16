@@ -121,4 +121,5 @@
 # Fixed package list for Solaris 11
 # 0.6.0: Tue 16 Sep 2014 09:14:36 AEST
 # Added package history for Solaris 11
-
+# 0.6.1: Tue 16 Sep 2014 10:43:57 AEST
+# Added package mediator infomration for Solaris 11

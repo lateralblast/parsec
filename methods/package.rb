@@ -48,6 +48,35 @@ def process_pkg_history()
   return
 end
 
+# Get package mediator
+
+def get_pkg_mediator()
+  file_name = "/patch+pkg/pkg_mediator.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process package history
+
+def process_pkg_mediator()
+  file_array = get_pkg_mediator()
+  if file_array
+    title = "Package mediator"
+    row   = [ 'Package', 'Source', 'Version', 'Implementation' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      if !line.match(/^MEDIATOR/)
+        (pkg_name,pkg_source,pkg_version,pkg_implementation) = line.split(/\s+/)
+        row   = [ pkg_name, pkg_source, pkg_version, pkg_implementation ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
 # Process package info
 
 def get_pkg_info()
@@ -94,6 +123,7 @@ def process_packages()
   os_version = get_os_version()
   if os_version == "5.11"
     process_pkg_history()
+    process_pkg_mediator()
   end
   return
 end
