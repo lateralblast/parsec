@@ -56,7 +56,7 @@ def get_pkg_mediator()
   return file_array
 end
 
-# Process package history
+# Process package mediator
 
 def process_pkg_mediator()
   file_array = get_pkg_mediator()
@@ -77,7 +77,7 @@ def process_pkg_mediator()
   return
 end
 
-# Get package repository property
+# Get package properties
 
 def get_pkg_properties()
   file_name = "/patch+pkg/pkg_property.out"
@@ -85,7 +85,7 @@ def get_pkg_properties()
   return file_array
 end
 
-# Process package history
+# Process package properties
 
 def process_pkg_properties()
   file_array = get_pkg_properties()
@@ -108,7 +108,7 @@ def process_pkg_properties()
   return
 end
 
-# Get package repository property
+# Get package publisher information
 
 def get_pkg_publisher()
   file_name = "/patch+pkg/pkg_publisher.out"
@@ -116,7 +116,7 @@ def get_pkg_publisher()
   return file_array
 end
 
-# Process package history
+# Process package publisher information
 
 def process_pkg_publisher()
   file_array = get_pkg_publisher()
