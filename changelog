@@ -127,3 +127,5 @@
 # Added package properties and publisher information for Solaris 11
 # 0.6.3: Tue 16 Sep 2014 15:51:11 AEST
 # Added crypto information for Solaris 11
+# 0.6.4: Tue 16 Sep 2014 16:09:50 AEST
+# Added cups information
