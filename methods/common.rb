@@ -189,9 +189,9 @@ def get_handbook_header(model)
     header = "Netra_"+model.gsub(/^N/,"")
   when /^V|K$/
     header = "SunFire"+model
-  when /[X6,X8,T6][0-9][0-9][0-9]/
+  when /X6[0-9][0-9][0-9]|X8[0-9][0-9][0-9]|T6[0-9][0-9][0-9]/
     header = "SunBlade"+model
-  when /T[3,4,5][-,_]|M[10,5,6][-,_]/
+  when /T3-|T4-|T5-|M10-|M5-|M6-/
     header = "SPARC_"+model
   when /X[3,4][-,_]/
     header = "Sun_Server_"+model

@@ -135,3 +135,5 @@
 # Added swap information
 # 0.6.7: Tue 16 Sep 2014 19:44:21 AEST
 # Added mount information
+# 0.6.8: Tue 16 Sep 2014 22:41:45 AEST
+# Added code to reduce image size

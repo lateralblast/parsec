@@ -345,17 +345,21 @@ def process_model_info(pdf,toc,model)
   if !File.directory?($image_dir) and !File.symlink($image_dir)
     return poc
   end
-  toc.push("Model Information,#{pdf.page_count}")
-  pdf.start_new_page
-  pdf.fill_color = $dark_blue
-  pdf.text "Model Information", :size => $section_font_size, :inline_format => true
-  pdf.text "\n"
-  pdf.fill_color $black
-  header = get_image_header(model)
+  counter = 0
+  header  = get_handbook_header(model)
   image_names = [ "Front", "Front Open", "Top", "Left Open", "Right Open", "Rear", "Rear Open" ]
   image_names.each do |image_name|
     image_file = $image_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_zoom.jpg"
     if File.exist?(image_file)
+      if counter == 0
+        toc.push("Model Information,#{pdf.page_count}")
+        pdf.start_new_page
+        pdf.fill_color = $dark_blue
+        pdf.text "Model Information", :size => $section_font_size, :inline_format => true
+        pdf.text "\n"
+        pdf.fill_color $black
+        counter = 1
+      end
       scale = 1
       image_size   = FastImage.size(image_file)
       image_width  = image_size[0]
@@ -369,7 +373,15 @@ def process_model_info(pdf,toc,model)
           scale = page_width / image_width
         end
       end
-      pdf.image image_file, :position => :center, :vposition => :center, :scale => scale
+      if image_file.match(/zoom/)
+        lq_image_file = image_file.gsub(/\.jpg/,"_lq.jpg")
+      end
+      if !File.exist?(lq_image_file)
+        image = Image.read(image_file).first
+        image.format = "JPEG"
+        image.write(lq_image_file) { self.quality = 10 }
+      end
+      pdf.image lq_image_file, :position => :center, :vposition => :center, :scale => scale
       text_string = "View: "+image_name
       text_width  = get_ttf_string_length(pdf,$default_font_size,text_string)
       x_pos = page_width/2 - text_width/2
