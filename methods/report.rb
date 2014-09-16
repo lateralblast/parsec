@@ -57,6 +57,9 @@ def config_report(report,report_type)
   if report_type.match(/all|io|disk/)
     process_io()
   end
+  if report_type.match(/all|io|disk|swap/)
+    process_swap()
+  end
   if report_type.match(/all|kernel/)
     process_etc_system()
   end

@@ -131,3 +131,5 @@
 # Added cups information
 # 0.6.5: Tue 16 Sep 2014 16:57:00 AEST
 # Added diskinfo function
+# 0.6.6: Tue 16 Sep 2014 17:16:26 AEST
+# Added swap information
