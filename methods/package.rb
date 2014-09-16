@@ -61,7 +61,7 @@ end
 def process_pkg_mediator()
   file_array = get_pkg_mediator()
   if file_array
-    title = "Package mediator"
+    title = "Package Mediator"
     row   = [ 'Package', 'Source', 'Version', 'Implementation' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
@@ -70,6 +70,68 @@ def process_pkg_mediator()
         (pkg_name,pkg_source,pkg_version,pkg_implementation) = line.split(/\s+/)
         row   = [ pkg_name, pkg_source, pkg_version, pkg_implementation ]
         table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
+# Get package repository property
+
+def get_pkg_properties()
+  file_name = "/patch+pkg/pkg_property.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process package history
+
+def process_pkg_properties()
+  file_array = get_pkg_properties()
+  if file_array
+    title = "Package Properties"
+    row   = [ 'Property', 'Value' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      if !line.match(/^PROPERTY/)
+        pkg_info     = line.split(/\s+/)
+        pkg_property = pkg_info[0]
+        pkg_value    = pkg_info[1..-1].join(" ")
+        row   = [ pkg_property, pkg_value ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
+# Get package repository property
+
+def get_pkg_publisher()
+  file_name = "/patch+pkg/pkg_publisher.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process package history
+
+def process_pkg_publisher()
+  file_array = get_pkg_publisher()
+  if file_array
+    title = "Package Publisher"
+    row   = [ 'Publisher', 'Type', 'Status', 'Location' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      if !line.match(/^Listing|^==|^PUBLISHER/)
+        if line.match(/[A-z]/)
+          (pkg_publisher,pkg_type,pkg_status,pkg_flag,pkg_location) = line.split(/\s+/)
+          row   = [ pkg_publisher, pkg_type, pkg_status, pkg_location ]
+          table = handle_table("row","",row,table)
+        end
       end
     end
     table = handle_table("end","","",table)
@@ -124,6 +186,8 @@ def process_packages()
   if os_version == "5.11"
     process_pkg_history()
     process_pkg_mediator()
+    process_pkg_properties()
+    process_pkg_publisher()
   end
   return
 end

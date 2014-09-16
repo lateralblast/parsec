@@ -122,4 +122,6 @@
 # 0.6.0: Tue 16 Sep 2014 09:14:36 AEST
 # Added package history for Solaris 11
 # 0.6.1: Tue 16 Sep 2014 10:43:57 AEST
-# Added package mediator infomration for Solaris 11
+# Added package mediator information for Solaris 11
+# 0.6.2: Tue 16 Sep 2014 13:14:59 AEST
+# Added package properties and publisher information for Solaris 11
