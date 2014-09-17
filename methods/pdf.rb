@@ -374,12 +374,12 @@ def process_model_info(pdf,toc,model)
         end
       end
       if image_file.match(/zoom/)
-        lq_image_file = image_file.gsub(/\.jpg/,"_lq.jpg")
+        lq_image_file  = image_file.gsub(/\.jpg/,"_lq.jpg")
       end
       if !File.exist?(lq_image_file)
         image = Image.read(image_file).first
         image.format = "JPEG"
-        image.write(lq_image_file) { self.quality = 10 }
+        image.write(lq_image_file) { self.quality = 80 }
       end
       pdf.image lq_image_file, :position => :center, :vposition => :center, :scale => scale
       text_string = "View: "+image_name
