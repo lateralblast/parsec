@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.6.8
+# Version:      0.6.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -69,7 +69,8 @@ $decode_dir   = script_dir+"/dmidecode"
     required_dir = script_dir+"/"+test_dir
     if !File.directory?(required_dir) and !File.symlink?(required_dir)
       puts "Cannot locate "+test_dir+" directory ("+required_dir+")"
-      exit
+      puts "Creating "+test_dir+" directory ("+required_dir+")"
+      Dir.mkdir(required_dir)
     end
   end
 end
