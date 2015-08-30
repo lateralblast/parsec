@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.6.9
+# Version:      0.7.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -63,7 +63,7 @@ $handbook_dir = script_dir+"/handbook"
 $fact_dir     = script_dir+"/facters"
 $decode_dir   = script_dir+"/dmidecode"
 
-[ "methods", "information", "firmware" ].each do |test_dir|
+[ "methods", "information", "firmware", "handbook" ].each do |test_dir|
   required_dir = eval("$#{test_dir}_dir")
   if !required_dir.match(/[A-z]/)
     required_dir = script_dir+"/"+test_dir
@@ -135,6 +135,26 @@ def get_code_ver()
   code_ver = code_ver[0].to_s.split(":")
   code_ver = code_ver[1].to_s.gsub(" ","")
   return code_ver
+end
+
+# Check local config
+
+def check_local_config()
+  if !$pigz_bin.match(/pigz/)
+    puts "Parallel GZip (pigz) not installed"
+    os_name = %x[uname -v]
+    if os_name.match(/Darwin/)
+      brew_bin = %x[which brew]
+      if brew_bin.match(/brew/)
+        %x[brew install pigz]
+      else
+        exit
+      end
+    else
+      exit
+    end
+  end
+  return
 end
 
 # Print usage
@@ -230,6 +250,12 @@ rescue
   print_usage(options)
 end
 
+# Check local config
+
+if !opt['h'] and !opt["V"]
+  check_local_config()
+end
+
 # Output mode
 
 if opt["T"]
@@ -281,7 +307,7 @@ end
 if opt["l"]
   list_explorers()
   list_facters()
-  list_dmidecodes()
+  #list_dmidecodes()
   exit
 end
 

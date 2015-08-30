@@ -139,3 +139,5 @@
 # Added code to reduce image size
 # 0.6.9: Sun 30 Aug 2015 08:47:10 AEST
 # Minor fix
+# 0.7.0: Sun 30 Aug 2015 13:32:52 AEST
+# Added check for parallel gzip
