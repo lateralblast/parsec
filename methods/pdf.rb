@@ -342,15 +342,23 @@ def process_handbook_info(pdf,toc,model)
 end
 
 def process_model_info(pdf,toc,model)
-  if !File.directory?($image_dir) and !File.symlink($image_dir)
+  header    = get_handbook_header(model)
+  if !File.directory?($images_dir) and !File.symlink($images_dir)
     return poc
   end
   counter = 0
-  header  = get_handbook_header(model)
-  image_names = [ "Front", "Front Open", "Top", "Left Open", "Right Open", "Rear", "Rear Open" ]
+  image_names = [ "Front", "Front Open", "Top", "Left Open", "Right Open", "Rear", "Rear Open", ]
   image_names.each do |image_name|
-    image_file = $image_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_zoom.jpg"
-    if File.exist?(image_file)
+    if image_name.match(/Main/)
+      image_file = $images_dir+"/"+header+".jpg"
+    else
+      image_file = $images_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_zoom.jpg"
+    end
+    file_type = get_file_type(image_file)
+    if file_type.match(/jpeg/)
+      if $verbose == 1
+        puts "Processing image: "+image_file
+      end
       if counter == 0
         toc.push("Model Information,#{pdf.page_count}")
         pdf.start_new_page
@@ -359,6 +367,8 @@ def process_model_info(pdf,toc,model)
         pdf.text "\n"
         pdf.fill_color $black
         counter = 1
+      else
+        pdf.start_new_page
       end
       scale = 1
       image_size   = FastImage.size(image_file)
@@ -366,20 +376,22 @@ def process_model_info(pdf,toc,model)
       page_width   = pdf.bounds.width
       image_height = image_size[1]
       page_height  = pdf.bounds.height
-      if image_height > page_height
-        scale = (page_height-100) / image_height
+      if image_width > page_width
+        scale = (page_width-150) / image_width
       else
-        if image_width > page_width
-          scale = page_width / image_width
+        if image_height > page_height
+          scale = (page_height-150) / image_height
         end
       end
       if image_file.match(/zoom/)
         lq_image_file  = image_file.gsub(/\.jpg/,"_lq.jpg")
-      end
-      if !File.exist?(lq_image_file)
-        image = Image.read(image_file).first
-        image.format = "JPEG"
-        image.write(lq_image_file) { self.quality = 80 }
+        if !File.exist?(lq_image_file)
+          image = Image.read(image_file).first
+          image.format = "JPEG"
+          image.write(lq_image_file) { self.quality = 80 }
+        end
+      else
+        lq_image_file = image_file
       end
       pdf.image lq_image_file, :position => :center, :vposition => :center, :scale => scale
       text_string = "View: "+image_name

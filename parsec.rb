@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.7.0
+# Version:      0.7.1
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -58,20 +58,18 @@ script_dir = File.basename($0)
 if !script_dir.match(/\//)
   script_dir = Dir.pwd
 end
-$image_dir    = script_dir+"/images"
-$handbook_dir = script_dir+"/handbook"
-$fact_dir     = script_dir+"/facters"
-$decode_dir   = script_dir+"/dmidecode"
+$data_dir     = script_dir+"/data"
+$handbook_dir = $data_dir+"/handbook"
+$fact_dir     = $data_dir+"/facters"
+$decode_dir   = $data_dir+"/dmidecode"
+$info_dir     = $data_dir+"/information"
+$images_dir   = $data_dir+"/images"
 
-[ "methods", "information", "firmware", "handbook" ].each do |test_dir|
-  required_dir = eval("$#{test_dir}_dir")
-  if !required_dir.match(/[A-z]/)
-    required_dir = script_dir+"/"+test_dir
-    if !File.directory?(required_dir) and !File.symlink?(required_dir)
-      puts "Cannot locate "+test_dir+" directory ("+required_dir+")"
-      puts "Creating "+test_dir+" directory ("+required_dir+")"
-      Dir.mkdir(required_dir)
-    end
+[ $data_dir, $images_dir, $handbook_dir, $fact_dir, $decode_dir, $info_dir ].each do |test_dir|
+  if !File.directory?(test_dir) and !File.symlink?(test_dir)
+    puts "Cannot locate "+test_dir+" directory ("+test_dir+")"
+    puts "Creating "+test_dir+" directory ("+test_dir+")"
+    Dir.mkdir(test_dir)
   end
 end
 

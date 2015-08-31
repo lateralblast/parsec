@@ -141,3 +141,5 @@
 # Minor fix
 # 0.7.0: Sun 30 Aug 2015 13:32:52 AEST
 # Added check for parallel gzip
+# 0.7.1: Mon 31 Aug 2015 21:37:09 AEST
+# Improved code for putting images in PDF

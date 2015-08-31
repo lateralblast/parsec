@@ -18,6 +18,17 @@ def check_file_type(file_name)
   return
 end
 
+# Get the file type
+
+def get_file_type(file_name)
+  if File.exist?(file_name)
+    file_type = %x[file --brief --mime-type #{file_name}].strip
+  else
+    file_type = "none"
+  end
+  return file_type
+end
+
 # Get OS version
 
 def get_os_version()
