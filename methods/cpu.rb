@@ -93,7 +93,7 @@ def process_cpu()
     if line.match(/[0-9][0-9]/)
       cpu_line = line.split(/\s+/)
       case sys_model
-      when /T[0-9]|M10-/
+      when /T[0-9]|M10-|M[5,6,7]-/
         if line.match(/^[0-9]/)
           cpu_thread = cpu_line[0]
           cpu_speed  = cpu_line[1..2].join(" ")

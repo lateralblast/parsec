@@ -7,7 +7,12 @@ def get_ctlr_no(io_path)
   # Get controller name by searching dev list for IO path
   # We do this as the kernel driver in path_to_inst is fp
   # whereas the controller is cX in everything else
-  file_name  = "/disks/ls-l_dev_cfg.out"
+  # except for oce on M[5,6]-32s
+  if io_path.match(/oce@/)
+    file_name = "/disks/ls_-lAR_@dev_@devices.out"
+  else
+    file_name  = "/disks/ls-l_dev_cfg.out"
+  end
   file_array = exp_file_to_array(file_name)
   ctlr_no    = file_array.grep(/#{io_path}/)
   ctlr_no    = ctlr_no.to_s.split(" ")
@@ -33,7 +38,7 @@ def get_ctlr_info(io_path,ctlr_no)
     fc_info = get_fc_info()
     if os_ver.match(/10|11/) and hw_cfg_file.match(/prtdiag/)
       ctlr_path = "/dev/cfg/"+ctlr_no
-      fc_info   = fc_info.grep(/#{ctlr_path}/)
+      fc_info   = fc_info.grep(/#{ctlr_path}\n/)
     else
       fc_info = fc_info.grep(/#{io_path}\/fp/)
     end

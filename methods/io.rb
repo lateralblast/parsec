@@ -216,6 +216,15 @@ def process_io()
         io_name  = io_line[-2]
         io_speed = io_line[-1]
         io_path  = line[index+1].gsub(/^\s+|\s+$/,"")
+      when /M[5,6,7]-/
+        io_slot  = io_line[0]
+        io_type  = io_line[1]
+        io_name  = io_line[2]
+        io_speed = io_line[-1]
+        io_path  = line[index+1]
+        if io_path
+          io_path  = io_path.gsub(/^\s+|\s+$/,"")
+        end
       when /T[3-5]-/
         io_slot  = io_line[0]
         io_type  = io_line[1].gsub(/PCI3/,"PCIE")

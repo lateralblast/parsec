@@ -246,8 +246,6 @@ def process_handbook()
     get_download(list_url,list_file)
   else
     header = get_manual_handbook_header(model)
-    puts header
-    exit
     html_files = Dir.entries($handbook_dir).grep(/#{header}[ ,\.]/)
     spec_file  = $handbook_dir+"/"+html_files.grep(/Specifications|spec/)[0]
     list_file  = $handbook_dir+"/"+html_files.grep(/omponents/)[0]

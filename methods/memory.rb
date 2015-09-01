@@ -75,6 +75,7 @@ def process_memory()
   total_mem      = ""
   dimm_size      = ""
   mem_base       = ""
+  block_count    = 0
   mem_info.each_with_index do |line,index|
     if line.match(/[0-9][0-9]|D[0-9]$/)
       counter       = counter+1
@@ -109,7 +110,7 @@ def process_memory()
           end
         end
       end
-      if sys_model.match(/M10-/)
+      if sys_model.match(/M10-|M[5,6]-/)
         mem_controller = mem_line[-1]
         if line.match(/^0x/)
           mem_base       = mem_line[0]
@@ -214,8 +215,17 @@ def process_memory()
           table = handle_table("row","Interleave",mem_interleave,table)
           f_count = f_count+1
         end
-        if counter < length-f_count-1
-          table = handle_table("line","","",table)
+        if sys_model.match(/M[5,6,7]-/)
+          if line.match(/^[0-9,A-F]x/)
+            block_count = block_count+1
+          end
+          if block_count < f_count+2
+            table = handle_table("line","","",table)
+          end
+        else
+          if counter < length-f_count-1
+            table = handle_table("line","","",table)
+          end
         end
         previous = line
       end
