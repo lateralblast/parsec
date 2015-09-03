@@ -149,3 +149,5 @@
 # Fixed alignment for TOC
 # 0.7.4: Thu  3 Sep 2015 21:32:26 AEST
 # Fixed issues with PDF creation
+# 0.7.5: Thu  3 Sep 2015 22:31:50 AEST
+# Improved masking support and tables for PDF output

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.7.4
+# Version:      0.7.5
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -387,6 +387,9 @@ if opt["P"] or opt["O"]
     Dir.mkdir(output_dir)
   end
   if opt["P"]
+    if $masked == 1
+      host_name = "explorer-host"
+    end
     if opt["R"] or opt["Z"]
       document_title = "Explorer: "+host_name
     end
@@ -401,6 +404,7 @@ if opt["P"] or opt["O"]
     end
     customer_name  = ""
     output_pdf     = "output/"+host_name+".pdf"
+    $output_file   = output_pdf
   end
 end
 
