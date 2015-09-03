@@ -147,3 +147,5 @@
 # Added support for M[5,6,7]-32
 # 0.7.3: Thu  3 Sep 2015 15:02:22 AEST
 # Fixed alignment for TOC
+# 0.7.4: Thu  3 Sep 2015 21:32:26 AEST
+# Fixed issues with PDF creation

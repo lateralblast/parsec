@@ -247,12 +247,24 @@ def process_handbook()
   else
     header = get_manual_handbook_header(model)
     html_files = Dir.entries($handbook_dir).grep(/#{header}[ ,\.]/)
-    spec_file  = $handbook_dir+"/"+html_files.grep(/Specifications|spec/)[0]
-    list_file  = $handbook_dir+"/"+html_files.grep(/omponents/)[0]
-    info_file  = $handbook_dir+"/"+html_files.grep(/Systems/)[0]
+    if html_files.to_s.match(/Specifications|spec/)
+      spec_file  = $handbook_dir+"/"+html_files.grep(/Specifications|spec/)[0]
+    end
+    if html_files.to_s.match(/omponents/)
+      list_file  = $handbook_dir+"/"+html_files.grep(/omponents/)[0]
+    end
+    if html_files.to_s.match(/Systems/)
+      info_file  = $handbook_dir+"/"+html_files.grep(/Systems/)[0]
+    end
   end
-  process_handbook_info_file(info_file)
-  process_handbook_spec_file(spec_file)
-  process_handbook_list_file(list_file)
+  if info_file
+    process_handbook_info_file(info_file)
+  end
+  if spec_file
+    process_handbook_spec_file(spec_file)
+  end
+  if list_file
+    process_handbook_list_file(list_file)
+  end
   return
 end

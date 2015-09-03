@@ -257,33 +257,35 @@ def create_table_contents(pdf,toc)
   toc.each_with_index do |page,index|
   #toc.each_with_index do |(key, value), index|
     (page_title,page_number) = page.split(",")
-    if toc_length > 40
-      page_number = page_number.to_i+3
-    else
-      page_number = page_number.to_i+2
-    end
-    dot_length  = get_ttf_string_length(pdf,font_size,".")
-    text_length = get_ttf_string_length(pdf,font_size,"#{page_title}  #{page_number}")
-    free_space  = pdf.bounds.width-text_length
-    no_dots     = free_space/dot_length
-    no_dots     = no_dots.to_i-1
-    dot_string  = "."*no_dots
-    test_string = "#{page_title} #{dot_string} #{page_number}"
-    text_string = "<link anchor='#{page_title}'>#{page_title}</link> #{dot_string}"
-    text_length = get_ttf_string_length(pdf,font_size,text_string)
-    text_height = get_ttf_string_height(pdf,font_size,text_string)
-    pdf.outline.page :title => page_title, :destination => page_number
-    number_length = get_ttf_string_length(pdf,font_size,page_number.to_s)
-    number_height = get_ttf_string_height(pdf,font_size,page_number.to_s)
-    y_pos = pdf.cursor
-    pdf.bounding_box [0, y_pos], :width => text_length, :height => font_size do
-      pdf.text_box text_string, :width => text_length, :align => :left, :inline_format => true
-    end
-    pdf.bounding_box [pdf.bounds.width-number_length, y_pos], :width => number_length, :height => font_size do
-      pdf.text_box page_number.to_s, :width => number_length, :align => :right, :inline_format => true
-    end
-    if y_pos < 20 and index < toc_length+1
-      pdf.start_new_page
+    if page_title.match(/[A-z]/)
+      if toc_length > 52
+        page_number = page_number.to_i+3
+      else
+        page_number = page_number.to_i+2
+      end
+      dot_length  = get_ttf_string_length(pdf,font_size,".")
+      text_length = get_ttf_string_length(pdf,font_size,"#{page_title}  #{page_number}")
+      free_space  = pdf.bounds.width-text_length
+      no_dots     = free_space/dot_length
+      no_dots     = no_dots.to_i-1
+      dot_string  = "."*no_dots
+      test_string = "#{page_title} #{dot_string} #{page_number}"
+      text_string = "<link anchor='#{page_title}'>#{page_title}</link> #{dot_string}"
+      text_length = get_ttf_string_length(pdf,font_size,text_string)
+      text_height = get_ttf_string_height(pdf,font_size,text_string)
+      pdf.outline.page :title => page_title.to_s, :destination => page_number.to_i
+      number_length = get_ttf_string_length(pdf,font_size,page_number.to_s)
+      number_height = get_ttf_string_height(pdf,font_size,page_number.to_s)
+      y_pos = pdf.cursor
+      pdf.bounding_box [0, y_pos], :width => text_length, :height => font_size do
+        pdf.text_box text_string, :width => text_length, :align => :left, :inline_format => true
+      end
+      pdf.bounding_box [pdf.bounds.width-number_length, y_pos], :width => number_length, :height => font_size do
+        pdf.text_box page_number.to_s, :width => number_length, :align => :right, :inline_format => true
+      end
+      if y_pos < 20 and index < toc_length
+        pdf.start_new_page
+      end
     end
   end
   return pdf
@@ -383,9 +385,7 @@ def process_model_info(pdf,toc,model)
           pdf.fill_color $black
           counter = 1
         else
-          if pdf.cursor < 100
-            pdf.start_new_page
-          end
+          pdf.start_new_page
         end
         scale = 1
         image_size   = FastImage.size(image_file)
@@ -427,7 +427,6 @@ def process_model_info(pdf,toc,model)
         y_pos = page_height/2 - image_height*scale/2 - 30
         pdf.draw_text(text_string, :at => [ x_pos, y_pos ] )
         pdf.add_dest(text_string,pdf.dest_fit(pdf.page))
-        current_ypos = pdf.y
         toc.push("#{text_string},#{pdf.page_count-1}")
       end
     end
