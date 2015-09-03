@@ -84,7 +84,7 @@ def get_ttf_string_length(pdf,font_size,text_string)
 end
 
 def get_ttf_string_height(pdf,font_size,text_string)
-  ttf_string_length = pdf.height_of(text_string,:size => font_size)
+  ttf_string_height = pdf.height_of(text_string,:size => font_size)
   return(ttf_string_height)
 end
 
@@ -253,10 +253,15 @@ def create_table_contents(pdf,toc)
   pdf.text " ", size: font_size
   pdf.fill_color = $black
   font_size      = $default_font_size
-  toc.each do |page|
+  toc_length     = toc.length
+  toc.each_with_index do |page,index|
   #toc.each_with_index do |(key, value), index|
     (page_title,page_number) = page.split(",")
-    page_number = page_number.to_i+2
+    if toc_length > 40
+      page_number = page_number.to_i+3
+    else
+      page_number = page_number.to_i+2
+    end
     dot_length  = get_ttf_string_length(pdf,font_size,".")
     text_length = get_ttf_string_length(pdf,font_size,"#{page_title}  #{page_number}")
     free_space  = pdf.bounds.width-text_length
@@ -264,10 +269,22 @@ def create_table_contents(pdf,toc)
     no_dots     = no_dots.to_i-1
     dot_string  = "."*no_dots
     test_string = "#{page_title} #{dot_string} #{page_number}"
-    text_length = get_ttf_string_length(pdf,font_size,test_string)
-    text_string = "<link anchor='#{page_title}'>#{page_title}</link> #{dot_string} #{page_number}"
+    text_string = "<link anchor='#{page_title}'>#{page_title}</link> #{dot_string}"
+    text_length = get_ttf_string_length(pdf,font_size,text_string)
+    text_height = get_ttf_string_height(pdf,font_size,text_string)
     pdf.outline.page :title => page_title, :destination => page_number
-    pdf.text text_string, size: font_size, :align => :right, :inline_format => true
+    number_length = get_ttf_string_length(pdf,font_size,page_number.to_s)
+    number_height = get_ttf_string_height(pdf,font_size,page_number.to_s)
+    y_pos = pdf.cursor
+    pdf.bounding_box [0, y_pos], :width => text_length, :height => font_size do
+      pdf.text_box text_string, :width => text_length, :align => :left, :inline_format => true
+    end
+    pdf.bounding_box [pdf.bounds.width-number_length, y_pos], :width => number_length, :height => font_size do
+      pdf.text_box page_number.to_s, :width => number_length, :align => :right, :inline_format => true
+    end
+    if y_pos < 20 and index < toc_length+1
+      pdf.start_new_page
+    end
   end
   return pdf
 end
@@ -347,61 +364,72 @@ def process_model_info(pdf,toc,model)
     return poc
   end
   counter = 0
-  image_names = [ "Front", "Front Open", "Top", "Left Open", "Right Open", "Rear", "Rear Open", ]
+  image_names = [ "Front", "Front Open", "Top", "Top Open", "Left", "Left Open", "Right", "Right Open", "Rear", "Rear Open" ]
+  image_views = [ "Zoom", "Callout" ]
   image_names.each do |image_name|
-    if image_name.match(/Main/)
-      image_file = $images_dir+"/"+header+".jpg"
-    else
-      image_file = $images_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_zoom.jpg"
-    end
-    file_type = get_file_type(image_file)
-    if file_type.match(/jpeg/)
-      if $verbose == 1
-        puts "Processing image: "+image_file
-      end
-      if counter == 0
-        toc.push("Model Information,#{pdf.page_count}")
-        pdf.start_new_page
-        pdf.fill_color = $dark_blue
-        pdf.text "Model Information", :size => $section_font_size, :inline_format => true
-        pdf.text "\n"
-        pdf.fill_color $black
-        counter = 1
-      else
-        pdf.start_new_page
-      end
-      scale = 1
-      image_size   = FastImage.size(image_file)
-      image_width  = image_size[0]
-      page_width   = pdf.bounds.width
-      image_height = image_size[1]
-      page_height  = pdf.bounds.height
-      if image_width > page_width
-        scale = (page_width-150) / image_width
-      else
-        if image_height > page_height
-          scale = (page_height-150) / image_height
+    image_views.each do |image_view|
+      image_file = $images_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_"+image_view.downcase+".jpg"
+      file_type = get_file_type(image_file)
+      if file_type.match(/jpeg/)
+        if $verbose == 1
+          puts "Processing image: "+image_file
         end
-      end
-      if image_file.match(/zoom/)
-        lq_image_file  = image_file.gsub(/\.jpg/,"_lq.jpg")
-        if !File.exist?(lq_image_file)
-          image = Image.read(image_file).first
-          image.format = "JPEG"
-          image.write(lq_image_file) { self.quality = 80 }
+        if counter == 0
+          toc.push("Model Information,#{pdf.page_count}")
+          pdf.start_new_page
+          pdf.fill_color = $dark_blue
+          pdf.text "Model Information", :size => $section_font_size, :inline_format => true
+          pdf.text "\n"
+          pdf.fill_color $black
+          counter = 1
+        else
+          if pdf.cursor < 100
+            pdf.start_new_page
+          end
         end
-      else
+        scale = 1
+        image_size   = FastImage.size(image_file)
+        image_width  = image_size[0]
+        page_width   = pdf.bounds.width
+        image_height = image_size[1]
+        page_height  = pdf.bounds.height
+        if image_width > page_width
+          new_image_height = image_height*scale
+          if new_image_height > page_height
+            scale = (page_height-150) / image_height
+          else
+            scale = (page_width-150) / image_width
+          end
+        else
+          if image_height > page_height
+            new_image_width = image_width*scale
+            if new_image_width > page_width
+              scale = (image_width-150) / image_width
+            else
+              scale = (page_height-150) / image_height
+            end
+          end
+        end
+        if image_file.match(/zoom/)
+          lq_image_file  = image_file.gsub(/\.jpg/,"_lq.jpg")
+          if !File.exist?(lq_image_file)
+            image = Image.read(image_file).first
+            image.format = "JPEG"
+            image.write(lq_image_file) { self.quality = 80 }
+          end
+        else
         lq_image_file = image_file
+        end
+        pdf.image lq_image_file, :position => :center, :vposition => :center, :scale => scale
+        text_string = "View: "+image_name+" ("+image_view+")"
+        text_width  = get_ttf_string_length(pdf,$default_font_size,text_string)
+        x_pos = page_width/2 - text_width/2
+        y_pos = page_height/2 - image_height*scale/2 - 30
+        pdf.draw_text(text_string, :at => [ x_pos, y_pos ] )
+        pdf.add_dest(text_string,pdf.dest_fit(pdf.page))
+        current_ypos = pdf.y
+        toc.push("#{text_string},#{pdf.page_count-1}")
       end
-      pdf.image lq_image_file, :position => :center, :vposition => :center, :scale => scale
-      text_string = "View: "+image_name
-      text_width  = get_ttf_string_length(pdf,$default_font_size,text_string)
-      x_pos = page_width/2 - text_width/2
-      y_pos = page_height/2 - image_height*scale/2 - 30
-      pdf.draw_text(text_string, :at => [ x_pos, y_pos ] )
-      pdf.add_dest(text_string,pdf.dest_fit(pdf.page))
-      current_ypos = pdf.y
-      toc.push("#{text_string},#{pdf.page_count-1}")
     end
   end
   return toc
@@ -438,7 +466,7 @@ def generate_pdf(pdf,document_title,output_pdf,customer_name)
       sub_section_counter = 0
       if next_line
         if next_line.match(/OBP Information/)
-          pdf.start_new_page
+          #pdf.start_new_page
         end
       end
       # Get Model number
