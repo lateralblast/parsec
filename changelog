@@ -151,3 +151,5 @@
 # Fixed issues with PDF creation
 # 0.7.5: Thu  3 Sep 2015 22:31:50 AEST
 # Improved masking support and tables for PDF output
+# 0.7.6: Fri  4 Sep 2015 08:07:13 AEST
+# Improved image scaling

@@ -429,6 +429,7 @@ def process_model_info(pdf,toc,model)
         image_height = image_size[1]
         page_height  = pdf.bounds.height
         if image_width > page_width
+          scale = (page_width-150) / image_width
           new_image_height = image_height*scale
           if new_image_height > page_height
             scale = (page_height-150) / image_height
@@ -437,6 +438,7 @@ def process_model_info(pdf,toc,model)
           end
         else
           if image_height > page_height
+            scale = (page_height-150) / image_height
             new_image_width = image_width*scale
             if new_image_width > page_width
               scale = (image_width-150) / image_width
