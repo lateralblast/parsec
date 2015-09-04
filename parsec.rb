@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.7.6
+# Version:      0.7.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -214,7 +214,7 @@ def print_usage(options)
   puts "    ssh:        SSH information"
   puts "    fs:         Filesystem information"
   puts "    services:   Services information"
-  puts "    lu:         LiveUpgrade information"
+  puts "    lu|be:      LiveUpgrade or Beadm information"
   puts "    locale:     Locale information"
   puts "    modinfo:    Module information"
   puts "    package:    Package information"

@@ -84,8 +84,13 @@ def config_report(report,report_type)
   if report_type.match(/all|services/)
     process_services()
   end
-  if report_type.match(/all|lu|liveupgrade/)
-    process_liveupgrade()
+  if report_type.match(/all|lu|liveupgrade|be/)
+    os_ver = get_os_version()
+    if os_ver.match(/11/)
+      process_beadm()
+    else
+      process_liveupgrade()
+    end
   end
   if report_type.match(/all|locale/)
     process_locale()
