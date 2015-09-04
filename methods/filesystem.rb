@@ -12,7 +12,7 @@ def process_file_systems()
   file_name  = "/etc/vfstab"
   file_array = get_vfstab()
   if file_array
-    puts
+    handle_output("\n")
     counter = 0
     title   = "File Systems ("+file_name+")"
     table   = Terminal::Table.new :title => title, :headings => ['Device', 'Mount','Type']

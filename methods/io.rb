@@ -334,7 +334,7 @@ def process_io()
           if $masked == 0
             table = handle_table("row","Interface",if_name,table)
           else
-            table = handle_table("row","Interface","xxxxxxxx",table)
+            table = handle_table("row","Interface","MASKED",table)
           end
           if_hostname = get_if_hostname(if_name)
         end
@@ -342,14 +342,14 @@ def process_io()
           if $masked == 0
             table = handle_table("row","Hostname",if_hostname,table)
           else
-            table = handle_table("row","Hostname","xxxxxxxx",table)
+            table = handle_table("row","Hostname","MASKED",table)
           end
           if_ip = get_hostname_ip(if_hostname)
           if if_ip
             if $masked == 0
               table = handle_table("row","IP",if_ip,table)
             else
-              table = handle_table("row","IP","XXX.XXX.XXX.XXX",table)
+              table = handle_table("row","IP","MASKED",table)
             end
           end
         end

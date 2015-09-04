@@ -5,7 +5,7 @@
 def process_services()
   file_array = get_manifests_services()
   if file_array
-    puts
+    handle_output("\n")
     title = "Service"
     table = Terminal::Table.new :title => title, :headings => ['Service', 'Status','Recommended','Complies']
     file_array.each do |line|

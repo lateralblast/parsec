@@ -137,9 +137,10 @@ end
 # Process M Series Logical Domain Information
 
 def process_m_series_logical_domains()
-  table = ""
-  host  = ""
-  param = ""
+  table   = ""
+  host    = ""
+  param   = ""
+  counter = 0
   file_array = get_ldom_info()
   if file_array
     ldom = Hash.new {|hash, key| hash[key] = Hash.new }
@@ -148,7 +149,12 @@ def process_m_series_logical_domains()
       items = line.split(/\|/)
       case line
       when /^DOMAIN/
-        host = items[1].split(/\=/)[1]
+        if $masked == 1
+          host    = "host"+counter.to_s
+          counter = counter+1
+        else
+          host = items[1].split(/\=/)[1]
+        end
         if host
           items[2..-1].each do |item|
             (param,value)     = item.split(/\=/)
@@ -177,9 +183,9 @@ def process_m_series_logical_domains()
             end
           end
         else
-          param = line+" Information"
+          param = line.capitalize.gsub(/Vcpu/,"vCPU")
           param = set_param_name(param)
-          ldom[host][param] = "" 
+          ldom[host][param] = "Information" 
         end
       when /^\|/
         line  = line.gsub(/^\|/,"")
@@ -202,6 +208,14 @@ def process_m_series_logical_domains()
       table = handle_table("title",title,row,"")
       details.each do |item,value|
         value = ldom[host][item]
+        if $masked == 1
+          if item.match(/MAC Address|Volume$|nvram|Server|Service|Vnet|Vcons|Vdisk|UUID|Network|Vcc|Host ID|Vsw|Vdisk/)
+            value = "MASKED"
+          end
+          if item.match(/Volume [A-z]/)
+            item = "Volume MASKED"
+          end
+        end
         row   = [ item, value ]
         if item.match(/Information/)
           table = handle_table("line","","",table)

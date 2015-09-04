@@ -65,7 +65,7 @@ def extract_exp_file(file_to_extract)
     end
     if $exp_file_list.include?(file_to_extract)
       if $verbose == 1
-        puts "Executing: "+command
+        handle_output("Executing: #{command}\n")
       end
       system(command)
     end
@@ -105,7 +105,7 @@ def exp_file_to_array(file_name)
     file_array = IO.readlines ext_file
   else
     if $verbose == 1
-      puts "File #{file_name} does not exist"
+      handle_output("File #{file_name} does not exist\n")
     end
   end
   return file_array
@@ -265,7 +265,7 @@ def list_explorers()
             orig_id   = host_info[1]
             host_name = "hostname"+counter.to_s
             counter   = counter+1
-            host_id   = "XXXXXXXX"
+            host_id   = "MASKED"
             exp_file  = exp_file.gsub(/#{orig_id}/,host_id).gsub(/#{orig_name}/,host_name)
           else
             host_name = host_info[2].split(/-/)[0]

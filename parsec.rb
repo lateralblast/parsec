@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.7.9
+# Version:      0.8.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -388,7 +388,7 @@ if opt["P"] or opt["O"]
   end
   if opt["P"]
     if $masked == 1
-      host_name = "explorer-host"
+      host_name = "masked"
     end
     if opt["R"] or opt["Z"]
       document_title = "Explorer: "+host_name

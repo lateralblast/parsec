@@ -45,15 +45,15 @@ def get_download(url,output_file)
   check_file_type(output_file)
   if !File.exist?(output_file)
     if $verbose == 1
-      puts "Downloading: #{url}"
-      puts "Destination: #{output_file}"
+      handle_output("Downloading: #{url}\n")
+      handle_output("Destination: #{output_file}\n")
     end
     output_dir = File.dirname(output_file)
     if !Dir.exist?(output_dir)
       begin
         Dir.mkdir(output_dir)
       rescue
-        puts "Cannot creating directory "+output_dir
+        handle_output("Cannot creating directory #{output_dir}\n")
         exit
       end
     end
@@ -69,14 +69,14 @@ def get_download(url,output_file)
           agent.get(url).save(output_file)
         rescue
           if $verbose == 1
-            puts "Error fetching: "+url
+            handle_output("Error fetching: #{url}\n")
           end
         end
       end
     end
   else
     if $verbose == 1
-      puts "File: #{output_file} already exists"
+      handle_output("File: #{output_file} already exists\n")
     end
   end
   return
@@ -86,7 +86,7 @@ end
 
 def get_mos_url(mos_url,local_file)
   if $verbose == 1
-    puts "Downloading "+mos_url+" to "+local_file
+    handle_output("Downloading #{mos_url} to #{local_file}\n")
   end
   if mos_url.match(/patch_file|zip$/)
     mos_passwd_file = Dir.home+"/.mospasswd"

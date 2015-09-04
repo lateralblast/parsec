@@ -54,6 +54,7 @@ def process_security(report_type)
           handle_output(table)
           handle_output("\n")
         end
+        handle_output("\n")
         curr_name  = file_name
         title      = "Security Settings ("+file_name+")"
         table      = Terminal::Table.new :title => title, :headings => ['Item', 'Current','Recommended','Complies']

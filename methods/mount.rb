@@ -28,7 +28,7 @@ def process_mounts()
       table   = handle_table("row","",row,table)
     end
     table = handle_table("end","","",table)
-    puts
+    handle_output("\n")
     title = "Mount Source Information"
     row   = [ 'Mount', 'Source', ]
     table = handle_table("title",title,row,"")
@@ -44,7 +44,7 @@ def process_mounts()
       table   = handle_table("row","",row,table)
     end
     table = handle_table("end","","",table)
-    puts
+    handle_output("\n")
     title = "Mount Type Information"
     row   = [ 'Mount', 'Type', 'Date', ]
     table = handle_table("title",title,row,"")

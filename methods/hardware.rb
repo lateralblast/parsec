@@ -64,7 +64,7 @@ def process_chassis_serial(table)
       table = handle_table("row","Serial",serial_number,table)
     end
   else
-    table = handle_table("row","Serial","XXXXXXXX",table)
+    table = handle_table("row","Serial","MASKED",table)
   end
   return table
 end

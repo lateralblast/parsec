@@ -159,3 +159,5 @@
 # Added support for Domain information on new M series
 # 0.7.9: Fri  4 Sep 2015 20:56:38 AEST
 # Added support for LDom information on new M series
+# 0.8.0: Sat  5 Sep 2015 08:52:52 AEST
+# Improved masking and output

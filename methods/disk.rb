@@ -22,7 +22,7 @@ def process_diskinfo()
       if line.match(/^c/)
         info  = line.split(/\t/)
         if $masked == 1
-          info[2] = "Masked"
+          info[2] = "MASKED"
         end
         row   = info
         table = handle_table("row","",row,table)

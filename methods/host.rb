@@ -34,7 +34,7 @@ def process_host_id(table)
   if $masked == 0
     table = handle_table("row","HostID",host_id,table)
   else
-    table = handle_table("row","HostID","XXXXXXXX",table)
+    table = handle_table("row","HostID","MASKED",table)
   end
   return table
 end
@@ -55,7 +55,7 @@ def process_host_name(table)
       table = handle_table("row","Hostname",host_name,table)
     end
   else
-    table = handle_table("row","Hostname","explorer-host",table)
+    table = handle_table("row","Hostname","MASKED",table)
   end
   return table
 end

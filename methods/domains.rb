@@ -14,6 +14,7 @@ def process_domain()
   if model_name.match(/^M[5,6]-/)
     file_array = get_domain_info()
     if file_array
+      handle_output("\n")
       title   = "Domain Information"
       row     = ['Item','Value']
       table   = handle_table("title",title,row,"")
@@ -22,6 +23,9 @@ def process_domain()
         items = line.split(/: /)
         item  = items[0]
         value = items[1]
+        if $masked == 1
+          value = "MASKED"
+        end
         row   = [ item, value ]
         table = handle_table("row","",row,table)
       end

@@ -59,6 +59,7 @@ def process_cpu()
   model_name = get_model_name()
   t_ratio    = 1
   c_ratio    = 1
+  handle_output("\n")
   if model_name.match(/^M|^T/)
     case model_name
     when /T2|T3-|T5[0-9]/

@@ -409,7 +409,7 @@ def process_model_info(pdf,toc,model)
       file_type = get_file_type(image_file)
       if file_type.match(/jpeg/)
         if $verbose == 1
-          puts "Processing image: "+image_file
+          handle_output("Processing image: #{image_file}\n")
         end
         if counter == 0
           toc.push("Model Information,#{pdf.page_count}")

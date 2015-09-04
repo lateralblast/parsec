@@ -92,6 +92,12 @@ def config_report(report,report_type)
       process_liveupgrade()
     end
   end
+  if report_type.match(/all|svcprop/)
+    os_ver = get_os_version()
+    if os_ver.match(/11/)
+    #  process_svcprop()
+    end
+  end
   if report_type.match(/all|locale/)
     process_locale()
   end
@@ -102,7 +108,10 @@ def config_report(report,report_type)
     process_packages()
   end
   if report_type.match(/all|patch/)
-    process_patches()
+    os_ver = get_os_version
+    if !os_ver.match(/11/)
+      process_patches()
+    end
   end
   if report_type.match(/all|tcp/)
     process_network("tcp")

@@ -99,6 +99,9 @@ def process_pkg_properties()
         pkg_info     = line.split(/\s+/)
         pkg_property = pkg_info[0]
         pkg_value    = pkg_info[1..-1].join(" ")
+        if pkg_property.match(/publisher-search-order/)
+          pkg_value = "MASKED"
+        end
         row   = [ pkg_property, pkg_value ]
         table = handle_table("row","",row,table)
       end
@@ -129,6 +132,14 @@ def process_pkg_publisher()
       if !line.match(/^Listing|^==|^PUBLISHER/)
         if line.match(/[A-z]/)
           (pkg_publisher,pkg_type,pkg_status,pkg_flag,pkg_location) = line.split(/\s+/)
+          if $masked == 1
+            if !pkg_publisher.match(/solaris|opscenter|cacao/)
+              pkg_publisher = "MASKED"
+            end
+            if pkg_location.match(/http/)
+              pkg_location = "MASKED"
+            end
+          end
           row   = [ pkg_publisher, pkg_type, pkg_status, pkg_location ]
           table = handle_table("row","",row,table)
         end
@@ -211,7 +222,7 @@ def process_packages()
         end
         if prefix.match(/FILES|STATUS/)
           if $masked == 1
-            if !pkg_name.match(/^CSW|^SUNW|^splunk|^SMC|^SME|^FJ|^TSI|^VRTS|^SYM|^TIV/)
+            if !pkg_name.match(/CSW|SUNW|splunk|SMC|SME|FJ|TSI|VRTS|SYM|TIV/)
               pkg_name = "MASKED"
             end
           end
