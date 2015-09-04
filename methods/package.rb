@@ -147,13 +147,53 @@ def get_pkg_info()
   return file_array
 end
 
+# Get IPS info
+
+def get_ips_info()
+  file_name  = "/patch+pkg/pkg_listing_ips"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process IPS info
+
+def process_pkg_ips()
+  file_array = get_ips_info()
+  if file_array
+    title = "IPS Package Information"
+    row   = [ 'Name (Publisher)', 'Version', 'IFO' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      if !line.match(/^NAME/)
+        items    = line.split(/\s+/)
+        if line.match(/\(/)
+          ips_name = items[0..1]
+          ips_ver  = items[2]
+          ips_ifo  = items[3]
+        else
+          ips_name = items[0]
+          ips_ver  = items[1]
+          ips_ifo  = items[2]
+        end
+        row      = [ ips_name, ips_ver, ips_ifo ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
+# Main routine for processing packages
+
 def process_packages()
   file_array = get_pkg_info()
   pkg_name   = ""
   pkg_ver    = ""
   pkg_date   = ""
   if file_array
-    title = "Package Information"
+    title = "System V Package Information"
     row   = [ 'Package', 'Version', 'Install' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
@@ -175,7 +215,7 @@ def process_packages()
               pkg_name = "MASKED"
             end
           end
-          row   = [pkg_name,pkg_ver,pkg_date]
+          row   = [ pkg_name, pkg_ver, pkg_date ]
           table = handle_table("row","",row,table)
         end
       end
@@ -184,6 +224,7 @@ def process_packages()
   end
   os_version = get_os_version()
   if os_version == "5.11"
+    process_pkg_ips()
     process_pkg_history()
     process_pkg_mediator()
     process_pkg_properties()

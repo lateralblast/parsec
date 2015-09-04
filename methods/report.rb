@@ -113,6 +113,9 @@ def config_report(report,report_type)
   if report_type.match(/all|ldom/)
     process_ldom()
   end
+  if report_type.match(/all|^dom/)
+    process_domain()
+  end
   if report_type.match(/all|fru/)
     process_fru()
   end

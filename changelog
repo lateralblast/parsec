@@ -155,3 +155,5 @@
 # Improved image scaling
 # 0.7.7: Fri  4 Sep 2015 10:14:14 AEST
 # Added Solaris 11 BE support
+# 0.7.8: Fri  4 Sep 2015 11:49:12 AEST
+# Added support for Domain information on new M series
