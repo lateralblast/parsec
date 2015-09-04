@@ -157,3 +157,5 @@
 # Added Solaris 11 BE support
 # 0.7.8: Fri  4 Sep 2015 11:49:12 AEST
 # Added support for Domain information on new M series
+# 0.7.9: Fri  4 Sep 2015 20:56:38 AEST
+# Added support for LDom information on new M series

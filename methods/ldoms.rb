@@ -1,5 +1,52 @@
 # LDOM related code
 
+def set_param_name(item)
+  item = item.gsub(/^cpu-arch/,"CPU Architecture")
+  item = item.gsub(/^dev/,"Device")
+  item = item.gsub(/^cpu/,"CPU")
+  item = item.gsub(/name/,"Name")
+  item = item.gsub(/^state/,"State")
+  item = item.gsub(/^flags/,"Flags")
+  item = item.gsub(/^uptime/,"Uptime")
+  item = item.gsub(/^vol/,"Volume")
+  item = item.gsub(/log/,"Log")
+  item = item.gsub(/^Uuid/,"UUID")
+  item = item.gsub(/^cons/,"Console Port")
+  item = item.gsub(/^mem$/,"Memory")
+  item = item.gsub(/^mac-addr/,"MAC Address")
+  item = item.gsub(/^hostid/,"Host ID")
+  item = item.gsub(/^mtu/,"MTU")
+  item = item.gsub(/^ncpu/,"CPUs")
+  item = item.gsub(/^uuid/,"UUID")
+  item = item.gsub(/^vcpu/,"vCPU")
+  item = item.gsub(/information/,"Information")
+  item = item.gsub(/^id/,"ID")
+  item = item.gsub(/^linkprop/,"Link Property")
+  item = item.gsub(/^cid/,"CPU ID")
+  item = item.gsub(/^vid/,"vCPU ID")
+  item = item.gsub(/mpgroup/,"MP Group")
+  item = item.gsub(/group/,"Group")
+  item = item.gsub(/mode/,"Mode")
+  item = item.gsub(/max-cores/,"Max Cores")
+  item = item.gsub(/physical-bindings/,"Physical Bindings")
+  item = item.gsub(/thread/,"Thread")
+  item = item.gsub(/norm_/,"Normal ")
+  item = item.gsub(/shutdown-/,"Shutdown ")
+  item = item.gsub(/util/,"Utilisation")
+  item = item.gsub(/master/,"Master")
+  item = item.gsub(/^cpuset/,"CPU Set")
+  item = item.gsub(/^softstate/,"Status")
+  item = item.gsub(/^port/,"Console Port")
+  item = item.gsub(/^nclients/,"Clients")
+  item = item.gsub(/net-dev/,"Network Device")
+  item = item.gsub(/timeout/,"Timeout")
+  item = item.gsub(/server/,"Server")
+  item = item.gsub(/service/,"Service")
+  item = item.gsub(/failure-policy/,"Failure Policy")
+  item = item.gsub(/extended-mapin-space/,"Extended Mapin Space")
+  return item
+end
+
 # Get available LDOM version
 
 def get_avail_ldom_ver(model_name)
@@ -87,9 +134,95 @@ def get_ldom_info()
   return file_array
 end
 
-# Proces Domain information
+# Process M Series Logical Domain Information
 
-def process_logical_domains()
+def process_m_series_logical_domains()
+  table = ""
+  host  = ""
+  param = ""
+  file_array = get_ldom_info()
+  if file_array
+    ldom = Hash.new {|hash, key| hash[key] = Hash.new }
+    file_array.each do |line|
+      line  = line.chomp
+      items = line.split(/\|/)
+      case line
+      when /^DOMAIN/
+        host = items[1].split(/\=/)[1]
+        if host
+          items[2..-1].each do |item|
+            (param,value)     = item.split(/\=/)
+            param = set_param_name(param)
+            ldom[host][param] = value
+          end
+        end
+      when /^[A-Z]/
+        if line.match(/\|/)
+          if host
+            items[1..-1].each do |item|
+              (param,value)     = item.split(/\=/)
+              if param == "name" or param == "group"
+                param = items[0].capitalize+" Name"
+              end
+              if param.match(/alt-mac-add/)
+                macs = value.split(/\,/)
+                macs.each_with_index do |mac, index|
+                  param = "Alternate MAC Address "+index.to_s
+                  ldom[host][param] = mac
+                end
+              else
+                param = set_param_name(param)
+                ldom[host][param] = value
+              end
+            end
+          end
+        else
+          param = line+" Information"
+          param = set_param_name(param)
+          ldom[host][param] = "" 
+        end
+      when /^\|/
+        line  = line.gsub(/^\|/,"")
+        if line.match(/\|/)
+          param = items[1].gsub(/\=/," ")
+          param = set_param_name(param)
+          value = items[2..-1].join(", ")
+        else
+          param = set_param_name(param)
+          (param,value) = line.split(/\=/)
+        end
+        param = set_param_name(param)
+        ldom[host][param] = value
+      else
+      end
+    end
+    ldom.each do |host,details|
+      title = "Logical Domain: "+host
+      row   = [ "Domain Items", "Values" ]
+      table = handle_table("title",title,row,"")
+      details.each do |item,value|
+        value = ldom[host][item]
+        row   = [ item, value ]
+        if item.match(/Information/)
+          table = handle_table("line","","",table)
+          table = handle_table("row","",row,table)
+          table = handle_table("line","","",table)
+        else
+          if item.match(/^CPU$|^Vnet/)
+            table = handle_table("line","","",table)
+          end
+          table = handle_table("row","",row,table)
+        end
+      end
+      table = handle_table("end","","",table)
+    end
+  end
+  return
+end
+
+# Process T Series Logical Domain information
+
+def process_t_series_logical_domains()
   table       = ""
   file_array  = get_ldom_info()
   counter     = 0
@@ -196,7 +329,7 @@ end
 
 def process_ldom()
   model_name = get_model_name()
-  if model_name.match(/^T/)
+  if model_name.match(/^T|^M[5,6]-/)
     title   = "LDom Information"
     row     = ['Item','Value']
     table   = handle_table("title",title,row,"")
@@ -209,7 +342,11 @@ def process_ldom()
       table   = handle_table("row",ldom_no,ldom_host,table)
     end
     table = handle_table("end","","",table)
-    process_logical_domains()
+    if model_name.match(/^T/)
+      process_t_series_logical_domains()
+    else
+      process_m_series_logical_domains()
+    end
   end
   return
 end
