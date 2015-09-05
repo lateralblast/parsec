@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.8.1
+# Version:      0.8.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -201,6 +201,7 @@ def print_usage(options)
   puts "    kernel:     Kernel information"
   puts "    keyserv:    keyserv information"
   puts "    ldom:       LDom information"
+  puts "    link:       Link information"
   puts "    locale:     Locale information"
   puts "    login:      Login information"
   puts "    lu|be:      LiveUpgrade or Beadm information"

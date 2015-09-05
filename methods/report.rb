@@ -66,6 +66,12 @@ def config_report(report,report_type)
       process_vnic()
     end
   end
+  if report_type.match(/all|link/)
+    os_ver = get_os_version()
+    if get_os_version.match(/11/)
+      process_link()
+    end
+  end
   if report_type.match(/all|kernel/)
     process_etc_system()
   end

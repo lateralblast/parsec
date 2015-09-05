@@ -39,6 +39,7 @@ The reporting options include:
 - Kernel information
 - Keyserv information
 - LDom information
+- Link information
 - LiveUpgrade information
 - Locale information
 - Login information

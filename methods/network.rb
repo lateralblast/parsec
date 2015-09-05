@@ -99,6 +99,38 @@ def process_vnic()
   return
 end
 
+# Process Link information
+
+def process_link()
+  file_array = get_ether_info()
+  if file_array
+    title = "Link Information"
+    row   = [ 'Link', 'Zone', 'Type', 'State', 'Auto', 'Speed', 'Pause' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      if !line.match(/^LINK/)
+        items = line.split(/\s+/)
+        link  = items[0]
+        zone  = items[1]
+        type  = items[2]
+        state = items[3]
+        auto  = items[4]
+        speed = items[5]
+        pause = items[6]
+        if $masked == 1
+          if !link.match(/net[0-9]/)
+            over = "MASKED"
+          end
+        end
+        row = [ link, zone, type, state, auto, speed, pause ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
 # Process network information
 
 def process_network(type)

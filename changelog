@@ -163,3 +163,5 @@
 # Improved masking and output
 # 0.8.1: Sat  5 Sep 2015 11:58:12 AEST
 # Added intial support for oce network device and vnic output
+# 0.8.2: Sat  5 Sep 2015 13:06:42 AEST
+# Added link information report
