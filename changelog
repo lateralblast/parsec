@@ -165,3 +165,5 @@
 # Added intial support for oce network device and vnic output
 # 0.8.2: Sat  5 Sep 2015 13:06:42 AEST
 # Added link information report
+# 0.8.3: Sat  5 Sep 2015 15:38:10 AEST
+# Added aggregate information

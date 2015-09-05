@@ -131,8 +131,18 @@ def process_link()
   return
 end
 
+# Get Aggregate details
+
 def get_aggr_detail()
   file_name = "/netinfo/dladm/dladm_show-aggr_-x.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end  
+
+# Get Aggregate config
+
+def get_aggr_config()
+  file_name = "/netinfo/dladm/dladm_show-aggr_-Z.out"
   file_array = exp_file_to_array(file_name)
   return file_array
 end  
@@ -140,6 +150,46 @@ end
 # Process aggregate information (report)
 
 def process_aggr()
+  process_aggr_detail()
+  process_aggr_config()
+  return
+end
+
+# Process Aggregate config
+
+def process_aggr_config()
+  file_array = get_aggr_config()
+  if file_array
+    title = "Aggregate Configuration"
+    row   = [ 'Link', 'Zone', 'Mode', 'Policy', 'Address Policy', 'LACP Activity', 'LACP Timer', 'Flags' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line  = line.chomp
+      items = line.split(/\s+/)
+      if !line.match(/^LINK/)
+        name   = items[0]
+        zone   = items[1]
+        mode   = items[2]
+        policy = items[3]
+        addr   = items[4]
+        lacp   = items[5]
+        timer  = items[6]
+        flags  = items[7]
+        if $masked == 1
+          name = "MASKED"
+        end
+        row = [ name, zone, mode, policy, addr, lacp, timer, flags ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
+# Process Aggregate detail
+
+def process_aggr_detail()
   file_array = get_aggr_detail()
   if file_array
     title = "Aggregate Information"
@@ -168,6 +218,7 @@ def process_aggr()
         end
         if $masked == 1
           name = "MASKED"
+          mac  = "MASKED"
           if !port.match(/net[0-9]|--/)
             port = "MASKED"
           end
