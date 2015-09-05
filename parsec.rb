@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.8.5
+# Version:      0.8.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -229,6 +229,7 @@ def print_usage(options)
   puts "    telnet:     Telnet information"
   puts "    udp:        UDP information"
   puts "    vnic:       VNIC information"
+  puts "    zfs:        ZFS information"
   puts "    zones:      Zone information"
   puts
   puts "Example (Display CPUs):"

@@ -91,12 +91,18 @@ def config_report(report,report_type)
   if report_type.match(/all|security|inetd/)
     process_inetd()
   end
-  if report_type.match(/all|fs|filesystem/)
+  if report_type.match(/all|^fs|filesystem/)
     process_file_systems()
   end
-  if report_type.match(/all|fs|filesystem|mount/)
+  if report_type.match(/all|^fs|filesystem|mount/)
     if $masked == 0
       process_mounts()
+    end
+  end
+  if report_type.match(/all|filesystem|zfs/)
+    os_ver = get_os_version()
+    if os_ver.match(/11/)
+      process_zfs()
     end
   end
   if report_type.match(/all|services/)

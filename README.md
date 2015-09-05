@@ -65,6 +65,7 @@ The reporting options include:
 - Telnet information
 - UDP information
 - VNIC information
+- ZFS information
 - Zone information
 
 License
