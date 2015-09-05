@@ -99,9 +99,45 @@ def process_vnic()
   return
 end
 
-# Process Link information
+# Get Link slots
 
-def process_link()
+def get_link_slots()
+  file_name = "/netinfo/dladm/dladm_show-phys_-L.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process Link speed information
+
+def process_link_slots()
+  file_array = get_link_slots()
+  if file_array
+    title = "Link Slot Information"
+    row   = [ 'Link', 'Device', 'Slot' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      if !line.match(/^LINK/)
+        items = line.split(/\s+/)
+        link  = items[0]
+        dev   = items[1]
+        loc   = items[2]
+        if $masked == 1
+          if !link.match(/net[0-9]/)
+            over = "MASKED"
+          end
+        end
+        row = [ link, dev, loc ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
+# Process Link physical information
+
+def process_link_speed()
   file_array = get_ether_info()
   if file_array
     title = "Link Information"
@@ -128,6 +164,14 @@ def process_link()
     end
     table = handle_table("end","","",table)
   end
+  return
+end
+
+# Process Link information
+
+def process_link()
+  process_link_speed()
+  process_link_slots()
   return
 end
 
