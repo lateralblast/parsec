@@ -22,44 +22,45 @@ Some of the features include:
 
 The reporting options include:
 
-- Open Boot Prom information
-- Host information
-- EEPROM information
-- Operating Sytem information
-- Coreadm information
-- Dupadm information
-- Explorer information
-- CPU information
-- Memory information
-- IO Information (Controllers, HBAs etc)
-- Disk information
-- Kernel information
-- Zone information
 - All security information
-- Password information
-- System information
-- Login information
-- Sendmail information
-- Inetinit information
-- Su information
-- Inetd information
+- Coreadm information
+- CPU information
 - Cron information
-- keyserv information
-- Telnet information
-- Power information
-- Suspend information
-- SSH information
+- Disk information
+- Dupadm information
+- EEPROM information
+- Explorer information
 - Filesystem information
-- Services information
+- FRU information
+- Host information
+- Inetd information
+- Inetinit information
+- IO Information (Controllers, HBAs etc)
+- Kernel information
+- Keyserv information
+- LDom information
 - LiveUpgrade information
 - Locale information
+- Login information
+- Memory information
 - Module information
+- Open Boot Prom information
+- Operating Sytem information
 - Package information
 - Patch information
+- Password information
+- Power information
+- Sendmail information
+- Services information
+- SSH information
+- Su information
+- Suspend information
+- System information
 - TCP information
+- Telnet information
 - UDP information
-- LDom information
-- FRU information
+- VNIC information
+- Zone information
 
 License
 -------
