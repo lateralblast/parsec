@@ -14,7 +14,7 @@ def process_cups_snmp()
   file_array = get_cups_snmp()
   if file_array
     source = ""
-    title  = "SNMP Configuration"
+    title  = "CUPS SNMP Configuration"
     row    = [ 'Item', 'Value' ]
     table  = handle_table("title",title,row,"")
     file_array.each do |line|

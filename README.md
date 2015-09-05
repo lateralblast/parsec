@@ -26,9 +26,12 @@ The reporting options include:
 - Coreadm information
 - CPU information
 - Cron information
+- Crypto information
+- CUPS information
 - Disk information
 - Dupadm information
 - EEPROM information
+- Elfsign information
 - Explorer information
 - Filesystem information
 - FRU information
@@ -53,6 +56,7 @@ The reporting options include:
 - Power information
 - Sendmail information
 - Services information
+- SNMP information
 - SSH information
 - Su information
 - Suspend information

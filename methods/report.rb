@@ -84,7 +84,7 @@ def config_report(report,report_type)
   if report_type.match(/all|zone/)
     process_zones()
   end
-  if report_type.match(/all|security|system|passwd|password|login|sendmail|inetinit|su|inet|cron|keyserv|telnet|power|suspend|ssh/)
+  if report_type.match(/all|security|system|passwd|password|login|sendmail|inetinit|su|inet|cron|keyserv|telnet|power|suspend|ssh|crypto|snmp|cups/)
     report_type.gsub(/password/,"passwd")
     process_security(report_type)
   end

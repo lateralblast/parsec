@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.8.4
+# Version:      0.8.5
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -186,12 +186,15 @@ def print_usage(options)
   puts
   puts "    agrr:       Aggregate information"
   puts "    all:        All information"
+  puts "    coreadm:    Coreadm information"
   puts "    cpu:        CPU information"
   puts "    cron:       Cron information"
+  puts "    crypto:     Crypto information"
+  puts "    cups:       CUPS information"
   puts "    disk:       Disk information"
   puts "    dumpadm:    Dupadm information"
-  puts "    coreadm:    Coreadm information"
   puts "    eeprom:     EEPROM information"
+  puts "    elfsign:    Elfsign information"
   puts "    explorer:   Explorer information"
   puts "    fru:        FRU information"
   puts "    fs:         Filesystem information"
@@ -215,12 +218,13 @@ def print_usage(options)
   puts "    patch:      Patch information"
   puts "    power:      Power information"
   puts "    security:   All security information"
-  puts "    system:     System information"
   puts "    sendmail:   Sendmail information"
   puts "    services:   Services information"
+  puts "    snmp:       SNMP information"
+  puts "    ssh:        SSH information"
   puts "    su:         Su information"
   puts "    suspend:    Suspend information"
-  puts "    ssh:        SSH information"
+  puts "    system:     System information"
   puts "    tcp:        TCP information"
   puts "    telnet:     Telnet information"
   puts "    udp:        UDP information"

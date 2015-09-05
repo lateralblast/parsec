@@ -92,13 +92,21 @@ def process_security(report_type)
       handle_output("\n")
     end
   end
-  process_cups_snmp()
-  process_cups()
+  case report_type
+  when /all|security|cups/
+    process_cups_snmp()
+  when /all|security|cups/
+    process_cups()
+  end
   os_version = get_os_version
   if os_version == "5.11"
-    process_crypto_providers()
-    process_crypto_list()
-    process_elfsign()
+    case report_type
+    when /all|security|crypto/
+      process_crypto_providers()
+      process_crypto_list()
+    when /all|security|elf/
+      process_elfsign()
+    end
   end
   return
 end
