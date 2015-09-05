@@ -131,6 +131,56 @@ def process_link()
   return
 end
 
+def get_aggr_detail()
+  file_name = "/netinfo/dladm/dladm_show-aggr_-x.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end  
+
+# Process aggregate information (report)
+
+def process_aggr()
+  file_array = get_aggr_detail()
+  if file_array
+    title = "Aggregate Information"
+    row   = [ 'Link', 'Port', 'Speed', 'Duplex', 'State', 'MAC Address', 'Port State' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line  = line.chomp
+      items = line.split(/\s+/)
+      if !line.match(/^LINK/)
+        if line.match(/--/)
+          name   = items[0]
+          port   = "--"
+          speed  = items[2]
+          duplex = items[3]
+          state  = items[4]
+          mac    = items[5]
+          pstate = items[6]
+        else
+          name   = "--"
+          port   = items[1]
+          speed  = items[2]
+          duplex = items[3]
+          state  = items[4]
+          mac    = items[5]
+          pstate = items[6]
+        end
+        if $masked == 1
+          name = "MASKED"
+          if !port.match(/net[0-9]|--/)
+            port = "MASKED"
+          end
+        end
+        row = [ name, port, speed, duplex, state, mac, pstate ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
 # Process network information
 
 def process_network(type)

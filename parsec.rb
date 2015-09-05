@@ -184,6 +184,7 @@ def print_usage(options)
   puts
   puts "-R: Report/Print configuration information for a specific component:"
   puts
+  puts "    agrr:       Aggregate information"
   puts "    all:        All information"
   puts "    cpu:        CPU information"
   puts "    cron:       Cron information"
