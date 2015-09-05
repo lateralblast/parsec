@@ -161,3 +161,5 @@
 # Added support for LDom information on new M series
 # 0.8.0: Sat  5 Sep 2015 08:52:52 AEST
 # Improved masking and output
+# 0.8.1: Sat  5 Sep 2015 11:58:12 AEST
+# Added intial support for oce network device and vnic output

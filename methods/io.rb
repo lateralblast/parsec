@@ -322,10 +322,31 @@ def process_io()
       if inst_no
         table = handle_table("row","Instance",inst_no,table)
       end
-      if io_path.match(/network/)
-        port_no   = io_path[-1]
-        table     = handle_table("row","Port",port_no,table)
-        aggr_name = process_aggr_info(dev_name)
+      if io_path.match(/network|oce/)
+        port_no = io_path[-1]
+        table   = handle_table("row","Port",port_no,table)
+        os_ver  = get_os_version()
+        if os_ver.match(/11/)
+          link_name = get_link_name(dev_name)
+          if link_name
+            table = handle_table("row","Link",link_name,table)
+          end
+          aggr_name = process_aggr_info(link_name)
+        else
+          aggr_name = process_aggr_info(dev_name)
+        end          
+        if os_ver.match(/11/)
+          (link_state,link_auto,link_speed) = get_link_details(link_name)
+          if link_state
+            table = handle_table("row","State",link_state,table)
+          end
+          if link_auto
+            table = handle_table("row","Auto",link_auto,table)
+          end
+          if link_speed
+            table = handle_table("row","Speed",link_speed,table)
+          end
+        end
         if aggr_name
           table = handle_table("row","Aggregate",aggr_name,table)
           if_hostname = get_if_hostname(aggr_name)

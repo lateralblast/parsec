@@ -51,14 +51,20 @@ def config_report(report,report_type)
   if report_type.match(/all|mem/)
     process_memory()
   end
-  if report_type.match(/all|io|disk/)
+  if report_type.match(/all|disk/)
     process_diskinfo()
   end
-  if report_type.match(/all|io|disk/)
+  if report_type.match(/all|io/)
     process_io()
   end
-  if report_type.match(/all|io|disk|swap/)
+  if report_type.match(/all|swap/)
     process_swap()
+  end
+  if report_type.match(/all|vnic/)
+    os_ver = get_os_version()
+    if get_os_version.match(/11/)
+      process_vnic()
+    end
   end
   if report_type.match(/all|kernel/)
     process_etc_system()
