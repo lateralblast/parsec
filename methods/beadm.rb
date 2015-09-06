@@ -30,8 +30,10 @@ def process_beadm()
         be_active  = items[1]
         be_mount   = items[2]
         if $masked == 1
-          if !be_mount.match(/^\/$|^\/var$|^\/export$|^\/usr$|^\/opt$/)
-            be_mount = "MASKED"
+          if be_mount
+            if !be_mount.match(/^\/$|^\/var$|^\/export$|^\/usr$|^\/opt$/)
+              be_mount = "MASKED"
+            end
           end
         end
         be_space   = items[3]

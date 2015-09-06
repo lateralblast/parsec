@@ -1,8 +1,63 @@
 # Disk related code
 
+# Disk paths
+
+def get_disk_paths()
+  file_name  = "/disks/mpathadm/mpathadm_list_LU.out"
+  file_array = exp_file_to_array(file_name)
+  disk_paths = {}
+  paths      = []
+  disk_name  = ""
+  file_array.each do |line|
+    line = line.chomp
+    line = line.gsub(/^\s+/,"")
+    if line.match(/dsk/)
+      if disk_name
+        disk_paths[disk_name] = paths
+      end
+      disk_name = line.split(/\//)[3].gsub(/s2/,"")
+      paths = []
+    else
+      path_no = line.split(/: /)[1]
+      paths.push(path_no)
+    end
+  end
+  if disk_name
+    disk_paths[disk_name] = paths
+  end
+  return disk_paths
+end
+
+# Get disk size
+
+def get_disk_sizes()
+  file_name  = "/disks/format.out"
+  file_array = exp_file_to_array(file_name)
+  disk_sizes = {}
+  file_array.each do |line|
+    line = line.chomp
+    line = line.gsub(/^\s+/,"")
+    if line.match(/^c/)
+      (disk_name,disk_info) = line.split(/:/)
+      disk_size = disk_info.split(/\s+/)[-1]
+      disk_sizes[disk_name] = disk_size
+    else
+      if line.match(/GB|MB/) and line.match(/[0-9]\. c/)
+        disk_info = line.split(/\s+/)
+        if disk_info
+          disk_name = disk_info[1] 
+          disk_size = disk_info[2..3].join.split(/\-/)[-1].gsub(/\>/,"")
+          disk_sizes[disk_name] = disk_size
+        end
+      end
+    end
+  end
+  return disk_sizes
+end
+
 # Get diskinfo information
 
-def get_diskinfo()
+def get_disk_info()
   file_name = "/disks/diskinfo"
   file_array = exp_file_to_array(file_name)
   return file_array
@@ -10,21 +65,34 @@ end
 
 # Process diskinfo insformation
 
-def process_diskinfo()
-  file_array = get_diskinfo()
+def process_disk_info()
+  file_array = get_disk_info()
+  disk_paths = get_disk_paths()
+  disk_sizes = get_disk_sizes()
   if file_array
     source = ""
     title  = "Disk Information"
-    row    = [ 'ID', 'Vendor / Product', 'Serial', 'Port' ]
+    row    = [ 'ID', 'Vendor / Product', 'Serial', 'Port', 'Paths', 'Size' ]
     table  = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
+      line = line.gsub(/^\s+/,"")
       if line.match(/^c/)
-        info  = line.split(/\t/)
+        info   = line.split(/\t/)
         if $masked == 1
           info[2] = "MASKED"
         end
-        row   = info
+        disk   = info[0]
+        vendor = info[1]
+        serial = info[2]
+        port   = info[3]
+        size   = disk_sizes[disk]
+        if disk_paths
+          paths  = disk_paths[disk][0..1].join(",")
+        else
+          paths  = ""
+        end
+        row   = [ disk, vendor, serial, port, paths, size ]
         table = handle_table("row","",row,table)
       end
     end
@@ -35,7 +103,7 @@ end
 
 # Get disk information
 
-def get_disk_info(disk_name)
+def get_iostat_info(disk_name)
   file_name  = "/sysconfig/iostat-En.out"
   file_array = exp_file_to_array(file_name)
   disk_info  = file_array.join.split(/Analysis:/)
@@ -60,8 +128,8 @@ end
 
 # Process disk information
 
-def process_disk_info(table,disk_name)
-  disk_info = get_disk_info(disk_name)
+def process_iostat_info(table,disk_name)
+  disk_info = get_iostat_info(disk_name)
   disk_info.each do |disk_data|
     disk_data = disk_data.gsub(/\n/,'')
     disk_data = disk_data.split(/:/)

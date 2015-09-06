@@ -52,7 +52,7 @@ def config_report(report,report_type)
     process_memory()
   end
   if report_type.match(/all|disk/)
-    process_diskinfo()
+    process_disk_info()
   end
   if report_type.match(/all|io/)
     process_io()

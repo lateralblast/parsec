@@ -170,7 +170,7 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
   end
   if io_path.match(/emlxs|qlc|scsi/)
     if $do_disks == 1
-      process_disk_info(table,ctlr_no)
+      process_iostat_info(table,ctlr_no)
     end
   end
   return table

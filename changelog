@@ -171,3 +171,7 @@
 # Added additional link information
 # 0.8.5: Sat  5 Sep 2015 16:29:42 AEST
 # Improved usage information and reporting
+# 0.8.6: Sat  5 Sep 2015 17:28:51 AEST
+# Added additional ZFS reporting
+# 0.8.7: Sun  6 Sep 2015 19:11:00 AEST
+# Improved disk information
