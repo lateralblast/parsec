@@ -69,6 +69,7 @@ def process_memory()
   end
   mem_info       = get_mem_info()
   length         = mem_info.grep(/[0-9]/).length
+  base_length    = mem_info.grep(/^0x/).length
   counter        = 0
   previous       = ""
   mem_interleave = ""
@@ -174,6 +175,7 @@ def process_memory()
         mem_status = "N/A"
         mem_mirror = "N/A"
         if line.match(/^0x/)
+          mem_base       = mem_line[0]
           mem_group_no   = mem_line[0].split(/x/)[1]
           mem_group_no   = mem_group_no.gsub(/000000000/,'')
           mem_size       = mem_line[1]
@@ -248,22 +250,28 @@ def process_memory()
           table   = handle_table("row","Interleave",mem_interleave,table)
           f_count = f_count+1
         end
-        if sys_model.match(/M[5,6,7]-/)
+        case sys_model
+        when /M[5,6,7]-/
           if line.match(/^[0-9,A-F]x/)
             block_count = block_count+1
           end
-          if block_count < f_count+2
+          if block_count < base_length
+            table = handle_table("line","","",table)
+          end
+        when /V440/
+          if line.match(/^[0-9,A-F]x/)
+            block_count = block_count+1
+          end
+          if block_count < base_length
+            table = handle_table("line","","",table)
+          end
+        when /480R/
+          if counter < length
             table = handle_table("line","","",table)
           end
         else
-          if sys_model.match(/480R/)
-            if counter < length
-              table = handle_table("line","","",table)
-            end
-          else
-            if counter < length-f_count-1
-              table = handle_table("line","","",table)
-            end
+          if counter < length-f_count-1
+            table = handle_table("line","","",table)
           end
         end
         previous = line
