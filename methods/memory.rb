@@ -61,10 +61,10 @@ def process_memory()
   table          = handle_table("title","Memory Information","","")
   sys_model      = get_sys_model()
   sys_mem        = get_sys_mem()
-  if sys_mem
+  if sys_mem and !sys_model.match(/M[5-7]-|T[5-7]-/)
     table = handle_table("row","System Memory",sys_mem,table)
   end
-  if !sys_model.match(/V120/)
+  if !sys_model.match(/V120|M[5-7]-|T[5-7]-/)
     table = handle_table("line","","",table)
   end
   mem_info       = get_mem_info()
@@ -73,15 +73,19 @@ def process_memory()
   previous       = ""
   mem_interleave = ""
   total_mem      = ""
-  dimm_size      = ""
+  mem_dimm_size  = ""
+  mem_bank_size  = ""
   mem_base       = ""
+  bank_size      = 0
   block_count    = 0
+  mem_module     = ""
+  mem_modules    = []
   mem_info.each_with_index do |line,index|
     if line.match(/[0-9][0-9]|D[0-9]$/)
       counter       = counter+1
       sys_board_no  = "1"
       mem_line      = line.split(/\s+/)
-      if sys_model.match(/T[0-9]/)
+      if sys_model.match(/T[0-9]/) and !sys_model.match(/T[5-7]-/)
         mem_group = mem_line[-1]
         if sys_model.match(/T5[1,2][2,4]/)
           mem_dimms = "1"
@@ -110,13 +114,37 @@ def process_memory()
           end
         end
       end
-      if sys_model.match(/M10-|M[5,6]-/)
+      if sys_model.match(/M10-|M[5,6]-|T[6,7]-/)
         mem_controller = mem_line[-1]
         if line.match(/^0x/)
+          if mem_module.match(/SYS/)
+            dimm_size     = bank_size / mem_modules.length+1
+            mem_dimm_size = dimm_size.to_s+" GB"
+            table         = handle_table("row","Number of DIMMs",mem_modules.length.to_s,table)
+            table         = handle_table("row","DIMM Size",mem_dimm_size,table)
+            mem_modules.each do |mem_module|
+              table      = handle_table("row","Module",mem_module,table)
+            end
+            table       = handle_table("line","","",table)
+            mem_modules = []
+          end
           mem_base       = mem_line[0]
           mem_size       = mem_line[1]+" "+mem_line[2]
           mem_interleave = mem_line[3]
-          mem_dimm_size  = mem_line[4]+" "+mem_line[5]
+          mem_bank_size  = mem_line[4]+" "+mem_line[5]
+          bank_size      = mem_line[4].to_i
+          mem_module     = mem_line[6]
+          sys_info       = mem_module.split(/\//)
+          mem_board      = sys_info[2].gsub(/PM/,"")
+          cpu_board      = sys_info[3].gsub(/CM/,"")
+          table          = handle_table("row","Bank Size",mem_bank_size,table)
+          table          = handle_table("row","Processor Board",mem_board,table)
+          table          = handle_table("row","CPU Module",cpu_board,table)
+          table          = handle_table("row","Interleave",mem_interleave,table)
+          mem_modules.push(mem_module)
+        else
+          mem_module = mem_line[1]
+          mem_modules.push(mem_module)
         end
       end
       if sys_model.match(/480R/)
@@ -124,8 +152,13 @@ def process_memory()
         mem_controller = mem_line[2]
         mem_bank       = mem_line[3]
         mem_size       = mem_line[4]
-        mem_dimm_size  = mem_line[5]
-        mem_interleave = mem_line[6]
+        if mem_line[5].match(/no_status/)
+          mem_dimm_size  = mem_line[6]
+          mem_interleave = mem_line[7]
+        else
+          mem_dimm_size  = mem_line[5]
+          mem_interleave = mem_line[6]
+        end
       end
       if sys_model.match(/M[3-9]0/)
         sys_board_no   = mem_line[1]
@@ -169,50 +202,50 @@ def process_memory()
           mem_group = mem_group_list
         end
       end
-      if mem_size or mem_group
+      if mem_size or mem_group and !sys_model.match(/T[6,7]-/)
         f_count = 0
         if sys_board_no
-          table = handle_table("row","System Board",sys_board_no,table)
+          table   = handle_table("row","System Board",sys_board_no,table)
           f_count = f_count+1
         end
         if mem_base
-          table = handle_table("row","Base Address",mem_base,table)
+          table   = handle_table("row","Base Address",mem_base,table)
           f_count = f_count+1
         end
         if mem_controller
-          table = handle_table("row","Memory Controller",mem_controller,table)
+          table   = handle_table("row","Memory Controller",mem_controller,table)
           f_count = f_count+1
         end
         if mem_bank
-          table = handle_table("row","Memory Bank",mem_bank,table)
+          table   = handle_table("row","Memory Bank",mem_bank,table)
           f_count = f_count+1
         end
         if mem_group
-          table = handle_table("row","Group(s)",mem_group,table)
+          table   = handle_table("row","Group(s)",mem_group,table)
           f_count = f_count+1
         end
         if mem_size
-          table = handle_table("row","Size",mem_size,table)
+          table   = handle_table("row","Size",mem_size,table)
           f_count = f_count+1
         end
         if mem_status
-          table = handle_table("row","Status",mem_status,table)
+          table   = handle_table("row","Status",mem_status,table)
           f_count = f_count+1
         end
         if mem_dimms
-          table = handle_table("row","DIMMs",mem_dimms,table)
+          table   = handle_table("row","DIMMs",mem_dimms,table)
           f_count = f_count+1
         end
         if mem_dimm_size
-          table = handle_table("row","DIMM Size",mem_dimm_size,table)
+          table   = handle_table("row","DIMM Size",mem_dimm_size,table)
           f_count = f_count+1
         end
         if mem_mirror
-          table = handle_table("row","Mirror",mem_mirror,table)
+          table   = handle_table("row","Mirror",mem_mirror,table)
           f_count = f_count+1
         end
         if mem_interleave
-          table = handle_table("row","Interleave",mem_interleave,table)
+          table   = handle_table("row","Interleave",mem_interleave,table)
           f_count = f_count+1
         end
         if sys_model.match(/M[5,6,7]-/)
@@ -223,12 +256,27 @@ def process_memory()
             table = handle_table("line","","",table)
           end
         else
-          if counter < length-f_count-1
-            table = handle_table("line","","",table)
+          if sys_model.match(/480R/)
+            if counter < length
+              table = handle_table("line","","",table)
+            end
+          else
+            if counter < length-f_count-1
+              table = handle_table("line","","",table)
+            end
           end
         end
         previous = line
       end
+    end
+  end
+  if sys_model.match(/M10-|M[5,6]-|T[6,7]-/) 
+    dimm_size     = bank_size / mem_modules.length+1
+    mem_dimm_size = dimm_size.to_s+" GB"
+    table         = handle_table("row","Number of DIMMs",mem_modules.length.to_s,table)
+    table         = handle_table("row","DIMM Size",mem_dimm_size,table)
+    mem_modules.each do |mem_module|
+      table      = handle_table("row","Module",mem_module,table)
     end
   end
   table = handle_table("end","","",table)

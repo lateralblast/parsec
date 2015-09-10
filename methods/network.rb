@@ -67,11 +67,12 @@ end
 def process_vnic()
   file_array = get_vnic_info()
   if file_array
-    title = "VNIC Information"
-    row   = [ 'Link', 'Zone', 'Over', 'Speed', 'MAC Address', 'MAC Type', 'VIDs' ]
-    table = handle_table("title",title,row,"")
     file_array.each do |line|
-      if !line.match(/^LINK/)
+      if line.match(/^LINK/)
+        title = "VNIC Information"
+        row   = [ 'Link', 'Zone', 'Over', 'Speed', 'MAC Address', 'MAC Type', 'VIDs' ]
+        table = handle_table("title",title,row,"")
+      else
         items = line.split(/\s+/)
         link  = items[0]
         zone  = items[1]
@@ -112,11 +113,12 @@ end
 def process_link_slots()
   file_array = get_link_slots()
   if file_array
-    title = "Link Slot Information"
-    row   = [ 'Link', 'Device', 'Slot' ]
-    table = handle_table("title",title,row,"")
     file_array.each do |line|
-      if !line.match(/^LINK/)
+      if line.match(/^LINK/)
+        title = "Link Slot Information"
+        row   = [ 'Link', 'Device', 'Slot' ]
+        table = handle_table("title",title,row,"")
+      else
         items = line.split(/\s+/)
         link  = items[0]
         dev   = items[1]
@@ -204,13 +206,14 @@ end
 def process_aggr_config()
   file_array = get_aggr_config()
   if file_array
-    title = "Aggregate Configuration"
-    row   = [ 'Link', 'Zone', 'Mode', 'Policy', 'Address Policy', 'LACP Activity', 'LACP Timer', 'Flags' ]
-    table = handle_table("title",title,row,"")
     file_array.each do |line|
       line  = line.chomp
       items = line.split(/\s+/)
-      if !line.match(/^LINK/)
+      if line.match(/^LINK/)
+        title = "Aggregate Configuration"
+        row   = [ 'Link', 'Zone', 'Mode', 'Policy', 'Address Policy', 'LACP Activity', 'LACP Timer', 'Flags' ]
+        table = handle_table("title",title,row,"")
+      else
         name   = items[0]
         zone   = items[1]
         mode   = items[2]
@@ -236,13 +239,14 @@ end
 def process_aggr_detail()
   file_array = get_aggr_detail()
   if file_array
-    title = "Aggregate Information"
-    row   = [ 'Link', 'Port', 'Speed', 'Duplex', 'State', 'MAC Address', 'Port State' ]
-    table = handle_table("title",title,row,"")
     file_array.each do |line|
       line  = line.chomp
       items = line.split(/\s+/)
-      if !line.match(/^LINK/)
+      if line.match(/^LINK/)
+        title = "Aggregate Information"
+        row   = [ 'Link', 'Port', 'Speed', 'Duplex', 'State', 'MAC Address', 'Port State' ]
+        table = handle_table("title",title,row,"")
+      else
         if line.match(/--/)
           name   = items[0]
           port   = "--"

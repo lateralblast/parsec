@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.8.7
+# Version:      0.8.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -355,16 +355,23 @@ else
   $exp_dir  = $exp_dir+"/explorers"
   file_list = Dir.entries($exp_dir).reject{|entry| entry.match(/\._/)}
   if opt["s"]
-    host_names    = []
-    host_names[0] = opt["s"]
+    if opt["s"] == "all"
+      host_names = file_list
+    else
+      host_names    = []
+      host_names[0] = opt["s"]
+    end
   else
     host_names = file_list
   end
   if !opt["A"] and !opt["F"] and !opt["B"]
     host_names.each do |host_name|
       $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
-      $exp_file = $exp_file[0].to_s
-      if !$exp_file.match(/[A-z]/)
+      if $exp_file.to_s.match(/\n/)
+        $exp_file = $exp_file.split(/\n/)
+      end
+      $exp_file = $exp_file[0].to_s.chomp
+      if !$exp_file.match(/[a-z]|[0-9]/)
         puts "Explorer for "+host_name+" does not exist in "+$exp_dir
         exit
       end
