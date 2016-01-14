@@ -193,3 +193,5 @@
 # Improved disk size determination
 # 0.9.6: Thu 14 Jan 2016 10:42:20 AEDT
 # Added initial standalone Veritas report
+# 0.9.7: Thu 14 Jan 2016 17:47:32 AEDT
+# Fixed ZFS report

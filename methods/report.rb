@@ -113,7 +113,7 @@ def config_report(report,report_type)
   end
   if report_type.match(/all|filesystem|zfs/)
     os_ver = get_os_version()
-    if os_ver.match(/11/)
+    if os_ver.match(/10|11/)
       process_zfs()
     else
       puts
