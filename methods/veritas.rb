@@ -97,8 +97,7 @@ end
 # Get Veritas disk information
 
 def get_vx_disk_info(disk_name)
-  file_name    = "/disks/vxvm/vxdisk-list.out"
-  file_array   = exp_file_to_array(file_name)
+  file_array   = get_vx_disk_list_info()
   vx_disk_info = file_array.grep(/#{disk_name}s2/)
   if !vx_disk_info.to_s.match(/c[0-9]/)
     file_name    = "/disks/vxvm/vxdisk_path.out"
@@ -106,6 +105,56 @@ def get_vx_disk_info(disk_name)
     vx_disk_info = file_array.grep(/#{disk_name}s2/)
   end
   return vx_disk_info
+end
+
+# Get Veritas disk list information
+
+def get_vx_disk_list_info()
+  file_name  = "/disks/vxvm/vxdisk-list.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process Veritas information
+
+def process_veritas()
+  file_array = get_vx_disk_list_info()
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    handle_output("\n")
+    title = "Veritas Disks"
+    table = Terminal::Table.new :title => title, :headings => ['Device', 'Configuration', 'Disk', 'Group', 'Status', 'Feature(s)', 'OS Device', 'Attribute', 'Type' ]
+    file_array.each do |line|
+      if !line.match(/DEVICE|ZFS/)
+        items  = line.split(/\s+/)
+        vxname = items[0]
+        config = items[1]
+        vxdisk = items[2]
+        group  = items[3].gsub(/\(|\)/,"")
+        status = items[4]
+        type   = items[-1]
+        if !type.match(/fc|sata|scsi/)
+          type   = items[-2]
+          other  = items[-3]
+          osdisk = items[-4]
+        else
+          other  = items[-2]
+          osdisk = items[-3]
+        end
+        feature = items[5]
+        if feature.match(/^c[0-9]/)
+          feature = ""
+        end
+        row = [vxname, config, vxdisk, group, status, feature, osdisk, other, type]
+        table.add_row(row)
+      end
+    end
+    handle_output(table)
+    handle_output("\n")
+  else
+    puts
+    puts "No Veritas disk information"
+  end
+  return
 end
 
 # Process Veritas Disk information

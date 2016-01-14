@@ -13,7 +13,7 @@ def process_domain()
   model_name = get_model_name()
   if model_name.match(/^M[5,6]-/)
     file_array = get_domain_info()
-    if file_array
+    if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
       handle_output("\n")
       title   = "Domain Information"
       row     = ['Item','Value']
@@ -31,6 +31,9 @@ def process_domain()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No domain information available"
   end
   return
 end

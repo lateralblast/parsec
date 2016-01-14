@@ -63,29 +63,34 @@ end
 # Process /etc/system info
 
 def process_etc_system()
-  table        = handle_table("title","Kernel Parameter Information","","")
   etc_sys_info = get_etc_sys_info()
-  etc_sys_info.each do |line|
-    line = line.chomp
-    if line.to_s.match(/^[A-z]/)
-      if line.to_s.match(/[A-z]/)
-        if line.to_s.match(/\=/)
-          line = line.split("=")
-        else
-          line = line.split(":")
+  if etc_sys_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    table = handle_table("title","Kernel Parameter Information","","")
+    etc_sys_info.each do |line|
+      line = line.chomp
+      if line.to_s.match(/^[A-z]/)
+        if line.to_s.match(/[A-z]/)
+          if line.to_s.match(/\=/)
+            line = line.split("=")
+          else
+            line = line.split(":")
+          end
+          item_name = line[0]
+          item_name = item_name.gsub(/set /,'')
+          item_name = item_name.gsub(/ $/,'')
+          item_val  = line[1].gsub(/^ /,'')
         end
-        item_name = line[0]
-        item_name = item_name.gsub(/set /,'')
-        item_name = item_name.gsub(/ $/,'')
-        item_val  = line[1].gsub(/^ /,'')
-      end
-      if item_name.to_s.match(/[A-z]/)
-        if item_val
-          table = handle_table("row",item_name,item_val,table)
+        if item_name.to_s.match(/[A-z]/)
+          if item_val
+            table = handle_table("row",item_name,item_val,table)
+          end
         end
       end
     end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No Kernel Parameter information available in /etc/system"
   end
-  table = handle_table("end","","",table)
   return
 end

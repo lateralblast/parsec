@@ -11,7 +11,7 @@ end
 def process_file_systems()
   file_name  = "/etc/vfstab"
   file_array = get_vfstab()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     counter = 0
     title   = "File Systems ("+file_name+")"
@@ -37,11 +37,14 @@ def process_file_systems()
     end
     handle_output(table)
     handle_output("\n")
+  else
+    puts
+    puts "No filesystem information available"
   end
   return
 end
 
-# Get file system mount point and filesystem insformation
+# Get file system mount point and filesystem information
 
 def get_vfstab_info(search)
   file_name   = "/etc/vfstab"

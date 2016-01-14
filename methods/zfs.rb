@@ -39,7 +39,7 @@ end
 
 def process_zfs_list()
 	file_array = get_zfs_list()
-	if file_array
+	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
 		title = "ZFS Filesystems"
 		row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
 		table = handle_table("title",title,row,"")
@@ -60,6 +60,9 @@ def process_zfs_list()
 			end
 		end
 		table = handle_table("end","","",table)
+	else
+		puts
+		puts "No ZFS filesystem information available"
 	end
 	return
 end
@@ -68,7 +71,7 @@ end
 
 def process_zfs_snapshots()
 	file_array = get_zfs_snapshots()
-	if file_array
+	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
 		title = "ZFS Snapshots"
 		row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
 		table = handle_table("title",title,row,"")
@@ -93,6 +96,9 @@ def process_zfs_snapshots()
 			end
 		end
 		table = handle_table("end","","",table)
+	else
+		puts
+		puts "No ZFS snapshot information available"
 	end
 	return
 end
@@ -101,7 +107,7 @@ end
 
 def process_zpool_list()
 	file_array = get_zpool_list()
-	if file_array
+	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
 		title = "ZFS Pools"
 		row   = [ 'Name', 'Size', 'Allocated', 'Free', 'Capacity', 'De-dupe', 'Health', 'Alt Root' ]
 		table = handle_table("title",title,row,"")
@@ -125,6 +131,9 @@ def process_zpool_list()
 			end
 		end
 		table = handle_table("end","","",table)
+	else
+		puts
+		puts "No ZFS pool information available"
 	end
 	return
 end

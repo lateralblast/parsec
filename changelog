@@ -179,3 +179,17 @@
 # Improved memory reporting for 480R
 # 0.8.9: Thu 10 Sep 2015 17:11:34 AEST
 # Improved memory reporting for V440
+# 0.9.0: Tue 12 Jan 2016 11:14:51 AEDT
+# Fix for empty disk paths
+# 0.9.1: Tue 12 Jan 2016 11:56:39 AEDT
+# Fix for CUPS (don't print empty table)
+# 0.9.2: Tue 12 Jan 2016 15:35:16 AEDT
+# Improved reporting output
+# 0.9.3: Wed 13 Jan 2016 10:53:30 AEDT
+# Fixed bug with processing IO
+# 0.9.4: Wed 13 Jan 2016 11:48:58 AEDT
+# Improved disk path determination and added disk IDs to disk report
+# 0.9.5: Wed 13 Jan 2016 13:51:51 AEDT
+# Improved disk size determination
+# 0.9.6: Thu 14 Jan 2016 10:42:20 AEDT
+# Added initial standalone Veritas report

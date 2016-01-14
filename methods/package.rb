@@ -31,7 +31,7 @@ end
 
 def process_pkg_history()
   file_array = get_pkg_history()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Package History"
     row   = [ 'Operation', 'Client', 'Outcome', 'Date' ]
     table = handle_table("title",title,row,"")
@@ -44,6 +44,9 @@ def process_pkg_history()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No package history information available"
   end
   return
 end
@@ -60,7 +63,7 @@ end
 
 def process_pkg_mediator()
   file_array = get_pkg_mediator()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Package Mediator"
     row   = [ 'Package', 'Source', 'Version', 'Implementation' ]
     table = handle_table("title",title,row,"")
@@ -73,6 +76,9 @@ def process_pkg_mediator()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No package mediator information available"
   end
   return
 end
@@ -89,7 +95,7 @@ end
 
 def process_pkg_properties()
   file_array = get_pkg_properties()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Package Properties"
     row   = [ 'Property', 'Value' ]
     table = handle_table("title",title,row,"")
@@ -107,6 +113,9 @@ def process_pkg_properties()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No package property information available"
   end
   return
 end
@@ -123,7 +132,7 @@ end
 
 def process_pkg_publisher()
   file_array = get_pkg_publisher()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Package Publisher"
     row   = [ 'Publisher', 'Type', 'Status', 'Location' ]
     table = handle_table("title",title,row,"")
@@ -146,6 +155,8 @@ def process_pkg_publisher()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts "No package publisher information available"
   end
   return
 end
@@ -170,7 +181,7 @@ end
 
 def process_pkg_ips()
   file_array = get_ips_info()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "IPS Package Information"
     row   = [ 'Name (Publisher)', 'Version', 'IFO' ]
     table = handle_table("title",title,row,"")
@@ -192,6 +203,9 @@ def process_pkg_ips()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No IPS package information available"
   end
   return
 end
@@ -203,7 +217,7 @@ def process_packages()
   pkg_name   = ""
   pkg_ver    = ""
   pkg_date   = ""
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "System V Package Information"
     row   = [ 'Package', 'Version', 'Install' ]
     table = handle_table("title",title,row,"")
@@ -232,6 +246,9 @@ def process_packages()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No System V package information available"
   end
   os_version = get_os_version()
   if os_version == "5.11"
@@ -240,6 +257,9 @@ def process_packages()
     process_pkg_mediator()
     process_pkg_properties()
     process_pkg_publisher()
+  else
+    puts
+    puts "No IPS package information available"
   end
   return
 end

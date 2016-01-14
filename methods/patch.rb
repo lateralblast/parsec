@@ -23,7 +23,7 @@ def process_patches()
   patch_info   = get_patch_info()
   patch_date   = ""
   patch_number = ""
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Patch Information"
     row   = [ 'Patch', 'Install Date', 'Packages' ]
     table = handle_table("title",title,row,"")
@@ -43,6 +43,9 @@ def process_patches()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No patch information available"
   end
   return
 end

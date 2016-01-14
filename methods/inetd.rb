@@ -57,7 +57,7 @@ $inetd_services=[
 def process_inetd()
   file_name  = "/etc/inetd.conf"
   file_array = exp_file_to_array(file_name)
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     title = "Security Settings ("+file_name+")"
     table = Terminal::Table.new :title => title, :headings => ['Service', 'Current','Recommended','Complies']
@@ -80,6 +80,9 @@ def process_inetd()
     end
     handle_output(table)
     handle_output("\n")
+  else
+    puts
+    puts "No security settings available in "+file_name
   end
   return
 end

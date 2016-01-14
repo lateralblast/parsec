@@ -12,7 +12,7 @@ end
 
 def process_cups()
   file_array = get_cups()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     source = ""
     title  = "CUPS Configuration"
     row    = [ 'Item', 'Value' ]
@@ -28,6 +28,9 @@ def process_cups()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No CUPS information available"
   end
   return
 end

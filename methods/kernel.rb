@@ -72,7 +72,7 @@ end
 def process_modules()
   file_array = get_mod_info()
   load_array = get_mod_load()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Kernel Module Information"
     row   = ['Module','Information','Status']
     table = handle_table("title",title,row,"")
@@ -98,6 +98,9 @@ def process_modules()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No kernel module information available"
   end
   return
 end

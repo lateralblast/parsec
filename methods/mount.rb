@@ -12,7 +12,7 @@ end
 
 def process_mounts()
   file_array = get_mounts()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Mount Options Information"
     row   = [ 'Mount', 'Options', ]
     table = handle_table("title",title,row,"")
@@ -61,6 +61,9 @@ def process_mounts()
       table   = handle_table("row","",row,table)
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No mount information available"
   end
   return
 end

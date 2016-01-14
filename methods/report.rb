@@ -24,6 +24,9 @@ end
 # Do configuration report
 
 def config_report(report,report_type)
+  if report_type.match(/all|cups/)
+    process_cups()
+  end
   if report_type.match(/all|obp/)
     process_obp()
   end
@@ -64,12 +67,18 @@ def config_report(report,report_type)
     os_ver = get_os_version()
     if get_os_version.match(/11/)
       process_vnic()
+    else
+      puts
+      puts "No VNIC information available"
     end
   end
   if report_type.match(/all|link/)
     os_ver = get_os_version()
     if get_os_version.match(/11/)
       process_link()
+    else
+      puts
+      puts "No link information available"
     end
   end
   if report_type.match(/all|aggr/)
@@ -80,6 +89,9 @@ def config_report(report,report_type)
   end
   if report_type.match(/all|kernel/)
     process_etc_system()
+  end
+  if report_type.match(/all|security|elfsign/)
+    process_elfsign()
   end
   if report_type.match(/all|zone/)
     process_zones()
@@ -103,6 +115,9 @@ def config_report(report,report_type)
     os_ver = get_os_version()
     if os_ver.match(/11/)
       process_zfs()
+    else
+      puts
+      puts "No ZFS information available"
     end
   end
   if report_type.match(/all|services/)
@@ -119,7 +134,10 @@ def config_report(report,report_type)
   if report_type.match(/all|svcprop/)
     os_ver = get_os_version()
     if os_ver.match(/11/)
-    #  process_svcprop()
+      process_svcprop()
+    else
+      puts
+      puts "No service property information available"
     end
   end
   if report_type.match(/all|locale/)
@@ -135,6 +153,9 @@ def config_report(report,report_type)
     os_ver = get_os_version
     if !os_ver.match(/11/)
       process_patches()
+    else
+      puts
+      puts "No patch information available"
     end
   end
   if report_type.match(/all|tcp/)
@@ -154,6 +175,13 @@ def config_report(report,report_type)
   end
   if report_type.match(/all|handbook/)
     process_handbook()
+  end
+  if report_type.match(/all|veritas|vx/)
+    process_veritas()
+  end
+  if report_type.match(/all|aggr|network/)
+    process_aggr_config()
+    process_aggr_detail()
   end
   handle_output("\n")
   return

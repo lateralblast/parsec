@@ -10,7 +10,7 @@ end
 
 def process_svcprop()
   file_array = get_svcprop_info()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     counter = 0
     title   = "Service Properties"
@@ -37,6 +37,9 @@ def process_svcprop()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No service property information available"
   end
   return
 end

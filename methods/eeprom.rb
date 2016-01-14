@@ -11,17 +11,22 @@ end
 # Process eeprom information
 
 def process_eeprom()
-  table      = handle_table("title","EEPROM Information","","")
   file_array = get_eeprom_info()
-  file_array.each do |line|
-    line.chomp
-    if !line.match(/data not available/)
-      (parameter,value) = line.split(/\=/)
-      if value
-        table = handle_table("row",parameter,value,table)
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    table = handle_table("title","EEPROM Information","","")
+    file_array.each do |line|
+      line.chomp
+      if !line.match(/data not available/)
+        (parameter,value) = line.split(/\=/)
+        if value
+          table = handle_table("row",parameter,value,table)
+        end
       end
     end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No EEPROM information available"
   end
-  table = handle_table("end","","",table)
   return
 end

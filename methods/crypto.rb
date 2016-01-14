@@ -13,7 +13,7 @@ end
 def process_crypto_list()
   file_array = get_crypto_list()
   table = ""
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line = line.chomp
       if line.match(/[A-z]/) and !line.match(/^Slot|^Provider|^=/)
@@ -50,6 +50,9 @@ def process_crypto_list()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No crypto information available"
   end
   return
 end
@@ -66,7 +69,7 @@ end
 
 def process_crypto_providers()
   file_array = get_crypto_providers()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     source = ""
     title  = "Crypto Providers"
     row    = [ 'Source', 'Library / Algorithm', 'Status' ]
@@ -89,6 +92,9 @@ def process_crypto_providers()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No crypto provider information available"
   end
   return
 end

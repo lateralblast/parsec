@@ -107,6 +107,9 @@ def process_ldom_ver(table)
       avail_ldom = avail_ldom+" (Newer)"
     end
     table = handle_table("row","Available LDom Version",avail_ldom,table)
+  else
+    puts
+    puts "No LDom version information available"
   end
   return table
 end
@@ -116,12 +119,17 @@ end
 def get_ldom_hosts()
   ldom_hosts = []
   file_array = get_ldom_info()
-  file_array.each do |line|
-    line = line.chomp
-    if line.match(/^DOMAIN/)
-      host_name = line.split(/\|/)[1].split(/\=/)[1]
-      ldom_hosts.push(host_name)
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    file_array.each do |line|
+      line = line.chomp
+      if line.match(/^DOMAIN/)
+        host_name = line.split(/\|/)[1].split(/\=/)[1]
+        ldom_hosts.push(host_name)
+      end
     end
+  else
+    puts
+    puts "No LDoms configured"
   end
   return ldom_hosts
 end
@@ -142,7 +150,7 @@ def process_m_series_logical_domains()
   param   = ""
   counter = 0
   file_array = get_ldom_info()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     ldom = Hash.new {|hash, key| hash[key] = Hash.new }
     file_array.each do |line|
       line  = line.chomp
@@ -230,6 +238,8 @@ def process_m_series_logical_domains()
       end
       table = handle_table("end","","",table)
     end
+  else
+    "No LDom information available"
   end
   return
 end
@@ -248,94 +258,99 @@ def process_t_series_logical_domains()
   mask_hosts  = {}
   mask_vols   = {}
   mask_groups = {}
-  file_array.each do |line|
-    line = line.chomp
-    dom_info = line.split(/\|/)
-    if dom_info[0] and line.match(/\|/)
-      if dom_info[0].match(/^DOMAIN/)
-        output = 1
-        if counter != 0
-          table = handle_table("end","","",table)
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    file_array.each do |line|
+      line = line.chomp
+      dom_info = line.split(/\|/)
+      if dom_info[0] and line.match(/\|/)
+        if dom_info[0].match(/^DOMAIN/)
+          output = 1
+          if counter != 0
+            table = handle_table("end","","",table)
+          end
+          counter  = counter+1
+          dom_name = dom_info[1].split(/\=/)[1]
+          title    = "Logical Domain "+dom_name
+          row      = ['Domain Items','Value']
+          table    = handle_table("title",title,row,"")
+        else
+          if dom_info[0].match(/^[A-Z]/) and dom_info[0].match(/^V/)
+            table  = handle_table("line","","",table)
+            item   = dom_info[0]
+            value  = "Value"
+            if value
+              table  = handle_table("row",item,value,table)
+            end
+            table  = handle_table("line","","",table)
+          end
         end
-        counter  = counter+1
-        dom_name = dom_info[1].split(/\=/)[1]
-        title    = "Logical Domain "+dom_name
-        row      = ['Domain Items','Value']
-        table    = handle_table("title",title,row,"")
+        dom_info.each do |dom_value|
+          if output == 1
+            if dom_value.match(/\=/)
+              (item,value) = dom_value.split(/\=/)
+              if item == "name" and line.match(/^DOMAIN/)
+                item = "Hostname"
+              end
+              item = item.capitalize
+              item = item.gsub(/^Dev/,"Device")
+              item = item.gsub(/^Vol/,"Volume")
+              item = item.gsub(/^Uuid/,"UUID")
+              item = item.gsub(/^Cons/,"Console Port")
+              item = item.gsub(/^Mem/,"Memory")
+              item = item.gsub(/^Mac-addr/,"MAC Address")
+              item = item.gsub(/^Hostid/,"Host ID")
+              item = item.gsub(/^Cpu-arch/,"CPU Architecture")
+              item = item.gsub(/^Mtu/,"MTU")
+              item = item.gsub(/^Ncpu/,"CPUs")
+              item = item.gsub(/^Id/,"ID")
+              item = item.gsub(/^Linkprop/,"Link Property")
+              item = item.gsub(/^Cid/,"CPU ID")
+              item = item.gsub(/^Mpgroup/,"MP Group")
+              item = item.gsub(/^Cpuset/,"CPU Set")
+              item = item.gsub(/^Softstate/,"Status")
+              item = item.gsub(/^Port/,"Console Port")
+              item = item.gsub(/^Nclients/,"Clients")
+              item = item.gsub(/Net-dev/,"Network Device")
+              item = item.gsub(/Nvramrc/,"NVRAMRC")
+              if item == "Memory"
+                value = value.to_i/(1024*1024)
+                if value > 1024
+                  value = value.to_i/1024
+                  value = value.to_s+" GB"
+                else
+                  value = value.to_s+" MB"
+                end
+              end
+              if value
+                table = handle_table("row",item,value,table)
+              end
+            end
+          end
+        end
       else
-        if dom_info[0].match(/^[A-Z]/) and dom_info[0].match(/^V/)
+        if !line.match(/^VERSION|^VCPU|^MEMORY/)
+          output = 1
           table  = handle_table("line","","",table)
-          item   = dom_info[0]
+          if line.match(/^IO|^MAU/)
+            item   = line
+          else
+            item   = line.downcase.capitalize
+          end
           value  = "Value"
           if value
             table  = handle_table("row",item,value,table)
           end
           table  = handle_table("line","","",table)
-        end
-      end
-      dom_info.each do |dom_value|
-        if output == 1
-          if dom_value.match(/\=/)
-            (item,value) = dom_value.split(/\=/)
-            if item == "name" and line.match(/^DOMAIN/)
-              item = "Hostname"
-            end
-            item = item.capitalize
-            item = item.gsub(/^Dev/,"Device")
-            item = item.gsub(/^Vol/,"Volume")
-            item = item.gsub(/^Uuid/,"UUID")
-            item = item.gsub(/^Cons/,"Console Port")
-            item = item.gsub(/^Mem/,"Memory")
-            item = item.gsub(/^Mac-addr/,"MAC Address")
-            item = item.gsub(/^Hostid/,"Host ID")
-            item = item.gsub(/^Cpu-arch/,"CPU Architecture")
-            item = item.gsub(/^Mtu/,"MTU")
-            item = item.gsub(/^Ncpu/,"CPUs")
-            item = item.gsub(/^Id/,"ID")
-            item = item.gsub(/^Linkprop/,"Link Property")
-            item = item.gsub(/^Cid/,"CPU ID")
-            item = item.gsub(/^Mpgroup/,"MP Group")
-            item = item.gsub(/^Cpuset/,"CPU Set")
-            item = item.gsub(/^Softstate/,"Status")
-            item = item.gsub(/^Port/,"Console Port")
-            item = item.gsub(/^Nclients/,"Clients")
-            item = item.gsub(/Net-dev/,"Network Device")
-            item = item.gsub(/Nvramrc/,"NVRAMRC")
-            if item == "Memory"
-              value = value.to_i/(1024*1024)
-              if value > 1024
-                value = value.to_i/1024
-                value = value.to_s+" GB"
-              else
-                value = value.to_s+" MB"
-              end
-            end
-            if value
-              table = handle_table("row",item,value,table)
-            end
-          end
-        end
-      end
-    else
-      if !line.match(/^VERSION|^VCPU|^MEMORY/)
-        output = 1
-        table  = handle_table("line","","",table)
-        if line.match(/^IO|^MAU/)
-          item   = line
         else
-          item   = line.downcase.capitalize
+          output = 0
         end
-        value  = "Value"
-        if value
-          table  = handle_table("row",item,value,table)
-        end
-        table  = handle_table("line","","",table)
-      else
-        output = 0
       end
     end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No LDom information available"
   end
-  table = handle_table("end","","",table)
   return
 end
 
@@ -361,6 +376,9 @@ def process_ldom()
     else
       process_m_series_logical_domains()
     end
+  else
+    puts
+    puts "No LDom information available"
   end
   return
 end

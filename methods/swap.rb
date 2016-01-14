@@ -12,7 +12,7 @@ end
 
 def process_swap()
   file_array = get_swap()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     source = ""
     title  = "Swap Information"
     row    = [ 'Swap File', 'Device', '512K Blocks / Page', 'Blocks', 'Free' ]
@@ -25,6 +25,9 @@ def process_swap()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No swap information available"
   end
   return
 end

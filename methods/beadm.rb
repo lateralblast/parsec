@@ -11,7 +11,7 @@ end
 def process_beadm()
   file_array = get_beadm_status()
   lu_current = ""
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     counter = 0
     title   = "Boot Environment Status"
@@ -44,6 +44,9 @@ def process_beadm()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No BE information available"
   end
   return
 end

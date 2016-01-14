@@ -11,15 +11,20 @@ end
 # Process coreadm infomation
 
 def process_coreadm()
-  table        = handle_table("title","Coreadm Configuration","","")
   coreadm_info = get_coreadm_info()
-  coreadm_info.each do |line|
-    (param,value) = line.split(": ")
-    if param and value
-      param = param.gsub(/^\s+/,'')
-      table = handle_table("row",param,value,table)
+  if coreadm_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    table = handle_table("title","Coreadm Configuration","","")
+    coreadm_info.each do |line|
+      (param,value) = line.split(": ")
+      if param and value
+        param = param.gsub(/^\s+/,'')
+        table = handle_table("row",param,value,table)
+      end
     end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No coreadm infomation available"
   end
-  table = handle_table("end","","",table)
   return
 end

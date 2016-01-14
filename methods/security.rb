@@ -12,7 +12,7 @@ end
 
 def process_elfsign()
   file_array = get_elfsign()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     source = ""
     title  = "Elfsign Verification"
     row    = [ 'Library / Algorithm', 'Status' ]
@@ -28,6 +28,9 @@ def process_elfsign()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No elfsign information"
   end
   return
 end

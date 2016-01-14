@@ -23,7 +23,7 @@ end
 def process_liveupgrade()
   file_array = get_lu_status()
   lu_current = ""
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     counter = 0
     title   = "Live Upgrade Status"
@@ -45,12 +45,15 @@ def process_liveupgrade()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No Live Upgrade status information available"
   end
   file_array = get_lu_tab()
   lu_name    = ""
   lu_fs      = ""
   lu_slice   = ""
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     title = "Live Upgrade Disk Layout"
     row   = ['Name', 'ID','Filesystem','Slice/Pool','Device']
@@ -95,10 +98,13 @@ def process_liveupgrade()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No Live Upgrade disk layout information available"
   end
   if lu_current.match(/[A-z]/)
     file_array = get_lu_fs_info(lu_current)
-    if file_array
+    if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
       handle_output("")
       lu_id = 0
       title = "Live Upgrade Filesystem Information ("+lu_current+")"
@@ -134,6 +140,9 @@ def process_liveupgrade()
         end
       end
       table = handle_table("end","","",table)
+    else
+      puts
+      puts "No Live Upgrade filesystem information available"
     end
   end
   return

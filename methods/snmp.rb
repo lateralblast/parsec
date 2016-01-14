@@ -12,7 +12,7 @@ end
 
 def process_cups_snmp()
   file_array = get_cups_snmp()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]/)
     source = ""
     title  = "CUPS SNMP Configuration"
     row    = [ 'Item', 'Value' ]
@@ -28,6 +28,8 @@ def process_cups_snmp()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts "No CUPS SNMP information available"
   end
   return
 end

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      0.8.9
+# Version:      0.9.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -184,7 +184,7 @@ def print_usage(options)
   puts
   puts "-R: Report/Print configuration information for a specific component:"
   puts
-  puts "    agrr:       Aggregate information"
+  puts "    aggr:       Aggregate information"
   puts "    all:        All information"
   puts "    coreadm:    Coreadm information"
   puts "    cpu:        CPU information"

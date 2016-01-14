@@ -66,7 +66,7 @@ end
 
 def process_vnic()
   file_array = get_vnic_info()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       if line.match(/^LINK/)
         title = "VNIC Information"
@@ -96,6 +96,9 @@ def process_vnic()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No VNIC information available"
   end
   return
 end
@@ -112,7 +115,7 @@ end
 
 def process_link_slots()
   file_array = get_link_slots()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       if line.match(/^LINK/)
         title = "Link Slot Information"
@@ -133,6 +136,9 @@ def process_link_slots()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No link slot information available"
   end
   return
 end
@@ -141,7 +147,7 @@ end
 
 def process_link_speed()
   file_array = get_ether_info()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Link Information"
     row   = [ 'Link', 'Zone', 'Type', 'State', 'Auto', 'Speed', 'Pause' ]
     table = handle_table("title",title,row,"")
@@ -165,6 +171,9 @@ def process_link_speed()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No link information available"
   end
   return
 end
@@ -205,7 +214,7 @@ end
 
 def process_aggr_config()
   file_array = get_aggr_config()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line  = line.chomp
       items = line.split(/\s+/)
@@ -230,6 +239,9 @@ def process_aggr_config()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No aggregate configuration information available"
   end
   return
 end
@@ -238,12 +250,12 @@ end
 
 def process_aggr_detail()
   file_array = get_aggr_detail()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line  = line.chomp
       items = line.split(/\s+/)
       if line.match(/^LINK/)
-        title = "Aggregate Information"
+        title = "Aggregate Detailed Information"
         row   = [ 'Link', 'Port', 'Speed', 'Duplex', 'State', 'MAC Address', 'Port State' ]
         table = handle_table("title",title,row,"")
       else
@@ -276,6 +288,9 @@ def process_aggr_detail()
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No aggregate detailed information available"
   end
   return
 end
@@ -284,7 +299,7 @@ end
 
 def process_network(type)
   file_array = get_ip_info(type)
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = type.upcase+" Kernel Information"
     row   = [ 'Paramater', 'Value' ]
     table = handle_table("title",title,row,"")
@@ -301,6 +316,9 @@ def process_network(type)
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No "+type.upcase+" kernel information available"
   end
   return
 end

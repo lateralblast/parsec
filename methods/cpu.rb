@@ -76,100 +76,105 @@ def process_cpu()
     title = "CPU Information"
     #table = handle_table("title","CPU Information","","")
   end
-  table      = Terminal::Table.new :title => title, :headings => [ 'Bo.', 'Mo.', 'So.', 'Co.', 'Th.', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs' ]
   cpu_info   = get_cpu_info()
-  sys_model  = get_sys_model()
-  length     = cpu_info.length
-  t_count    = 0
-  board_no   = "1"
-  cpu_no     = "1"
-  core_no    = ""
-  cpu_status = ""
-  cpu_speed  = ""
-  cpu_mask   = ""
-  cp_cache   = ""
-  cpu_type   = ""
-  cpu_ids    = ""
-  cpu_info.each do |line|
-    if line.match(/[0-9][0-9]/)
-      cpu_line = line.split(/\s+/)
-      case sys_model
-      when /T[0-9]|M10-|M[5,6,7]-/
-        if line.match(/^[0-9]/)
-          cpu_thread = cpu_line[0]
-          cpu_speed  = cpu_line[1..2].join(" ")
-          cpu_type   = cpu_line[3]
-          cpu_status = cpu_line[4]
-        end
-      when /V1/
-        if line.match(/^ [0-9]/)
-          board_no   = cpu_line[1]
-          cpu_no     = cpu_line[2]
-          cpu_module = cpu_line[3]
-          cpu_speed  = cpu_line[4]+" MHz"
-          cpu_cache  = cpu_line[5]
-          cpu_mask   = cpu_line[7]
-          cpu_type   = get_sys_model()
-          cpu_list   = cpu_no
-          cpu_type   = cpu_type.split(/\(/)[1].split(/ /)[0]
-        end
-      when /480R/
-        if line.match(/^ [A-Z]/)
-          board_no  = cpu_line[1]
-          cpu_no    = cpu_line[2]
-          cpu_speed = cpu_line[3]+" MHz"
-          cpu_cache = cpu_line[4]
-          cpu_type  = cpu_line[5]
-          cpu_mask  = cpu_line[6]
-        end
-      when /V4/
-        if line.match(/^[0-9]/)
-          cpu_no    = cpu_line[0].to_s
-          cpu_speed = cpu_line[1]+" MHz"
-          cpu_cache = cpu_line[3]
-          cpu_type  = cpu_line[4].split(/,/)[1]
-          cpu_mask  = cpu_line[5]
-          cpu_list  = "0"
-        end
-      when /M[3-9]0/
-        if line.match(/^ [0-9]/)
-          cpu_list  = ""
-          cpu_no    = cpu_line[2]
-          cpu_mask  = cpu_line[-1]
-          cpu_cache = cpu_line[-3]
-          cpu_speed = cpu_line[-4]+" MHz"
-          board_no  = cpu_line[1]
-          cpu_ids   = line.split(/(?<=,)/)
-          cpu_ids.each do |cpu_id|
-            if cpu_id.match(/,$/)
-              cpu_id = cpu_id.split(/\s+/)
-              cpu_id = cpu_id[-1]
-            else
-              cpu_id = cpu_id.gsub(/^\s+/,"")
-              cpu_id = cpu_id.split(/\s+/)
-              cpu_id = cpu_id[0]
-            end
-            cpu_list = cpu_list+cpu_id
+  if cpu_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    table      = Terminal::Table.new :title => title, :headings => [ 'Bo.', 'Mo.', 'So.', 'Co.', 'Th.', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs' ]
+    sys_model  = get_sys_model()
+    length     = cpu_info.length
+    t_count    = 0
+    board_no   = "1"
+    cpu_no     = "1"
+    core_no    = ""
+    cpu_status = ""
+    cpu_speed  = ""
+    cpu_mask   = ""
+    cp_cache   = ""
+    cpu_type   = ""
+    cpu_ids    = ""
+    cpu_info.each do |line|
+      if line.match(/[0-9][0-9]/)
+        cpu_line = line.split(/\s+/)
+        case sys_model
+        when /T[0-9]|M10-|M[5,6,7]-/
+          if line.match(/^[0-9]/)
+            cpu_thread = cpu_line[0]
+            cpu_speed  = cpu_line[1..2].join(" ")
+            cpu_type   = cpu_line[3]
+            cpu_status = cpu_line[4]
           end
-          cpu_ids  = cpu_list.split(",")
-          cpu_id   = cpu_ids[0]
-          cpu_id   = cpu_id.to_i.chr.unpack('H*')
-          cpu_id   = cpu_id[0]
-          cpu_type = get_cpu_type(cpu_id)
-    #     cpu_family=get_cpu_family(cpu_mask)
+        when /V1/
+          if line.match(/^ [0-9]/)
+            board_no   = cpu_line[1]
+            cpu_no     = cpu_line[2]
+            cpu_module = cpu_line[3]
+            cpu_speed  = cpu_line[4]+" MHz"
+            cpu_cache  = cpu_line[5]
+            cpu_mask   = cpu_line[7]
+            cpu_type   = get_sys_model()
+            cpu_list   = cpu_no
+            cpu_type   = cpu_type.split(/\(/)[1].split(/ /)[0]
+          end
+        when /480R/
+          if line.match(/^ [A-Z]/)
+            board_no  = cpu_line[1]
+            cpu_no    = cpu_line[2]
+            cpu_speed = cpu_line[3]+" MHz"
+            cpu_cache = cpu_line[4]
+            cpu_type  = cpu_line[5]
+            cpu_mask  = cpu_line[6]
+          end
+        when /V4/
+          if line.match(/^[0-9]/)
+            cpu_no    = cpu_line[0].to_s
+            cpu_speed = cpu_line[1]+" MHz"
+            cpu_cache = cpu_line[3]
+            cpu_type  = cpu_line[4].split(/,/)[1]
+            cpu_mask  = cpu_line[5]
+            cpu_list  = "0"
+          end
+        when /M[3-9]0/
+          if line.match(/^ [0-9]/)
+            cpu_list  = ""
+            cpu_no    = cpu_line[2]
+            cpu_mask  = cpu_line[-1]
+            cpu_cache = cpu_line[-3]
+            cpu_speed = cpu_line[-4]+" MHz"
+            board_no  = cpu_line[1]
+            cpu_ids   = line.split(/(?<=,)/)
+            cpu_ids.each do |cpu_id|
+              if cpu_id.match(/,$/)
+                cpu_id = cpu_id.split(/\s+/)
+                cpu_id = cpu_id[-1]
+              else
+                cpu_id = cpu_id.gsub(/^\s+/,"")
+                cpu_id = cpu_id.split(/\s+/)
+                cpu_id = cpu_id[0]
+              end
+              cpu_list = cpu_list+cpu_id
+            end
+            cpu_ids  = cpu_list.split(",")
+            cpu_id   = cpu_ids[0]
+            cpu_id   = cpu_id.to_i.chr.unpack('H*')
+            cpu_id   = cpu_id[0]
+            cpu_type = get_cpu_type(cpu_id)
+      #     cpu_family=get_cpu_family(cpu_mask)
+          end
         end
+        if sys_model.match(/T[0-9]|M10-/)
+          cpu_no  = (t_count / c_ratio)
+          core_no = (t_count / t_ratio)
+          t_count = t_count+1
+        end
+        # 'Board', 'Module', 'Socket', 'Core', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs'
+        row = [ board_no.to_s, board_no.to_s, cpu_no.to_s, core_no.to_s, cpu_thread.to_s, cpu_status, cpu_speed, cpu_mask, cp_cache, cpu_type, cpu_ids ]
+        table.add_row(row)
       end
-      if sys_model.match(/T[0-9]|M10-/)
-        cpu_no  = (t_count / c_ratio)
-        core_no = (t_count / t_ratio)
-        t_count = t_count+1
-      end
-      # 'Board', 'Module', 'Socket', 'Core', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs'
-      row = [ board_no.to_s, board_no.to_s, cpu_no.to_s, core_no.to_s, cpu_thread.to_s, cpu_status, cpu_speed, cpu_mask, cp_cache, cpu_type, cpu_ids ]
-      table.add_row(row)
     end
+    handle_output(table)
+    handle_output("\n")
+  else
+    puts
+    puts "No CPU information available"
   end
-  handle_output(table)
-  handle_output("\n")
   return
 end

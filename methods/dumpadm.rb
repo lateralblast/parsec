@@ -8,18 +8,23 @@ def get_dumpadm_info()
   return file_array
 end
 
-# Process dumpadm infomation
+# Process dumpadm information
 
 def process_dumpadm()
-  table        = handle_table("title","Dumpadm Configuration","","")
   dumpadm_info = get_dumpadm_info()
-  dumpadm_info.each do |line|
-    (param,value) = line.split(": ")
-    param         = param.gsub(/^\s+/,'')
-    if value
-      table = handle_table("row",param,value,table)
+  if dumpadm_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    table = handle_table("title","Dumpadm Configuration","","")
+    dumpadm_info.each do |line|
+      (param,value) = line.split(": ")
+      param         = param.gsub(/^\s+/,'')
+      if value
+        table = handle_table("row",param,value,table)
+      end
     end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No dumpadm information available"
   end
-  table = handle_table("end","","",table)
   return
 end

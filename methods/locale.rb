@@ -10,7 +10,7 @@ end
 
 def process_locale()
   file_array = get_locale_info()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Locale Information"
     table = handle_table("title",title,"","")
     file_array.each do |line|
@@ -22,6 +22,9 @@ def process_locale()
       table      = handle_table("row","",row,table)
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No locale information available"
   end
   return
 end

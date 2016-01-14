@@ -4,7 +4,7 @@
 
 def process_services()
   file_array = get_manifests_services()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     title = "Service"
     table = Terminal::Table.new :title => title, :headings => ['Service', 'Status','Recommended','Complies']
@@ -43,8 +43,11 @@ def process_services()
         table.add_row(row)
       end
     end
+    handle_output(table)
+    handle_output("\n")
+  else
+    puts
+    puts "No service manifest information available"
   end
-  handle_output(table)
-  handle_output("\n")
   return
 end

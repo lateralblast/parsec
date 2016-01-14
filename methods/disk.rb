@@ -69,10 +69,10 @@ def process_disk_info()
   file_array = get_disk_info()
   disk_paths = get_disk_paths()
   disk_sizes = get_disk_sizes()
-  if file_array
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     source = ""
     title  = "Disk Information"
-    row    = [ 'ID', 'Vendor / Product', 'Serial', 'Port', 'Paths', 'Size' ]
+    row    = [ 'ID', 'SSD', 'Target', 'Vendor / Product', 'Serial', 'Port', 'Paths', 'Size' ]
     table  = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
@@ -82,21 +82,40 @@ def process_disk_info()
         if $masked == 1
           info[2] = "MASKED"
         end
-        disk   = info[0]
-        vendor = info[1]
-        serial = info[2]
-        port   = info[3]
-        size   = disk_sizes[disk]
-        if disk_paths
-          paths  = disk_paths[disk][0..1].join(",")
-        else
-          paths  = ""
+        disk    = info[0]
+        id      = get_disk_id(disk)
+        vendor  = info[1]
+        serial  = info[2]
+        port    = info[3]
+        if disk
+          if disk_paths
+            if disk_paths[disk]
+              paths = disk_paths[disk][0..1].join(",")
+              path1 = disk_patch[0]
+              path2 = disk_patch[1]
+              ssd1  = get_disk_ssd_id(path1)
+              ssd2  = get_disk_ssd_id(path2)
+              ssd   = ssd1+","+ssd2
+              size  = get_disk_size_from_ssd_id(ssd1)
+            else
+              paths = get_disk_path(disk)
+              ssd   = get_disk_ssd_id(paths)
+              size  = get_disk_size_from_ssd_id(ssd)
+            end
+          else
+            paths = get_disk_path(disk)
+            ssd   = get_disk_ssd_id(paths)
+            size  = get_disk_size_from_ssd_id(ssd)
+          end
+          row   = [ id, ssd, disk, vendor, serial, port, paths, size ]
+          table = handle_table("row","",row,table)
         end
-        row   = [ disk, vendor, serial, port, paths, size ]
-        table = handle_table("row","",row,table)
       end
     end
     table = handle_table("end","","",table)
+  else
+    puts
+    puts "No disk information available"
   end
   return
 end
@@ -199,6 +218,36 @@ def get_disk_sd_info(counter)
   return disk_info
 end
 
+# Get a disk ssd id
+
+def get_disk_ssd_id(disk_path)
+  file_name  = "/etc/path_to_inst"
+  file_array = exp_file_to_array(file_name)
+  ssd_info    = file_array.grep(/#{disk_path}\"/)[0]
+  if ssd_info.to_s.match(/sd/)
+    ssd_info = ssd_info.split(/\s+/)
+    ssd_id   = ssd_info[2].gsub(/\"/,"")+ssd_info[1]
+  else
+    ssd_id = ""
+  end
+  return ssd_id
+end
+
+# Get disk size from ssd id
+
+def get_disk_size_from_ssd_id(ssd_id)
+  file_name  = "/disks/iostat_-E.out"
+  file_array = exp_file_to_array(file_name)
+  disk_size  = ""
+  file_array.each_with_index do |line,index|
+    if line.match(/^#{ssd_id} /)
+      disk_size = file_array[index+2].split(/\s+/)[1]
+      return disk_size
+    end
+  end
+  return disk_size
+end
+
 # Handle disk sd information
 
 def handle_disk_sd_info(table,disk_data)
@@ -238,6 +287,16 @@ def get_disk_path(disk_name)
   disk_info  = disk_info[1].gsub(/\s+/,'')
   return disk_info
 end
+
+def get_disk_id(disk_name)
+  file_name  = "/disks/format.out"
+  file_array = exp_file_to_array(file_name)
+  disk_info  = file_array.grep(/[0-9]\./)
+  disk_info  = disk_info.grep(/#{disk_name} /)
+  disk_id    = disk_info[0].split(/\./)[0].gsub(/\s+/,"")
+  return disk_id
+end
+
 
 # Get available disk firmware version
 
