@@ -295,6 +295,74 @@ def process_aggr_detail()
   return
 end
 
+# Process ndd info for network interface
+
+def process_ndd_nic_driver(nic_name)
+  nic_no  = nic_name.gsub(/[a-z]/,"")
+  driver  = nic_name.gsub(/[0-9]/,"")
+  nic_dir = driver+"."+nic_no
+  file_name  = "/netinfo/ndd/"+nic_dir+"/list.out"
+  file_array = exp_file_to_array(file_name)
+  if file_array.to_s.match(/[A-Z]|[a-z][0-9]/)
+    puts
+    title = "Kernel "+nic_name+" Paramater Information"
+    row   = ['Parameter', 'Type', 'Value']
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      if line.match(/^[a-z]/) and !line.match(/^\?/)
+        line  = line.chop
+        param = line.split(/\(/)[0].gsub(/\s+/,"")
+        type  = line.split(/\(/)[1].split(/\)/)[0]
+        value_name  = "/netinfo/ndd/"+nic_dir+"/"+param+".out"
+        value_array = exp_file_to_array(value_name)
+        if value_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+          value = value_array[0].chop
+        else
+          value = ""
+        end
+        row   = [ param, type, value ]
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  end
+  return
+end
+
+# Process network interface information
+
+def process_nic_info()
+  file_name  = "/etc/path_to_inst"
+  file_array = exp_file_to_array(file_name)
+  nic_list   = []
+  if file_array.to_s.match(/[A-Z]|[a-z][0-9]/)
+    title = "Network Interfaces"
+    row   = [ 'Interface', 'Path', 'hostname', 'IP' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      if line.match(/network/)
+        line = line.gsub(/"/,"")
+        (path,inst,driver) = line.split(/\s+/)
+        nic_name = driver+inst
+        nic_list.push(nic_name)
+        nic_host = get_if_hostname(nic_name)
+        nic_ip   = get_hostname_ip(nic_host)
+        row      = [ nic_name, path, nic_host, nic_ip ]
+        table    = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+    nic_list = nic_list.uniq
+    nic_list.each do |nic_name|
+      process_ndd_nic_driver(nic_name)
+    end
+  else
+    puts
+    puts "No network interface information available"
+  end
+  return
+end
+
 # Process network information
 
 def process_network(type)

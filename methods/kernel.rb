@@ -63,11 +63,135 @@ def get_mod_load()
   return file_array
 end
 
+# Get ndd tcp info
+
+def get_ndd_tcp_info()
+  ndd_type   = "ndd"
+  file_array = get_ndd_info(ndd_type)
+  return file_array
+end
+
+# Get ndd arp info
+
+def get_ndd_arp_info()
+  ndd_type   = "arp"
+  file_array = get_ndd_info(ndd_type)
+  return file_array
+end
+
+# Generic routine for getting ndd information
+
+def get_ndd_info(ndd_type)
+  file_name  = "/netinfo/ndd/"+ndd_type+".out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process ndd tcp information
+
+def process_ndd_tcp_info()
+  ndd_type = "tcp"
+  process_ndd_info(ndd_type)
+  return
+end
+
+# Process ndd arp information
+
+def process_ndd_arp_info()
+  ndd_type = "arp"
+  process_ndd_info(ndd_type)
+  return
+end
+
+# Process ndd icmp information
+
+def process_ndd_icmp_info()
+  ndd_type = "icmp"
+  process_ndd_info(ndd_type)
+  return
+end
+
+# Process ndd stcp information
+
+def process_ndd_sctp_info()
+  ndd_type = "sctp"
+  process_ndd_info(ndd_type)
+  return
+end
+
+# Process ndd udp information
+
+def process_ndd_udp_info()
+  ndd_type = "udp"
+  process_ndd_info(ndd_type)
+  return
+end
+
+
+# Process ndd ip information
+
+def process_ndd_ip_info()
+  ndd_type = "ip"
+  process_ndd_info(ndd_type)
+  return
+end
+
+# Generic routine for processing ndd information
+
+def process_ndd_info(ndd_type)
+  file_array = get_ndd_info(ndd_type)
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title = "Kernel "+ndd_type+" Parameter Information"
+    row   = ['Parameter', 'Type', 'Value']
+    table = handle_table("title",title,row,"")
+    file_array.each_with_index do |line,index|
+      if line.match(/^#{ndd_type}/) and !line.match(/status|hash|obsolete|host_param/)
+        (param,type) = line.split(/\(/)
+        param = param.gsub(/\s+/,"")
+        type  = type.split(/\)/)[0]
+        value = ""
+        count = index+1
+        if line.match(/tcp_extra_priv_ports/)
+          while !file_array[count].match(/^tcp/)
+            if !value.match(/[A-Z]|[a-z]|[0-9]/)
+              value = file_array[count].chop.gsub(/\s+$/,"")
+            else
+              value = value+" "+file_array[count].chop.gsub(/\s+/,"")
+            end
+            count = count+1
+          end
+        else
+          value = file_array[count]
+        end
+        if value.match(/^#{ndd_type}/)
+          row   = [ param, type, "" ]
+          (param,type) = value.split(/\(/)
+          param = param.gsub(/\s+/,"")
+          type  = type.split(/\)/)[0]
+          row   = [ param, type, "" ]
+        else
+          row   = [ param, type, value ]
+          table = handle_table("row","",row,table)
+        end
+      end
+    end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No "+ndd_type+" tcp information available"
+  end
+  return
+end
+
+# Get module information
+
 def get_mod_info()
   file_name  = "/sysconfig/modinfo.out"
   file_array = exp_file_to_array(file_name)
   return file_array
 end
+
+# Process module information
 
 def process_modules()
   file_array = get_mod_info()

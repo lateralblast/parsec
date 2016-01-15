@@ -87,8 +87,14 @@ def config_report(report,report_type)
       process_aggr()
     end
   end
-  if report_type.match(/all|kernel/)
+  if report_type.match(/all|kernel|ndd/)
     process_etc_system()
+    process_ndd_ip_info()
+    process_ndd_tcp_info()
+    process_ndd_udp_info()
+    process_ndd_arp_info()
+    process_ndd_icmp_info()
+    process_ndd_sctp_info()
   end
   if report_type.match(/all|security|elfsign/)
     process_elfsign()
@@ -182,6 +188,9 @@ def config_report(report,report_type)
   if report_type.match(/all|aggr|network/)
     process_aggr_config()
     process_aggr_detail()
+  end
+  if report_type.match(/all|network/)
+    process_nic_info()
   end
   handle_output("\n")
   return
