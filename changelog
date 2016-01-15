@@ -197,3 +197,5 @@
 # Fixed ZFS report
 # 0.9.8: Fri 15 Jan 2016 12:05:08 AEDT
 # Added more network and ndd reporting
+# 0.9.9: Fri 15 Jan 2016 14:14:02 AEDT
+# Added more service information

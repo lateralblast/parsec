@@ -127,7 +127,9 @@ def config_report(report,report_type)
     end
   end
   if report_type.match(/all|services/)
+    process_service_descs()
     process_services()
+    process_service_deps()
   end
   if report_type.match(/all|lu|liveupgrade|be/)
     os_ver = get_os_version()
