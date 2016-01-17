@@ -64,6 +64,7 @@ The reporting options include:
 - TCP information
 - Telnet information
 - UDP information
+- Veritas information
 - VNIC information
 - ZFS information
 - Zone information
@@ -188,5 +189,3 @@ In order to work, parsec requires three directories:
   - required for some machines to obtain further information
   - can be the repository generated from the [oort](https://github.com/lateralblast/oort) script
   - see the [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started) wiki
-
-

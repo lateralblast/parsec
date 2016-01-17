@@ -4,7 +4,7 @@ def list_facters()
   counter = 0
   if File.directory?($fact_dir) or File.symlink?($fact_dir)
     fact_list=Dir.entries($fact_dir).sort
-    if fact_list.to_s.match(/[A-z]/)
+    if fact_list.to_s.match(/[A-Z]|[a-z]|[0-9]/)
       title = "Puppet Facters in "+$fact_dir+":"
       table = Terminal::Table.new :title => title, :headings => ['Hostname', 'Date', 'File']
       fact_list.each do |fact_file|
@@ -35,6 +35,9 @@ def list_facters()
       end
       handle_output(table)
       handle_output("\n")
+    else
+      puts
+      puts "No facter information available"
     end
   end
   return

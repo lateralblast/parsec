@@ -199,3 +199,5 @@
 # Added more network and ndd reporting
 # 0.9.9: Fri 15 Jan 2016 14:14:02 AEDT
 # Added more service information
+# 1.0.0: Mon 18 Jan 2016 09:36:54 AEDT
+# Minor update to facter output
