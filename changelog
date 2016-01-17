@@ -201,3 +201,5 @@
 # Added more service information
 # 1.0.0: Mon 18 Jan 2016 09:36:54 AEDT
 # Minor update to facter output
+# 1.0.1: Mon 18 Jan 2016 10:09:15 AEDT
+# Added initial support for CDROMs to disk information

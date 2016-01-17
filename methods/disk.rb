@@ -45,7 +45,7 @@ def get_disk_sizes()
       if line.match(/GB|MB/) and line.match(/[0-9]\. c/)
         disk_info = line.split(/\s+/)
         if disk_info
-          disk_name = disk_info[1] 
+          disk_name = disk_info[1]
           disk_size = disk_info[2..3].join.split(/\-/)[-1].gsub(/\>/,"")
           disk_sizes[disk_name] = disk_size
         end
@@ -283,9 +283,18 @@ def get_disk_path(disk_name)
   disk_info  = file_array.grep(/[0-9]/)
   disk_info  = disk_info.join.split(/\. /)
   disk_info  = disk_info.grep(/#{disk_name} /)
-  disk_info  = disk_info[0].split(/\n/)
-  disk_info  = disk_info[1].gsub(/\s+/,'')
-  return disk_info
+  if disk_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    disk_path  = disk_info[0].split(/\n/)
+    disk_path  = disk_path[1].gsub(/\s+/,'')
+  else
+    if disk_name.match(/c0t4d0/)
+      file_name  = "/sysconfig/prtpicl-v.out"
+      file_array = exp_file_to_array(file_name)
+      disk_path  = file_array.grep(/:cdrom/)
+      disk_path  = disk_path.join(" ").split(/\s+/)[2]
+    end
+  end
+  return disk_path
 end
 
 def get_disk_id(disk_name)
@@ -293,7 +302,13 @@ def get_disk_id(disk_name)
   file_array = exp_file_to_array(file_name)
   disk_info  = file_array.grep(/[0-9]\./)
   disk_info  = disk_info.grep(/#{disk_name} /)
-  disk_id    = disk_info[0].split(/\./)[0].gsub(/\s+/,"")
+  if disk_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    disk_id = disk_info[0].split(/\./)[0].gsub(/\s+/,"")
+  else
+    if disk_name.match(/c0t4d0/)
+      disk_id = "CDROM"
+    end
+  end
   return disk_id
 end
 

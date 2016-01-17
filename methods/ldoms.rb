@@ -110,6 +110,7 @@ def process_ldom_ver(table)
   else
     puts
     puts "No LDom version information available"
+    puts
   end
   return table
 end
@@ -193,7 +194,7 @@ def process_m_series_logical_domains()
         else
           param = line.capitalize.gsub(/Vcpu/,"vCPU")
           param = set_param_name(param)
-          ldom[host][param] = "Information" 
+          ldom[host][param] = "Information"
         end
       when /^\|/
         line  = line.gsub(/^\|/,"")
