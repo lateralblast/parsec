@@ -70,9 +70,10 @@ def process_disk_info()
   disk_paths = get_disk_paths()
   disk_sizes = get_disk_sizes()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    paths = "1,1"
     source = ""
     title  = "Disk Information"
-    row    = [ 'ID', 'SSD', 'Target', 'Vendor / Product', 'Serial', 'Port', 'Paths', 'Size' ]
+    row    = [ 'ID', 'SSD', 'Target', 'Vendor / Product', 'Serial', 'Port', 'Path', 'Paths', 'Size' ]
     table  = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
@@ -88,26 +89,20 @@ def process_disk_info()
         serial  = info[2]
         port    = info[3]
         if disk
-          if disk_paths
+          if disk_paths.to_s.match(/[0-9]/)
             if disk_paths[disk]
               paths = disk_paths[disk][0..1].join(",")
-              path1 = disk_patch[0]
-              path2 = disk_patch[1]
-              ssd1  = get_disk_ssd_id(path1)
-              ssd2  = get_disk_ssd_id(path2)
-              ssd   = ssd1+","+ssd2
-              size  = get_disk_size_from_ssd_id(ssd1)
-            else
-              paths = get_disk_path(disk)
-              ssd   = get_disk_ssd_id(paths)
-              size  = get_disk_size_from_ssd_id(ssd)
             end
-          else
-            paths = get_disk_path(disk)
-            ssd   = get_disk_ssd_id(paths)
-            size  = get_disk_size_from_ssd_id(ssd)
           end
-          row   = [ id, ssd, disk, vendor, serial, port, paths, size ]
+          path = get_disk_path(disk)
+          ssd  = get_disk_ssd_id(path)
+          size = get_disk_size_from_ssd_id(ssd)
+          if id.match(/cdrom/)
+            id  = "na"
+            ssd = "cdrom"
+            size = "NA"
+          end
+          row   = [ id, ssd, disk, vendor, serial, port, path, paths, size ]
           table = handle_table("row","",row,table)
         end
       end
@@ -306,7 +301,7 @@ def get_disk_id(disk_name)
     disk_id = disk_info[0].split(/\./)[0].gsub(/\s+/,"")
   else
     if disk_name.match(/c0t4d0/)
-      disk_id = "CDROM"
+      disk_id = "cdrom"
     end
   end
   return disk_id

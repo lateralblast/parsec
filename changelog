@@ -203,3 +203,5 @@
 # Minor update to facter output
 # 1.0.1: Mon 18 Jan 2016 10:09:15 AEDT
 # Added initial support for CDROMs to disk information
+# 1.0.2: Mon 18 Jan 2016 11:05:33 AEDT
+# Fixed determination of number of paths for disk
