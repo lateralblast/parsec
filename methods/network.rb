@@ -238,8 +238,13 @@ def process_aggregation()
         config = items[4]
         status = items[5]
         time   = items[6]
-        host   = get_if_hostname(aggr)
-        ip     = get_hostname_ip(host)
+        if $masked == 1
+          host = "MASKED"
+          ip   = "MASKED"
+        else
+          host = get_if_hostname(aggr)
+          ip   = get_hostname_ip(host)
+        end
         row    = [ aggr, type, nics, devs, config, status, time, host, ip ]
         table  = handle_table("row","",row,table)
       end
@@ -403,8 +408,13 @@ def process_nic_info()
         nic_name = driver+inst
         nic_list.push(nic_name)
         aggr_nic = get_aggr_nic(nic_name)
-        nic_host = get_if_hostname(nic_name)
-        nic_ip   = get_hostname_ip(nic_host)
+        if $masked == 1
+          nic_host = "MASKED"
+          nic_ip   = "MASKED"
+        else
+          nic_host = get_if_hostname(nic_name)
+          nic_ip   = get_hostname_ip(nic_host)
+        end
         row      = [ nic_name, path, aggr_nic, nic_host, nic_ip ]
         table    = handle_table("row","",row,table)
       end

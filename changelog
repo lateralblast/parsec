@@ -209,3 +209,7 @@
 # Improved processing of inetd
 # 1.0.4: Mon 18 Jan 2016 15:09:16 AEDT
 # Improved hostname and IP determination
+# 1.0.5: Mon 18 Jan 2016 20:28:21 AEDT
+# Added aggregate info to network interface summary
+# 1.0.6: Mon 18 Jan 2016 21:23:38 AEDT
+# Added configured zone information

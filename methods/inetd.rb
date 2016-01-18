@@ -61,7 +61,8 @@ def process_inetd()
   if file_array.grep(/^[A-Z]|^[a-z]|^[0-9]/)
     handle_output("\n")
     title = "Security Settings ("+file_name+")"
-    table = Terminal::Table.new :title => title, :headings => ['Service', 'Current','Recommended','Complies']
+    row   = [ 'Service', 'Current', 'Recommended', 'Complies' ]
+    table = handle_table("title",title,row,"")
     file_array.each do |line|
       if line.match(/udp|tcp|rpc/)
         if !line.match(/^#/) and line.match(/[A-z]|[0-9]/)
@@ -92,12 +93,11 @@ def process_inetd()
             comment  = "N/A"
           end
         end
-        row = [service,curr_val,rec_val,comment]
-        table.add_row(row)
+        row   = [service,curr_val,rec_val,comment]
+        table = handle_table("row","",row,table)
       end
     end
-    handle_output(table)
-    handle_output("\n")
+    table = handle_table("end","","",table)
   else
     puts
     puts "No inetd information available"
