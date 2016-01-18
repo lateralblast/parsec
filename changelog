@@ -213,3 +213,5 @@
 # Added aggregate info to network interface summary
 # 1.0.6: Mon 18 Jan 2016 21:23:38 AEDT
 # Added configured zone information
+# 1.0.7: Tue 19 Jan 2016 10:48:50 AEDT
+# Added processing for zone XML config files
