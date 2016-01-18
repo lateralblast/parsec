@@ -57,22 +57,40 @@ $inetd_services=[
 def process_inetd()
   file_name  = "/etc/inetd.conf"
   file_array = exp_file_to_array(file_name)
-  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+  no_lines   = 0
+  if file_array.grep(/^[A-Z]|^[a-z]|^[0-9]/)
     handle_output("\n")
     title = "Security Settings ("+file_name+")"
     table = Terminal::Table.new :title => title, :headings => ['Service', 'Current','Recommended','Complies']
     file_array.each do |line|
-      if !line.match(/^#/) and line.match(/[A-z]|[0-9]/)
-        service       = line.split(/\s+/)[0]
-        service_check = $inetd_services.select{|service_name| service_name.match(/^#{service}/)}
-        if service_check.to_s.match(/#{service}/)
-          curr_val = "Enabled"
-          rec_val  = "Disabled"
-          comment  = "*No*"
+      if line.match(/udp|tcp|rpc/)
+        if !line.match(/^#/) and line.match(/[A-z]|[0-9]/)
+          service       = line.split(/\s+/)[0]
+          service_check = $inetd_services.select{|service_name| service_name.match(/^#{service}/)}
+          if service_check.to_s.match(/#{service}/)
+            curr_val = "Enabled"
+            rec_val  = "Disabled"
+            comment  = "*No*"
+          else
+            curr_val = "Enabled"
+            rec_val  = "N/A"
+            comment  = "N/A"
+          end
         else
-          curr_val = "Enabled"
-          rec_val  = "N/A"
-          comment  = "N/A"
+          if line.match(/^#\s+[A-Z]|^#\s+[a-z]|^#\s+[0-9]/)
+            service = line.split(/\s+/)[1].gsub(/^#/,"")
+          else
+            service = line.split(/\s+/)[0].gsub(/^#/,"")
+          end
+          service_check = $inetd_services.select{|service_name| service_name.match(/^#{service}/)}
+          curr_val = "Disabled"
+          if service_check.to_s.match(/#{service}/)
+            rec_val  = "Disabled"
+            comment  = "*Yes*"
+          else
+            rec_val  = "N/A"
+            comment  = "N/A"
+          end
         end
         row = [service,curr_val,rec_val,comment]
         table.add_row(row)
@@ -82,7 +100,7 @@ def process_inetd()
     handle_output("\n")
   else
     puts
-    puts "No security settings available in "+file_name
+    puts "No inetd information available"
   end
   return
 end

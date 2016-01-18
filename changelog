@@ -205,3 +205,5 @@
 # Added initial support for CDROMs to disk information
 # 1.0.2: Mon 18 Jan 2016 11:05:33 AEDT
 # Fixed determination of number of paths for disk
+# 1.0.3: Mon 18 Jan 2016 11:40:31 AEDT
+# Improved processing of inetd
