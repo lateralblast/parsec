@@ -371,6 +371,21 @@ def process_ndd_nic_driver(nic_name)
   return
 end
 
+# Get aggregate NIC name
+
+def get_aggr_nic(nic_name)
+  aggr_nic   = ""
+  file_array = get_aggregation()
+  file_array.each do |line|
+    if !line.match(/^#/)
+      if line.match(/#{nic_name}/)
+        aggr_nic = "aggr"+line.split(/\s+/)[0]
+      end
+    end
+  end
+  return aggr_nic
+end
+
 # Process network interface information
 
 def process_nic_info()
@@ -378,8 +393,8 @@ def process_nic_info()
   file_array = exp_file_to_array(file_name)
   nic_list   = []
   if file_array.to_s.match(/[A-Z]|[a-z][0-9]/)
-    title = "Network Interfaces"
-    row   = [ 'Interface', 'Path', 'hostname', 'IP' ]
+    title = "Physical Network Interfaces"
+    row   = [ 'Interface', 'Path', 'Aggregate', 'Hostname', 'IP' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       if line.match(/network/)
@@ -387,9 +402,10 @@ def process_nic_info()
         (path,inst,driver) = line.split(/\s+/)
         nic_name = driver+inst
         nic_list.push(nic_name)
+        aggr_nic = get_aggr_nic(nic_name)
         nic_host = get_if_hostname(nic_name)
         nic_ip   = get_hostname_ip(nic_host)
-        row      = [ nic_name, path, nic_host, nic_ip ]
+        row      = [ nic_name, path, aggr_nic, nic_host, nic_ip ]
         table    = handle_table("row","",row,table)
       end
     end
