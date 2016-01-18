@@ -81,12 +81,6 @@ def config_report(report,report_type)
       puts "No link information available"
     end
   end
-  if report_type.match(/all|aggr/)
-    os_ver = get_os_version()
-    if get_os_version.match(/11/)
-      process_aggr()
-    end
-  end
   if report_type.match(/all|kernel|ndd/)
     process_etc_system()
     process_ndd_ip_info()
@@ -188,8 +182,9 @@ def config_report(report,report_type)
     process_veritas()
   end
   if report_type.match(/all|aggr|network/)
-    process_aggr_config()
-    process_aggr_detail()
+    process_dladm_aggr_config()
+    process_dladm_aggr_detail()
+    process_aggregation()
   end
   if report_type.match(/all|network/)
     process_nic_info()

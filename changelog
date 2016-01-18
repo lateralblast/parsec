@@ -207,3 +207,5 @@
 # Fixed determination of number of paths for disk
 # 1.0.3: Mon 18 Jan 2016 11:40:31 AEDT
 # Improved processing of inetd
+# 1.0.4: Mon 18 Jan 2016 15:09:16 AEDT
+# Improved hostname and IP determination

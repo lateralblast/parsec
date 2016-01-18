@@ -188,38 +188,80 @@ end
 
 # Get Aggregate details
 
-def get_aggr_detail()
+def get_dladm_aggr_detail()
   file_name = "/netinfo/dladm/dladm_show-aggr_-x.out"
   file_array = exp_file_to_array(file_name)
   return file_array
-end  
+end
 
 # Get Aggregate config
 
-def get_aggr_config()
+def get_dladm_aggr_config()
   file_name = "/netinfo/dladm/dladm_show-aggr_-Z.out"
   file_array = exp_file_to_array(file_name)
   return file_array
-end  
+end
+
+# Get other Aggregate information if available
+
+def get_aggregation()
+  file_name  = "/etc/aggregation.conf"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
 
 # Process aggregate information (report)
 
 def process_aggr()
-  process_aggr_detail()
-  process_aggr_config()
+  process_dladm_aggr_detail()
+  process_dladm_aggr_config()
+  process_aggregation()
+  return
+end
+
+# Process aggregation config file
+
+def process_aggregation()
+  file_array = get_aggregation()
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title = "Aggregate Configuration"
+    row   = [ 'Interface', 'Type', 'Members', 'Devices', 'Config', 'Status', 'Timeout', 'Hostname', 'IP' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      if !line.match(/^#/) and line.match(/[a-z]|[0-9]/)
+        line  = line.chomp
+        items  = line.split(/\s+/)
+        aggr   = "aggr"+items[0]
+        type   = items[1]
+        nics   = items[2]
+        devs   = items[3]
+        config = items[4]
+        status = items[5]
+        time   = items[6]
+        host   = get_if_hostname(aggr)
+        ip     = get_hostname_ip(host)
+        row    = [ aggr, type, nics, devs, config, status, time, host, ip ]
+        table  = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No aggregate configuration information available"
+  end
   return
 end
 
 # Process Aggregate config
 
-def process_aggr_config()
-  file_array = get_aggr_config()
+def process_dladm_aggr_config()
+  file_array = get_dladm_aggr_config()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line  = line.chomp
       items = line.split(/\s+/)
       if line.match(/^LINK/)
-        title = "Aggregate Configuration"
+        title = "Aggregate Configuration (dladm)"
         row   = [ 'Link', 'Zone', 'Mode', 'Policy', 'Address Policy', 'LACP Activity', 'LACP Timer', 'Flags' ]
         table = handle_table("title",title,row,"")
       else
@@ -241,21 +283,21 @@ def process_aggr_config()
     table = handle_table("end","","",table)
   else
     puts
-    puts "No aggregate configuration information available"
+    puts "No dladm aggregate configuration information available"
   end
   return
 end
 
 # Process Aggregate detail
 
-def process_aggr_detail()
-  file_array = get_aggr_detail()
+def process_dladm_aggr_detail()
+  file_array = get_dladm_aggr_detail()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line  = line.chomp
       items = line.split(/\s+/)
       if line.match(/^LINK/)
-        title = "Aggregate Detailed Information"
+        title = "Aggregate Detailed Information (dladm)"
         row   = [ 'Link', 'Port', 'Speed', 'Duplex', 'State', 'MAC Address', 'Port State' ]
         table = handle_table("title",title,row,"")
       else
@@ -290,7 +332,7 @@ def process_aggr_detail()
     table = handle_table("end","","",table)
   else
     puts
-    puts "No aggregate detailed information available"
+    puts "No dladm aggregate detailed information available"
   end
   return
 end
@@ -448,10 +490,29 @@ end
 
 def get_hostname_ip(hostname)
   hostname_ip = ""
-  file_name   = "/etc/inet/hosts"
-  file_array  = exp_file_to_array(file_name)
-  hostname_ip = file_array.grep(/#{hostname}/)
-  hostname_ip = hostname_ip[0].to_s.split(/\s+/)[0]
+  if !hostname.match(/localhost/) and hostname.match(/[a-z]/)
+    file_name   = "/etc/inet/hosts"
+    file_array  = exp_file_to_array(file_name)
+    if !file_array.to_s.match(/[a-z]|[0-9]/)
+      file_name   = "/etc/hosts"
+      file_array  = exp_file_to_array(file_name)
+    end
+    file_array.each do |line|
+      if !line.match(/^#/)
+        (hostname_ip,entry1,entry2) = line.split(/\s+/)
+        if entry1
+          if entry1.match(/^#{hostname}/)
+            return hostname_ip
+          end
+        end
+        if entry2
+          if entry2.match(/^#{hostname}/)
+            return hostname_ip
+          end
+        end
+      end
+    end
+  end
   return hostname_ip
 end
 
