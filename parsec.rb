@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.0.7
+# Version:      1.1.1
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -100,17 +100,63 @@ $masked        = 0
 # Report types
 
 report             = {}
-report["io"]       = "Report on all IO"
-report["emulex"]   = "Report on Emulex FC devices"
-report["qlogic"]   = "Report on Qlogic FC devices"
-report["disk"]     = "Report on disks"
-report["eeprom"]   = "Report on EEPROM"
-report["security"] = "Report on Security settings"
-report["password"] = "Report on Password settings"
-report["host"]     = "Report on Host information"
-report["memory"]   = "Report on Memory information"
+report["aggr"]     = "Report on aggregate information"
+report["all"]      = "Report on everything"
+report["coreadm"]  = "Report on coreadm information"
 report["cpu"]      = "Report on CPU information"
+report["cron"]     = "Report on cron information"
+report["crypto"]   = "Report on crypto information"
+report["cups"]     = "Report on CUPS information"
+report["disk"]     = "Report on disks"
+report["dumpadm"]  = "Report on dumpadm information"
+report["eeprom"]   = "Report on EEPROM"
+report["elfsign"]  = "Report on elfsign information"
+report["emulex"]   = "Report on Emulex FC devices"
+report["explorer"] = "Report on Explore information"
+report["fru"]      = "Report on FRU information"
+report["fs"]       = "Report on filesystem information"
+report["host"]     = "Report on host information"
+report["inetd"]    = "Report on inetd information"
+report["inetinit"] = "Report on inetinit information"
+report["io"]       = "Report on all IO"
 report["ldom"]     = "Report on LDom information"
+report["link"]     = "Report on link information"
+report["locale"]   = "Report on locale information"
+report["login"]    = "Report on locale information"
+report["lu"]       = "Report on Live Upgrade information"
+report["kernel"]   = "Report on kernel information"
+report["keyserv"]  = "Report on keyserv information"
+report["memory"]   = "Report on Memory information"
+report["modinfo"]  = "Report on Kernel Module information"
+report["module"]   = "Report on Kernel Module information"
+report["mount"]    = "Report on mount information"
+report["ndd"]      = "Report on ndd information"
+report["network"]  = "Report on network information"
+report["obp"]      = "Report on OBP information"
+report["os"]       = "Report on OS information"
+report["package"]  = "Report on package information"
+report["pam"]      = "Report on PAM information"
+report["password"] = "Report on password information"
+report["patch"]    = "Report on patch information"
+report["power"]    = "Report on power information"
+report["qlogic"]   = "Report on Qlogic FC devices"
+report["security"] = "Report on Security information"
+report["sendmail"] = "Report on Sendmail settings"
+report["services"] = "Report on Services information"
+report["snmp"]     = "Report on SNMP information"
+report["ssh"]      = "Report on SSH information"
+report["su"]       = "Report on SU information"
+report["suspend"]  = "Report on Suspend information"
+report["syslog"]   = "Report on syslog information"
+report["system"]   = "Report on system information"
+report["swap"]     = "Report on swap information"
+report["tcp"]      = "Report on TCP information"
+report["telnet"]   = "Report on Telnet information"
+report["udp"]      = "Report on UDP information"
+report["vnic"]     = "Report on VNIC information"
+report["veritas"]  = "Report on Veritas information"
+report["zfs"]      = "Report on ZFS information"
+report["zone"]     = "Report on Zone information"
 #report[""]=""
 
 # Get script name
@@ -157,7 +203,7 @@ end
 
 # Print usage
 
-def print_usage(options)
+def print_usage(options,report)
   code_name = get_code_name()
   code_ver  = get_code_ver()
   puts
@@ -184,53 +230,13 @@ def print_usage(options)
   puts
   puts "-R: Report/Print configuration information for a specific component:"
   puts
-  puts "    aggr:       Aggregate information"
-  puts "    all:        All information"
-  puts "    coreadm:    Coreadm information"
-  puts "    cpu:        CPU information"
-  puts "    cron:       Cron information"
-  puts "    crypto:     Crypto information"
-  puts "    cups:       CUPS information"
-  puts "    disk:       Disk information"
-  puts "    dumpadm:    Dupadm information"
-  puts "    eeprom:     EEPROM information"
-  puts "    elfsign:    Elfsign information"
-  puts "    explorer:   Explorer information"
-  puts "    fru:        FRU information"
-  puts "    fs:         Filesystem information"
-  puts "    host:       Host information"
-  puts "    inetd:      Inetd information"
-  puts "    inetinit:   Inetinit information"
-  puts "    io:         IO Information (Controllers, HBAs etc)"
-  puts "    kernel:     Kernel information"
-  puts "    keyserv:    keyserv information"
-  puts "    ldom:       LDom information"
-  puts "    link:       Link information"
-  puts "    locale:     Locale information"
-  puts "    login:      Login information"
-  puts "    lu|be:      LiveUpgrade or Beadm information"
-  puts "    memory:     Memory information"
-  puts "    modinfo:    Module information"
-  puts "    obp:        Open Boot Prom information"
-  puts "    os:         Operating Sytem information"
-  puts "    package:    Package information"
-  puts "    password:   Password information"
-  puts "    patch:      Patch information"
-  puts "    power:      Power information"
-  puts "    security:   All security information"
-  puts "    sendmail:   Sendmail information"
-  puts "    services:   Services information"
-  puts "    snmp:       SNMP information"
-  puts "    ssh:        SSH information"
-  puts "    su:         Su information"
-  puts "    suspend:    Suspend information"
-  puts "    system:     System information"
-  puts "    tcp:        TCP information"
-  puts "    telnet:     Telnet information"
-  puts "    udp:        UDP information"
-  puts "    vnic:       VNIC information"
-  puts "    zfs:        ZFS information"
-  puts "    zones:      Zone information"
+  report.each do |type,info|
+    if type.length < 7
+      puts type+":\t\t"+info
+    else
+      puts type+":\t"+info
+    end
+  end
   puts
   puts "Example (Display CPUs):"
   puts
@@ -253,7 +259,7 @@ end
 begin
   opt = Getopt::Std.getopts(options)
 rescue
-  print_usage(options)
+  print_usage(options,report)
 end
 
 # Check local config
@@ -346,7 +352,7 @@ else
   if !opt["s"] and !opt["a"]
     puts
     puts "Explorer file or home name not specified"
-    print_usage(options)
+    print_usage(options,report)
   end
   if  !opt["b"] and !$base_dir.match(/[A-z]/)
     $base_dir = Dir.pwd
@@ -522,7 +528,7 @@ if opt["R"]
   else
     if !opt["i"] and !opt["s"]
       puts "Explorer file or home name not specified"
-      print_usage(options)
+      print_usage(options,report)
       exit
     end
     config_report(report,report_type)
@@ -530,7 +536,7 @@ if opt["R"]
 end
 
 if opt["h"]
-  print_usage(options)
+  print_usage(options,report)
 end
 
 # Handle Facter / dmidecode

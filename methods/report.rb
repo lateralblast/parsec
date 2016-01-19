@@ -24,6 +24,15 @@ end
 # Do configuration report
 
 def config_report(report,report_type)
+  if report_type.match(/all|security|ntp/)
+    process_ntp()
+  end
+  if report_type.match(/all|security|pam/)
+    process_pam()
+  end
+  if report_type.match(/all|syslog/)
+    process_syslog()
+  end
   if report_type.match(/all|cups/)
     process_cups()
   end
@@ -145,7 +154,7 @@ def config_report(report,report_type)
   if report_type.match(/all|locale/)
     process_locale()
   end
-  if report_type.match(/all|modinfo/)
+  if report_type.match(/all|modinfo|module/)
     process_modules()
   end
   if report_type.match(/all|package/)

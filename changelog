@@ -215,3 +215,11 @@
 # Added configured zone information
 # 1.0.7: Tue 19 Jan 2016 10:48:50 AEDT
 # Added processing for zone XML config files
+# 1.0.8: Tue 19 Jan 2016 11:48:24 AEDT
+# Added support for syslog
+# 1.0.9: Tue 19 Jan 2016 12:06:13 AEDT
+# Added support for PAM
+# 1.1.0: Tue 19 Jan 2016 13:47:35 AEDT
+# Cleaned up usage information
+# 1.1.1: Tue 19 Jan 2016 15:44:46 AEDT
+# Added support for NTP
