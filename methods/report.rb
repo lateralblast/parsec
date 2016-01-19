@@ -27,6 +27,9 @@ def config_report(report,report_type)
   if report_type.match(/all|security|ntp/)
     process_ntp()
   end
+  if report_type.match(/all|inetadm/)
+    process_inetadm()
+  end
   if report_type.match(/all|security|pam/)
     process_pam()
   end

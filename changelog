@@ -223,3 +223,5 @@
 # Cleaned up usage information
 # 1.1.1: Tue 19 Jan 2016 15:44:46 AEDT
 # Added support for NTP
+# 1.1.2: Tue 19 Jan 2016 22:02:33 AEDT
+# Added support for inetadm
