@@ -111,6 +111,11 @@ def get_obp_ver()
     file_name = "/sysconfig/prtdiag-v.out"
     file_array = exp_file_to_array(file_name)
     obp_ver    = file_array.grep(/^OBP/)[0]
+    if !obp_ver
+      file_name  = "/sysconfig/prtconf-vp.out"
+      file_array = exp_file_to_array(file_name)
+      obp_ver    = file_array.grep(/OBP/)[0].split(/\s+/)[2..3].join(" ")
+    end
   else
     file_name  = "/sysconfig/prtconf-V.out"
     file_array = exp_file_to_array(file_name)
@@ -118,4 +123,3 @@ def get_obp_ver()
   end
   return obp_ver
 end
-

@@ -256,10 +256,12 @@ def list_explorers()
     exp_list=Dir.entries($exp_dir).sort
     if exp_list.grep(/^explorer/)
       title = "Explorers in "+$exp_dir+":"
-      table = Terminal::Table.new :title => title, :headings => ['Hostname', 'Date','Host ID','File']
+      table = Terminal::Table.new :title => title, :headings => [ 'Hostname', 'Model', 'Date', 'Host ID', 'File' ]
       exp_list.each do |exp_file|
         if exp_file.match(/^explorer/)
           host_info = exp_file.split(/\./)
+          host_id    = host_info[1]
+          model_name = get_model_from_hostid(host_id)
           if $masked == 1
             orig_name = host_info[2].split(/-/)[0]
             orig_id   = host_info[1]
@@ -268,11 +270,10 @@ def list_explorers()
             host_id   = "MASKED"
             exp_file  = exp_file.gsub(/#{orig_id}/,host_id).gsub(/#{orig_name}/,host_name)
           else
-            host_name = host_info[2].split(/-/)[0]
-            host_id   = host_info[1]
+            host_name  = host_info[2].split(/-/)[0]
           end
           date_info = host_info[5..6].join(":")+" "+host_info[4]+"/"+host_info[3]+"/"+host_info[2].split(/-/)[1]
-          table_row = [ host_name, date_info, host_id, exp_file ]
+          table_row = [ host_name, model_name, date_info, host_id, exp_file ]
           table.add_row(table_row)
         end
       end
@@ -282,4 +283,3 @@ def list_explorers()
   end
   return
 end
-

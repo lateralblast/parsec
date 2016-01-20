@@ -27,6 +27,15 @@ def get_sys_mem()
   return sys_mem
 end
 
+# Get Actual Memory
+
+def get_actual_mem()
+  file_name  = "/sysconfig/prtdiag-v.out"
+  file_array = exp_file_to_array(file_name)
+  actual_mem = file_array.grep(/^0x0/)[0].split(/\s+/)[1..2].join(" ")
+  return actual_mem
+end
+
 # Process System Memory
 
 def process_sys_mem(table)
@@ -65,6 +74,10 @@ def process_memory()
     if sys_mem and !sys_model.match(/M[5-7]-|T[5-7]-/)
       table = handle_table("row","System Memory",sys_mem,table)
     end
+    if sys_model.match(/T3/)
+      actual_mem = get_actual_mem()
+      table     = handle_table("row","Actual Memory",actual_mem,table)
+    end
     if !sys_model.match(/V120|M[5-7]-|T[5-7]-/)
       table = handle_table("line","","",table)
     end
@@ -75,6 +88,7 @@ def process_memory()
     previous       = ""
     mem_interleave = ""
     total_mem      = ""
+    dimm_size      = ""
     mem_dimm_size  = ""
     mem_bank_size  = ""
     mem_base       = ""
@@ -279,7 +293,7 @@ def process_memory()
         end
       end
     end
-    if sys_model.match(/M10-|M[5,6]-|T[6,7]-/) 
+    if sys_model.match(/M10-|M[5,6]-|T[6,7]-/)
       dimm_size     = bank_size / mem_modules.length+1
       mem_dimm_size = dimm_size.to_s+" GB"
       table         = handle_table("row","Number of DIMMs",mem_modules.length.to_s,table)
@@ -295,5 +309,3 @@ def process_memory()
   end
   return
 end
-
-

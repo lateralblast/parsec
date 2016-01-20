@@ -1,5 +1,41 @@
 # Hardeare related code
 
+# Get hardware from hostid
+
+def get_model_from_hostid(hostid)
+  case hostid
+  when /^8480|^843/
+    model = "M5000"
+  when /^809/
+    model = "M3000"
+  when /^832/
+    model = "480R"
+  when /^83a/
+    model = "V440"
+  when /^83c/
+    model = "V120"
+  when /^84[81,9,a]/
+    model = "T2000"
+  when /^8[4e,58]/
+    model = "T5120"
+  when /^865d1/
+    model = "T5-4"
+  when /^865d0/
+    model = "T7-4"
+  when /^8622/
+    model = "T4-2"
+  when /^86[0,20,2a]|^84f83/
+    model = "T4-1"
+  when /^85[a,b]|^84f87/
+    model = "T3-1"
+  when /8626/
+    model = "M6-32"
+  else
+    model = "unknown"
+  end
+  return model
+end
+
 # Get hardware config file
 # prtfiag or prtpicl
 

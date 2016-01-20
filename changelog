@@ -225,3 +225,13 @@
 # Added support for NTP
 # 1.1.2: Tue 19 Jan 2016 22:02:33 AEDT
 # Added support for inetadm
+# 1.1.3: Wed 20 Jan 2016 11:14:11 AEDT
+# Added IP and MAC Address information to generic network output
+# 1.1.4: Wed 20 Jan 2016 12:11:27 AEDT
+# Added model look up table to provide models in list view
+# 1.1.5: Wed 20 Jan 2016 15:33:01 AEDT
+# Fixed OBP detection for some models
+# 1.1.6: Wed 20 Jan 2016 16:13:40 AEDT
+# Improved model determination from hostid
+# 1.1.7: Wed 20 Jan 2016 18:01:31 AEDT
+# Fixed memory reporting

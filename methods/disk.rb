@@ -97,10 +97,18 @@ def process_disk_info()
           path = get_disk_path(disk)
           ssd  = get_disk_ssd_id(path)
           size = get_disk_size_from_ssd_id(ssd)
-          if id.match(/cdrom/)
-            id  = "na"
-            ssd = "cdrom"
-            size = "NA"
+          if id
+            if id.match(/cdrom/)
+              id  = "na"
+              ssd = "cdrom"
+              size = "NA"
+            end
+          else
+            if vendor.match(/TEAC|CDROM/)
+              id   = "na"
+              ssd  = "cdrom"
+              size = "N/A"
+            end
           end
           row   = [ id, ssd, disk, vendor, serial, port, path, paths, size ]
           table = handle_table("row","",row,table)

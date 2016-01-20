@@ -391,6 +391,44 @@ def get_aggr_nic(nic_name)
   return aggr_nic
 end
 
+# Get ethernet address from ifconfig output
+
+def get_if_ether(nic_name)
+  file_name  = "/sysconfig/ifconfig-a.out"
+  file_array = exp_file_to_array(file_name)
+  ether = ""
+  file_array.each_with_index do |line,index|
+    if line.match(/^#{nic_name}:/)
+      ether = file_array[index+2]
+      if ether.match(/ether/)
+        ether = ether.gsub(/^\s+/,"").split(/\s+/)[1]
+      else
+        ether = ""
+      end
+    end
+  end
+  return ether
+end
+
+# Get IP from ifconfig output
+
+def get_if_ip(nic_name)
+  file_name  = "/sysconfig/ifconfig-a.out"
+  file_array = exp_file_to_array(file_name)
+  ip = ""
+  file_array.each_with_index do |line,index|
+    if line.match(/^#{nic_name}:/)
+      ip = file_array[index+1]
+      if ip.match(/inet/)
+        ip = ip.gsub(/^\s+/,"").split(/\s+/)[1]
+      else
+        ip = ""
+      end
+    end
+  end
+  return ip
+end
+
 # Process network interface information
 
 def process_nic_info()
@@ -399,7 +437,7 @@ def process_nic_info()
   nic_list   = []
   if file_array.to_s.match(/[A-Z]|[a-z][0-9]/)
     title = "Physical Network Interfaces"
-    row   = [ 'Interface', 'Path', 'Aggregate', 'Hostname', 'IP' ]
+    row   = [ 'Interface', 'Path', 'Aggregate', 'Hostname', 'IP', 'Ether' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       if line.match(/network/)
@@ -411,11 +449,16 @@ def process_nic_info()
         if $masked == 1
           nic_host = "MASKED"
           nic_ip   = "MASKED"
+          nic_eth  = "MASKED"
         else
           nic_host = get_if_hostname(nic_name)
           nic_ip   = get_hostname_ip(nic_host)
+          if !nic_ip.match(/[0-9]/)
+            nic_ip = get_if_ip(nic_name)
+          end
+          nic_eth  = get_if_ether(nic_name)
         end
-        row      = [ nic_name, path, aggr_nic, nic_host, nic_ip ]
+        row      = [ nic_name, path, aggr_nic, nic_host, nic_ip, nic_eth ]
         table    = handle_table("row","",row,table)
       end
     end
