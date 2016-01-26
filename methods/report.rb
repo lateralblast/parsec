@@ -194,9 +194,7 @@ def config_report(report,report_type)
     process_veritas()
   end
   if report_type.match(/all|aggr|network/)
-    process_dladm_aggr_config()
-    process_dladm_aggr_detail()
-    process_aggregation()
+    process_aggr()
   end
   if report_type.match(/all|network/)
     process_nic_info()

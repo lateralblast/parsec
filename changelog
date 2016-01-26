@@ -245,3 +245,15 @@
 # Fixed VNIC information and added more part numbers
 # 1.2.2: Tue 26 Jan 2016 11:48:46 AEDT
 # Slightly improved network interface reporting in IO report
+# 1.2.3: Tue 26 Jan 2016 15:10:32 AEDT
+# Fixed memory output for T5-X
+# 1.2.4: Tue 26 Jan 2016 16:13:19 AEDT
+# Added PAM support for Solaris 11
+# 1.2.5: Tue 26 Jan 2016 16:30:11 AEDT
+# Fixed bug with link slot information
+# 1.2.6: Tue 26 Jan 2016 16:43:09 AEDT
+# Fixed bug with aggregate information
+# 1.2.7: Tue 26 Jan 2016 17:12:30 AEDT
+# Improved part description determination for HBAs with Oracle part numbers as names
+# 1.2.8: Tue 26 Jan 2016 17:46:21 AEDT
+# Fixed bug with memory information on T5-X and T7-X

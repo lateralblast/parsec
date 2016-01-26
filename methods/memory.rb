@@ -96,6 +96,9 @@ def process_memory()
     block_count    = 0
     mem_module     = ""
     mem_modules    = []
+    if sys_model.match(/^T5-/)
+      mem_dimm_no = 0
+    end
     mem_info.each_with_index do |line,index|
       if line.match(/[0-9][0-9]|D[0-9]$/)
         counter       = counter+1
@@ -130,7 +133,7 @@ def process_memory()
             end
           end
         end
-        if sys_model.match(/M10-|M[5,6]-|T[6,7]-/)
+        if sys_model.match(/M10-|M[5,6]-|T6-/)
           mem_controller = mem_line[-1]
           if line.match(/^0x/)
             if mem_module.match(/SYS/)
@@ -161,6 +164,58 @@ def process_memory()
           else
             mem_module = mem_line[1]
             mem_modules.push(mem_module)
+          end
+        end
+        if sys_model.match(/T[5,7]-/)
+          if line.match(/SYS/)
+            if mem_dimm_no
+              mem_dimm_no = mem_dimm_no+1
+            else
+              mem_dimm_no = 0
+            end
+          end
+          if line.match(/^0x/)
+            if mem_line[0].match(/^0x0$/)
+              mem_base       = mem_line[0]
+              mem_modules    = []
+              mem_bank_size  = mem_line[1..2].join(" ")
+              mem_interleave = mem_line[3]
+              mem_module     = mem_line[-1]
+              mem_dimm_size  = mem_line[-3..-2].join(" ")
+              mem_modules.push(mem_module)
+            else
+              if line.match(/^0x/)
+                table          = handle_table("row","Base Address",mem_base,table)
+                table          = handle_table("row","Bank Size",mem_bank_size,table)
+                table          = handle_table("row","Interleave",mem_interleave,table)
+                table          = handle_table("row","Module Size",mem_dimm_size,table)
+                table          = handle_table("row","Number",mem_dimm_no,table)
+                table          = handle_table("row","Modules",mem_modules.join("\n"),table)
+                table          = handle_table("line","","",table)
+                mem_base        = mem_line[0]
+                mem_bank_size  = mem_line[1..2].join(" ")
+                mem_interleave = mem_line[3]
+                mem_module     = mem_line[-1]
+                mem_dimm_size  = mem_line[-3..-2].join(" ")
+                mem_modules    = []
+                mem_modules.push(mem_module)
+                mem_dimm_no = 0
+              end
+            end
+          else
+            mem_module = mem_line[-1]
+            mem_modules.push(mem_module)
+            if counter == length
+              if line.match(/SYS/)
+                mem_dimm_no = mem_dimm_no+1
+              end
+              table = handle_table("row","Base Address",mem_base,table)
+              table = handle_table("row","Bank Size",mem_bank_size,table)
+              table = handle_table("row","Interleave",mem_interleave,table)
+              table = handle_table("row","Module Size",mem_dimm_size,table)
+              table = handle_table("row","Number",mem_dimm_no,table)
+              table = handle_table("row","Modules",mem_modules.join("\n"),table)
+            end
           end
         end
         if sys_model.match(/480R/)
@@ -219,7 +274,7 @@ def process_memory()
             mem_group = mem_group_list
           end
         end
-        if mem_size or mem_group and !sys_model.match(/T[6,7]-/)
+        if mem_size or mem_group and !sys_model.match(/T6-/)
           f_count = 0
           if sys_board_no
             table   = handle_table("row","System Board",sys_board_no,table)
@@ -293,7 +348,7 @@ def process_memory()
         end
       end
     end
-    if sys_model.match(/M10-|M[5,6]-|T[6,7]-/)
+    if sys_model.match(/M10-|M[5,6]-|T6-/)
       dimm_size     = bank_size / mem_modules.length+1
       mem_dimm_size = dimm_size.to_s+" GB"
       table         = handle_table("row","Number of DIMMs",mem_modules.length.to_s,table)

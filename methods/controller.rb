@@ -50,8 +50,10 @@ end
 # Processes fcinfo into an array
 
 def process_ctlr_info(table,io_name,io_path,ctlr_no)
-  os_ver      = get_os_ver()
-  hw_cfg_file = get_hw_cfg_file()
+  os_ver        = get_os_ver()
+  hw_cfg_file   = get_hw_cfg_file()
+  hba_part_desc = ""
+  hba_part_no   = ""
   # Handle SCSI devices
   if io_path.match(/scsi/)
     scsi_part_info = $scsi_part_list[io_name]
@@ -158,14 +160,26 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
         end
       end
     end
-    hba_part_info = $hba_part_list[io_name]
-    if hba_part_info
-      hba_part_info = hba_part_info.split(/,/)
-      hba_part_no   = hba_part_info[0]
-      hba_part_desc = hba_part_info[1]
-      if hba_part_no
-        table = handle_table("row","Part Number",hba_part_no,table)
+    if io_name.match(/^7/)
+      if io_path.match(/qlc|emlx|oce/)
+        $hba_part_list.each do |hba_name, hba_part_info|
+          if hba_part_info.match(/#{io_name}/)
+            hba_part_info = hba_part_info.split(/,/)
+            hba_part_no   = hba_part_info[0]
+            hba_part_desc = hba_part_info[1]
+          end
+        end
       end
+    else
+      hba_part_info = $hba_part_list[io_name]
+      if hba_part_info
+        hba_part_info = hba_part_info.split(/,/)
+        hba_part_no   = hba_part_info[0]
+        hba_part_desc = hba_part_info[1]
+      end
+    end
+    if hba_part_no
+      table = handle_table("row","Part Number",hba_part_no,table)
     else
       if io_name
         table = handle_table("row","Part Number",io_name,table)

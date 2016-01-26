@@ -119,9 +119,10 @@ end
 
 def process_link_slots()
   file_array = get_link_slots()
+  table = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-    file_array.each do |line|
-      if line.match(/^LINK/)
+    file_array.each_with_index do |line, index|
+      if line.match(/^LINK/) and index < 1
         title = "Link Slot Information"
         row   = [ 'Link', 'Device', 'Slot' ]
         table = handle_table("title",title,row,"")
@@ -265,6 +266,7 @@ end
 
 def process_dladm_aggr_config()
   file_array = get_dladm_aggr_config()
+  table = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line  = line.chomp
@@ -301,6 +303,7 @@ end
 
 def process_dladm_aggr_detail()
   file_array = get_dladm_aggr_detail()
+  table = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line  = line.chomp

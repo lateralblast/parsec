@@ -172,7 +172,7 @@ def process_io()
             end
             io_path = get_io_path(device,temp_count)
           end
-        when /T5-/
+        when /T[5,7]-/
           io_slot = io_line[0]
           io_type = io_line[1]
           io_name = io_line[3]
@@ -235,7 +235,7 @@ def process_io()
           if io_path
             io_path  = io_path.gsub(/^\s+|\s+$/,"")
           end
-        when /T[3,4,6,7]-/
+        when /T[3,4,6]-/
           io_slot  = io_line[0]
           io_type  = io_line[1].gsub(/PCI3/,"PCIE")
           io_speed = io_line[-1]

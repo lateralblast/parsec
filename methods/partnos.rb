@@ -167,6 +167,8 @@ $nic_part_list["SUNW,pci-x-qge/pci-bri+"] = ",Sun Quad Gigaswift Ethernet,,"
 $nic_part_list["SUNW,pci-ce/pci-bridge"]  = ",Sun Gigaswift FC Ethernet,,"
 $nic_part_list["SUNW,pcie-qgc"]           = ",Sun Quad Gigabit Ethernet,,"
 $nic_part_list["ixgbe"]                   = ",Intel Gigabit Ethernet,,"
+$nic_part_list["SUNW,hme"]                = ",Sun 100M Ethernet,,"
+$nic_part_list["SUNW,bge"]                = ",Sun 1Gb Ethernet,,"
 
 $gfx_part_list = {}
 $gfx_part_list["X3685A"]                  = ",XVR-500 Graphics Accelerator,375-3069,"
