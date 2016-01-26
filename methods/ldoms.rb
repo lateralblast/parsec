@@ -55,7 +55,7 @@ def get_avail_ldom_ver(model_name)
   when /^T1|^T2/
     avail_ldom = "1.2"
   else
-    avail_ldom = "3.1.1"
+    avail_ldom = "3.3"
   end
   return avail_ldom
 end

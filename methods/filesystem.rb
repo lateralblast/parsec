@@ -15,7 +15,8 @@ def process_file_systems()
     handle_output("\n")
     counter = 0
     title   = "File Systems ("+file_name+")"
-    table   = Terminal::Table.new :title => title, :headings => ['Device', 'Mount','Type']
+    row   = [ 'Device', 'Mount', 'Type' ]
+    table = handle_table("title",title,row,"")
     file_array.each do |line|
       if line.match(/^\/dev/)
         items    = line.split(/\s+/)
@@ -31,12 +32,11 @@ def process_file_systems()
           fs_mount = "/mount#{counter}"
           counter  = counter+1
         end
-        row = [fs_dev,fs_mount,fs_type]
-        table.add_row(row)
+        row   = [fs_dev,fs_mount,fs_type]
+        table = handle_table("row","",row,table)
       end
     end
-    handle_output(table)
-    handle_output("\n")
+    table = handle_table("end","","",table)
   else
     puts
     puts "No filesystem information available"

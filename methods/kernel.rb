@@ -140,45 +140,47 @@ end
 
 def process_ndd_info(ndd_type)
   file_array = get_ndd_info(ndd_type)
-  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-    title = "Kernel "+ndd_type+" Parameter Information"
-    row   = ['Parameter', 'Type', 'Value']
-    table = handle_table("title",title,row,"")
-    file_array.each_with_index do |line,index|
-      if line.match(/^#{ndd_type}/) and !line.match(/status|hash|obsolete|host_param/)
-        (param,type) = line.split(/\(/)
-        param = param.gsub(/\s+/,"")
-        type  = type.split(/\)/)[0]
-        value = ""
-        count = index+1
-        if line.match(/tcp_extra_priv_ports/)
-          while !file_array[count].match(/^tcp/)
-            if !value.match(/[A-Z]|[a-z]|[0-9]/)
-              value = file_array[count].chop.gsub(/\s+$/,"")
-            else
-              value = value+" "+file_array[count].chop.gsub(/\s+/,"")
-            end
-            count = count+1
-          end
-        else
-          value = file_array[count]
-        end
-        if value.match(/^#{ndd_type}/)
-          row   = [ param, type, "" ]
-          (param,type) = value.split(/\(/)
+  if ndd_type.match(/[a-z]/)
+    if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+      title = "Kernel "+ndd_type+" Parameter Information"
+      row   = ['Parameter', 'Type', 'Value']
+      table = handle_table("title",title,row,"")
+      file_array.each_with_index do |line,index|
+        if line.match(/^#{ndd_type}/) and !line.match(/status|hash|obsolete|host_param/)
+          (param,type) = line.split(/\(/)
           param = param.gsub(/\s+/,"")
           type  = type.split(/\)/)[0]
-          row   = [ param, type, "" ]
-        else
-          row   = [ param, type, value ]
-          table = handle_table("row","",row,table)
+          value = ""
+          count = index+1
+          if line.match(/tcp_extra_priv_ports/)
+            while !file_array[count].match(/^tcp/)
+              if !value.match(/[A-Z]|[a-z]|[0-9]/)
+                value = file_array[count].chop.gsub(/\s+$/,"")
+              else
+                value = value+" "+file_array[count].chop.gsub(/\s+/,"")
+              end
+              count = count+1
+            end
+          else
+            value = file_array[count]
+          end
+          if value.match(/^#{ndd_type}/)
+            row   = [ param, type, "" ]
+            (param,type) = value.split(/\(/)
+            param = param.gsub(/\s+/,"")
+            type  = type.split(/\)/)[0]
+            row   = [ param, type, "" ]
+          else
+            row   = [ param, type, value ]
+            table = handle_table("row","",row,table)
+          end
         end
       end
+      table = handle_table("end","","",table)
+    else
+      puts
+      puts "No "+ndd_type+" tcp information available"
     end
-    table = handle_table("end","","",table)
-  else
-    puts
-    puts "No "+ndd_type+" tcp information available"
   end
   return
 end
@@ -228,4 +230,3 @@ def process_modules()
   end
   return
 end
-

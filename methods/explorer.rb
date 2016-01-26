@@ -256,7 +256,8 @@ def list_explorers()
     exp_list=Dir.entries($exp_dir).sort
     if exp_list.grep(/^explorer/)
       title = "Explorers in "+$exp_dir+":"
-      table = Terminal::Table.new :title => title, :headings => [ 'Hostname', 'Model', 'Date', 'Host ID', 'File' ]
+      row   = [ 'Hostname', 'Model', 'Date', 'Host ID', 'File' ]
+      table = handle_table("title",title,row,"")
       exp_list.each do |exp_file|
         if exp_file.match(/^explorer/)
           host_info = exp_file.split(/\./)
@@ -274,11 +275,10 @@ def list_explorers()
           end
           date_info = host_info[5..6].join(":")+" "+host_info[4]+"/"+host_info[3]+"/"+host_info[2].split(/-/)[1]
           table_row = [ host_name, model_name, date_info, host_id, exp_file ]
-          table.add_row(table_row)
+          table     = handle_table("row","",table_row,table)
         end
       end
-      handle_output(table)
-      handle_output("\n")
+      table = handle_table("end","","",table)
     end
   end
   return

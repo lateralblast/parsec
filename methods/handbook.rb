@@ -27,23 +27,23 @@ def process_handbook_info_file(info_file)
         end
       end
     end
-    table   = Terminal::Table.new :title => "Support Information", :headings => [ 'Item', 'Value' ]
-    length  = titles.length
-    index   = 0
+    title  = "Support Information"
+    row    = [ 'Item', 'Value' ]
+    table  = handle_table("title",title,row,"")
+    length = titles.length
+    index  = 0
     titles.each_with_index do |title,index|
       content = ""
       items[title].each do |item|
         content = items[title].join(" ")
       end
-      row = [ title, content ]
-      table.add_row(row)
+      row   = [ title, content ]
+      table = handle_table("row","",row,table)
       if index < length-1
-        table.add_separator
+        table = handle_table("line","","",table)
       end
     end
-    handle_output(table)
-    handle_output("\n")
-    handle_output("\n")
+    table = handle_table("end","","",table)
   end
   return
 end
@@ -68,13 +68,13 @@ def process_handbook_spec_file(spec_file)
             title = row.css("b").text.gsub(/\n/,"").gsub(/\s+/," ")
             if title.match(/[A-z]/)
               if t_table
-                handle_output(t_table)
-                handle_output("\n")
+                table = handle_table("end","","",t_table)
               end
               if title == "Rack Mounting" or title == "Power Supplies"
-                t_table = Terminal::Table.new :title => title
+                t_table = handle_table("title",title,row,"")
               else
-                t_table = Terminal::Table.new :title => title, :headings => [ 'Item', 'Value' ]
+                t_row   = [ 'Item', 'Value' ]
+                t_table = handle_table("title",title,t_row,"")
                 counter = 0
               end
             end
@@ -90,8 +90,8 @@ def process_handbook_spec_file(spec_file)
                     end
                     if counter == 0
                       if !row.next_element.to_s.match(/[A-z]/) and title == "Rack Mounting" or title == "Power Supplies"
-                        t_row = [ text ]
-                        t_table.add_row(t_row)
+                        t_row   = [ text ]
+                        t_table = handle_table("row","",t_row,t_table)
                       else
                         item    = text
                         counter = 1
@@ -100,7 +100,7 @@ def process_handbook_spec_file(spec_file)
                       value   = text
                       counter = 0
                       t_row   = [ item, value ]
-                      t_table.add_row(t_row)
+                      t_table = handle_table("row","",t_row,t_table)
                     end
                   end
                 end
@@ -111,8 +111,7 @@ def process_handbook_spec_file(spec_file)
       end
     end
     if t_table
-      handle_output(t_table)
-      handle_output("\n")
+      t_table = handle_table("end","","",t_table)
     end
   end
   return
@@ -135,8 +134,7 @@ def process_handbook_list_file(list_file)
           title = row.css("a").text
           if !title.match(/Oracle System Handbook|Cancel|Table Legend|Exploded View/) and title.match(/[A-z]/)
             if t_table
-              handle_output(t_table)
-              handle_output("\n")
+              t_table = handle_table("end","","",t_table)
             end
             t_table = Terminal::Table.new :title => title, :headings => ['Option Part', 'Manufacturing Part', 'Description', 'Previous Part']
             counter = 0
@@ -148,7 +146,7 @@ def process_handbook_list_file(list_file)
                 t_row = []
                 if counter > 1
                   if t_table
-                    t_table.add_separator
+                    t_table = handle_table("line","","",t_table)
                   end
                 else
                   counter = counter + 1
@@ -174,7 +172,7 @@ def process_handbook_list_file(list_file)
                 if t_table
                   t_row = [ supported, current, description, previous ]
                   if t_row.to_s.match(/[0-9]/)
-                    t_table.add_row(t_row)
+                    t_table = handle_table("row","",t_row,t_table)
                   end
                 end
               else
@@ -198,8 +196,7 @@ def process_handbook_list_file(list_file)
       end
     end
     if t_table
-      handle_output(t_table)
-      handle_output("\n")
+      t_table = handle_table("end","","",t_table)
     end
     if notes[0]
       notes.each do |note|

@@ -6,7 +6,8 @@ def list_facters()
     fact_list=Dir.entries($fact_dir).sort
     if fact_list.to_s.match(/[A-Z]|[a-z]|[0-9]/)
       title = "Puppet Facters in "+$fact_dir+":"
-      table = Terminal::Table.new :title => title, :headings => ['Hostname', 'Date', 'File']
+      row   = ['Hostname', 'Date', 'File']
+      table = handle_table("title",title,row,"")
       fact_list.each do |fact_file|
         if fact_file.match(/[A-z]/)
           file_name = $fact_dir+"/"+fact_file
@@ -14,14 +15,14 @@ def list_facters()
           if host_name.match(/[A-z]/)
             date_info = File.mtime(file_name)
             table_row = [ host_name, date_info, fact_file ]
-            table.add_row(table_row)
+            table     = handle_table("row","",table_row,table)
           end
         end
       end
-      handle_output(table)
-      handle_output("\n")
+      table = handle_table("end","","",table)
       title = "Ansible Facters in "+$fact_dir+":"
-      table = Terminal::Table.new :title => title, :headings => ['Hostname', 'Date', 'File']
+      row   = ['Hostname', 'Date', 'File']
+      table = handle_table("title",title,row,"")
       fact_list.each do |fact_file|
         if fact_file.match(/[A-z]/)
           file_name = $fact_dir+"/"+fact_file
@@ -29,12 +30,11 @@ def list_facters()
           if host_name.match(/[A-z]/)
             date_info = File.mtime(file_name)
             table_row = [ host_name, date_info, fact_file ]
-            table.add_row(table_row)
+            table     = handle_table("row","",table_row,table)
           end
         end
       end
-      handle_output(table)
-      handle_output("\n")
+      table = handle_table("end","","",table)
     else
       puts
       puts "No facter information available"
@@ -90,10 +90,11 @@ def process_puppet_facter_configs(config)
     else
       table_title = title.capitalize
     end
-    table = Terminal::Table.new :title => table_title, :headings => [ 'Item', 'Value' ]
+    row      = [ 'Item', 'Value' ]
+    table    = handle_table("title",table_title,row,"")
     previous = ""
-    headers = [ 'kernel', 'swap', 'hardware', 'operatingsystem', 'product', 'memory' ]
-    length = facts.length
+    headers  = [ 'kernel', 'swap', 'hardware', 'operatingsystem', 'product', 'memory' ]
+    length   = facts.length
     facts.each_with_index do |fact,index|
       found = 0
       item  = ""
@@ -107,9 +108,9 @@ def process_puppet_facter_configs(config)
           else
             item  = item.split(/#{header}/)[1]
           end
-          item = handle_puppet_facter_item(item)
-          row  = [item, value]
-          table.add_row(row)
+          item  = handle_puppet_facter_item(item)
+          row   = [item, value]
+          table = handle_table("row","",row,table)
           temp  = header
         end
       end
@@ -117,17 +118,16 @@ def process_puppet_facter_configs(config)
         if item.match(/_/) and !item.match(/^mtu|^ipaddress|^macaddress/)
           item    = item.split(/_/)[1..-1].join(" ")
         end
-        item = handle_puppet_facter_item(item)
-        row  = [item, value]
-        table.add_row(row)
+        item  = handle_puppet_facter_item(item)
+        row   = [item, value]
+        table = handle_table("row","",row,table)
         if current != previous and index < length-1
-          table.add_separator
+          table = handle_table("line","","",table)
         end
       end
       previous = current
     end
-    puts table
-    puts
+    table = handle_table("end","","",table)
   end
 end
 
@@ -308,48 +308,49 @@ def process_ansible_facter(host_name,file_name)
         end
       end
     end
-    table  = Terminal::Table.new :title => "System Information", :headings => [ 'Item', 'Value' ]
+    title  = "System Information"
+    row    = [ 'Item', 'Value' ]
+    table  = handle_table("title",title,row,"")
     length = info["system"].length
     info["system"].each_with_index do |line,index|
       (item,value) = line.split(",")
       if value
         value = value.gsub(/^\s+|^ /,"")
-        row = [ item, value ]
-        table.add_row(row)
+        row   = [ item, value ]
+        table = handle_table("row","",row,table)
         if index < length-1
-          table.add_separator
+          table = handle_table("line","","",table)
         end
       end
     end
-    handle_output(table)
-    handle_output("\n")
-    handle_output("\n")
-    table  = Terminal::Table.new :title => "Network Information", :headings => [ 'Item', 'Value' ]
+    table  = handle_table("end","","",table)
+    title  = "Network Information"
+    row    = [ 'Item', 'Value' ]
+    table  = handle_table("title",title,row,"")
     length = info["network"].length
     info["network"].each_with_index do |line,index|
       (item,value) = line.split(",")
       if item.match(/Device|[0-9]/) and value
         value = value.gsub(/^\s+|^ /,"")
         if index > 1
-          table.add_separator
+          table = handle_table("line","","",table)
         end
-        row = [ item, value ]
-        table.add_row(row)
+        row   = [ item, value ]
+        table = handle_table("row","",row,table)
         if item.match(/Device/)
           if index < length-1
-            table.add_separator
+            table = handle_table("line","","",table)
           end
         end
       else
         if value
           value = value.gsub(/^\s+|^ /,"")
-          row = [ item, value ]
-          table.add_row(row)
+          row   = [ item, value ]
+          table = handle_table("row","",row,table)
         end
       end
     end
-    handle_output(table)
-    handle_output("\n")
+    table = handle_table("end","","",table)
   end
   return
 end

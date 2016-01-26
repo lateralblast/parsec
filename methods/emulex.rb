@@ -14,8 +14,17 @@ def process_avail_em_fw(table,em_model,em_fw)
   table       = handle_table("row","Installed Firmware",em_fw,table)
   fw_info     = get_avail_em_fw()
   em_model    = em_model.gsub(/-S/,'')
+  if em_model.match(/^7/)
+    $hba_part_list.each do |name, info|
+      if info.match(/#{em_model}/)
+        em_model = name
+      end
+    end
+  end
   uc_em_model = em_model.upcase
-  em_fw       = em_fw.split(/ /)[0]
+  if em_fw.match(/ /)
+    em_fw = em_fw.split(/ /)[0]
+  end
   if fw_info
     fw_info.each do |fw_line|
       if fw_line.match(/^#{uc_em_model}/)
@@ -35,4 +44,3 @@ def process_avail_em_fw(table,em_model,em_fw)
   end
   return table
 end
-

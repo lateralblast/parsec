@@ -11,7 +11,7 @@ def get_ctlr_no(io_path)
   if io_path.match(/oce@/)
     file_name = "/disks/ls_-lAR_@dev_@devices.out"
   else
-    file_name  = "/disks/ls-l_dev_cfg.out"
+    file_name = "/disks/ls-l_dev_cfg.out"
   end
   file_array = exp_file_to_array(file_name)
   ctlr_no    = file_array.grep(/#{io_path}/)
@@ -52,6 +52,23 @@ end
 def process_ctlr_info(table,io_name,io_path,ctlr_no)
   os_ver      = get_os_ver()
   hw_cfg_file = get_hw_cfg_file()
+  # Handle SCSI devices
+  if io_path.match(/scsi/)
+    scsi_part_info = $scsi_part_list[io_name]
+    if scsi_part_info
+      scsi_part_info = scsi_part_info.split(/,/)
+      scsi_part_no   = scsi_part_info[0]
+      scsi_part_desc = scsi_part_info[1]
+      if scsi_part_no
+        if scsi_part_no.match(/[A-Z]|[0-9]/)
+          table = handle_table("row","Part Number",scsi_part_no,table)
+        end
+      end
+      if scsi_part_desc
+        table = handle_table("row","Part Description",scsi_part_desc,table)
+      end
+    end
+  end
   # Handle FC devices
   if io_path.match(/emlxs|qlc|fibre-channel/)
     if os_ver.match(/10|11/)
@@ -166,6 +183,20 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
     end
     if hba_part_desc
       table = handle_table("row","Part Description",hba_part_desc,table)
+    end
+  end
+  if io_path.match(/oce/)
+    hba_part_info = $hba_part_list[io_name]
+    if hba_part_info
+      hba_part_info = hba_part_info.split(/,/)
+      hba_part_no   = hba_part_info[0]
+      hba_part_desc = hba_part_info[1]
+      if hba_part_no
+        table = handle_table("row","Part Number",hba_part_no,table)
+      end
+      if hba_part_desc
+        table = handle_table("row","Part Description",hba_part_desc,table)
+      end
     end
   end
   if io_path.match(/emlxs|qlc|scsi/)

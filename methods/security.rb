@@ -54,13 +54,13 @@ def process_security(report_type)
     if report_type.match(/all|security/) or file_name.match(/#{report_type}/)
       if curr_name != file_name
         if curr_name != ""
-          handle_output(table)
-          handle_output("\n")
+          table = handle_table("end","","",table)
         end
-        handle_output("\n")
+        puts
         curr_name  = file_name
         title      = "Security Settings ("+file_name+")"
-        table      = Terminal::Table.new :title => title, :headings => ['Item', 'Current','Recommended','Complies']
+        row        = ['Item', 'Current','Recommended','Complies']
+        table      = handle_table("title",title,row,"")
         file_array = exp_file_to_array(file_name)
         curr_name  = file_name
       end
@@ -77,8 +77,8 @@ def process_security(report_type)
               else
                 comment = "*No*"
               end
-              row = [param_name,curr_val,rec_val,comment]
-              table.add_row(row)
+              row   = [param_name,curr_val,rec_val,comment]
+              table = handle_table("row","",row,table)
             end
           end
         end
@@ -87,12 +87,12 @@ def process_security(report_type)
         curr_val = "N/A"
         comment  = "*No*"
         row      = [param_name,curr_val,rec_val,comment]
-        table.add_row(row)
+        table    = handle_table("row","",row,table)
       end
     end
     if item == $defaults.last
-      handle_output(table)
-      handle_output("\n")
+      table = handle_table("end","","",table)
+      puts
     end
   end
   case report_type

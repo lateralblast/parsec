@@ -66,33 +66,37 @@ end
 
 def process_vnic()
   file_array = get_vnic_info()
+  table = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
+      line = line.chomp
       if line.match(/^LINK/)
         title = "VNIC Information"
         row   = [ 'Link', 'Zone', 'Over', 'Speed', 'MAC Address', 'MAC Type', 'VIDs' ]
         table = handle_table("title",title,row,"")
       else
-        items = line.split(/\s+/)
-        link  = items[0]
-        zone  = items[1]
-        over  = items[2]
-        speed = items[3]
-        mac   = items[4]
-        type  = items[5]
-        vids  = items[6]
-        if $masked == 1
-          link = "MASKED"
-          if !zone.match(/global/)
-            zone = "MASKED"
+        if line.match(/[0-9]/)
+          items = line.split(/\s+/)
+          link  = items[0]
+          zone  = items[1]
+          over  = items[2]
+          speed = items[3]
+          mac   = items[4]
+          type  = items[5]
+          vids  = items[6]
+          if $masked == 1
+            link = "MASKED"
+            if !zone.match(/global/)
+              zone = "MASKED"
+            end
+            if !over.match(/net[0-9]/)
+              over = "MASKED"
+            end
+            mac = "MASKED"
           end
-          if !over.match(/net[0-9]/)
-            over = "MASKED"
-          end
-          mac = "MASKED"
+          row = [ link, zone, over, speed, mac, type, vids ]
+          table = handle_table("row","",row,table)
         end
-        row = [ link, zone, over, speed, mac, type, vids ]
-        table = handle_table("row","",row,table)
       end
     end
     table = handle_table("end","","",table)
@@ -350,28 +354,30 @@ def process_ndd_nic_driver(nic_name)
   nic_dir = driver+"."+nic_no
   file_name  = "/netinfo/ndd/"+nic_dir+"/list.out"
   file_array = exp_file_to_array(file_name)
-  if file_array.to_s.match(/[A-Z]|[a-z][0-9]/)
-    puts
-    title = "Kernel "+nic_name+" Paramater Information"
-    row   = ['Parameter', 'Type', 'Value']
-    table = handle_table("title",title,row,"")
-    file_array.each do |line|
-      if line.match(/^[a-z]/) and !line.match(/^\?/)
-        line  = line.chop
-        param = line.split(/\(/)[0].gsub(/\s+/,"")
-        type  = line.split(/\(/)[1].split(/\)/)[0]
-        value_name  = "/netinfo/ndd/"+nic_dir+"/"+param+".out"
-        value_array = exp_file_to_array(value_name)
-        if value_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-          value = value_array[0].chop
-        else
-          value = ""
+  if nic_name.match(/[a-z]/)
+    if file_array.to_s.match(/[A-Z]|[a-z][0-9]/)
+      puts
+      title = "Kernel "+nic_name+" Paramater Information"
+      row   = ['Parameter', 'Type', 'Value']
+      table = handle_table("title",title,row,"")
+      file_array.each do |line|
+        if line.match(/^[a-z]/) and !line.match(/^\?/)
+          line  = line.chop
+          param = line.split(/\(/)[0].gsub(/\s+/,"")
+          type  = line.split(/\(/)[1].split(/\)/)[0]
+          value_name  = "/netinfo/ndd/"+nic_dir+"/"+param+".out"
+          value_array = exp_file_to_array(value_name)
+          if value_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+            value = value_array[0].chop
+          else
+            value = ""
+          end
+          row   = [ param, type, value ]
+          table = handle_table("row","",row,table)
         end
-        row   = [ param, type, value ]
-        table = handle_table("row","",row,table)
       end
+      table = handle_table("end","","",table)
     end
-    table = handle_table("end","","",table)
   end
   return
 end

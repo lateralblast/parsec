@@ -122,7 +122,8 @@ def process_veritas()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     title = "Veritas Disks"
-    table = Terminal::Table.new :title => title, :headings => ['Device', 'Configuration', 'Disk', 'Group', 'Status', 'Feature(s)', 'OS Device', 'Attribute', 'Type' ]
+    row   = ['Device', 'Configuration', 'Disk', 'Group', 'Status', 'Feature(s)', 'OS Device', 'Attribute', 'Type' ]
+    table = handle_table("title",title,row,"")
     file_array.each do |line|
       if !line.match(/DEVICE|ZFS/)
         items  = line.split(/\s+/)
@@ -144,12 +145,11 @@ def process_veritas()
         if feature.match(/^c[0-9]/)
           feature = ""
         end
-        row = [vxname, config, vxdisk, group, status, feature, osdisk, other, type]
-        table.add_row(row)
+        row   = [vxname, config, vxdisk, group, status, feature, osdisk, other, type]
+        table = handle_table("row","",row,table)
       end
     end
-    handle_output(table)
-    handle_output("\n")
+    table = handle_table("end","","",table)
   else
     puts
     puts "No Veritas disk information"

@@ -172,6 +172,15 @@ def process_io()
             end
             io_path = get_io_path(device,temp_count)
           end
+        when /T5-/
+          io_slot = io_line[0]
+          io_type = io_line[1]
+          io_name = io_line[3]
+          if io_name.match(/GT/)
+            io_name = "N/A"
+          end
+          io_max  = io_line[-2]
+          io_now  = io_line[-1]
         when /V1/
           sys_board_no = io_line[1]
           io_type      = io_line[2]
@@ -226,7 +235,7 @@ def process_io()
           if io_path
             io_path  = io_path.gsub(/^\s+|\s+$/,"")
           end
-        when /T[3-7]-/
+        when /T[3,4,6,7]-/
           io_slot  = io_line[0]
           io_type  = io_line[1].gsub(/PCI3/,"PCIE")
           io_speed = io_line[-1]
@@ -283,6 +292,24 @@ def process_io()
         end
         if io_name
           table = handle_table("row","Name",io_name,table)
+          if io_name.match(/^7/)
+            if io_path.match(/qlc|emlx|oce/)
+              $hba_part_list.each do |hba_name, hba_info|
+                if hba_info.match(/#{io_name}/)
+                  table = handle_table("row","Model",hba_name,table)
+                end
+              end
+            end
+          end
+        end
+        if io_speed
+          table = handle_table("row","Speed",io_speed,table)
+        end
+        if io_max
+          table = handle_table("row","Max Speed",io_max,table)
+        end
+        if io_now
+          table = handle_table("row","Max Speed",io_now,table)
         end
         if !model_name.match(/480R/)
           if model_name.match(/T2/)
@@ -335,7 +362,7 @@ def process_io()
             aggr_name = process_aggr_info(link_name)
           else
             aggr_name = process_aggr_info(dev_name)
-          end          
+          end
           if os_ver.match(/11/)
             (link_state,link_auto,link_speed) = get_link_details(link_name)
             if link_state
@@ -373,6 +400,34 @@ def process_io()
               else
                 table = handle_table("row","IP","MASKED",table)
               end
+            end
+          end
+        end
+        if io_slot
+          if io_slot.match(/USB/)
+            table = handle_table("row","Part Description","USB Controller",table)
+          end
+          if io_slot.match(/VIDEO/)
+            table = handle_table("row","Part Description","Video Controller",table)
+          end
+        end
+        if io_path.match(/network/)
+          if !io_name.match(/N\/A/)
+            nic_part_info = $nic_part_list[io_name]
+          else
+            nic_part_info = $nic_part_list[drv_name]
+          end
+          if nic_part_info
+            nic_part_info = nic_part_info.split(/,/)
+            nic_part_no   = nic_part_info[0]
+            nic_part_desc = nic_part_info[1]
+            if nic_part_no
+              if nic_part_no.match(/[A-Z]|[0-9]/)
+                table = handle_table("row","Part Number",nic_part_no,table)
+              end
+            end
+            if nic_part_desc
+              table = handle_table("row","Part Description",nic_part_desc,table)
             end
           end
         end
