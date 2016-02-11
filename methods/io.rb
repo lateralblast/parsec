@@ -130,18 +130,29 @@ def process_io()
     end
     dev_count  = {}
     if sys_model.match(/480|880|490|890|280/)
-      io_name = "2200"
-      device  = "qlc"
-      count   = 0
-      io_path = get_io_path(device,count)
-      ctlr_no = "c1"
-      table = process_ctlr_info(table,io_name,io_path,ctlr_no)
-      table = handle_table("line","","",table)
+      io_type  = "PCI"
+      table    = handle_table("row","Type",io_type,table)
+      io_speed = "33"
+      table    = handle_table("row","Speed",io_speed,table)
+      io_name  = "2200"
+      device   = "qlc"
+      count    = 0
+      io_path  = get_io_path(device,count)
+      ctlr_no  = "c1"
+      io_desc  = "PCI Dual FC Network Adapter+"
+      table    = process_ctlr_info(table,io_name,io_path,ctlr_no)
+      table    = handle_table("line","","",table)
     end
     line_count = 0
     io_info.each_with_index do |line,index|
+      io_desc    = ""
+      io_vendor  = ""
+      io_vendid  = ""
+      io_devid   = ""
       counter = counter+1
       if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD|PCI/) and !line.match(/Status/)
+        io_desc     = ""
+        io_name     = ""
         line_count  = line_count+1
         # Fixed squashed output
         line         = line.gsub(/PCIE3PCIE/,"PCIE3 PCI3")
@@ -151,6 +162,19 @@ def process_io()
         io_line      = line.split(/\s+/)
         sys_board_no = io_line[0]
         case sys_model
+        when /V440/
+          io_type   = io_line[0]
+          io_speed  = io_line[1]
+          io_slot   = io_line[2]
+          io_name   = io_line[-1]
+          io_name   = io_name.gsub(/\)|\(/,"")
+          if io_name.match(/seria/)
+            io_name = "serial"
+          end
+          next_line = line[index+1]
+          next_line = next_line.split(/\s+/)
+          io_status = next_line[1]
+          io_path   = next_line[2]
         when /480R|880R/
           io_type   = io_line[0]
           io_port   = io_line[1]
@@ -187,11 +211,21 @@ def process_io()
           io_speed     = io_line[3]+" MHz"
           io_slot      = io_line[4]
           io_path      = io_line[5]
-          if line.match(/network|scsi|qlc|emlx/)
-            io_name = io_line[-1]
+          if io_line[6]
+            io_path = io_line[5]
+            io_name = io_line[6]
+          else
+            io_name = io_path
+          end
+          if io_path.match(/[0-9]/)
+            (io_vendid,io_devid) = io_path.split(/\,/)
+            if io_devid.match(/\./)
+              io_devid = io_devid.split(/\./)[0]
+            end
+            io_vendid = io_vendid.split(/-/)[1].gsub(/[a-z]/,"")
           end
           if io_path.match(/glm|fc/)
-            device     = io_path.split(/\-/)[1]
+            device = io_path.split(/\-/)[1]
             if !dev_count[device]
               temp_count = 0
               dev_count[device] = temp_count+1
@@ -217,9 +251,11 @@ def process_io()
           if sys_board_no
             table   = handle_table("row","IOU",sys_board_no,table)
           end
-          io_type = io_line[1]
-          io_path = io_info[counter].gsub(/\s+/,"")
-          io_slot = get_io_slot(io_path,io_type,sys_model)
+          io_type   = io_line[1]
+          io_devid  = io_line[4].gsub(/\,/,"")
+          io_vendid = io_line[5]
+          io_path   = io_info[counter].gsub(/\s+/,"")
+          io_slot   = get_io_slot(io_path,io_type,sys_model)
         when /M10-/
           io_slot  = io_line[0]
           io_type  = io_line[1]
@@ -235,7 +271,7 @@ def process_io()
           if io_path
             io_path  = io_path.gsub(/^\s+|\s+$/,"")
           end
-        when /T[3,4,6]-/
+        when /T[3,4,67]-/
           io_slot  = io_line[0]
           io_type  = io_line[1].gsub(/PCI3/,"PCIE")
           io_speed = io_line[-1]
@@ -326,6 +362,18 @@ def process_io()
           io_path = io_path.gsub(/okay/,'')
         end
         if io_path
+          if io_path.match(/^ebus$/)
+            io_desc = "PCI/ISA Bridge"
+          end
+          if io_path.match(/^isa$/)
+            io_desc = "ISA Bridge"
+          end
+          if io_path.match(/^lomp$/)
+            io_desc = "Lights Out Management Device"
+          end
+          if io_path.match(/^pmu/)
+            io_desc = "Power Management Unit"
+          end
           table = handle_table("row","Path",io_path,table)
         end
         if io_slot
@@ -405,11 +453,17 @@ def process_io()
         end
         if io_slot
           if io_slot.match(/USB/)
-            table = handle_table("row","Part Description","USB Controller",table)
+            io_desc = "USB Controller"
           end
           if io_slot.match(/VIDEO/)
-            table = handle_table("row","Part Description","Video Controller",table)
+            io_desc = "Video Controller"
           end
+        end
+        if io_path.match(/^usb/)
+          io_desc = "USB Controller"
+        end
+        if io_path.match(/^ide/)
+          io_desc = "IDE Controller"
         end
         if io_path.match(/network/)
           if !io_name.match(/N\/A/)
@@ -423,13 +477,32 @@ def process_io()
             nic_part_desc = nic_part_info[1]
             if nic_part_no
               if nic_part_no.match(/[A-Z]|[0-9]/)
-                table = handle_table("row","Part Number",nic_part_no,table)
+                io_desc = nic_part_no
               end
             end
             if nic_part_desc
-              table = handle_table("row","Part Description",nic_part_desc,table)
+              io_desc = nic_part_desc
             end
           end
+        end
+        if !io_desc
+          io_desc = ""
+        end
+        if !io_desc.match(/[A-Z]|[a-z]/)
+          io_desc = get_io_desc_from_driver(drv_name)
+        end
+        if io_vendid.match(/[0-9]/)
+          table     = handle_table("row","Vendor ID",io_vendid,table)
+          io_vendor = get_io_vendor_from_vendor_id(io_vendid)
+          table     = handle_table("row","Vendor Name",io_vendor,table)
+        end
+        if io_devid.match(/[0-9]/)
+          table    = handle_table("row","Device ID",io_devid,table)
+          io_devid = get_io_device_from_vendor_id(io_vendid,io_devid)
+          table    = handle_table("row","Device Name",io_devid,table)
+        end
+        if io_desc.match(/[a-z]|[A-Z]|[0-9]/)
+          table = handle_table("row","Part Description",io_desc,table)
         end
         table = process_ctlr_info(table,io_name,io_path,ctlr_no)
         if line_count < length

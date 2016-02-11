@@ -78,7 +78,7 @@ def process_memory()
       actual_mem = get_actual_mem()
       table     = handle_table("row","Actual Memory",actual_mem,table)
     end
-    if !sys_model.match(/V120|M[5-7]-|T[5-7]-/)
+    if !sys_model.match(/V120|M[5-7]-|T[5-7]-|T2000/)
       table = handle_table("line","","",table)
     end
     mem_info       = get_mem_info()
@@ -137,12 +137,12 @@ def process_memory()
           mem_controller = mem_line[-1]
           if line.match(/^0x/)
             if mem_module.match(/SYS/)
-              dimm_size     = bank_size / mem_modules.length+1
+              dimm_size     = bank_size / mem_modules.length
               mem_dimm_size = dimm_size.to_s+" GB"
               table         = handle_table("row","Number of DIMMs",mem_modules.length.to_s,table)
               table         = handle_table("row","DIMM Size",mem_dimm_size,table)
               mem_modules.each do |mem_module|
-                table      = handle_table("row","Module",mem_module,table)
+                table = handle_table("row","Module",mem_module,table)
               end
               table       = handle_table("line","","",table)
               mem_modules = []
@@ -152,7 +152,7 @@ def process_memory()
             mem_interleave = mem_line[3]
             mem_bank_size  = mem_line[4]+" "+mem_line[5]
             bank_size      = mem_line[4].to_i
-            mem_module     = mem_line[6]
+            mem_module     = mem_line[-1]
             sys_info       = mem_module.split(/\//)
             mem_board      = sys_info[2].gsub(/PM/,"")
             cpu_board      = sys_info[3].gsub(/CM/,"")
@@ -162,7 +162,7 @@ def process_memory()
             table          = handle_table("row","Interleave",mem_interleave,table)
             mem_modules.push(mem_module)
           else
-            mem_module = mem_line[1]
+            mem_module = mem_line[-1]
             mem_modules.push(mem_module)
           end
         end
@@ -188,7 +188,6 @@ def process_memory()
                 table          = handle_table("row","Base Address",mem_base,table)
                 table          = handle_table("row","Bank Size",mem_bank_size,table)
                 table          = handle_table("row","Interleave",mem_interleave,table)
-                table          = handle_table("row","Module Size",mem_dimm_size,table)
                 table          = handle_table("row","Number",mem_dimm_no,table)
                 table          = handle_table("row","Modules",mem_modules.join("\n"),table)
                 table          = handle_table("line","","",table)
@@ -212,7 +211,6 @@ def process_memory()
               table = handle_table("row","Base Address",mem_base,table)
               table = handle_table("row","Bank Size",mem_bank_size,table)
               table = handle_table("row","Interleave",mem_interleave,table)
-              table = handle_table("row","Module Size",mem_dimm_size,table)
               table = handle_table("row","Number",mem_dimm_no,table)
               table = handle_table("row","Modules",mem_modules.join("\n"),table)
             end
@@ -277,11 +275,22 @@ def process_memory()
         if mem_size or mem_group and !sys_model.match(/T6-/)
           f_count = 0
           if sys_board_no
-            table   = handle_table("row","System Board",sys_board_no,table)
+            if sys_model.match(/M5000/) and index > 4
+              table = handle_table("line","","",table)
+            end
+            if sys_model.match(/T5[1,2]|T4-1/) and index > 5
+              table = handle_table("line","","",table)
+            end
+            if sys_model.match(/T4-2/) and index > 13
+              table = handle_table("line","","",table)
+            end
+            table = handle_table("row","System Board",sys_board_no,table)
             f_count = f_count+1
           end
           if mem_base
-            table   = handle_table("row","Base Address",mem_base,table)
+            if mem_base.match(/[0-9]/)
+              table = handle_table("row","Base Address",mem_base,table)
+            end
             f_count = f_count+1
           end
           if mem_controller

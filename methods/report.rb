@@ -24,6 +24,9 @@ end
 # Do configuration report
 
 def config_report(report,report_type)
+  if report_type.match(/all|host/)
+    process_host()
+  end
   if report_type.match(/all|security|ntp/)
     process_ntp()
   end
@@ -41,9 +44,6 @@ def config_report(report,report_type)
   end
   if report_type.match(/all|obp/)
     process_obp()
-  end
-  if report_type.match(/all|host/)
-    process_host()
   end
   if report_type.match(/all|eeprom/)
     process_eeprom()
@@ -186,6 +186,9 @@ def config_report(report,report_type)
   end
   if report_type.match(/all|fru/)
     process_fru()
+  end
+  if report_type.match(/all|sensor/)
+    process_sensors()
   end
   if report_type.match(/all|handbook/)
     process_handbook()

@@ -43,10 +43,10 @@ def process_avail_ql_fw(table,ql_model,ql_fw)
               $io_fw_urls.push(fw_urls[1])
             end
           end
+          return table
         end
       end
     end
   end
   return table
 end
-

@@ -110,6 +110,9 @@ def process_disk_info()
               size = "N/A"
             end
           end
+          if !path
+            path = "/dev/rdsk/"+disk
+          end
           row   = [ id, ssd, disk, vendor, serial, port, path, paths, size ]
           table = handle_table("row","",row,table)
         end

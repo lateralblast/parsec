@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.2.8
+# Version:      1.3.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -33,19 +33,32 @@ require 'rmagick'
 
 include Magick
 
+# Handle CTRL-C more gracefully
+
+Signal.trap("SIGINT") do
+  exit 130
+end
+
+# Defaults for PDF
+
 $default_font_size = 12
 $section_font_size = 28
 $heading_font_size = 18
 $table_font_size   = 10
 
-# Detauks for PDF
-
 $company_name = "Lateral Blast Pty Ltd"
 $author_name  = "Richard Spindler"
 
-$output_mode = "text"
+# Defaults for output
+
+$output_mode  = "text"
+
+# Options
 
 options   = "abcdefhlmvABCDEFHIKLMOPSTVZd:i:s:w:R:o:p:"
+
+# Check for pigz to accelerate decompression
+
 $pigz_bin = %x[which pigz].chomp
 
 # Set up some script related variables
@@ -58,6 +71,7 @@ script_dir = File.basename($0)
 if !script_dir.match(/\//)
   script_dir = Dir.pwd
 end
+
 $data_dir     = script_dir+"/data"
 $handbook_dir = $data_dir+"/handbook"
 $fact_dir     = $data_dir+"/facters"
@@ -71,6 +85,15 @@ $images_dir   = $data_dir+"/images"
     puts "Creating "+test_dir+" directory ("+test_dir+")"
     Dir.mkdir(test_dir)
   end
+end
+
+$pci_ids_url  = "http://pci-ids.ucw.cz/v2.2/pci.ids"
+$pci_ids_file = $info_dir+"/pci.ids"
+
+$pci_ids = []
+
+if File.exist?($pci_ids_file)
+  $pci_ids = File.readlines($pci_ids_file)
 end
 
 # Load methods
@@ -144,6 +167,7 @@ report["power"]    = "Report on power information"
 report["qlogic"]   = "Report on Qlogic FC devices"
 report["security"] = "Report on Security information"
 report["sendmail"] = "Report on Sendmail settings"
+report["sensors"]  = "Report on Sensor information"
 report["services"] = "Report on Services information"
 report["snmp"]     = "Report on SNMP information"
 report["ssh"]      = "Report on SSH information"
