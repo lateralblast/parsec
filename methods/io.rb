@@ -171,7 +171,7 @@ def process_io()
           if io_name.match(/seria/)
             io_name = "serial"
           end
-          next_line = line[index+1]
+          next_line = io_info[index+1]
           next_line = next_line.split(/\s+/)
           io_status = next_line[1]
           io_path   = next_line[2]
@@ -261,15 +261,39 @@ def process_io()
           io_type  = io_line[1]
           io_name  = io_line[-2]
           io_speed = io_line[-1]
-          io_path  = line[index+1].gsub(/^\s+|\s+$/,"")
+          io_path  = io_info[index+1].gsub(/^\s+|\s+$/,"")
         when /M[5,6,7]-/
-          io_slot  = io_line[0]
-          io_type  = io_line[1]
-          io_name  = io_line[2]
-          io_speed = io_line[-1]
-          io_path  = line[index+1]
+          io_path  = io_info[index+1]
           if io_path
             io_path  = io_path.gsub(/^\s+|\s+$/,"")
+          end
+          io_slot  = io_line[0]
+          io_type  = io_line[1]
+          if sys_model.match(/M7-8/)
+            io_name  = io_line[3]
+            io_max   = io_line[4]
+            io_speed = io_line[5]
+            io_class = io_line[2]
+            if io_class.match(/[0-9]/)
+              if io_class.match(/SUNW/)
+                (header,io_vendid,io_devid) = io_class.split(/\,/)
+              else
+                (io_vendid,io_devid) = io_class.split(/\,/)
+              end
+              if io_devid
+                if io_devid.match(/\./)
+                  io_devid = io_devid.split(/\./)[0]
+                end
+              end
+              if io_vendid
+                if io_vendid.match(/-/)
+                  io_vendid = io_vendid.split(/-/)[1].gsub(/[a-z]/,"")
+                end
+              end
+            end
+          else
+            io_name  = io_line[2]
+            io_speed = io_line[-1]
           end
         when /T[3,4,67]-/
           io_slot  = io_line[0]

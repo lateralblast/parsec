@@ -166,7 +166,7 @@ def process_memory()
             mem_modules.push(mem_module)
           end
         end
-        if sys_model.match(/T[5,7]-/)
+        if sys_model.match(/T[5,7]-|M7/)
           if line.match(/SYS/)
             if mem_dimm_no
               mem_dimm_no = mem_dimm_no+1

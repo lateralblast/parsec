@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.3.8
+# Version:      1.3.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -453,13 +453,14 @@ if opt["P"] or opt["O"]
     if opt["B"]
       document_title = "DMI decode: "+host_name
     end
-    customer_name  = ""
-    output_pdf     = "output/"+host_name+".pdf"
-    $output_file   = output_pdf
+    customer_name = ""
+    output_pdf    = "output/"+host_name+".pdf"
+    $output_file  = output_pdf
   end
 end
 
 if opt["o"] or opt["P"] or opt["O"]
+  puts "Setting output file to: "+$output_file
   if File.exist?($output_file)
     File.delete($output_file)
     FileUtils.touch($output_file)

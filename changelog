@@ -277,3 +277,5 @@
 # Fixed bug with multiple QLogic firmware links
 # 1.3.8: Thu 11 Feb 2016 15:50:23 AEDT
 # Added basic install script for gems and made PDF related modules optional
+# 1.3.9: Fri 12 Feb 2016 08:26:13 AEDT
+# Added initial support for M7-8

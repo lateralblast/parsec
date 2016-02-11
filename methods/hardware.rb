@@ -28,8 +28,10 @@ def get_model_from_hostid(hostid)
     model = "T4-1"
   when /^85[a,b]|^84f87/
     model = "T3-1"
-  when /8626/
+  when /^8626/
     model = "M6-32"
+  when /^864/
+    model = "M7-8"
   else
     model = "unknown"
   end
