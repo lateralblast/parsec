@@ -88,7 +88,7 @@ $images_dir   = $data_dir+"/images"
 end
 
 $pci_ids_url  = "http://pci-ids.ucw.cz/v2.2/pci.ids"
-$pci_ids_file = $info_dir+"/pci.ids"
+$pci_ids_file = script_dir+"/information/pci.ids"
 
 $pci_ids = []
 
