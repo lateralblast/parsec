@@ -154,8 +154,9 @@ Requirements
 Tools:
 
 - Uses pigz if available
+- ImageMagick required for image processing for PDF reports
 
-Ruby Gems:
+Required Ruby Gems (required for text reports):
 
 - rubygems
 - fileutils
@@ -163,13 +164,24 @@ Ruby Gems:
 - pathname
 - hex_string
 - terminal-table
-- prawn
-- prawn/table
 - pathname
 - etc
-- fastimage
 - unpack
 - enumerator
+
+Optional Ruby Gems (required for PDF reports)
+
+- prawn
+- prawn/table
+- fastimage
+- nokogiri
+- rmagick
+
+There is a very basic script to install gems
+
+```
+./methods/install_gems.sh
+```
 
 A base set of firmware information is provided.
 This information is created using [oort](https://github.com/lateralblast/oort).

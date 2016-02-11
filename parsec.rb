@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.3.7
+# Version:      1.3.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -21,17 +21,21 @@ require 'getopt/std'
 require 'pathname'
 require 'hex_string'
 require 'terminal-table'
-require 'prawn'
-require 'prawn/table'
 require 'pathname'
 require 'etc'
-require 'fastimage'
 require 'unpack'
 require 'enumerator'
-require 'nokogiri'
-require 'rmagick'
 
-include Magick
+begin
+  require 'prawn'
+  require 'prawn/table'
+  require 'fastimage'
+  require 'nokogiri'
+  require 'rmagick'
+  include Magick
+rescue LoadError
+end
+
 
 # Handle CTRL-C more gracefully
 
