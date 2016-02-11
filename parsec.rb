@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.3.9
+# Version:      1.4.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -220,12 +220,13 @@ def check_local_config()
     if os_name.match(/Darwin/)
       brew_bin = %x[which brew]
       if brew_bin.match(/brew/)
+        puts "Installing Parallel GZip"
         %x[brew install pigz]
       else
-        exit
+        puts "Using gzip"
       end
     else
-      exit
+      puts "Using gzip"
     end
   end
   return
