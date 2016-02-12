@@ -281,3 +281,7 @@
 # Added initial support for M7-8
 # 1.4.0: Fri 12 Feb 2016 09:07:06 AEDT
 # Fixed pigz detection and gzip handling
+# 1.4.1: Fri 12 Feb 2016 10:48:19 AEDT
+# Initial Logical Domain information for M7
+# 1.4.2: Fri 12 Feb 2016 11:43:00 AEDT
+# Added component serial information report

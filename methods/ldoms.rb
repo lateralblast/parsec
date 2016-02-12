@@ -109,7 +109,7 @@ def process_ldom_ver(table)
     table = handle_table("row","Available LDom Version",avail_ldom,table)
   else
     puts
-    puts "No LDom version information available"
+    puts "No T-Series LDom version information available"
     puts
   end
   return table
@@ -359,7 +359,7 @@ end
 
 def process_ldom()
   model_name = get_model_name()
-  if model_name.match(/^T|^M[5,6]-/)
+  if model_name.match(/^T|^M[5-7]-/)
     title   = "LDom Information"
     row     = ['Item','Value']
     table   = handle_table("title",title,row,"")
@@ -379,7 +379,7 @@ def process_ldom()
     end
   else
     puts
-    puts "No LDom information available"
+    puts "No LDom configuration information available"
   end
   return
 end

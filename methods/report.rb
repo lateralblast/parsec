@@ -202,6 +202,14 @@ def config_report(report,report_type)
   if report_type.match(/all|network/)
     process_nic_info()
   end
+  if report_type.match(/^serial$/)
+    serial = get_chassis_serial()
+    puts serial
+    exit
+  end
+  if report_type.match(/all|serials/)
+    process_serials()
+  end
   handle_output("\n")
   return
 end
