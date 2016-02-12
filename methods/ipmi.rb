@@ -47,9 +47,11 @@ def process_ipmi_sel()
     row   = [ 'Device / Parameter', 'Value' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
-      line = line.chomp
-      row = line.split(/\s+:\s+/)
-      table = handle_table("row","",row,table)
+      if !line.match(/^SEL Information/)
+        line = line.chomp
+        row = line.split(/\s+:\s+/)
+        table = handle_table("row","",row,table)
+      end
     end
     table = handle_table("end","","",table)
   else
@@ -69,7 +71,7 @@ def process_ipmi_sel_events()
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
-      row = line.split(/\s+|\s+/)
+      row = line.split(/\s+\|\s+/)
       table = handle_table("row","",row,table)
     end
     table = handle_table("end","","",table)
@@ -89,9 +91,13 @@ def process_ipmi_mc()
     row   = [ 'Device / Parameter', 'Value' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
-      line = line.chomp
-      row = line.split(/\s+:\s+/)
-      table = handle_table("row","",row,table)
+      if !line.match(/Additional Device Support|Aux Firmware Rev Info/)
+        if line.match(/:/)
+          line = line.chomp
+          row = line.split(/\s+:\s+/)
+          table = handle_table("row","",row,table)
+        end
+      end
     end
     table = handle_table("end","","",table)
   else
