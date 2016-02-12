@@ -22,10 +22,68 @@ def get_ipmi_mc()
   return file_array
 end
 
+# Get IPMI SEL information
+
+def get_ipmi_sel()
+  file_name  = "/ipmi/ipmitool_sel_info.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Get IPMI SEL events information
+
+def get_ipmi_sel_events()
+  file_name  = "/ipmi/ipmitool_sel_elist.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process IPMI SEL Information
+
+def process_ipmi_sel()
+  file_array = get_ipmi_sel()
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title = "IPMI System Event Log Information"
+    row   = [ 'Device / Parameter', 'Value' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      row = line.split(/\s+:\s+/)
+      table = handle_table("row","",row,table)
+    end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No IPMI System Event Log information available"
+  end
+  return
+end
+
+# Process IPMI SEL Event Information
+
+def process_ipmi_sel_events()
+  file_array = get_ipmi_sel_events()
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title = "IPMI System Event Log Events"
+    row   = [ 'Event', 'Date', 'Description', 'Result', 'Status' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      row = line.split(/\s+:\s+/)
+      table = handle_table("row","",row,table)
+    end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No IPMI System Event Log event information available"
+  end
+  return
+end
+
 # Process IPMI MC Information
 
 def process_ipmi_mc()
-  file_array = get_ipmi_chassis()
+  file_array = get_ipmi_mc()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "IPMI Machine Controller Information"
     row   = [ 'Device / Parameter', 'Value' ]
@@ -108,5 +166,7 @@ def process_ipmi()
   process_ipmi_fru()
   process_ipmi_chassis()
   process_ipmi_mc()
+  process_ipmi_sel()
+  process_ipmi_sel_events()
   return
 end
