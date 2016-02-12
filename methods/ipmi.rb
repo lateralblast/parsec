@@ -69,7 +69,7 @@ def process_ipmi_sel_events()
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
-      row = line.split(/\s+:\s+/)
+      row = line.split(/\s+|\s+/)
       table = handle_table("row","",row,table)
     end
     table = handle_table("end","","",table)
