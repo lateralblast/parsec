@@ -67,7 +67,7 @@ def process_ipmi_sel_events()
   file_array = get_ipmi_sel_events()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "IPMI System Event Log Events"
-    row   = [ 'Event', 'Date', 'Description', 'Result', 'Status' ]
+    row   = [ 'Event', 'Date', 'Time', 'Description', 'Result', 'Status' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
