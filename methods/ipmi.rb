@@ -118,6 +118,9 @@ def process_ipmi_chassis()
     file_array.each do |line|
       line = line.chomp
       row = line.split(/\s+:\s+/)
+      if !row[1]
+        row[1] = ""
+      end
       table = handle_table("row","",row,table)
     end
     table = handle_table("end","","",table)
