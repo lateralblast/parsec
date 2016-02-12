@@ -293,3 +293,5 @@
 # Cleaned up ZFS reporting
 # 1.4.6: Sat 13 Feb 2016 09:19:25 AEDT
 # Added IPMI FRU reporting
+# 1.4.7: Sat 13 Feb 2016 10:02:19 AEDT
+# Added IPMI Chassis reporting

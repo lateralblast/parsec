@@ -6,6 +6,35 @@ def get_ipmi_fru()
   return file_array
 end
 
+# Get IPMI chasis information
+
+def get_ipmi_chassis()
+  file_name  = "/ipmi/ipmitool_chassis_status.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process IPMI chassis information
+
+def process_ipmi_chassis()
+  file_array = get_ipmi_chassis()
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title = "IPMI Chassis Information"
+    row   = [ 'Device / Parameter', 'Status' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      row = line.split(/\s+:\s+/)
+      table = handle_table("row","",row,table)
+    end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No IPMI Chassis information available"
+  end
+  return
+end
+
 # Process IPMI FRU information
 
 def process_ipmi_fru()
@@ -48,5 +77,6 @@ end
 
 def process_ipmi()
   process_ipmi_fru()
+  process_ipmi_chassis()
   return
 end
