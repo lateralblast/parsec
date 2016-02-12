@@ -287,3 +287,5 @@
 # Added component serial information report
 # 1.4.3: Fri 12 Feb 2016 11:48:30 AEDT
 # Added domain support for M7
+# 1.4.4: Fri 12 Feb 2016 21:05:01 AEDT
+# Added component firmware reporting

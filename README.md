@@ -22,52 +22,69 @@ Some of the features include:
 
 The reporting options include:
 
-- All security information
-- Coreadm information
-- CPU information
-- Cron information
-- Crypto information
-- CUPS information
-- Disk information
-- Dupadm information
-- EEPROM information
-- Elfsign information
-- Explorer information
-- Filesystem information
-- FRU information
-- Host information
-- Inetd information
-- Inetinit information
-- IO Information (Controllers, HBAs etc)
-- Kernel information
-- Keyserv information
-- LDom information
-- Link information
-- LiveUpgrade information
-- Locale information
-- Login information
-- Memory information
-- Module information
-- Open Boot Prom information
-- Operating Sytem information
-- Package information
-- Patch information
-- Password information
-- Power information
-- Sendmail information
-- Services information
-- SNMP information
-- SSH information
-- Su information
-- Suspend information
-- System information
-- TCP information
-- Telnet information
-- UDP information
-- Veritas information
-- VNIC information
-- ZFS information
-- Zone information
+- Report on aggregate information
+- Report on everything
+- Report on coreadm information
+- Report on CPU information
+- Report on cron information
+- Report on crypto information
+- Report on CUPS information
+- Report on disks
+- Report on dumpadm information
+- Report on EEPROM
+- Report on elfsign information
+- Report on Emulex FC devices
+- Report on Explore information
+- Report on Firmware information
+- Report on FRU information
+- Report on filesystem information
+- Report on host information
+- Report on inetadm information
+- Report on inetd information
+- Report on inetinit information
+- Report on all IO
+- Report on LDom information
+- Report on link information
+- Report on locale information
+- Report on locale information
+- Report on Live Upgrade information
+- Report on kernel information
+- Report on keyserv information
+- Report on Memory information
+- Report on Kernel Module information
+- Report on Kernel Module information
+- Report on mount information
+- Report on ndd information
+- Report on network information
+- Report on NTP information
+- Report on OBP information
+- Report on OS information
+- Report on package information
+- Report on PAM information
+- Report on password information
+- Report on patch information
+- Report on power information
+- Report on Qlogic FC devices
+- Report on Security information
+- Report on Sendmail settings
+- Report on Sensor information
+- Report on Chassis Serial information
+- Report on Component Serial information
+- Report on Services information
+- Report on SNMP information
+- Report on SSH information
+- Report on SU information
+- Report on Suspend information
+- Report on syslog information
+- Report on system information
+- Report on swap information
+- Report on TCP information
+- Report on Telnet information
+- Report on UDP information
+- Report on VNIC information
+- Report on Veritas information
+- Report on ZFS information
+- Report on Zone information
 
 License
 -------

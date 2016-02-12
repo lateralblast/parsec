@@ -210,6 +210,9 @@ def config_report(report,report_type)
   if report_type.match(/all|serials/)
     process_serials()
   end
+  if report_type.match(/all|firmware/)
+    process_firmware()
+  end
   handle_output("\n")
   return
 end

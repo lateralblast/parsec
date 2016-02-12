@@ -26,6 +26,11 @@ end
 def get_other_serials()
   file_name  = "/sysconfig/serials"
   file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+def process_other_serials()
+  file_array = get_other_serials()
   if file_array.to_s.match(/[0-9]|[A-Z]|[a-z]/)
     table = handle_table("title","Component Serial Information","","")
     file_array.each do |line|
@@ -44,6 +49,6 @@ def get_other_serials()
 end
 
 def process_serials()
-  get_other_serials()
+  process_other_serials()
   return
 end
