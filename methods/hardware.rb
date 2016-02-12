@@ -65,24 +65,6 @@ def process_arch_name(table)
   return table
 end
 
-# Get the chassis serial number.
-
-def get_chassis_serial()
-  file_name  = "/sysconfig/chassis_serial.out"
-  file_array = exp_file_to_array(file_name)
-  if !file_array
-    serial_number = ""
-  else
-    serial_number = file_array[0].to_s
-  end
-  if !serial_number.match(/[0-9]/)
-    file_name  = "/sysconfig/env.out"
-    file_array = exp_file_to_array(file_name)
-    serial_number = file_array.grep(/EXP_SERIAL/)[0].split(/\=/)[1]
-  end
-  return serial_number
-end
-
 # Process Model Name
 
 def process_model_name(table)

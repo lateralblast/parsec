@@ -11,7 +11,7 @@ end
 
 def process_domain()
   model_name = get_model_name()
-  if model_name.match(/^M[5,6]-/)
+  if model_name.match(/^M[5-7]-/)
     file_array = get_domain_info()
     if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
       handle_output("\n")
