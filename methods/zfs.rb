@@ -4,7 +4,6 @@ def get_zfs_list()
   file_name  = "/disks/zfs/zfs_list.out"
   file_array = exp_file_to_array(file_name)
   return file_array
-	return
 end
 
 # Get ZFS pool list
@@ -13,26 +12,64 @@ def get_zpool_list()
   file_name  = "/disks/zfs/zpool_list.out"
   file_array = exp_file_to_array(file_name)
   return file_array
-	return
 end
 
 # Get ZFS snapshot list
 
 def get_zfs_snapshots()
-  file_name  = "/disks/zfs/zpool_list-t_snapshot.out"
+  file_name  = "/disks/zfs/zfs_list-t_snapshot.out"
   file_array = exp_file_to_array(file_name)
   return file_array
-	return
 end
 
+# Get ZFS volumes
+
+def get_zfs_volumes()
+  file_name = "/disks/zfs/zfs_list-t_volume.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
 
 # Process ZFS
 
 def process_zfs()
 	process_zfs_list()
 	process_zpool_list()
+  process_zfs_volumes()
 	process_zfs_snapshots()
 	return
+end
+
+# Proces ZFS volumes
+
+def process_zfs_volumes()
+  file_array = get_zfs_volumes()
+	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title = "ZFS Volumes"
+    row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+			if !line.match(/^NAME/)
+        items = line.split(/\s+/)
+        name  = items[0]
+        used  = items[1]
+        avail = items[2]
+        refer = items[3]
+        if $masked == 1
+          mount = "MASKED"
+        else
+          mount = items[4]
+        end
+        row   = [ name, used, avail, refer, mount ]
+        table = handle_table("row","",row,table)
+      end
+    end
+		table = handle_table("end","","",table)
+  else
+    puts
+    puts "No ZFS volume information available"
+  end
+  return
 end
 
 # Process ZFS list

@@ -289,3 +289,5 @@
 # Added domain support for M7
 # 1.4.4: Fri 12 Feb 2016 21:05:01 AEDT
 # Added component firmware reporting
+# 1.4.5: Sat 13 Feb 2016 08:29:44 AEDT
+# Cleaned up ZFS reporting
