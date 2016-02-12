@@ -299,3 +299,5 @@
 # Added IPMI MC reporting
 # 1.4.9: Sat 13 Feb 2016 10:30:08 AEDT
 # Added IPMI SEL reporting
+# 1.5.0: Sat 13 Feb 2016 10:37:18 AEDT
+# Fixed IPMI reporting
