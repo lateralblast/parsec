@@ -295,3 +295,5 @@
 # Added IPMI FRU reporting
 # 1.4.7: Sat 13 Feb 2016 10:02:19 AEDT
 # Added IPMI Chassis reporting
+# 1.4.8: Sat 13 Feb 2016 10:19:22 AEDT
+# Added IPMI MC reporting

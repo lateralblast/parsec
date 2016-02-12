@@ -14,6 +14,35 @@ def get_ipmi_chassis()
   return file_array
 end
 
+# Get IPMI MC information
+
+def get_ipmi_mc()
+  file_name  = "/ipmi/ipmitool_mc_info.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process IPMI MC Information
+
+def process_ipmi_mc()
+  file_array = get_ipmi_chassis()
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title = "IPMI Machine Controller Information"
+    row   = [ 'Device / Parameter', 'Value' ]
+    table = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      row = line.split(/\s+:\s+/)
+      table = handle_table("row","",row,table)
+    end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No IPMI Machine Controller information available"
+  end
+  return
+end
+
 # Process IPMI chassis information
 
 def process_ipmi_chassis()
@@ -78,5 +107,6 @@ end
 def process_ipmi()
   process_ipmi_fru()
   process_ipmi_chassis()
+  process_ipmi_mc()
   return
 end
