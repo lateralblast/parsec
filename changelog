@@ -291,3 +291,5 @@
 # Added component firmware reporting
 # 1.4.5: Sat 13 Feb 2016 08:29:44 AEDT
 # Cleaned up ZFS reporting
+# 1.4.6: Sat 13 Feb 2016 09:19:25 AEDT
+# Added IPMI FRU reporting

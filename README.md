@@ -42,6 +42,7 @@ The reporting options include:
 - Report on inetadm information
 - Report on inetd information
 - Report on inetinit information
+- Report on IPMI information
 - Report on all IO
 - Report on LDom information
 - Report on link information

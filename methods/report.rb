@@ -213,6 +213,9 @@ def config_report(report,report_type)
   if report_type.match(/all|firmware/)
     process_firmware()
   end
+  if report_type.match(/all|ipmi/)
+    process_ipmi()
+  end
   handle_output("\n")
   return
 end
