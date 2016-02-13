@@ -301,3 +301,5 @@
 # Added IPMI SEL reporting
 # 1.5.0: Sat 13 Feb 2016 10:37:18 AEDT
 # Fixed IPMI reporting
+# 1.5.1: Sat 13 Feb 2016 21:57:29 AEDT
+# Added support for OEM x86 machines

@@ -148,15 +148,17 @@ def process_ipmi_fru()
         row = line.split(/\s+:\s+/)
         table = handle_table("row","",row,table)
         next_line = file_array[index+1]
-        if !next_line.match(/:/)
-          row = [ ' Status', 'Not Present' ]
-        else
-          row = [ ' Status', 'Present' ]
+        if next_line
+          if !next_line.match(/:/)
+            row = [ ' Status', 'Not Present' ]
+          else
+            row = [ ' Status', 'Present' ]
+          end
+          table = handle_table("row","",row,table)
         end
-        table = handle_table("row","",row,table)
       else
         if line.match(/:/)
-          row = line.split(/\s+:\s+/)
+          row   = line.split(/\s+:\s+/)
           table = handle_table("row","",row,table)
         end
       end

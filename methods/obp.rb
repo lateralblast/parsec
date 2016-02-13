@@ -88,20 +88,37 @@ def process_obp_ver(table)
       table = handle_table("row","Installed OBP Version",curr_obp,table)
     end
   else
-    avail_obp  = get_avail_obp_ver(model_name)
-    latest_obp = compare_ver(curr_obp,avail_obp)
-    if latest_obp == avail_obp
-      avail_obp = avail_obp+" (Newer)"
-    end
-    if curr_obp
-      table = handle_table("row","Installed OBP Version",curr_obp,table)
-    end
-    if avail_obp
-      table = handle_table("row","Available OBP Version",avail_obp,table)
+    if model_name.match(/O\.E.M\./)
+      bios_ver = get_bios_ver()
+      table    = handle_table("row","BIOS Version",bios_ver,table)
+    else
+      avail_obp  = get_avail_obp_ver(model_name)
+      latest_obp = compare_ver(curr_obp,avail_obp)
+      if latest_obp == avail_obp
+        avail_obp = avail_obp+" (Newer)"
+      end
+      if curr_obp
+        table = handle_table("row","Installed OBP/BIOS Version",curr_obp,table)
+      end
+      if avail_obp
+        if avail_obp.match(/[0-9]/)
+          table = handle_table("row","Available OBP/BIOS Version",avail_obp,table)
+        end
+      end
     end
   end
   return table
 end
+
+# Get BIOS version
+
+def get_bios_ver()
+  file_name = "/sysconfig/prtdiag-v.out"
+  file_array = exp_file_to_array(file_name)
+  bios_ver   = file_array.grep(/^BIOS Configuration/)[0].split(/: /)[1].chomp
+  return bios_ver
+end
+
 
 # Get OBP version.
 
@@ -119,7 +136,7 @@ def get_obp_ver()
   else
     file_name  = "/sysconfig/prtconf-V.out"
     file_array = exp_file_to_array(file_name)
-    obp_ver    = file_array.to_s.chomp
+    obp_ver    = file_array[0].chomp
   end
   return obp_ver
 end

@@ -19,6 +19,15 @@ def process_core_no(table)
   return table
 end
 
+# Get general CPU info
+
+def get_general_cpu_info()
+  file_name  = "/sysconfig/prtdiag-v.out"
+  file_array = exp_file_to_array(file_name)
+  cpu_info   = file_array.grep(/CPU/)[0].chomp
+  return cpu_info
+end
+
 # Get CPU information
 
 def get_cpu_info()
@@ -76,9 +85,17 @@ def process_cpu()
     title = "CPU Information"
     #table = handle_table("title","CPU Information","","")
   end
-  cpu_info   = get_cpu_info()
+  cpu_info = get_cpu_info()
+  if !cpu_info.to_s.match(/[0-9]/)
+    table    = handle_table("title",title,"","")
+    cpu_info = get_general_cpu_info()
+    table    = handle_table("row","CPU",cpu_info,table)
+    table    = handle_table("end","","",table)
+    return
+  end
   if cpu_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-    table      = Terminal::Table.new :title => title, :headings => [ 'Bo.', 'Mo.', 'So.', 'Co.', 'Th.', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs' ]
+    row        = [ 'Bo.', 'Mo.', 'So.', 'Co.', 'Th.', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs' ]
+    table      = handle_table("title",title,row,"")
     sys_model  = get_sys_model()
     length     = cpu_info.length
     t_count    = 0
@@ -166,12 +183,10 @@ def process_cpu()
           t_count = t_count+1
         end
         # 'Board', 'Module', 'Socket', 'Core', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs'
-        row = [ board_no.to_s, board_no.to_s, cpu_no.to_s, core_no.to_s, cpu_thread.to_s, cpu_status, cpu_speed, cpu_mask, cp_cache, cpu_type, cpu_ids ]
-        table.add_row(row)
+        table = handle_table("row","",row,table)
       end
     end
-    handle_output(table)
-    handle_output("\n")
+    table = handle_table("end","","",table)
   else
     puts
     puts "No CPU information available"

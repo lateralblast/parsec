@@ -21,6 +21,12 @@ def get_sys_mem()
   file_array = exp_file_to_array(file_name)
   sys_mem    = file_array.grep(/^Memory size:/)
   sys_mem    = sys_mem[0]
+  if !sys_mem
+    file_name  = "/sysconfig/prtconf-vD.out"
+    file_array = exp_file_to_array(file_name)
+    sys_mem    = file_array.grep(/^Memory size:/)
+    sys_mem    = sys_mem[0]
+  end
   sys_mem    = sys_mem.split(": ")
   sys_mem    = sys_mem[1]
   sys_mem    = sys_mem.chomp
@@ -61,6 +67,9 @@ end
 
 def get_mem_info
   mem_info=search_prtdiag_info("Memory Configuration")
+  if !mem_info.to_s.match(/[0-9]/)
+    mem_info=search_prtdiag_info("Memory Device Sockets")
+  end
   return mem_info
 end
 
@@ -100,10 +109,27 @@ def process_memory()
       mem_dimm_no = 0
     end
     mem_info.each_with_index do |line,index|
-      if line.match(/[0-9][0-9]|D[0-9]$/)
+      if line.match(/[0-9][0-9]|D[0-9]$/) or line.match(/^DDR/)
         counter       = counter+1
         sys_board_no  = "1"
-        mem_line      = line.split(/\s+/)
+        if line.match(/in use/)
+          mem_line      = line.split(/ \s+/)
+        else
+          mem_line      = line.split(/\s+/)
+        end
+        if sys_model.match(/O\.E\.M\./)
+          mem_speed   = mem_line[0]
+          mem_status  = mem_line[1].split(/ /)[0..1].join(" ")
+          mem_dimm_no = mem_line[2]
+          mem_bank    = mem_line[3]
+          if index > 3
+            table = handle_table("line","","",table)
+          end
+          table       = handle_table("row","Bank",mem_bank,table)
+          table       = handle_table("row","DIMM",mem_dimm_no,table)
+          table       = handle_table("row","Speed",mem_speed,table)
+          table       = handle_table("row","Status",mem_status,table)
+        end
         if sys_model.match(/T[0-9]/) and !sys_model.match(/T[5-7]-/)
           mem_group = mem_line[-1]
           if sys_model.match(/T5[1,2][2,4]/)

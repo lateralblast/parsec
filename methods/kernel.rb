@@ -213,9 +213,13 @@ def process_modules()
           mod_info = ""
         end
         mod_status = load_array.select{|mod_state| mod_state.match(/ #{mod_name}/)}
-        mod_status = mod_status[0].gsub(/^\s+/,'')
-        if mod_status
-          mod_status = mod_status.split(/\s+/)[3]
+        if mod_status.to_s.match(/[0-9]|[A-Z]|[a-z]/)
+          mod_status = mod_status[0].gsub(/^\s+/,'')
+          if mod_status
+            mod_status = mod_status.split(/\s+/)[3]
+          else
+            mod_status = ""
+          end
         else
           mod_status = ""
         end

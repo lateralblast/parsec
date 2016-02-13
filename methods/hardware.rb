@@ -32,6 +32,8 @@ def get_model_from_hostid(hostid)
     model = "M6-32"
   when /^864/
     model = "M7-8"
+  when /^008/
+    model = "x86"
   else
     model = "unknown"
   end

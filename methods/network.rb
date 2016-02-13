@@ -449,7 +449,7 @@ def process_nic_info()
     row   = [ 'Interface', 'Path', 'Aggregate', 'Hostname', 'IP', 'Ether' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
-      if line.match(/network/)
+      if line.match(/network|igb/)
         line = line.gsub(/"/,"")
         (path,inst,driver) = line.split(/\s+/)
         nic_name = driver+inst

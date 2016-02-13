@@ -48,6 +48,7 @@ def process_firmware()
     end
     table = handle_table("end","","",table)
   else
+    puts
     puts "No firmware information available"
   end
   return

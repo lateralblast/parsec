@@ -31,7 +31,7 @@ end
 
 def process_other_serials()
   file_array = get_other_serials()
-  if file_array.to_s.match(/[0-9]|[A-Z]|[a-z]/)
+  if file_array.to_s.match(/[0-9]|[A-Z]|[a-z]/) and !file_array.to_s.match(/O\.E\.M\./)
     table = handle_table("title","Component Serial Information","","")
     file_array.each do |line|
       if line.match(/\|/)
@@ -43,6 +43,7 @@ def process_other_serials()
     end
     table = handle_table("end","","",table)
   else
+    puts
     puts "No component serial number information available"
   end
   return
