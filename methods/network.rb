@@ -438,21 +438,61 @@ def get_if_ip(nic_name)
   return ip
 end
 
+# Get link name from nic name
+
+def get_nic_link(nic_name)
+  file_name  = "/netinfo/etc/dladm/datalink.conf"
+  file_array = exp_file_to_array(file_name)
+  nic_link   = file_array.grep(/#{nic_name};$/)[0].split(/;/)[0].split(/=/)[1]
+  return nic_link
+end
+
+# Get IP from link
+
+def get_link_ip(nic_link)
+  file_name = "/sysconfig/hotplug_list_-v.out"
+  file_array = exp_file_to_array(file_name)
+  nic_ip     = file_array.grep(/#{nic_link}: hosts IP/)[0]
+  if nic_ip
+    nic_ip = nic_ip.split(/\s+/)[-2]
+  else
+    nic_ip = ""
+  end
+  return nic_ip
+end
+
+# Get hostname from link
+
+def get_link_hostname(nic_ip)
+  file_name  = "/etc/hosts"
+  file_array = exp_file_to_array(file_name)
+  nic_host   = file_array.grep(/#{nic_ip}/)[0].split(/\s+/)[-1]
+  return nic_host
+end
+
 # Process network interface information
 
 def process_nic_info()
   file_name  = "/etc/path_to_inst"
   file_array = exp_file_to_array(file_name)
   nic_list   = []
+  os_ver     = get_os_version()
   if file_array.to_s.match(/[A-Z]|[a-z][0-9]/)
     title = "Physical Network Interfaces"
-    row   = [ 'Interface', 'Path', 'Aggregate', 'Hostname', 'IP', 'Ether' ]
+    if os_ver.match(/11/)
+      row   = [ 'Interface', 'Link', 'Path', 'Aggregate', 'Hostname', 'IP', 'Ether' ]
+    else
+      row   = [ 'Interface', 'Path', 'Aggregate', 'Hostname', 'IP', 'Ether' ]
+    end
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       if line.match(/network|igb/)
         line = line.gsub(/"/,"")
         (path,inst,driver) = line.split(/\s+/)
         nic_name = driver+inst
+        if os_ver.match(/11/)
+          nic_link = get_nic_link(nic_name)
+        end
         nic_list.push(nic_name)
         aggr_nic = get_aggr_nic(nic_name)
         if $masked == 1
@@ -460,14 +500,29 @@ def process_nic_info()
           nic_ip   = "MASKED"
           nic_eth  = "MASKED"
         else
-          nic_host = get_if_hostname(nic_name)
-          nic_ip   = get_hostname_ip(nic_host)
+          if os_ver.match(/11/)
+            nic_ip   = get_link_ip(nic_link)
+            if nic_ip.match(/[0-9]/)
+              nic_host = get_link_hostname(nic_ip)
+              nic_eth  = get_if_ether(nic_link)
+            else
+              nic_host = ""
+              nic_eth  = ""
+            end
+          else
+            nic_host = get_if_hostname(nic_name)
+            nic_ip   = get_hostname_ip(nic_host)
+            nic_eth  = get_if_ether(nic_name)
+          end
           if !nic_ip.match(/[0-9]/)
             nic_ip = get_if_ip(nic_name)
           end
-          nic_eth  = get_if_ether(nic_name)
         end
-        row      = [ nic_name, path, aggr_nic, nic_host, nic_ip, nic_eth ]
+        if os_ver.match(/11/)
+          row      = [ nic_name, nic_link, path, aggr_nic, nic_host, nic_ip, nic_eth ]
+        else
+          row      = [ nic_name, path, aggr_nic, nic_host, nic_ip, nic_eth ]
+        end
         table    = handle_table("row","",row,table)
       end
     end
