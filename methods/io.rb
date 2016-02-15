@@ -52,6 +52,8 @@ def get_io_info()
     io_info = search_prtdiag_info("IO Configuration")
   when /V1|480R/
     io_info = search_prtdiag_info("IO Cards")
+  when /O\.E\.M\./
+    io_info = search_prtdiag_info("On-Board Devices")
   else
     io_info = search_prtdiag_info("IO Devices")
   end
@@ -150,7 +152,7 @@ def process_io()
       io_vendid  = ""
       io_devid   = ""
       counter = counter+1
-      if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD|PCI/) and !line.match(/Status/)
+      if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD|PCI|Onboard/) and !line.match(/Status/)
         io_desc     = ""
         io_name     = ""
         line_count  = line_count+1
@@ -162,6 +164,9 @@ def process_io()
         io_line      = line.split(/\s+/)
         sys_board_no = io_line[0]
         case sys_model
+        when /O\.E\.M\./
+          io_type = io_line[1]
+          io_name = io_line[2]
         when /V440/
           io_type   = io_line[0]
           io_speed  = io_line[1]
@@ -413,7 +418,9 @@ def process_io()
               (dev_name,drv_name,inst_no) = process_drv_info(io_path)
             end
           else
-            (dev_name,drv_name,inst_no) = process_drv_info(io_path)
+            if dev_name
+              (dev_name,drv_name,inst_no) = process_drv_info(io_path)
+            end
           end
         end
         if drv_name

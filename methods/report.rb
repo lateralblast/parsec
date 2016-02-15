@@ -216,6 +216,9 @@ def config_report(report,report_type)
   if report_type.match(/all|ipmi/)
     process_ipmi()
   end
+  if report_type.match(/all|slots/)
+    process_upgrade_slots()
+  end
   handle_output("\n")
   return
 end

@@ -305,3 +305,5 @@
 # Added support for OEM x86 machines
 # 1.5.2: Sat 13 Feb 2016 23:26:10 AEDT
 # Improved physical network interface reporting for Solaris 11
+# 1.5.3: Mon 15 Feb 2016 15:49:22 AEDT
+# Added Upgradeable slot reporting 

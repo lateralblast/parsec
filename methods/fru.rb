@@ -1,5 +1,34 @@
 # FRU related code
 
+# Get upgradeable slot information
+
+def get_upgrade_slot_info()
+  slot_info = search_prtdiag_info("Upgradeable Slots")
+  return slot_info
+end
+
+# Process slot information
+
+def process_upgrade_slots()
+  slot_info = get_upgrade_slot_info()
+  if slot_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title = "Upgradeable Slot Information"
+    row   = [ 'ID', 'Status', 'Type', 'Description' ]
+    table = handle_table("title",title,row,"")
+    slot_info.each do |line|
+      if line.match(/^[0-9]/)
+        row   = line.split(/ \s+/)
+        table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  else
+    puts
+    puts "No Upgradeable slot information available"
+  end
+  return
+end
+
 # Get FRU information
 
 def get_fru_info()
@@ -10,10 +39,10 @@ end
 # Process FRU information
 
 def process_fru()
-  fru_info   = get_fru_info()
+  fru_info = get_fru_info()
   if fru_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-    title      = "FRU Information"
-    row        = [ 'Location', 'Name', 'Status' ]
+    title = "FRU Information"
+    row   = [ 'Location', 'Name', 'Status' ]
     table = handle_table("title",title,row,"")
     fru_info.each do |line|
       if line.match(/^SYS/)

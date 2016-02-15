@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.5.2
+# Version:      1.5.3
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -177,6 +177,7 @@ report["sensors"]  = "Report on Sensor information"
 report["serial"]   = "Report on Chassis Serial information"
 report["serials"]  = "Report on Component Serial information"
 report["services"] = "Report on Services information"
+report["slots"]    = "Report on Upgradeable slot information"
 report["snmp"]     = "Report on SNMP information"
 report["ssh"]      = "Report on SSH information"
 report["su"]       = "Report on SU information"
