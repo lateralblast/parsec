@@ -22,49 +22,49 @@ Some of the features include:
 
 The reporting options include:
 
-- Report on aggregate information
-- Report on everything
-- Report on coreadm information
+- Report on Aggregate information
+- Report on Everything
+- Report on Coreadm information
 - Report on CPU information
-- Report on cron information
-- Report on crypto information
+- Report on Cron information
+- Report on Crypto information
 - Report on CUPS information
-- Report on disks
-- Report on dumpadm information
+- Report on Disks
+- Report on Dumpadm information
 - Report on EEPROM
-- Report on elfsign information
+- Report on Elfsign information
 - Report on Emulex FC devices
 - Report on Explore information
 - Report on Firmware information
 - Report on FRU information
-- Report on filesystem information
-- Report on host information
+- Report on Filesystem information
+- Report on Firmware information
+- Report on FRU information
+- Report on Host information
 - Report on inetadm information
 - Report on inetd information
 - Report on inetinit information
 - Report on IPMI information
-- Report on all IO
+- Report on IO information
 - Report on LDom information
-- Report on link information
-- Report on locale information
-- Report on locale information
+- Report on Link information
+- Report on Locale information
 - Report on Live Upgrade information
-- Report on kernel information
-- Report on keyserv information
+- Report on Kernel information
+- Report on Keyserv information
 - Report on Memory information
 - Report on Kernel Module information
-- Report on Kernel Module information
-- Report on mount information
+- Report on Mount information
 - Report on ndd information
-- Report on network information
+- Report on Network information
 - Report on NTP information
 - Report on OBP information
 - Report on OS information
 - Report on package information
 - Report on PAM information
-- Report on password information
-- Report on patch information
-- Report on power information
+- Report on Password information
+- Report on Patch information
+- Report on Power information
 - Report on Qlogic FC devices
 - Report on Security information
 - Report on Sendmail settings
@@ -76,11 +76,12 @@ The reporting options include:
 - Report on SSH information
 - Report on SU information
 - Report on Suspend information
-- Report on syslog information
-- Report on system information
-- Report on swap information
+- Report on Syslog information
+- Report on System information
+- Report on Swap information
 - Report on TCP information
 - Report on Telnet information
+- Report on Upgradeable slot information
 - Report on UDP information
 - Report on VNIC information
 - Report on Veritas information
