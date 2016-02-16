@@ -306,4 +306,6 @@
 # 1.5.2: Sat 13 Feb 2016 23:26:10 AEDT
 # Improved physical network interface reporting for Solaris 11
 # 1.5.3: Mon 15 Feb 2016 15:49:22 AEDT
-# Added Upgradeable slot reporting 
+# Added Upgradeable slot reporting
+# 1.5.4: Tue 16 Feb 2016 14:20:28 AEDT
+# Added PCI scan reporting

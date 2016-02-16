@@ -219,6 +219,9 @@ def config_report(report,report_type)
   if report_type.match(/all|slots/)
     process_upgrade_slots()
   end
+  if report_type.match(/all|pci/)
+    process_pci_scan()
+  end
   handle_output("\n")
   return
 end

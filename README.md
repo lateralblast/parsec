@@ -64,6 +64,7 @@ The reporting options include:
 - Report on PAM information
 - Report on Password information
 - Report on Patch information
+- Report on PCI information
 - Report on Power information
 - Report on Qlogic FC devices
 - Report on Security information
