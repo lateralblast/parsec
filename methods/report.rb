@@ -23,7 +23,14 @@ end
 
 # Do configuration report
 
-def config_report(report,report_type)
+def config_report(report,report_type,host_name)
+  if $output_mode == "html"
+    puts "<html>"
+    puts "<head>"
+    puts "<title>Explorer report for #{host_name}</title>"
+    puts "</head>"
+    puts "<body>"
+  end
   if report_type.match(/all|host/)
     process_host()
   end
@@ -222,6 +229,10 @@ def config_report(report,report_type)
   if report_type.match(/all|pci/)
     process_pci_scan()
   end
+  if $output_mode == "html"
+    puts "</body>"
+    puts "</html>"
+  end
   handle_output("\n")
   return
 end
@@ -293,6 +304,17 @@ def handle_output(output)
   if $output_mode == "text"
     print output
   end
+  if $output_mode == "html"
+    if output.class == String
+      puts "<p>#{output}</p>"
+    else
+      puts "<p>"
+      output.each do |line|
+        puts "#{line}"
+      end
+      puts "<br>"
+    end
+  end
   if $output_mode == "file"
     file = File.open($output_file,"a")
     file.write(output)
@@ -307,18 +329,37 @@ end
 def handle_table(type,title,row,table)
   if type.match(/title/)
     handle_output("\n")
+    if $output_mode == "html"
+      table = []
+      table.push("<h1>#{title}</h1>")
+      table.push("<table border=\"1\">")
+    end
     if row.to_s.match(/[A-z]/)
-      table = Terminal::Table.new :title => title, :headings => row
+      if $output_mode == "html"
+        row.each do |heading|
+          table.push("<th>#{heading}</th>")
+        end
+      else
+        table = Terminal::Table.new :title => title, :headings => row
+      end
     else
-      table = Terminal::Table.new :title => title, :headings => ['Item', 'Value']
+      if $output_mode == "html"
+        table.push("<th>Item</th>")
+        table.push("<th>Value</th>")
+      else
+        table = Terminal::Table.new :title => title, :headings => ['Item', 'Value']
+      end
     end
   end
   if type.match(/end/)
+    table.push("</table>")
     handle_output(table)
     handle_output("\n")
   end
   if type.match(/line/)
-    table.add_separator
+    if !$output_mode == "html"
+      table.add_separator
+    end
   end
   if type.match(/row/)
     if $masked == 1
@@ -334,7 +375,15 @@ def handle_table(type,title,row,table)
       value = row[1]
       $host_info[item] = value
     end
-    table.add_row(row)
+    if $output_mode == "html"
+      table.push("<tr>")
+      row.each do |value|
+        table.push("<td>#{value}</td>")
+      end
+      table.push("</tr>")
+    else
+      table.add_row(row)
+    end
   end
   return table
 end

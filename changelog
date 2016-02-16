@@ -309,3 +309,5 @@
 # Added Upgradeable slot reporting
 # 1.5.4: Tue 16 Feb 2016 14:20:28 AEDT
 # Added PCI scan reporting
+# 1.5.5: Tue 16 Feb 2016 17:15:02 AEDT
+# Added very basic HTML output

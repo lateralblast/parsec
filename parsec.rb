@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.5.4
+# Version:      1.5.5
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -59,7 +59,7 @@ $output_mode  = "text"
 
 # Options
 
-options   = "abcdefhlmvABCDEFHIKLMOPSTVZd:i:s:w:R:o:p:"
+options   = "abcdefhlmvABCDEFHIKLMOPSTVWZd:i:s:w:R:o:p:"
 
 # Check for pigz to accelerate decompression
 
@@ -306,9 +306,14 @@ end
 
 # Output mode
 
+
 if opt["T"]
   if opt["R"] or opt["A"] or opt["F"] or opt["B"] or opt["Z"]
-    $output_mode = "text"
+    if opt["W"]
+      $output_mode = "html"
+    else
+      $output_mode = "text"
+    end
   else
     puts "Report type not specified"
     puts "Must use -R, -A, -B, -Z, or -F"
@@ -324,7 +329,11 @@ else
       exit
     end
   else
-    $output_mode = "text"
+    if opt["W"]
+      $output_mode = "html"
+    else
+      $output_mode = "text"
+    end
   end
 end
 
@@ -487,74 +496,74 @@ end
 
 if opt["Z"]
   report_type = "all"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["I"]
   report_type = "io"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["D"]
   report_type = "disk"
   $do_disks = 1
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["S"]
   report_type = "os"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["E"]
   report_type = "eeprom"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["Y"]
   report_type = "system"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["Z"]
   report_type = "zones"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["K"]
   report_type = "kernel"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["M"]
   report_type = "memory"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["C"]
   report_type = "cpu"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["H"]
   report_type = "host"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
 if opt["L"]
   report_type = "ldoms"
-  config_report(report,report_type)
+  config_report(report,report_type,host_name)
   exit
 end
 
@@ -568,7 +577,7 @@ if opt["R"]
       print_usage(options,report)
       exit
     end
-    config_report(report,report_type)
+    config_report(report,report_type,host_name)
   end
 end
 

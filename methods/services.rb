@@ -27,7 +27,7 @@ def process_service_deps()
         name = name[1..-1].join(" ")
       end
       if line.match(/^dep/)
-        if deps.match(/[a-z]/) 
+        if deps.match(/[a-z]/)
           deps = deps+"\n"+line.split(/\s+/)[2]
         else
           deps = line.split(/\s+/)[2]
@@ -70,7 +70,7 @@ def process_service_descs()
         name = name[1..-1].join(" ")
       end
       if line.match(/^dep/)
-        if deps.match(/[a-z]/) 
+        if deps.match(/[a-z]/)
           deps = deps+"\n"+line.split(/\s+/)[2]
         else
           deps = line.split(/\s+/)[2]
@@ -94,7 +94,8 @@ def process_services()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     title = "Service Statuses"
-    table = Terminal::Table.new :title => title, :headings => [ 'Service', 'Status', 'Recommended', 'Complies' ]
+    row   = [ 'Service', 'Status', 'Recommended', 'Complies' ]
+    table = handle_table("title",title,row,"")
     file_array.each do |line|
       items   = line.split(/\s+/)
       state   = items[0]
@@ -126,12 +127,11 @@ def process_services()
         complies = "N/A"
       end
       if !service.match(/FMRI/)
-        row = [service,curr_val,rec_val,complies]
-        table.add_row(row)
+        row   = [service,curr_val,rec_val,complies]
+        table = handle_table("row","",row,table)
       end
     end
-    handle_output(table)
-    handle_output("\n")
+    table = handle_table("end","","",table)
   else
     puts
     puts "No service manifest information available"
