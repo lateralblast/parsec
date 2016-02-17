@@ -352,9 +352,12 @@ def handle_table(type,title,row,table)
     end
   end
   if type.match(/end/)
-    table.push("</table>")
-    handle_output(table)
-    handle_output("\n")
+    if $output_mode == "html"
+      table.push("</table>")
+    else
+      handle_output(table)
+      handle_output("\n")
+    end
   end
   if type.match(/line/)
     if !$output_mode == "html"
