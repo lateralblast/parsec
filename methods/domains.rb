@@ -23,9 +23,6 @@ def process_domain()
         items = line.split(/: /)
         item  = items[0]
         value = items[1]
-        if $masked == 1
-          value = "MASKED"
-        end
         row   = [ item, value ]
         table = handle_table("row","",row,table)
       end

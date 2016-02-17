@@ -313,3 +313,5 @@
 # Added very basic HTML output
 # 1.5.6: Wed 17 Feb 2016 22:39:37 AEDT
 # Fixed bug with output code
+# 1.5.7: Thu 18 Feb 2016 09:26:40 AEDT
+# Added tab delimited output that can be piped into something else

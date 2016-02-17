@@ -80,14 +80,11 @@ def process_disk_info()
       line = line.gsub(/^\s+/,"")
       if line.match(/^c/)
         info   = line.split(/\t/)
-        if $masked == 1
-          info[2] = "MASKED"
-        end
-        disk    = info[0]
-        id      = get_disk_id(disk)
-        vendor  = info[1]
-        serial  = info[2]
-        port    = info[3]
+        disk   = info[0]
+        id     = get_disk_id(disk)
+        vendor = info[1]
+        serial = info[2]
+        port   = info[3]
         if disk
           if disk_paths.to_s.match(/[0-9]/)
             if disk_paths[disk]

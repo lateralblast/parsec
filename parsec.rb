@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.5.6
+# Version:      1.5.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -59,7 +59,7 @@ $output_mode  = "text"
 
 # Options
 
-options   = "abcdefhlmvABCDEFHIKLMOPSTVWZd:i:s:w:R:o:p:"
+options   = "abcdefhlmpvABCDEFHIKLMOPSTVWZd:i:s:w:R:o:"
 
 # Check for pigz to accelerate decompression
 
@@ -312,7 +312,15 @@ if opt["T"]
     if opt["W"]
       $output_mode = "html"
     else
-      $output_mode = "text"
+      if opt["p"]
+        $output_mode = "pipe"
+      else
+        if opt["c"]
+          $output_mode = "csv"
+        else
+          $output_mode = "text"
+        end
+      end
     end
   else
     puts "Report type not specified"
@@ -332,7 +340,15 @@ else
     if opt["W"]
       $output_mode = "html"
     else
-      $output_mode = "text"
+      if opt["p"]
+        $output_mode = "pipe"
+      else
+        if opt["c"]
+          $output_mode = "csv"
+        else
+          $output_mode = "text"
+        end
+      end
     end
   end
 end

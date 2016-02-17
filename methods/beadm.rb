@@ -21,21 +21,10 @@ def process_beadm()
       line       = line.chomp
       line       = line.gsub(/^\s+/,"")
       items      = line.split(/\s+/)
-      if $masked == 1
-        be_name = "MASKED"
-      else
-        be_name    = items[0]
-      end
+      be_name    = items[0]
       if !be_name.match(/BE|--/)
         be_active  = items[1]
         be_mount   = items[2]
-        if $masked == 1
-          if be_mount
-            if !be_mount.match(/^\/$|^\/var$|^\/export$|^\/usr$|^\/opt$/)
-              be_mount = "MASKED"
-            end
-          end
-        end
         be_space   = items[3]
         be_policy  = items[4]
         be_created = items[5]

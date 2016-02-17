@@ -301,8 +301,19 @@ end
 # Handle output
 
 def handle_output(output)
-  if $output_mode == "text"
-    print output
+  if $output_mode == "text" or $output_mode == "pipe"
+    if $output_mode == "pipe"
+      output = output.to_s
+      output = output.split(/\n/)
+      output.each do |line|
+        line = line.gsub(/^\s+/,"")
+        if line.match(/[0-9]|[A-Z]|[a-z]/)
+          puts line
+        end
+      end
+    else
+      print output
+    end
   end
   if $output_mode == "html"
     if output.class == String
@@ -340,14 +351,24 @@ def handle_table(type,title,row,table)
           table.push("<th>#{heading}</th>")
         end
       else
-        table = Terminal::Table.new :title => title, :headings => row
+        if $output_mode == "pipe"
+          title = "::"+title
+          table = Terminal::Table.new :title => title, :style => { :border_x => "", :border_y => "", :border_i => "" }, :headings => row
+        else
+          table = Terminal::Table.new :title => title, :headings => row
+        end
       end
     else
       if $output_mode == "html"
         table.push("<th>Item</th>")
         table.push("<th>Value</th>")
       else
-        table = Terminal::Table.new :title => title, :headings => ['Item', 'Value']
+        if $output_mode == "pipe"
+          title = "::"+title
+          table = Terminal::Table.new :title => title, :style => { :border_x => "", :border_y => "", :border_i => "" }, :headings => ['Item', 'Value']
+        else
+          table = Terminal::Table.new :title => title, :headings => ['Item', 'Value']
+        end
       end
     end
   end
@@ -366,8 +387,21 @@ def handle_table(type,title,row,table)
   end
   if type.match(/row/)
     if $masked == 1
-      if title.match(/Serial|WWN|Domain|Name|directory|nvram|Customer|Contract|User|Email|Phone|Country|Host Name|Host ID|Volume|UUID|MAC|IP|Group|[T,t]ime|[D,d]ate/)
-        row = "MASKED"
+      if row.class == String
+        if title.match(/Serial|WWN|Domain|Name|Mount|[D,d]irectory|nvram|Customer|Contract|User|Email|Phone|Country|Host Name|Host ID|Volume|UUID|MAC|IP|Group|[T,t]ime|[D,d]ate/)
+          row = "MASKED"
+        end
+      else
+        if row
+          row.each.with_index do |value,index|
+            case row
+            when /[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]/
+              row[index] = "MASKED"
+            else
+              row[index] = value
+            end
+          end
+        end
       end
     end
     if title.match(/[A-z]/)
