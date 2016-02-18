@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.6.1
+# Version:      1.6.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -138,7 +138,6 @@ report["disk"]     = "Report on disks"
 report["dumpadm"]  = "Report on dumpadm information"
 report["eeprom"]   = "Report on EEPROM"
 report["elfsign"]  = "Report on elfsign information"
-report["emulex"]   = "Report on Emulex FC devices"
 report["explorer"] = "Report on Explore information"
 report["firmware"] = "Report on Firmware information"
 report["fru"]      = "Report on FRU information"
@@ -170,7 +169,6 @@ report["pam"]      = "Report on PAM information"
 report["password"] = "Report on password information"
 report["patch"]    = "Report on patch information"
 report["power"]    = "Report on power information"
-report["qlogic"]   = "Report on Qlogic FC devices"
 report["security"] = "Report on Security information"
 report["sendmail"] = "Report on Sendmail settings"
 report["sensors"]  = "Report on Sensor information"

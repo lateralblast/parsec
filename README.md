@@ -33,7 +33,6 @@ The reporting options include:
 - Report on Dumpadm information
 - Report on EEPROM
 - Report on Elfsign information
-- Report on Emulex FC devices
 - Report on Explore information
 - Report on Firmware information
 - Report on FRU information
@@ -66,7 +65,6 @@ The reporting options include:
 - Report on Patch information
 - Report on PCI information
 - Report on Power information
-- Report on Qlogic FC devices
 - Report on Security information
 - Report on Sendmail settings
 - Report on Sensor information

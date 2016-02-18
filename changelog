@@ -323,5 +323,6 @@
 # Added hostids to hardware determination
 # 1.6.1: Thu 18 Feb 2016 14:41:37 AEDT
 # Fixed file name date resolution
-
+# 1.6.2: Thu 18 Feb 2016 16:38:59 AEDT
+# Improved help for reporting options
 

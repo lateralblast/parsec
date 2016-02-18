@@ -24,6 +24,7 @@ end
 # Do configuration report
 
 def config_report(report,report_type,host_name)
+  valid_sw = 0
   if $output_mode == "html"
     puts "<html>"
     puts "<head>"
@@ -32,57 +33,74 @@ def config_report(report,report_type,host_name)
     puts "<body>"
   end
   if report_type.match(/all|host/)
+    valid_sw = 1
     process_host()
   end
   if report_type.match(/all|security|ntp/)
     process_ntp()
   end
   if report_type.match(/all|inetadm/)
+    valid_sw = 1
     process_inetadm()
   end
   if report_type.match(/all|security|pam/)
+    valid_sw = 1
     process_pam()
   end
   if report_type.match(/all|syslog/)
+    valid_sw = 1
     process_syslog()
   end
   if report_type.match(/all|cups/)
+    valid_sw = 1
     process_cups()
   end
   if report_type.match(/all|obp/)
+    valid_sw = 1
     process_obp()
   end
   if report_type.match(/all|eeprom/)
+    valid_sw = 1
     process_eeprom()
   end
   if report_type.match(/all|os|core/)
+    valid_sw = 1
     process_coreadm()
   end
   if report_type.match(/all|os|dump/)
+    valid_sw = 1
     process_dumpadm()
   end
   if report_type.match(/all|os|exp/)
+    valid_sw = 1
     process_explorer()
   end
   if report_type.match(/all|os/)
+    valid_sw = 1
     process_system()
   end
   if report_type.match(/all|cpu/)
+    valid_sw = 1
     process_cpu()
   end
   if report_type.match(/all|mem/)
+    valid_sw = 1
     process_memory()
   end
   if report_type.match(/all|disk/)
+    valid_sw = 1
     process_disk_info()
   end
   if report_type.match(/all|io/)
+    valid_sw = 1
     process_io()
   end
   if report_type.match(/all|swap/)
+    valid_sw = 1
     process_swap()
   end
   if report_type.match(/all|vnic/)
+    valid_sw = 1
     os_ver = get_os_version()
     if get_os_version.match(/11/)
       process_vnic()
@@ -92,6 +110,7 @@ def config_report(report,report_type,host_name)
     end
   end
   if report_type.match(/all|link/)
+    valid_sw = 1
     os_ver = get_os_version()
     if get_os_version.match(/11/)
       process_link()
@@ -101,6 +120,7 @@ def config_report(report,report_type,host_name)
     end
   end
   if report_type.match(/all|kernel|ndd/)
+    valid_sw = 1
     process_etc_system()
     process_ndd_ip_info()
     process_ndd_tcp_info()
@@ -110,27 +130,34 @@ def config_report(report,report_type,host_name)
     process_ndd_sctp_info()
   end
   if report_type.match(/all|security|elfsign/)
+    valid_sw = 1
     process_elfsign()
   end
   if report_type.match(/all|zone/)
+    valid_sw = 1
     process_zones()
   end
   if report_type.match(/all|security|system|passwd|password|login|sendmail|inetinit|su|inet|cron|keyserv|telnet|power|suspend|ssh|crypto|snmp|cups/)
     report_type.gsub(/password/,"passwd")
+    valid_sw = 1
     process_security(report_type)
   end
   if report_type.match(/all|security|inetd/)
+    valid_sw = 1
     process_inetd()
   end
   if report_type.match(/all|^fs|filesystem/)
+    valid_sw = 1
     process_file_systems()
   end
   if report_type.match(/all|^fs|filesystem|mount/)
+    valid_sw = 1
     if $masked == 0
       process_mounts()
     end
   end
   if report_type.match(/all|filesystem|zfs/)
+    valid_sw = 1
     os_ver = get_os_version()
     if os_ver.match(/10|11/)
       process_zfs()
@@ -140,11 +167,13 @@ def config_report(report,report_type,host_name)
     end
   end
   if report_type.match(/all|services/)
+    valid_sw = 1
     process_service_descs()
     process_services()
     process_service_deps()
   end
   if report_type.match(/all|lu|liveupgrade|be/)
+    valid_sw = 1
     os_ver = get_os_version()
     if os_ver.match(/11/)
       process_beadm()
@@ -153,6 +182,7 @@ def config_report(report,report_type,host_name)
     end
   end
   if report_type.match(/all|svcprop/)
+    valid_sw = 1
     os_ver = get_os_version()
     if os_ver.match(/11/)
       process_svcprop()
@@ -162,15 +192,19 @@ def config_report(report,report_type,host_name)
     end
   end
   if report_type.match(/all|locale/)
+    valid_sw = 1
     process_locale()
   end
   if report_type.match(/all|modinfo|module/)
+    valid_sw = 1
     process_modules()
   end
   if report_type.match(/all|package/)
+    valid_sw = 1
     process_packages()
   end
   if report_type.match(/all|patch/)
+    valid_sw = 1
     os_ver = get_os_version
     if !os_ver.match(/11/)
       process_patches()
@@ -180,53 +214,69 @@ def config_report(report,report_type,host_name)
     end
   end
   if report_type.match(/all|tcp/)
+    valid_sw = 1
     process_network("tcp")
   end
   if report_type.match(/all|udp/)
+    valid_sw = 1
     process_network("udp")
   end
   if report_type.match(/all|ldom/)
+    valid_sw = 1
     process_ldom()
   end
   if report_type.match(/all|^dom/)
+    valid_sw = 1
     process_domain()
   end
   if report_type.match(/all|fru/)
+    valid_sw = 1
     process_fru()
   end
   if report_type.match(/all|sensor/)
+    valid_sw = 1
     process_sensors()
   end
   if report_type.match(/all|handbook/)
+    valid_sw = 1
     process_handbook()
   end
   if report_type.match(/all|veritas|vx/)
+    valid_sw = 1
     process_veritas()
   end
   if report_type.match(/all|aggr|network/)
+    valid_sw = 1
     process_aggr()
   end
   if report_type.match(/all|network/)
+    valid_sw = 1
     process_nic_info()
   end
   if report_type.match(/^serial$/)
+    valid_sw = 1
     serial = get_chassis_serial()
     puts serial
     exit
   end
   if report_type.match(/all|serials/)
+    valid_sw = 1
     process_serials()
   end
   if report_type.match(/all|firmware/)
+    valid_sw = 1
     process_firmware()
   end
   if report_type.match(/all|ipmi/)
+    valid_sw = 1
     process_ipmi()
   end
   if report_type.match(/all|slots/)
+    valid_sw = 1
     process_upgrade_slots()
   end
   if report_type.match(/all|pci/)
+    valid_sw = 1
     process_pci_scan()
   end
   if $output_mode == "html"
@@ -234,6 +284,10 @@ def config_report(report,report_type,host_name)
     puts "</html>"
   end
   handle_output("\n")
+  if valid_sw == 0
+    report_help(report,report_type)
+    handle_output("\n")
+  end
   return
 end
 

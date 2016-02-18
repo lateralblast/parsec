@@ -96,7 +96,7 @@ def process_security(report_type)
     end
   end
   case report_type
-  when /all|security|cups/
+  when /all|security|cups|snmp/
     process_cups_snmp()
   when /all|security|cups/
     process_cups()
