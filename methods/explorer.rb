@@ -273,9 +273,13 @@ def list_explorers()
           else
             host_name  = host_info[2].split(/-/)[0..-2].join("-")
           end
-          date_info = host_info[5..6].join(":")+" "+host_info[4]+"/"+host_info[3]+"/"+host_info[2].split(/-/)[1]
-          table_row = [ host_name, model_name, date_info, host_id, exp_file ]
-          table     = handle_table("row","",table_row,table)
+          year_info  = host_info[2].split(/-/)[-1].split(/\./)[0]
+          month_info = host_info[3]
+          day_info   = host_info[4]
+          time_info  = host_info[5..6].join(":")
+          date_info  = time_info+" "+day_info+"/"+month_info+"/"+year_info
+          table_row  = [ host_name, model_name, date_info, host_id, exp_file ]
+          table      = handle_table("row","",table_row,table)
         end
       end
       table = handle_table("end","","",table)
