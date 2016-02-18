@@ -319,3 +319,7 @@
 # Fixed listing explorers to support hyphenated host names
 # 1.5.9: Thu 18 Feb 2016 12:58:51 AEDT
 # Fixed listing explorers to correctly show date with hyphenated host names
+# 1.6.0: Thu 18 Feb 2016 13:14:46 AEDT
+# Added hostids to hardware determination
+
+
