@@ -102,7 +102,7 @@ def exp_file_to_array(file_name)
         extract_exp_file(arc_file)
       end
     end
-    file_array = IO.readlines ext_file
+    file_array = File.readlines(ext_file,:encoding => 'ISO-8859-1')
   else
     if $verbose == 1
       handle_output("File #{file_name} does not exist\n")

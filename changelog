@@ -327,4 +327,5 @@
 # Improved help for reporting options
 # 1.6.3: Thu 18 Feb 2016 18:04:39 AEDT
 # Fixed module reporting
-
+# 1.6.4: Thu 18 Feb 2016 18:29:47 AEDT
+# Fixed CPU reporting

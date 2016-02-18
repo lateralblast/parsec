@@ -24,7 +24,12 @@ end
 def get_general_cpu_info()
   file_name  = "/sysconfig/prtdiag-v.out"
   file_array = exp_file_to_array(file_name)
-  cpu_info   = file_array.grep(/CPU/)[0].chomp
+  cpu_info   = file_array.grep(/CPU/)[0]
+  if cpu_info
+    cpu_info = cpu_info.chomp
+  else
+    cpu_info = ""
+  end
   return cpu_info
 end
 
@@ -80,10 +85,8 @@ def process_cpu()
       c_ratio = 16
     end
     title = "Domain CPU Information"
-    #table = handle_table("title","Domain CPU Information","","")
   else
     title = "CPU Information"
-    #table = handle_table("title","CPU Information","","")
   end
   cpu_info = get_cpu_info()
   if !cpu_info.to_s.match(/[0-9]/)
@@ -100,8 +103,10 @@ def process_cpu()
     length     = cpu_info.length
     t_count    = 0
     board_no   = "1"
+    cpu_module = ""
     cpu_no     = "1"
     core_no    = ""
+    cpu_thread = ""
     cpu_status = ""
     cpu_speed  = ""
     cpu_mask   = ""
@@ -174,7 +179,6 @@ def process_cpu()
             cpu_id   = cpu_id.to_i.chr.unpack('H*')
             cpu_id   = cpu_id[0]
             cpu_type = get_cpu_type(cpu_id)
-      #     cpu_family=get_cpu_family(cpu_mask)
           end
         end
         if sys_model.match(/T[0-9]|M10-/)
@@ -182,7 +186,7 @@ def process_cpu()
           core_no = (t_count / t_ratio)
           t_count = t_count+1
         end
-        # 'Board', 'Module', 'Socket', 'Core', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs'
+        row   = [ board_no, cpu_module, cpu_no, core_no, cpu_status, cpu_thread, cpu_speed, cpu_mask, cpu_cache, cpu_type, cpu_ids ]
         table = handle_table("row","",row,table)
       end
     end
