@@ -271,7 +271,7 @@ def list_explorers()
             host_id   = "MASKED"
             exp_file  = exp_file.gsub(/#{orig_id}/,host_id).gsub(/#{orig_name}/,host_name)
           else
-            host_name  = host_info[2].split(/-/)[0]
+            host_name  = host_info[2].split(/-/)[0..-2].join("-")
           end
           date_info = host_info[5..6].join(":")+" "+host_info[4]+"/"+host_info[3]+"/"+host_info[2].split(/-/)[1]
           table_row = [ host_name, model_name, date_info, host_id, exp_file ]

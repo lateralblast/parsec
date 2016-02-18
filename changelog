@@ -315,3 +315,6 @@
 # Fixed bug with output code
 # 1.5.7: Thu 18 Feb 2016 09:26:40 AEDT
 # Added tab delimited output that can be piped into something else
+# 1.5.8: Thu 18 Feb 2016 12:05:52 AEDT
+# Fixed listing explorers to support hyphenated names
+
