@@ -462,12 +462,13 @@ end
 # Get file date
 
 def get_file_date()
-  file_year  = search_file_name(2)
-  file_year  = file_year.to_s.split("-")
-  file_year  = file_year[1].to_s
-  file_month = search_file_name(3)
-  file_day   = search_file_name(4)
-  file_date  = file_day+"/"+file_month+"/"+file_year
+  host_info  = Pathname.new($exp_file)
+  host_info  = host_info.basename
+  host_info  = host_info.to_s.split(/\./)
+  year_info  = host_info[2].split(/-/)[-1].split(/\./)[0]
+  month_info = host_info[3]
+  day_info   = host_info[4]
+  file_date  = day_info+"/"+month_info+"/"+year_info
   return file_date
 end
 

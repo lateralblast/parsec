@@ -321,5 +321,7 @@
 # Fixed listing explorers to correctly show date with hyphenated host names
 # 1.6.0: Thu 18 Feb 2016 13:14:46 AEDT
 # Added hostids to hardware determination
+# 1.6.1: Thu 18 Feb 2016 14:41:37 AEDT
+# Fixed file name date resolution
 
 
