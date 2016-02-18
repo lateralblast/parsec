@@ -325,4 +325,6 @@
 # Fixed file name date resolution
 # 1.6.2: Thu 18 Feb 2016 16:38:59 AEDT
 # Improved help for reporting options
+# 1.6.3: Thu 18 Feb 2016 18:04:39 AEDT
+# Fixed module reporting
 

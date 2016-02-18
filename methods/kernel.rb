@@ -204,13 +204,18 @@ def process_modules()
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       if !line.match(/Loadaddr/)
-        mod_info = line[29..-1]
-        mod_info = mod_info.split(/ \(/)
-        mod_name = mod_info[0]
-        if mod_info[1]
-          mod_info = mod_info[1].gsub(/\)/,'')
+        mod_name = line[29..-1]
+        mod_name = mod_name.split(/ \(/)[0]
+        if mod_name.to_s.match(/\-/)
+          mod_name = line.split(/\s+/)[6]
+        end
+        if mod_name.match(/^\(/)
+          mod_name = line.split(/\s+/)[5]
+        end
+        if line.match(/\(/)
+          mod_info = line.split(/\(/)[1].split(/\)/)[0]
         else
-          mod_info = ""
+          mod_info = mod_name
         end
         mod_status = load_array.select{|mod_state| mod_state.match(/ #{mod_name}/)}
         if mod_status.to_s.match(/[0-9]|[A-Z]|[a-z]/)
