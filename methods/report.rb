@@ -371,7 +371,9 @@ def handle_output(output)
   end
   if $output_mode == "html"
     if output.class == String
-      puts "<p>#{output}</p>"
+      if output.match(/[A-z]/)
+        puts "<p>#{output}</p>"
+      end
     else
       puts "<p>"
       output.each do |line|
@@ -429,6 +431,7 @@ def handle_table(type,title,row,table)
   if type.match(/end/)
     if $output_mode == "html"
       table.push("</table>")
+      handle_output(table)
     else
       handle_output(table)
       handle_output("\n")
