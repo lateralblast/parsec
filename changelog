@@ -331,3 +331,6 @@
 # Fixed CPU reporting
 # 1.6.5: Fri 19 Feb 2016 15:23:46 AEDT
 # Added handling for null TZ
+# 1.6.6: Fri 19 Feb 2016 15:41:40 AEDT
+# More handling fixes for TZ
+

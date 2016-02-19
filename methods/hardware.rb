@@ -38,6 +38,8 @@ def get_model_from_hostid(hostid)
     model = "IBM System x3200 M3"
   when /^000581/
     model = "HP EliteBook Folio 9480m"
+  when /^1a35/
+    model = "UCSC-C22-M3S "
   else
     model = "unknown"
   end
