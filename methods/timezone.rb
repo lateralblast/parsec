@@ -8,7 +8,12 @@ def get_time_zone()
   if !file_array
     time_zone = ""
   else
-    time_zone = file_array.grep(/^TZ/)[0].split("=")[1].chomp
+    time_zone = file_array.grep(/^TZ/)[0]
+    if time_zone
+      if time_zone.match(/[A-Z]/)
+        time_zone = time_zone.split(/\=/)[1].chomp
+      end
+    end
   end
   return time_zone
 end
