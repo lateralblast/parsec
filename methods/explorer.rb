@@ -30,11 +30,7 @@ end
 
 def check_exp_file_exists(file_name)
   if !$exp_file_list[0]
-    if $pigz_bin.match(/pigz/)
-      $exp_file_list = %x[cd #{$work_dir} ; pigz -dc #{$exp_file} | tar -tf -].split("\n")
-    else
-      $exp_file_list = %x[cd #{$work_dir} ; gzip -dc #{$exp_file} | tar -tf -].split("\n")
-    end
+    $exp_file_list = %x[cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t].split("\n")
   end
   check_file = $exp_file_list.grep(/#{file_name}/)
   if check_file
@@ -50,25 +46,15 @@ end
 
 def extract_exp_file(file_to_extract)
   if File.exist?($exp_file)
-    if $pigz_bin.match(/pigz/)
-      command = "cd #{$work_dir} ; pigz -dc #{$exp_file} | tar -xpf - #{file_to_extract} > /dev/null 2>&1"
+    if $verbose_mode == 1
+      command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract}"
     else
-      command = "cd #{$work_dir} ; gzip -dc #{$exp_file} |tar -xpf - #{file_to_extract} > /dev/null 2>&1"
+      command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract} > /dev/null 2>&1"
     end
-    if !$exp_file_list[1]
-      if $pigz_bin.match(/pigz/)
-        $exp_file_list = `pigz -dc #{$exp_file} | tar -tf -`
-      else
-        $exp_file_list = `gzip -dc #{$exp_file} | tar -tf -`
-      end
-      $exp_file_list = $exp_file_list.split(/\n/)
+    if $verbose_mode == 1
+      handle_output("Executing: #{command}\n")
     end
-    if $exp_file_list.include?(file_to_extract)
-      if $verbose == 1
-        handle_output("Executing: #{command}\n")
-      end
-      system(command)
-    end
+    system(command)
   end
 end
 
@@ -83,6 +69,9 @@ def exp_file_to_array(file_name)
   if !File.exist?(ext_file)
     if !File.symlink?(ext_file)
       arc_file = exp_name+file_name
+      if $verbose_mode == 1
+        puts "Extracting "+arc_file+" from "+$exp_file+" to "+ext_file
+      end
       extract_exp_file(arc_file)
     end
   end
@@ -102,7 +91,11 @@ def exp_file_to_array(file_name)
         extract_exp_file(arc_file)
       end
     end
-    file_array = File.readlines(ext_file,:encoding => 'ISO-8859-1')
+    if File.exist?(ext_file)
+      file_array = File.readlines(ext_file,:encoding => 'ISO-8859-1')
+    else
+      file_array = []
+    end
   else
     if $verbose == 1
       handle_output("File #{file_name} does not exist\n")

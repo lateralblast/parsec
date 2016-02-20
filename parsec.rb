@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.6.7
+# Version:      1.6.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -17,7 +17,7 @@
 
 require 'rubygems'
 require 'fileutils'
-require 'getopt/std'
+require 'getopt/long'
 require 'pathname'
 require 'hex_string'
 require 'terminal-table'
@@ -36,6 +36,13 @@ begin
 rescue LoadError
 end
 
+# Script name
+
+$script = $0
+
+# Valid output formats
+
+$valid_output_formats = [ 'text', 'pdf', 'pipe', 'csv' ]
 
 # Handle CTRL-C more gracefully
 
@@ -55,15 +62,75 @@ $author_name  = "Richard Spindler"
 
 # Defaults for output
 
-$output_mode  = "text"
+$output_format  = "text"
 
-# Options
+# Get version
 
-options   = "abcdefhlmpvABCDEFHIKLMOPSTVWZd:i:s:w:R:o:"
+def get_version()
+  file_array = IO.readlines $0
+  version    = file_array.grep(/^# Version/)[0].split(":")[1].gsub(/^\s+/,'').chomp
+  packager   = file_array.grep(/^# Packager/)[0].split(":")[1].gsub(/^\s+/,'').chomp
+  name       = file_array.grep(/^# Name/)[0].split(":")[1].gsub(/^\s+/,'').chomp
+  return version,packager,name
+end
+
+# Print script version information
+
+def print_version()
+  (version,packager,name) = get_version()
+  puts name+" v. "+version+" "+packager
+  exit
+end
+
+# Print usage
+
+def print_help()
+  switches     = []
+  long_switch  = ""
+  short_switch = ""
+  help_info    = ""
+  puts ""
+  puts "Usage: "+$script
+  puts ""
+  file_array  = IO.readlines $0
+  option_list = file_array.grep(/\[ "--/)
+  option_list.each do |line|
+    if !line.match(/file_array/)
+      help_info    = line.split(/# /)[1]
+      switches     = line.split(/,/)
+      long_switch  = switches[0].gsub(/\[/,"").gsub(/\s+/,"")
+      short_switch = switches[1].gsub(/\s+/,"")
+      if long_switch.gsub(/\s+/,"").length < 7
+        puts long_switch+",\t\t"+short_switch+"\t"+help_info
+      else
+        puts long_switch+",\t"+short_switch+"\t"+help_info
+      end
+    end
+  end
+  puts
+  return
+end
+
+# Get command line arguments
+# Print help if given none
+
+if !ARGV[0]
+  print_help()
+  exit
+end
+
+# Try to make sure we have valid long switches
+
+ARGV[0..-1].each do |switch|
+  if switch.match(/^-[a-z]=/)
+    puts "Invalid command line option: "+switch
+    exit
+  end
+end
 
 # Check for pigz to accelerate decompression
 
-$pigz_bin = %x[which pigz].chomp
+$gzip_bin = %x[which pigz].chomp
 
 # Set up some script related variables
 
@@ -214,419 +281,386 @@ def get_code_ver()
   return code_ver
 end
 
-# Check local config
+# Options
 
-def check_local_config()
-  if !$pigz_bin.match(/pigz/)
-    puts "Parallel GZip (pigz) not installed"
-    os_name = %x[uname -v]
-    if os_name.match(/Darwin/)
-      brew_bin = %x[which brew]
-      if brew_bin.match(/brew/)
-        puts "Installing Parallel GZip"
-        %x[brew install pigz]
-      else
-        puts "Using gzip"
+# Process options
+
+begin
+  option = Getopt::Long.getopts(
+    [ "--prefix",       "-b", Getopt::REQUIRED ],   # Set base/prefix directory
+    [ "--customer",     "-C", Getopt::REQUIRED ],   # Set customer name 
+    [ "--dir",          "-d", Getopt::BOOLEAN ],    # Specify directory where explorers are (default is ./explorers)
+    [ "--dodisks",      "-D", Getopt::BOOLEAN ],    # Do disks (reports information on all disks)
+    [ "--format",       "-f", Getopt::REQUIRED ],   # Output format
+    [ "--list",         "-l", Getopt::BOOLEAN ],    # List explorers (also lists dmidecodes and facters if present)
+    [ "--masked",       "-m", Getopt::BOOLEAN ],    # Mask hostnames, IPs, MAC addresses etc
+    [ "--output",       "-o", Getopt::REQUIRED ],   # Output file
+    [ "--pause",        "-p", Getopt::BOOLEAN ],    # Pause between each report when running against all hosts (useful for debugging)
+    [ "--report",       "-R", Getopt::REQUIRED ],   # Report type (e.g. all, cpu, memory)
+    [ "--server",       "-s", Getopt::REQUIRED ],   # Server to run explorer report for
+    [ "--type",         "-t", Getopt::REQUIRED ],   # Type of report (default is explorer)
+    [ "--temp",         "-w", Getopt::REQUIRED ],   # Work directory
+    [ "--usage",        "-u", Getopt::REQUIRED ],   # Display usage information
+    [ "--help",         "-h", Getopt::BOOLEAN ],    # Display help information
+    [ "--verbose",      "-v", Getopt::BOOLEAN ],    # Verbose output
+    [ "--version",      "-V", Getopt::BOOLEAN ],    # Display version
+    [ "--changelog",    "-c", Getopt::BOOLEAN ]     # Print changelog
+ )
+rescue
+  print_help()
+  exit
+end
+
+# Print Changelog
+
+def print_changelog()
+  if File.exist?("changelog")
+    changelog = File.readlines("changelog")
+    changelog = changelog.reverse
+    changelog.each_with_index do |line, index|
+      line = line.gsub(/^# /,"")
+      if line.match(/^[0-9]/)
+        puts line
+        puts changelog[index-1].gsub(/^# /,"")
+        puts
       end
-    else
-      puts "Using gzip"
     end
   end
   return
 end
 
-# Print usage
-
-def print_usage(options,report)
-  code_name = get_code_name()
-  code_ver  = get_code_ver()
-  puts
-  puts code_name+" v. "+code_ver
-  puts
-  puts "Usage: "+code_name+" -["+options+"]"
-  puts
-  puts "-h: Print help"
-  puts "-i: Specify Explorer file to process"
-  puts "-s: Specify System to process"
-  puts "    (Filename will be determined if it exists)"
-  puts "-m: Mask data (hostnames etc)"
-  puts "-d: Set Explorer directory"
-  puts "-l: List explorers, and facts for either puppet or ansible"
-  puts "-B: Report based on DMI decode"
-  puts "-F: Report based on Puppet Facter output"
-  puts "-A: Report based on Ansible Fact output"
-  puts "-a: Process all explorers"
-  puts "-P: Output in PDF mode"
-  puts "-T: Output in text mode (default)"
-  puts "-O: Output to file (in output directory)"
-  puts
-  puts "Reporting:"
-  puts
-  puts "-R: Report/Print configuration information for a specific component:"
-  puts
-  report.each do |type,info|
-    if type.length < 7
-      puts type+":\t\t"+info
-    else
-      puts type+":\t"+info
-    end
+def check_output_format()
+  if !$valid_output_formats.grep(/#{$output_format}/)
+    puts "Invalid output format"
+    exit
   end
-  puts
-  puts "Example (Display CPUs):"
-  puts
-  puts code_name+" -s hostanme -R cpu"
-  puts
-  puts "Explorer shortcuts:"
-  puts
-  puts "-Z: Print all configuration information (default)"
-  puts "-E: Print EEPROM configuration information"
-  puts "-I: Print IO configuration information"
-  puts "-H: Print Host configuration information"
-  puts "-L: Print LDom configuration information"
-  puts "-C: Print CPU configuration information"
-  puts "-S: Print OS configuration information"
-  puts "-Y: Print System configuration information"
-  puts
-  exit
 end
 
-begin
-  opt = Getopt::Std.getopts(options)
-rescue
-  print_usage(options,report)
+opt = option
+
+# Check local config
+
+def check_local_config()
+  os_name = %x[uname -v]
+  if !os_name.match(/SunOS/)
+    $tar_bin = %x[which star].chomp
+    if !$tar_bin.match(/star/)
+      if $verbose_mode == 1
+        puts "S tar not installed"
+      end
+      if os_name.match(/Darwin/)
+        if brew_bin.match(/brew/)
+          puts "Installing S tar"
+          %x[brew install star]
+        else
+          puts "Cannot find S tar"
+          puts "S tar is required"
+          exit
+        end
+      else
+        if !$tar_bin.match(/star/)
+          puts "Cannot find S tar"
+          puts "S tar is required"
+        end
+      end
+    end
+  else
+    $tar_bin = "/usr/bin/tar"
+  end
+  if !$gzip_bin.match(/pigz/)
+    if $verbose_mode == 1
+      puts "Parallel GZip (pigz) not installed"
+    end
+    if os_name.match(/Darwin/)
+      brew_bin = %x[which brew]
+      if brew_bin.match(/brew/)
+      puts "Installing Parallel GZip"
+        %x[brew install pigz]
+      else
+        $gzip_bin = %x[which gzip].chomp
+        if !$gzip_bin.match(/gzip/)
+          puts "Cannot find gzip"
+          exit
+        else
+          if $verbose_mode == 1
+            puts "Using gzip"
+          end
+        end
+      end
+    else
+      $gzip_bin = %x[which gzip].chomp
+      if !$gzip_bin.match(/gzip/)
+        puts "Cannot find gzip"
+        exit
+      else
+        if $verbose_mode == 1
+          puts "Using gzip"
+        end
+      end
+    end
+  end
+  return
+end
+
+# Enable verbose mode
+
+if option["verbose"]
+  $verbose_mode = 1
+  puts "Operating in verbose mode"
+end
+
+# get server name
+
+if option["server"]
+  host_name = option["server"].downcase
+  if !option["report"]
+    option["report"] = "all"
+    if $verbose_mode == 1
+      puts "reporting on all elements of "+host_name
+    end
+  end
 end
 
 # Check local config
 
-if !opt['h'] and !opt["V"]
+if !option["help"] and !option["version"]
   check_local_config()
 end
 
-# Output mode
-
-
-if opt["T"]
-  if opt["R"] or opt["A"] or opt["F"] or opt["B"] or opt["Z"]
-    if opt["W"]
-      $output_mode = "html"
-    else
-      if opt["p"]
-        $output_mode = "pipe"
-      else
-        if opt["c"]
-          $output_mode = "csv"
-        else
-          $output_mode = "text"
-        end
-      end
-    end
-  else
-    puts "Report type not specified"
-    puts "Must use -R, -A, -B, -Z, or -F"
-    exit
-  end
+if option["prefix"]
+  $base_dir = option["prefix"]
 else
-  if opt["P"] or opt["o"] or opt["O"]
-    if opt["R"] or opt["A"] or opt["F"] or opt["B"] or opt["Z"]
-      $output_mode = "file"
-    else
-      puts "Report type not specified"
-      puts "Must use -R, -A, -B, -Z, or -F"
-      exit
-    end
-  else
-    if opt["W"]
-      $output_mode = "html"
-    else
-      if opt["p"]
-        $output_mode = "pipe"
-      else
-        if opt["c"]
-          $output_mode = "csv"
-        else
-          $output_mode = "text"
-        end
-      end
-    end
+  $base_dir = Dir.pwd
+end  
+
+# Print version
+
+if option["version"]
+  print_version()
+  exit
+end
+
+# Print changelog
+
+if option["changelog"]
+  print_changelog()
+  exit
+end
+
+# Set format of report
+
+if option["format"]
+  $output_format = option["format"].downcase
+  check_output_format()
+else
+  $output_format = "text"
+  if $verbose_mode == 1
+    puts "Setting output type to "+$output_format
   end
 end
 
-# Get hostname
+# Pause mode
 
-if opt["s"]
-  host_name = opt["s"]
+if option["pause"]
+  pause_mode = 1
+else
+  pause_mode = 0
 end
 
 # Mask data
 
-if opt["m"]
+if option["masked"]
   $masked = 1
+  if $verbose_mode == 1
+    puts "Masking output"
+  end
 end
 
 # Set explorer directory
 
-if opt["d"]
-  $exp_dir = opt["d"]
+if option["dir"]
+  $exp_dir = opt["dir"]
 else
   if !$exp_dir.match(/[A-z]/)
     $exp_dir = Dir.pwd+"/explorers"
   end
 end
 
+# Set type
+
+if option["type"]
+  input_type = option["type"]
+else
+  input_type = "explorer"
+end
+
 # List explorers
 
-if opt["l"]
-  list_explorers()
-  list_facters()
-  #list_dmidecodes()
+if option["list"]
+  if input_type.match(/all|explorer/)
+    list_explorers()
+  end
+  if input_type.match(/all|facter/)
+    list_facters()
+  end
+  if input_type.match(/all|dmidecode/)
+    list_dmidecodes()
+  end
   exit
 end
 
-if opt["d"]
+# Report on all disk information
+
+if option["dodisks"]
   $do_disks = 1
-end
-
-if opt["V"]
-  code_name = get_code_name()
-  code_ver  = get_code_ver()
-  puts code_name+"v. "+code_ver
-  exit
-end
-
-if opt["v"]
-  $verbose = 1
-  puts "Operating in verbose mode"
+  if $verbose_mode == 1
+    puts "Enabling full disk reporting"
+  end
 end
 
 # Handle filename and hostname options
 
-if opt["i"]
-  $exp_file = opt["i"]
-  if !File.exist?($exp_file)
+if option["input"]
+  $exp_file = option["input"]
+  if !File.exist?($exp_file) and !File.symlink?($exp_file)
     puts
-    puts "Explorer File: #{$exp_file} does not exist"
+    puts "Input file: "+$exp_file+" does not exist"
     exit
   end
 else
-  if !opt["s"] and !opt["a"]
+  if !option["server"]
     puts
-    puts "Explorer file or home name not specified"
-    print_usage(options,report)
-  end
-  if  !opt["b"] and !$base_dir.match(/[A-z]/)
-    $base_dir = Dir.pwd
+    puts "Input file or hostname not specified"
+    print_help()
+    exit
   end
   $exp_dir  = $base_dir.chomp()
   $exp_dir  = $exp_dir+"/explorers"
   file_list = Dir.entries($exp_dir).reject{|entry| entry.match(/\._/)}
-  if opt["s"]
-    if opt["s"] == "all"
-      host_names = file_list
+  if option["server"]
+    if option["server"].match(/^all$/)
+      host_names = []
+      file_list.each do |file_name|
+        if file_name.match(/\-/) and file_name.match(/tgz|tar/) and file_name.match(/explorer/)
+          temp_name = file_name.split(/\./)[2].split(/\-/)[0..-2].join("-")
+          host_names.push(temp_name)
+        end
+      end
+      host_names = host_names.uniq
     else
       host_names    = []
-      host_names[0] = opt["s"]
+      host_names[0] = option["server"]
     end
   else
     host_names = file_list
-  end
-  if !opt["A"] and !opt["F"] and !opt["B"]
-    host_names.each do |host_name|
-      $exp_file = file_list.grep(/tar\.gz/).grep(/#{host_name}/)
-      if $exp_file.to_s.match(/\n/)
-        $exp_file = $exp_file.split(/\n/)
-      end
-      $exp_file = $exp_file[0].to_s.chomp
-      if !$exp_file.match(/[a-z]|[0-9]/)
-        puts "Explorer for "+host_name+" does not exist in "+$exp_dir
-        exit
-      end
-    end
-    $exp_file = $exp_dir+"/"+$exp_file
-  end
-end
-
-if opt["o"]
-  $output_file = opt["o"]
-else
-  $output_file = "output/"+host_name+".txt"
-  output_dir = File.dirname($output_file)
-  if !File.directory?(output_dir)
-    Dir.mkdir(output_dir)
-  end
-end
-
-if opt["P"] or opt["O"]
-  if $output_file.match(/\.pdf$|\.PDF$/)
-    $output_file = $output_file.gsub(/\.pdf$|\.PDF$/,"")
-  end
-  if !$output_file.match(/\.txt$/)
-    $output_file = $output_file+".txt"
-  end
-  output_dir = File.dirname($output_file)
-  if !File.directory?(output_dir)
-    Dir.mkdir(output_dir)
-  end
-  if opt["P"]
-    if $masked == 1
-      host_name = "masked"
-    end
-    if opt["R"] or opt["Z"]
-      document_title = "Explorer: "+host_name
-    end
-    if opt["A"]
-      document_title = "Ansible Facts: "+host_name
-    end
-    if opt["F"]
-      document_title = "Puppet Facts: "+host_name
-    end
-    if opt["B"]
-      document_title = "DMI decode: "+host_name
-    end
-    customer_name = ""
-    output_pdf    = "output/"+host_name+".pdf"
-    $output_file  = output_pdf
-  end
-end
-
-if opt["o"] or opt["P"] or opt["O"]
-  puts "Setting output file to: "+$output_file
-  if File.exist?($output_file)
-    File.delete($output_file)
-    FileUtils.touch($output_file)
-  else
-    FileUtils.touch($output_file)
   end
 end
 
 # Set work directory
 
-if opt["w"]
-  $work_dir = opt["w"]
+if option["temp"]
+  $work_dir = option["temp"]
 else
   if !$work_dir.match(/[A-z]/)
     $work_dir = "/tmp"
   end
 end
 
-if opt["Z"]
-  report_type = "all"
-  config_report(report,report_type,host_name)
-  exit
+# Get report type
+
+if option["report"]
+  report_type = option["report"]
+  if !option["input"] and !option["server"]
+    puts "Input file or home name not specified"
+    print_help()
+    exit
+  end
 end
 
-if opt["I"]
-  report_type = "io"
-  config_report(report,report_type,host_name)
-  exit
-end
+# Get customer name
 
-if opt["D"]
-  report_type = "disk"
-  $do_disks = 1
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["S"]
-  report_type = "os"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["E"]
-  report_type = "eeprom"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["Y"]
-  report_type = "system"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["Z"]
-  report_type = "zones"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["K"]
-  report_type = "kernel"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["M"]
-  report_type = "memory"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["C"]
-  report_type = "cpu"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["H"]
-  report_type = "host"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["L"]
-  report_type = "ldoms"
-  config_report(report,report_type,host_name)
-  exit
-end
-
-if opt["R"]
-  report_type = opt["R"]
-  if opt["h"]
-    report_help(report,report_type)
+if option["customer"]
+  if $masked == "1"
+    customer_name = "Masked"
   else
-    if !opt["i"] and !opt["s"]
-      puts "Explorer file or home name not specified"
-      print_usage(options,report)
+    customer_name = option["customer"]
+  end
+else
+  customer_name = ""
+end
+
+# Set output file
+
+if option["output"]
+  $output_file = option["output"]
+  $output_dir  = File.dirname($output_file)
+  if !File.directory?($output_dir)
+    Dir.mkdir($output_dir)
+  end
+  if $verbose_mode == 1 and !host_name.match(/^all$/)
+    puts "Setting output file to: "+$output_file
+  end
+  if File.exist?($output_file)
+    File.delete($output_file)
+    FileUtils.touch($output_file)
+  else
+    FileUtils.touch($output_file)
+  end
+else
+  $output_dir = $base_dir+"/output"
+  if $output_format.match(/pdf/)
+    if !host_name.match(/^all$/)
+      $output_file = $output_dir+"/"+host_name+".txt"
+    end
+  end
+end
+
+# Handle explorer output
+
+if input_type.match(/explorer/)
+  host_names.each do |temp_name|
+    if host_name.match(/^all$/) and $output_format.match(/pdf/)
+      $output_file = $output_dir+"/"+temp_name+".txt"
+    end
+    if $verbose_mode == 1 and !$output_format.match(/pdf/)
+      puts "Processing explorer ("+report_type+") report for "+temp_name
+    end
+    $exp_file = file_list.grep(/tar\.gz/).grep(/#{temp_name}/)
+    if $exp_file.to_s.match(/\n/)
+      $exp_file = $exp_file.split(/\n/)
+    end
+    $exp_file = $exp_file[0].to_s.chomp
+    $exp_file = $exp_dir+"/"+$exp_file
+    if !$exp_file.match(/[a-z]|[0-9]/) 
+      puts "Explorer for "+temp_name+" does not exist in "+$exp_dir
       exit
     end
-    config_report(report,report_type,host_name)
+    config_report(report,report_type,temp_name)
+    if host_name.match(/^all$/) and pause_mode == 1
+      print "continue (y/n)? "
+      STDOUT.flush()
+      exit if 'n' == STDIN.gets.chomp
+    end
+    if $output_format.match(/pdf/)
+      pdf = Prawn::Document.new
+      if host_name.match(/^all$/)
+        output_pdf = $output_dir+"/"+temp_name+".pdf"
+      else
+        output_pdf = $output_file.gsub(/\.txt$/,".pdf")
+      end
+      if $verbose_mode == 1
+        puts "Input file:  "+$output_file
+        puts "Output file: "+output_pdf
+      end
+      if $masked == 1
+        document_title = "Explorer: masked"
+      else
+        document_title = "Explorer: "+temp_name
+      end
+      if !customer_name.match(/masked/) and host_name.match(/^all$/)
+        customer_name = get_customer_name()
+      end
+      generate_pdf(pdf,document_title,output_pdf,customer_name)
+    end
   end
 end
-
-if opt["h"]
-  print_usage(options,report)
-end
-
-# Handle Facter / dmidecode
-
-if opt["F"] or opt["A"] or opt["B"]
-  if opt["s"]
-    host_name = opt["s"]
-    file_name = ""
-  end
-  if opt["i"]
-    file_name = opt["i"]
-    host_name = ""
-  end
-  if opt["F"]
-    process_puppet_facter(host_name,file_name)
-  end
-  if opt["A"]
-    process_ansible_facter(host_name,file_name)
-  end
-  if opt["B"]
-    process_dmidecode(host_name,file_name)
-  end
-end
-
-# Handle output of PDF
-
-if opt["P"]
-  pdf = Prawn::Document.new
-  output_pdf = $output_file.gsub(/\.txt$/,".pdf")
-  generate_pdf(pdf,document_title,output_pdf,customer_name)
-end
-
-#clean_up()

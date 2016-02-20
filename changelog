@@ -335,4 +335,6 @@
 # More handling fixes for TZ
 # 1.6.7: Sat 20 Feb 2016 09:28:32 AEDT
 # Fixed HTML output
+# 1.6.8: Sun 21 Feb 2016 00:46:43 AEDT
+# Cleaned up command line handling (moved to getopt long)
 

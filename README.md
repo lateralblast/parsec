@@ -172,6 +172,7 @@ Requirements
 Tools:
 
 - Uses pigz if available
+- S tar required for Operating Systems other than Solaris
 - ImageMagick required for image processing for PDF reports
 
 Required Ruby Gems (required for text reports):

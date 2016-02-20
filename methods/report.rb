@@ -25,7 +25,7 @@ end
 
 def config_report(report,report_type,host_name)
   valid_sw = 0
-  if $output_mode == "html"
+  if $output_format == "html"
     puts "<html>"
     puts "<head>"
     puts "<title>Explorer report for #{host_name}</title>"
@@ -279,7 +279,7 @@ def config_report(report,report_type,host_name)
     valid_sw = 1
     process_pci_scan()
   end
-  if $output_mode == "html"
+  if $output_format == "html"
     puts "</body>"
     puts "</html>"
   end
@@ -355,38 +355,39 @@ end
 # Handle output
 
 def handle_output(output)
-  if $output_mode == "text" or $output_mode == "pipe"
-    if $output_mode == "pipe"
-      output = output.to_s
-      output = output.split(/\n/)
-      output.each do |line|
-        line = line.gsub(/^\s+/,"")
-        if line.match(/[0-9]|[A-Z]|[a-z]/)
-          puts line
-        end
-      end
-    else
-      print output
-    end
-  end
-  if $output_mode == "html"
-    if output.class == String
-      if output.match(/[A-z]/)
-        puts "<p>#{output}</p>"
-      end
-    else
-      puts "<p>"
-      output.each do |line|
-        puts "#{line}"
-      end
-      puts "<br>"
-    end
-  end
-  if $output_mode == "file"
+  if $output_file
     file = File.open($output_file,"a")
     file.write(output)
     file.write("\n")
     file.close()
+  else
+    if $output_format == "text" or $output_format == "pipe"
+      if $output_format == "pipe"
+        output = output.to_s
+        output = output.split(/\n/)
+        output.each do |line|
+          line = line.gsub(/^\s+/,"")
+          if line.match(/[0-9]|[A-Z]|[a-z]/)
+            puts line
+          end
+        end
+      else
+        print output
+      end
+    end
+    if $output_format == "html"
+      if output.class == String
+        if output.match(/[A-z]/)
+          puts "<p>#{output}</p>"
+        end
+      else
+        puts "<p>"
+        output.each do |line|
+          puts "#{line}"
+        end
+        puts "<br>"
+      end
+    end
   end
   return
 end
@@ -396,18 +397,18 @@ end
 def handle_table(type,title,row,table)
   if type.match(/title/)
     handle_output("\n")
-    if $output_mode == "html"
+    if $output_format == "html"
       table = []
       table.push("<h1>#{title}</h1>")
       table.push("<table border=\"1\">")
     end
     if row.to_s.match(/[A-z]/)
-      if $output_mode == "html"
+      if $output_format == "html"
         row.each do |heading|
           table.push("<th>#{heading}</th>")
         end
       else
-        if $output_mode == "pipe"
+        if $output_format == "pipe"
           title = "::"+title
           table = Terminal::Table.new :title => title, :style => { :border_x => "", :border_y => "", :border_i => "" }, :headings => row
         else
@@ -415,11 +416,11 @@ def handle_table(type,title,row,table)
         end
       end
     else
-      if $output_mode == "html"
+      if $output_format == "html"
         table.push("<th>Item</th>")
         table.push("<th>Value</th>")
       else
-        if $output_mode == "pipe"
+        if $output_format == "pipe"
           title = "::"+title
           table = Terminal::Table.new :title => title, :style => { :border_x => "", :border_y => "", :border_i => "" }, :headings => ['Item', 'Value']
         else
@@ -429,7 +430,7 @@ def handle_table(type,title,row,table)
     end
   end
   if type.match(/end/)
-    if $output_mode == "html"
+    if $output_format == "html"
       table.push("</table>")
       handle_output(table)
     else
@@ -438,7 +439,7 @@ def handle_table(type,title,row,table)
     end
   end
   if type.match(/line/)
-    if !$output_mode == "html"
+    if !$output_format == "html"
       table.add_separator
     end
   end
@@ -469,7 +470,7 @@ def handle_table(type,title,row,table)
       value = row[1]
       $host_info[item] = value
     end
-    if $output_mode == "html"
+    if $output_format == "html"
       table.push("<tr>")
       row.each do |value|
         table.push("<td>#{value}</td>")
