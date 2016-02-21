@@ -2,11 +2,11 @@
 
 # Specify option to report on
 
-def report_help(report,report_type)
-  if report[report_type]
-    puts report_type+": "+report[report_type]
+def report_help(report)
+  if report[$report_type]
+    puts $report_type+": "+report[$report_type]
   else
-    puts "No option for "+report_type+" exists"
+    puts "No option for "+$report_type+" exists"
     puts
     puts "The following options exist:"
     puts
@@ -23,83 +23,83 @@ end
 
 # Do configuration report
 
-def config_report(report,report_type,host_name)
+def config_report(report,host_name)
   valid_sw = 0
-  if $output_format == "html"
+  if $output_format.match(/html/)
     puts "<html>"
     puts "<head>"
     puts "<title>Explorer report for #{host_name}</title>"
     puts "</head>"
     puts "<body>"
   end
-  if report_type.match(/all|host/)
+  if $report_type.match(/all|host/)
     valid_sw = 1
     process_host()
   end
-  if report_type.match(/all|security|ntp/)
+  if $report_type.match(/all|security|ntp/)
     process_ntp()
   end
-  if report_type.match(/all|inetadm/)
+  if $report_type.match(/all|inetadm/)
     valid_sw = 1
     process_inetadm()
   end
-  if report_type.match(/all|security|pam/)
+  if $report_type.match(/all|security|pam/)
     valid_sw = 1
     process_pam()
   end
-  if report_type.match(/all|syslog/)
+  if $report_type.match(/all|syslog/)
     valid_sw = 1
     process_syslog()
   end
-  if report_type.match(/all|cups/)
+  if $report_type.match(/all|cups/)
     valid_sw = 1
     process_cups()
   end
-  if report_type.match(/all|obp/)
+  if $report_type.match(/all|obp/)
     valid_sw = 1
     process_obp()
   end
-  if report_type.match(/all|eeprom/)
+  if $report_type.match(/all|eeprom/)
     valid_sw = 1
     process_eeprom()
   end
-  if report_type.match(/all|os|core/)
+  if $report_type.match(/all|os|core/)
     valid_sw = 1
     process_coreadm()
   end
-  if report_type.match(/all|os|dump/)
+  if $report_type.match(/all|os|dump/)
     valid_sw = 1
     process_dumpadm()
   end
-  if report_type.match(/all|os|exp/)
+  if $report_type.match(/all|os|exp/)
     valid_sw = 1
     process_explorer()
   end
-  if report_type.match(/all|os/)
+  if $report_type.match(/all|os/)
     valid_sw = 1
     process_system()
   end
-  if report_type.match(/all|cpu/)
+  if $report_type.match(/all|cpu/)
     valid_sw = 1
     process_cpu()
   end
-  if report_type.match(/all|mem/)
+  if $report_type.match(/all|mem/)
     valid_sw = 1
     process_memory()
   end
-  if report_type.match(/all|disk/)
+  if $report_type.match(/all|disk/)
     valid_sw = 1
     process_disk_info()
   end
-  if report_type.match(/all|io/)
+  if $report_type.match(/all|io/)
     valid_sw = 1
     process_io()
   end
-  if report_type.match(/all|swap/)
+  if $report_type.match(/all|swap/)
     valid_sw = 1
     process_swap()
   end
-  if report_type.match(/all|vnic/)
+  if $report_type.match(/all|vnic/)
     valid_sw = 1
     os_ver = get_os_version()
     if get_os_version.match(/11/)
@@ -109,7 +109,7 @@ def config_report(report,report_type,host_name)
       puts "No VNIC information available"
     end
   end
-  if report_type.match(/all|link/)
+  if $report_type.match(/all|link/)
     valid_sw = 1
     os_ver = get_os_version()
     if get_os_version.match(/11/)
@@ -119,7 +119,7 @@ def config_report(report,report_type,host_name)
       puts "No link information available"
     end
   end
-  if report_type.match(/all|kernel|ndd/)
+  if $report_type.match(/all|kernel|ndd/)
     valid_sw = 1
     process_etc_system()
     process_ndd_ip_info()
@@ -129,34 +129,34 @@ def config_report(report,report_type,host_name)
     process_ndd_icmp_info()
     process_ndd_sctp_info()
   end
-  if report_type.match(/all|security|elfsign/)
+  if $report_type.match(/all|security|elfsign/)
     valid_sw = 1
     process_elfsign()
   end
-  if report_type.match(/all|zone/)
+  if $report_type.match(/all|zone/)
     valid_sw = 1
     process_zones()
   end
-  if report_type.match(/all|security|system|passwd|password|login|sendmail|inetinit|su|inet|cron|keyserv|telnet|power|suspend|ssh|crypto|snmp|cups/)
-    report_type.gsub(/password/,"passwd")
+  if $report_type.match(/all|security|system|passwd|password|login|sendmail|inetinit|su|inet|cron|keyserv|telnet|power|suspend|ssh|crypto|snmp|cups/)
+    $report_type.gsub(/password/,"passwd")
     valid_sw = 1
-    process_security(report_type)
+    process_security($report_type)
   end
-  if report_type.match(/all|security|inetd/)
+  if $report_type.match(/all|security|inetd/)
     valid_sw = 1
     process_inetd()
   end
-  if report_type.match(/all|^fs|filesystem/)
+  if $report_type.match(/all|^fs|filesystem/)
     valid_sw = 1
     process_file_systems()
   end
-  if report_type.match(/all|^fs|filesystem|mount/)
+  if $report_type.match(/all|^fs|filesystem|mount/)
     valid_sw = 1
     if $masked == 0
       process_mounts()
     end
   end
-  if report_type.match(/all|filesystem|zfs/)
+  if $report_type.match(/all|filesystem|zfs/)
     valid_sw = 1
     os_ver = get_os_version()
     if os_ver.match(/10|11/)
@@ -166,13 +166,13 @@ def config_report(report,report_type,host_name)
       puts "No ZFS information available"
     end
   end
-  if report_type.match(/all|services/)
+  if $report_type.match(/all|services/)
     valid_sw = 1
     process_service_descs()
     process_services()
     process_service_deps()
   end
-  if report_type.match(/all|lu|liveupgrade|be/)
+  if $report_type.match(/all|lu|liveupgrade|be/)
     valid_sw = 1
     os_ver = get_os_version()
     if os_ver.match(/11/)
@@ -181,7 +181,7 @@ def config_report(report,report_type,host_name)
       process_liveupgrade()
     end
   end
-  if report_type.match(/all|svcprop/)
+  if $report_type.match(/all|svcprop/)
     valid_sw = 1
     os_ver = get_os_version()
     if os_ver.match(/11/)
@@ -191,19 +191,19 @@ def config_report(report,report_type,host_name)
       puts "No service property information available"
     end
   end
-  if report_type.match(/all|locale/)
+  if $report_type.match(/all|locale/)
     valid_sw = 1
     process_locale()
   end
-  if report_type.match(/all|modinfo|module/)
+  if $report_type.match(/all|modinfo|module/)
     valid_sw = 1
     process_modules()
   end
-  if report_type.match(/all|package/)
+  if $report_type.match(/all|package/)
     valid_sw = 1
     process_packages()
   end
-  if report_type.match(/all|patch/)
+  if $report_type.match(/all|patch/)
     valid_sw = 1
     os_ver = get_os_version
     if !os_ver.match(/11/)
@@ -213,79 +213,79 @@ def config_report(report,report_type,host_name)
       puts "No patch information available"
     end
   end
-  if report_type.match(/all|tcp/)
+  if $report_type.match(/all|tcp/)
     valid_sw = 1
     process_network("tcp")
   end
-  if report_type.match(/all|udp/)
+  if $report_type.match(/all|udp/)
     valid_sw = 1
     process_network("udp")
   end
-  if report_type.match(/all|ldom/)
+  if $report_type.match(/all|ldom/)
     valid_sw = 1
     process_ldom()
   end
-  if report_type.match(/all|^dom/)
+  if $report_type.match(/all|^dom/)
     valid_sw = 1
     process_domain()
   end
-  if report_type.match(/all|fru/)
+  if $report_type.match(/all|fru/)
     valid_sw = 1
     process_fru()
   end
-  if report_type.match(/all|sensor/)
+  if $report_type.match(/all|sensor/)
     valid_sw = 1
     process_sensors()
   end
-  if report_type.match(/all|handbook/)
+  if $report_type.match(/all|handbook/)
     valid_sw = 1
     process_handbook()
   end
-  if report_type.match(/all|veritas|vx/)
+  if $report_type.match(/all|veritas|vx/)
     valid_sw = 1
     process_veritas()
   end
-  if report_type.match(/all|aggr|network/)
+  if $report_type.match(/all|aggr|network/)
     valid_sw = 1
     process_aggr()
   end
-  if report_type.match(/all|network/)
+  if $report_type.match(/all|network/)
     valid_sw = 1
     process_nic_info()
   end
-  if report_type.match(/^serial$/)
+  if $report_type.match(/^serial$/)
     valid_sw = 1
     serial = get_chassis_serial()
     puts serial
     exit
   end
-  if report_type.match(/all|serials/)
+  if $report_type.match(/all|serials/)
     valid_sw = 1
     process_serials()
   end
-  if report_type.match(/all|firmware/)
+  if $report_type.match(/all|firmware/)
     valid_sw = 1
     process_firmware()
   end
-  if report_type.match(/all|ipmi/)
+  if $report_type.match(/all|ipmi/)
     valid_sw = 1
     process_ipmi()
   end
-  if report_type.match(/all|slots/)
+  if $report_type.match(/all|slots/)
     valid_sw = 1
     process_upgrade_slots()
   end
-  if report_type.match(/all|pci/)
+  if $report_type.match(/all|pci/)
     valid_sw = 1
     process_pci_scan()
   end
-  if $output_format == "html"
+  if $output_format.match(/html/)
     puts "</body>"
     puts "</html>"
   end
   handle_output("\n")
   if valid_sw == 0
-    report_help(report,report_type)
+    report_help(report)
     handle_output("\n")
   end
   return
@@ -361,8 +361,8 @@ def handle_output(output)
     file.write("\n")
     file.close()
   else
-    if $output_format == "text" or $output_format == "pipe"
-      if $output_format == "pipe"
+    if $output_format.match(/table|pdf|pipe/)
+      if $output_format.match(/pipe/)
         output = output.to_s
         output = output.split(/\n/)
         output.each do |line|
@@ -375,7 +375,7 @@ def handle_output(output)
         print output
       end
     end
-    if $output_format == "html"
+    if $output_format.match(/html/)
       if output.class == String
         if output.match(/[A-z]/)
           puts "<p>#{output}</p>"
@@ -397,18 +397,18 @@ end
 def handle_table(type,title,row,table)
   if type.match(/title/)
     handle_output("\n")
-    if $output_format == "html"
+    if $output_format.match(/html/)
       table = []
       table.push("<h1>#{title}</h1>")
       table.push("<table border=\"1\">")
     end
     if row.to_s.match(/[A-z]/)
-      if $output_format == "html"
+      if $output_format.match(/html/)
         row.each do |heading|
           table.push("<th>#{heading}</th>")
         end
       else
-        if $output_format == "pipe"
+        if $output_format.match(/pipe/)
           title = "::"+title
           table = Terminal::Table.new :title => title, :style => { :border_x => "", :border_y => "", :border_i => "" }, :headings => row
         else
@@ -416,11 +416,11 @@ def handle_table(type,title,row,table)
         end
       end
     else
-      if $output_format == "html"
+      if $output_format.match(/html/)
         table.push("<th>Item</th>")
         table.push("<th>Value</th>")
       else
-        if $output_format == "pipe"
+        if $output_format.match(/pipe/)
           title = "::"+title
           table = Terminal::Table.new :title => title, :style => { :border_x => "", :border_y => "", :border_i => "" }, :headings => ['Item', 'Value']
         else
@@ -430,7 +430,7 @@ def handle_table(type,title,row,table)
     end
   end
   if type.match(/end/)
-    if $output_format == "html"
+    if $output_format.match(/html/)
       table.push("</table>")
       handle_output(table)
     else
@@ -439,21 +439,22 @@ def handle_table(type,title,row,table)
     end
   end
   if type.match(/line/)
-    if !$output_format == "html"
+    if !$output_format.match(/html/)
       table.add_separator
     end
   end
   if type.match(/row/)
     if $masked == 1
-      if row.class == String
-        if title.match(/Serial|WWN|Domain|Name|Mount|[D,d]irectory|nvram|Customer|Contract|User|Email|Phone|Country|Host Name|Host ID|Volume|UUID|MAC|IP|Group|[T,t]ime|[D,d]ate/)
-          row = "MASKED"
+      if row.class == String 
+        if title.match(/Serial|WWN|Domain|Name|Mount|[D,d]irectory|nvram|Customer|Contract|User|Email|Phone|Country|Host Name|Host ID|Volume|UUID|MAC|IP|Group|[T,t]ime|[D,d]ate/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/)
+          if !title.match(/Device Name|Vendor Name|Driver Name|Kernel/)
+            row = "MASKED"
+          end
         end
       else
         if row
           row.each.with_index do |value,index|
-            case row
-            when /[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]/
+            if value.to_s.match(/[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]|[0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F]/) and !value.match(/sd\@|ssd|c[0-9]|_|pci/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/)
               row[index] = "MASKED"
             else
               row[index] = value
@@ -468,12 +469,20 @@ def handle_table(type,title,row,table)
     if row.length == 2
       item  = row[0]
       value = row[1]
-      $host_info[item] = value
+      if value.to_s.match(/[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]|[0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F]/) and !value.match(/sd\@|ssd|c[0-9]|_|pci/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/)
+        $host_info[item] = "MASKED"
+      else
+        $host_info[item] = value
+      end
     end
-    if $output_format == "html"
+    if $output_format.match(/html/)
       table.push("<tr>")
       row.each do |value|
-        table.push("<td>#{value}</td>")
+        if value.to_s.match(/[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]|[0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F]/) and !value.match(/sd\@|ssd|c[0-9]|_|pci/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/)
+          table.push("<td>MASKED</td>")
+        else
+          table.push("<td>#{value}</td>")
+        end
       end
       table.push("</tr>")
     else

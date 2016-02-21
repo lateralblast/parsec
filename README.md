@@ -20,6 +20,32 @@ Some of the features include:
 - Security checks for defaults and kernel parameters
 - Mask customer information, WWNs, etc
 
+Usage
+-----
+
+The default output has changed to pipe (white space delimited plain text).
+
+To get the old style terminal tables, use the table output format type, e.g.:
+
+```
+$ ./parsec.rb --server=hostname --report=all --format=table
+```
+
+To get the html formated output use the html output format type, e.g.:
+
+```
+$ ./parsec.rb --server=hostname --report=all --format=html
+```
+
+To get pdf output, use the pdf format output type, e.g.:
+
+```
+$ ./parsec.rb --server=hostname --report=all --format=pdf
+```
+
+Reports
+-------
+
 The reporting options include:
 
 - Report on Aggregate information

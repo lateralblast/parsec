@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.6.9
+# Version:      1.7.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -42,7 +42,7 @@ $script = $0
 
 # Valid output formats
 
-$valid_output_formats = [ 'text', 'pdf', 'pipe', 'csv' ]
+$valid_output_formats = [ 'table', 'pdf', 'pipe', 'csv' ]
 
 # Handle CTRL-C more gracefully
 
@@ -62,7 +62,7 @@ $author_name  = "Richard Spindler"
 
 # Defaults for output
 
-$output_format  = "text"
+$output_format  = "pipe"
 
 # Get version
 
@@ -545,7 +545,7 @@ if option["format"]
   $output_format = option["format"].downcase
   check_output_format()
 else
-  $output_format = "text"
+  $output_format = "pipe"
   if $verbose_mode == 1
     puts "Setting output type to "+$output_format
   end
@@ -663,7 +663,7 @@ end
 # Get report type
 
 if option["report"]
-  report_type = option["report"]
+  $report_type = option["report"]
   if !option["input"] and !option["server"]
     puts "Input file or home name not specified"
     print_help()
@@ -714,10 +714,10 @@ end
 if input_type.match(/explorer/)
   host_names.each do |temp_name|
     if host_name.match(/^all$/) and $output_format.match(/pdf/)
-      $output_file = $output_dir+"/"+temp_name+"-"+report_type+".txt"
+      $output_file = $output_dir+"/"+temp_name+"-"+$report_type+".txt"
     end
     if $verbose_mode == 1 and !$output_format.match(/pdf/)
-      puts "Processing explorer ("+report_type+") report for "+temp_name
+      puts "Processing explorer ("+$report_type+") report for "+temp_name
     end
     $exp_file = file_list.grep(/tar\.gz/).grep(/#{temp_name}/)
     if $exp_file.to_s.match(/\n/)
@@ -725,11 +725,11 @@ if input_type.match(/explorer/)
     end
     $exp_file = $exp_file[0].to_s.chomp
     $exp_file = $exp_dir+"/"+$exp_file
-    if !$exp_file.match(/[a-z]|[0-9]/) 
+    if !$exp_file.match(/#{temp_name}/)
       puts "Explorer for "+temp_name+" does not exist in "+$exp_dir
       exit
     end
-    config_report(report,report_type,temp_name)
+    config_report(report,temp_name)
     if host_name.match(/^all$/) and pause_mode == 1
       print "continue (y/n)? "
       STDOUT.flush()

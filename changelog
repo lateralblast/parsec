@@ -339,4 +339,6 @@
 # Cleaned up command line handling (moved to getopt long)
 # 1.6.9: Sun 21 Feb 2016 14:07:02 AEDT
 # Added examples
+# 1.7.0: Sun 21 Feb 2016 15:54:58 AEDT
+# Cleaned up masking code
 

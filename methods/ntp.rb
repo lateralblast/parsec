@@ -36,7 +36,11 @@ def process_ntp_config()
       line = line.chomp
       if !line.match(/^#|^ifdef/) and line.match(/[a-z]/)
         items = line.split(/\s+/)
-        row   = [ items[0], items[1..-1].join(" ") ]
+        if line.match(/server/) and $masked == 1
+          row   = [ items[0], "MASKED" ]
+        else
+          row   = [ items[0], items[1..-1].join(" ") ]
+        end
         table = handle_table("row","",row,table)
       end
     end
@@ -62,6 +66,10 @@ def process_ntpq()
           title  = "NTPQ Information"
           table  = handle_table("title",title,row,"")
         else
+          if $masked == 1
+            row[0] = "MASKED"
+            row[1] = "MASKED"
+          end
           table = handle_table("row","",row,table)
         end
       end
