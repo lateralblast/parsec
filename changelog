@@ -337,4 +337,6 @@
 # Fixed HTML output
 # 1.6.8: Sun 21 Feb 2016 00:46:43 AEDT
 # Cleaned up command line handling (moved to getopt long)
+# 1.6.9: Sun 21 Feb 2016 14:07:02 AEDT
+# Added examples
 

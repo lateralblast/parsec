@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.6.8
+# Version:      1.6.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -402,6 +402,98 @@ def check_local_config()
   return
 end
 
+# Print examples
+
+def print_examples(usage)
+  match = 0
+  if usage.match(/example|report|server|cpu/)
+    match = 1
+    puts "Run a CPU report against a specific host"
+    puts
+    puts "$ #{$script} --server=hostname --report=cpu"
+    puts
+    puts "Run a CPU report against all hosts"
+    puts
+    puts "$ #{$script} --server=all --report=cpu"
+    puts
+  end
+  if usage.match(/example|report|server|cpu/)
+    match = 1
+    puts "Run a all reports against a specific host"
+    puts
+    puts "$ #{$script} --server=hostname --report=all"
+    puts
+    puts "Run all reports against all hosts"
+    puts
+    puts "$ #{$script} --server=all --report=all"
+    puts
+  end
+  if usage.match(/example|report|server|cpu/)
+    match = 1
+    puts "Run all reports against a specific host and output a PDF report"
+    puts "(will create a file based on the hostname and report in the outputs directory)"
+    puts
+    puts "$ #{$script} --server=hostname --report=all --format=pdf"
+    puts
+    puts "Run all reports against a specific host and output PDF a report to a specific file"
+    puts
+    puts "$ #{$script} --server=hostname --report=all --format=pdf --output=hostename.pdf"
+    puts
+  end
+  if usage.match(/example|report|server|cpu/)
+    match = 1
+    puts "Run a all reports against a specific host and output it in a format that can be piped into another command"
+    puts
+    puts "$ #{$script} --server=hostname --report=all --format=pipe"
+    puts
+  end
+  if usage.match(/example|report|server|cpu/)
+    match = 1
+    puts "Run a all reports against a specific host and output it in a table format"
+    puts
+    puts "$ #{$script} --server=hostname --report=all --format=table"
+    puts
+  end
+  if match == 0
+    print_help()
+  end
+  return
+end
+
+# Print usage
+
+def print_usage(usage,report)
+  case usage
+  when /reports/
+    puts
+    report.each do |type,info|
+      if type.length < 7
+        puts type+":\t\t"+info
+      else
+        puts type+":\t"+info
+      end
+    end
+  else
+    puts
+    print_examples(usage)
+  end
+  puts
+  return
+end
+
+# Print help
+
+if option["help"]
+  print_help()
+  exit
+end
+
+if option["usage"]
+  usage = option["usage"]
+  print_usage(usage,report)
+  exit
+end
+
 # Enable verbose mode
 
 if option["verbose"]
@@ -528,9 +620,11 @@ if option["input"]
     exit
   end
 else
-  if !option["server"]
-    puts
-    puts "Input file or hostname not specified"
+  if !option["server"] 
+    if !option["help"]
+      puts
+      puts "Input file or hostname not specified"
+    end
     print_help()
     exit
   end
@@ -620,7 +714,7 @@ end
 if input_type.match(/explorer/)
   host_names.each do |temp_name|
     if host_name.match(/^all$/) and $output_format.match(/pdf/)
-      $output_file = $output_dir+"/"+temp_name+".txt"
+      $output_file = $output_dir+"/"+temp_name+"-"+report_type+".txt"
     end
     if $verbose_mode == 1 and !$output_format.match(/pdf/)
       puts "Processing explorer ("+report_type+") report for "+temp_name
