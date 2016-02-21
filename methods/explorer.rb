@@ -30,7 +30,11 @@ end
 
 def check_exp_file_exists(file_name)
   if !$exp_file_list[0]
-    $exp_file_list = %x[cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t].split("\n")
+    command = "#{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t"
+    if $verbose_mode == 1
+      handle_output("Executing: #{command}\n")
+    end
+    $exp_file_list = %x[command].split("\n")
   end
   check_file = $exp_file_list.grep(/#{file_name}/)
   if check_file

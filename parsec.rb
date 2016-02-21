@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.7.0
+# Version:      1.7.1
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -428,7 +428,7 @@ def print_examples(usage)
     puts "$ #{$script} --server=all --report=all"
     puts
   end
-  if usage.match(/example|report|server|cpu/)
+  if usage.match(/example|report|server|cpu|format/)
     match = 1
     puts "Run all reports against a specific host and output a PDF report"
     puts "(will create a file based on the hostname and report in the outputs directory)"
@@ -440,14 +440,14 @@ def print_examples(usage)
     puts "$ #{$script} --server=hostname --report=all --format=pdf --output=hostename.pdf"
     puts
   end
-  if usage.match(/example|report|server|cpu/)
+  if usage.match(/example|report|server|cpu|format/)
     match = 1
     puts "Run a all reports against a specific host and output it in a format that can be piped into another command"
     puts
     puts "$ #{$script} --server=hostname --report=all --format=pipe"
     puts
   end
-  if usage.match(/example|report|server|cpu/)
+  if usage.match(/example|report|server|cpu|format/)
     match = 1
     puts "Run a all reports against a specific host and output it in a table format"
     puts
