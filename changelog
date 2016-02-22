@@ -347,4 +347,6 @@
 # Improved handling and determination of gzip and tar
 # 1.7.3: Mon 22 Feb 2016 14:00:16 AEDT
 # Improved hostname determination for dladm processing
+# 1.7.4: Mon 22 Feb 2016 14:10:17 AEDT
+# Improved link information handling
 

@@ -19,6 +19,7 @@ end
 # get link name for Solaris 11
 
 def get_link_name(dev_name)
+  link_name = ""
   file_array = get_phys_info()
   if file_array
     file_array.each do |line|
@@ -42,6 +43,9 @@ end
 # Get Link details
 
 def get_link_details(link_name)
+  link_state = ""
+  link_auto  = ""
+  link_speed = ""
   file_array = get_ether_info()
   if file_array
     file_array.each do |line|
