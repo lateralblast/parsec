@@ -445,10 +445,20 @@ end
 # Get link name from nic name
 
 def get_nic_link(nic_name)
+  nic_link   = ""
   file_name  = "/netinfo/etc/dladm/datalink.conf"
   file_array = exp_file_to_array(file_name)
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-    nic_link = file_array.grep(/#{nic_name};$/)[0].split(/;/)[0].split(/=/)[1]
+    nic_link = file_array.grep(/#{nic_name};$/)[0]
+    if nic_link
+      if nic_link.match(/[A-Z]|[a-z]|[0-9]/)
+        nic_link = nic_link.split(/;/)[0].split(/\=/)[1]
+      else
+        nic_link = ""
+      end
+    else
+      nic_link = ""
+    end
   else
     nic_link = ""
   end
