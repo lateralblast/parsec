@@ -40,9 +40,13 @@ def check_exp_file_exists(file_name)
     end
     $exp_file_list = %x[command].split("\n")
   end
-  check_file = $exp_file_list.grep(/#{file_name}/)
+  check_file = $exp_file_list.grep(/#{file_name}/)[0]
   if check_file
-    return file_name
+    if check_file.match(/[A-Z]|[a-z]|[0-9]/)
+      return file_name
+    else
+      check_file = ""
+    end
   else
     check_file = ""
     return check_file
@@ -53,24 +57,30 @@ end
 # Extract a file from the the explorer .tar.gz
 
 def extract_exp_file(file_to_extract)
-  if File.exist?($exp_file)
-    if $verbose_mode == 1
-      if $tar_bin.match(/star/)
-        command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract}"
-      else
-        command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf -  #{file_to_extract}"
-      end
-    else
-      if $tar_bin.match(/star/)
-        command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract} > /dev/null 2>&1"
-      else
-        command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf - #{file_to_extract} > /dev/null 2>&1"
+  if File.exist?($exp_file) or File.symlink?($exp_file)
+    ext_file = $work_dir+"/"+file_to_extract
+    if !File.exist?(ext_file) and !File.symlink?(ext_file)
+      check_file = check_exp_file_exists(file_to_extract)
+      if check_file.match(/[A-Z]|[a-z]|[0-9]/)
+        if $verbose_mode == 1
+          if $tar_bin.match(/star/)
+            command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract}"
+          else
+            command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf -  #{file_to_extract}"
+          end
+        else
+          if $tar_bin.match(/star/)
+            command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract} > /dev/null 2>&1"
+          else
+            command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf - #{file_to_extract} > /dev/null 2>&1"
+          end
+        end
+        if $verbose_mode == 1
+          handle_output("Executing: #{command}\n")
+        end
+        system(command)
       end
     end
-    if $verbose_mode == 1
-      handle_output("Executing: #{command}\n")
-    end
-    system(command)
   end
 end
 

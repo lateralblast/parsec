@@ -50,12 +50,15 @@ end
 # prtfiag or prtpicl
 
 def get_hw_cfg_file()
+  found_file = ""
   [ "prtdiag-v.out", "prtpicl-v.out" ].each do |file_name|
     hw_cfg_file = check_exp_file_exists(file_name)
-    if hw_cfg_file == file_name
-      return hw_cfg_file
+    if hw_cfg_file.match(/#{file_name}/)
+      found_file = hw_cfg_file
+      return found_file
     end
   end
+  return found_file
 end
 
 # Get Architecture

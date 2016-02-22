@@ -349,4 +349,5 @@
 # Improved hostname determination for dladm processing
 # 1.7.4: Mon 22 Feb 2016 14:10:17 AEDT
 # Improved link information handling
-
+# 1.7.5: Mon 22 Feb 2016 14:56:25 AEDT
+# Improved explorer extraction code to reduce IO
