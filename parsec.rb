@@ -345,7 +345,7 @@ def check_local_config()
   os_name = %x[uname -v]
   if !os_name.match(/SunOS/)
     $tar_bin = %x[which star].chomp
-    if !$tar_bin.match(/star/)
+    if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
       if $verbose_mode == 1
         puts "S tar not installed"
       end
@@ -367,7 +367,7 @@ def check_local_config()
     end
   else
     $tar_bin = %x[which star].chomp
-    if !$tar_bin.match(/star/)
+    if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
       if $verbose_mode == 1
         puts "Using gzip"
       end
@@ -380,12 +380,12 @@ def check_local_config()
     end
     if os_name.match(/Darwin/)
       brew_bin = %x[which brew]
-      if brew_bin.match(/brew/)
-      puts "Installing Parallel GZip"
+      if brew_bin.match(/brew/) and !brew_bin.match(/no brew/)
+        puts "Installing Parallel GZip"
         %x[brew install pigz]
       else
         $gzip_bin = %x[which gzip].chomp
-        if !$gzip_bin.match(/gzip/)
+        if !$gzip_bin.match(/gzip/) or $gzip_bin.match(/no gzip/)
           puts "Cannot find gzip"
           exit
         else
@@ -396,7 +396,7 @@ def check_local_config()
       end
     else
       $gzip_bin = %x[which gzip].chomp
-      if !$gzip_bin.match(/gzip/)
+      if !$gzip_bin.match(/gzip/) or $gzip_bin.match(/no gzip/)
         puts "Cannot find gzip"
         exit
       else
@@ -495,14 +495,14 @@ if option["use"]
   case use_flag
   when /star/
     $tar_bin = %x[which star].chomp
-    if !$star.match(/star/)
+    if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
       $tar_bin = %x[which tar].chomp
     end
   when /tar/
     $tar_bin = %x[which tar].chomp
   when /pigz/
-    $gzip_bin = %x[which pigz].chomp
-    if !$gzip_bin.match(/pigz/)
+    $gzip_bin = %x[which pigz].chomp 
+    if !$gzip_bin.match(/pigz/) or $gzip_bin.match(/no pigz/)
       $gzip_bin = %x[which gzip].chomp
     end
   when /gzip/
