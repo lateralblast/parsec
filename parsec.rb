@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.7.1
+# Version:      1.7.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -42,7 +42,7 @@ $script = $0
 
 # Valid output formats
 
-$valid_output_formats = [ 'table', 'pdf', 'pipe', 'csv' ]
+$valid_output_formats = [ 'table', 'pdf', 'pipe', 'csv', 'text' ]
 
 # Handle CTRL-C more gracefully
 
@@ -301,6 +301,7 @@ begin
     [ "--type",         "-t", Getopt::REQUIRED ],   # Type of report (default is explorer)
     [ "--temp",         "-w", Getopt::REQUIRED ],   # Work directory
     [ "--usage",        "-u", Getopt::REQUIRED ],   # Display usage information
+    [ "--use",          "-U", Getopt::REQUIRED ],   # Overide defaults, e.g. use gzip rather than pgiz
     [ "--help",         "-h", Getopt::BOOLEAN ],    # Display help information
     [ "--verbose",      "-v", Getopt::BOOLEAN ],    # Verbose output
     [ "--version",      "-V", Getopt::BOOLEAN ],    # Display version
@@ -365,7 +366,13 @@ def check_local_config()
       end
     end
   else
-    $tar_bin = "/usr/bin/tar"
+    $tar_bin = %x[which star].chomp
+    if !$tar_bin.match(/star/)
+      if $verbose_mode == 1
+        puts "Using gzip"
+      end
+      $tar_bin = "/usr/bin/tar"
+    end
   end
   if !$gzip_bin.match(/pigz/)
     if $verbose_mode == 1
@@ -481,6 +488,28 @@ def print_usage(usage,report)
   return
 end
 
+# Overide defaults
+
+if option["use"]
+  use_flag = option["use"]
+  case use_flag
+  when /star/
+    $tar_bin = %x[which star].chomp
+    if !$star.match(/star/)
+      $tar_bin = %x[which tar].chomp
+    end
+  when /tar/
+    $tar_bin = %x[which tar].chomp
+  when /pigz/
+    $gzip_bin = %x[which pigz].chomp
+    if !$gzip_bin.match(/pigz/)
+      $gzip_bin = %x[which gzip].chomp
+    end
+  when /gzip/
+    $gzip_bin = %x[which gzip].chomp
+  end
+end
+
 # Print help
 
 if option["help"]
@@ -543,6 +572,7 @@ end
 
 if option["format"]
   $output_format = option["format"].downcase
+  $output_format = $output_format.gsub(/text/,"pipe")
   check_output_format()
 else
   $output_format = "pipe"

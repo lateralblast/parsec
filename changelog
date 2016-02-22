@@ -341,4 +341,8 @@
 # Added examples
 # 1.7.0: Sun 21 Feb 2016 15:54:58 AEDT
 # Cleaned up masking code
+# 1.7.1: Sun 21 Feb 2016 22:39:23 AEDT
+# Added format usage information
+# 1.7.2: Mon 22 Feb 2016 11:39:11 AEDT
+# Improved handling and determination of gzip and tar
 
