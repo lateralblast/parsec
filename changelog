@@ -345,4 +345,6 @@
 # Added format usage information
 # 1.7.2: Mon 22 Feb 2016 11:39:11 AEDT
 # Improved handling and determination of gzip and tar
+# 1.7.3: Mon 22 Feb 2016 14:00:16 AEDT
+# Improved hostname determination for dladm processing
 

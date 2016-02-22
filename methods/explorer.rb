@@ -30,7 +30,11 @@ end
 
 def check_exp_file_exists(file_name)
   if !$exp_file_list[0]
-    command = "#{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t"
+    if $tar_bin.match(/star/)
+      command = "#{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t"
+    else
+      command = "#{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -tf -"
+    end
     if $verbose_mode == 1
       handle_output("Executing: #{command}\n")
     end
@@ -51,9 +55,17 @@ end
 def extract_exp_file(file_to_extract)
   if File.exist?($exp_file)
     if $verbose_mode == 1
-      command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract}"
+      if $tar_bin.match(/star/)
+        command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract}"
+      else
+        command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf -  #{file_to_extract}"
+      end
     else
-      command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract} > /dev/null 2>&1"
+      if $tar_bin.match(/star/)
+        command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract} > /dev/null 2>&1"
+      else
+        command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf - #{file_to_extract} > /dev/null 2>&1"
+      end
     end
     if $verbose_mode == 1
       handle_output("Executing: #{command}\n")

@@ -443,7 +443,11 @@ end
 def get_nic_link(nic_name)
   file_name  = "/netinfo/etc/dladm/datalink.conf"
   file_array = exp_file_to_array(file_name)
-  nic_link   = file_array.grep(/#{nic_name};$/)[0].split(/;/)[0].split(/=/)[1]
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    nic_link = file_array.grep(/#{nic_name};$/)[0].split(/;/)[0].split(/=/)[1]
+  else
+    nic_link = ""
+  end
   return nic_link
 end
 
@@ -464,9 +468,27 @@ end
 # Get hostname from link
 
 def get_link_hostname(nic_ip)
-  file_name  = "/etc/hosts"
-  file_array = exp_file_to_array(file_name)
-  nic_host   = file_array.grep(/#{nic_ip}/)[0].split(/\s+/)[-1]
+  nic_host = ""
+  if nic_ip.match(/[0-9]/)
+    file_name  = "/etc/inet/hosts"
+    file_array = exp_file_to_array(file_name)
+    if !file_array.to_s.match(/[a-z]/)
+      file_name  = "/etc/hosts"
+      file_array = exp_file_to_array(file_name)
+    end
+    if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+      nic_host = file_array.grep(/#{nic_ip}/)
+      if nic_host.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+        nic_host = nic_host[0].split(/\s+/)[-1]
+      else
+        nic_host = "unknown"
+      end
+    else
+      nic_host = ""
+    end
+  else
+    nic_host = ""
+  end
   return nic_host
 end
 
