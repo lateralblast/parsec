@@ -196,7 +196,22 @@ def process_io()
             io_status = io_line[6]
           end
           io_path   = io_line[-1]
+          if !io_path.match(/-/)
+            io_path = io_line[-2]
+            io_name = io_line[-1]
+          end
           if io_path.match(/qlc/)
+            if io_path.match(/[0-9]/)
+              if io_path.match(/SUNW/)
+                (header,io_vendid,io_devid) = io_path.split(/\,/)
+              else
+                (io_vendid,io_devid) = io_path.split(/\,/)
+              end
+              if io_devid.match(/\./)
+                io_devid = io_devid.split(/\./)[0]
+              end
+              io_vendid = io_vendid.split(/-/)[1].gsub(/[a-z]/,"")
+            end
             io_name = io_path.split(/,/)[2].split(/\./)[0]
             io_name = "ISP"+io_name.to_s
             device  = io_path.split(/\-/)[0]
