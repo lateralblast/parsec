@@ -363,6 +363,7 @@ def process_io()
         when /T2/
           io_type = io_line[1]
           io_slot = io_line[0]
+          io_path = io_line[3]
           if line.match(/LSI|qlc|emlx/)
             io_name = io_line[-1]
             if io_name.match(/[0-9]LP/)
@@ -370,7 +371,14 @@ def process_io()
               io_name = "LP"+io_name
             end
           else
-            io_name = "N/A"
+            io_name = io_line[-1]
+            if io_name.match(/\,/)
+              (io_vendid,io_devid) = io_name.split(/\,/)
+              if io_devid.match(/\./)
+                io_devid = io_devid.split(/\./)[0]
+              end
+              io_vendid = io_vendid.split(/-/)[1].gsub(/[a-z]/,"")
+            end
           end
         else
           io_type  = io_line[0]

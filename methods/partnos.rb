@@ -234,6 +234,7 @@ $scsi_part_list["SAS3801XL-S"]            = "SG-XPCI8SAS-E-Z,LSI Logic SAS/SATA 
 $scsi_part_list["LSI,320-2X"]             = "XTA5210-SCR2-320,LSI MegaRAID 320-2X Dual Ultra-320 SCSI,375-3208,"
 $scsi_part_list["LSI,3801"]               = ",LSI SAS/SATA HBA,375-3488,"
 $scsi_part_list["LSI,1064"]               = ",LSI Serial Attached SCSI HBA,370-7696,"
+$scsi_part_list["LSI,1064E"]              = ",LSI Serial Attached SCSI HBA,370-7696,"
 $scsi_part_list["9300-8i"]                = ",LSI Logic 8-Port 12Gbps SAS-3 RAID HBA (Internal),7085207,"
 $scsi_part_list["SAS3008"]                = ",LSI Logic 8-Port 12Gbps SAS-3 RAID HBA (Internal),7085209,"
 $scsi_part_list["SAS3108"]                = ",LSI Logic 8-Port 12Gbps SAS-3 RAID HBA (Internal),7085209,"
