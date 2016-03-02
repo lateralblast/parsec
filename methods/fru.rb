@@ -78,27 +78,23 @@ end
 
 def process_sensors()
   sensor_info = get_sensor_info()
-  title       = ""
-  row         = ""
-  table       = ""
-  sensor_name = ""
-  counter     = 0
   if sensor_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title       = ""
+    row         = ""
+    sensor_name = ""
+    table       = ""
     sensor_info.each do |line|
       line = line.chomp
       line = line.gsub(/\[NO_FAULT\]/,"OK")
       line = line.gsub(/\[NO_FAULT\s+\]/,"OK")
-      if line.match(/[S,s]ensors:$|[S,s]tatus:$|[S,s]upplies:$|\):/) and !line.match(/System LED/)
-        if counter > 1
-          table = handle_table("end","","",table)
-        end
-        counter     = counter+1
+      if line.match(/[S,s]ensors:$|[S,s]tatus:$|[S,s]upplies:$|\):$/) and !line.match(/System LED/)
+        table = handle_table("end","","",table)
         sensor_name = line.split(/ /)[0]
         title       = sensor_name+" Sensor Information"
         row         = [ 'Location', 'Sensor/Value', 'Status' ]
         table       = handle_table("title",title,row,"")
       else
-        if line.match(/^SYS|^CPU|^DISK/)
+        if line.match(/^SYS|^CPU|^DISK|^DBP/)
           row   = line.split(/\s+/)
           table = handle_table("row","",row,table)
         end 

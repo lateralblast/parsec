@@ -294,6 +294,7 @@ begin
     [ "--format",       "-f", Getopt::REQUIRED ],   # Output format
     [ "--list",         "-l", Getopt::BOOLEAN ],    # List explorers (also lists dmidecodes and facters if present)
     [ "--masked",       "-m", Getopt::BOOLEAN ],    # Mask hostnames, IPs, MAC addresses etc
+    [ "--model",        "-o", Getopt::REQUIRED ],   # Set model (used in conjunction with list)
     [ "--output",       "-o", Getopt::REQUIRED ],   # Output file
     [ "--pause",        "-p", Getopt::BOOLEAN ],    # Pause between each report when running against all hosts (useful for debugging)
     [ "--report",       "-R", Getopt::REQUIRED ],   # Report type (e.g. all, cpu, memory)
@@ -301,7 +302,7 @@ begin
     [ "--type",         "-t", Getopt::REQUIRED ],   # Type of report (default is explorer)
     [ "--temp",         "-w", Getopt::REQUIRED ],   # Work directory
     [ "--usage",        "-u", Getopt::REQUIRED ],   # Display usage information
-    [ "--use",          "-U", Getopt::REQUIRED ],   # Overide defaults, e.g. use gzip rather than pgiz
+    [ "--use",          "-U", Getopt::REQUIRED ],   # Override defaults, e.g. use gzip rather than pgiz
     [ "--help",         "-h", Getopt::BOOLEAN ],    # Display help information
     [ "--verbose",      "-v", Getopt::BOOLEAN ],    # Verbose output
     [ "--version",      "-V", Getopt::BOOLEAN ],    # Display version
@@ -542,6 +543,14 @@ if option["server"]
   end
 end
 
+# Get model type
+
+if option["model"]
+  search_model = option["model"] 
+else
+  search_model = ""
+end
+
 # Check local config
 
 if !option["help"] and !option["version"]
@@ -620,7 +629,7 @@ end
 
 if option["list"]
   if input_type.match(/all|explorer/)
-    list_explorers()
+    list_explorers(search_model)
   end
   if input_type.match(/all|facter/)
     list_facters()

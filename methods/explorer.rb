@@ -270,7 +270,7 @@ end
 
 # List explorers
 
-def list_explorers()
+def list_explorers(search_model)
   counter = 0
   if Dir.exist?($exp_dir) or File.symlink?($exp_dir)
     exp_list=Dir.entries($exp_dir).sort
@@ -283,23 +283,25 @@ def list_explorers()
           host_info = exp_file.split(/\./)
           host_id    = host_info[1]
           model_name = get_model_from_hostid(host_id)
-          if $masked == 1
-            orig_name = host_info[2].split(/-/)[0]
-            orig_id   = host_info[1]
-            host_name = "hostname"+counter.to_s
-            counter   = counter+1
-            host_id   = "MASKED"
-            exp_file  = exp_file.gsub(/#{orig_id}/,host_id).gsub(/#{orig_name}/,host_name)
-          else
-            host_name  = host_info[2].split(/-/)[0..-2].join("-")
+          if !search_model.match(/[a-z,A-Z,0-9]/) or search_model.downcase.match(/#{model_name.downcase}/)
+            if $masked == 1
+              orig_name = host_info[2].split(/-/)[0]
+              orig_id   = host_info[1]
+              host_name = "hostname"+counter.to_s
+              counter   = counter+1
+              host_id   = "MASKED"
+              exp_file  = exp_file.gsub(/#{orig_id}/,host_id).gsub(/#{orig_name}/,host_name)
+            else
+              host_name  = host_info[2].split(/-/)[0..-2].join("-")
+            end
+            year_info  = host_info[2].split(/-/)[-1].split(/\./)[0]
+            month_info = host_info[3]
+            day_info   = host_info[4]
+            time_info  = host_info[5..6].join(":")
+            date_info  = time_info+" "+day_info+"/"+month_info+"/"+year_info
+            table_row  = [ host_name, model_name, date_info, host_id, exp_file ]
+            table      = handle_table("row","",table_row,table)
           end
-          year_info  = host_info[2].split(/-/)[-1].split(/\./)[0]
-          month_info = host_info[3]
-          day_info   = host_info[4]
-          time_info  = host_info[5..6].join(":")
-          date_info  = time_info+" "+day_info+"/"+month_info+"/"+year_info
-          table_row  = [ host_name, model_name, date_info, host_id, exp_file ]
-          table      = handle_table("row","",table_row,table)
         end
       end
       table = handle_table("end","","",table)
