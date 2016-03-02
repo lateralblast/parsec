@@ -367,3 +367,5 @@
 # Improved CPU reporting
 # 1.8.3: Thu  3 Mar 2016 10:10:20 AEDT
 # Improved IO reporting on T2000
+# 1.8.4: Thu  3 Mar 2016 10:23:17 AEDT
+# Fixed bug with FC firmware code detection

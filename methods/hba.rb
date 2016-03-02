@@ -289,7 +289,11 @@ def get_hba_fcode(io_path)
     fc_ver     = fc_info.split(/:/)[1]
     if fc_ver
       if fc_ver.match(/Host/)
-        fc_ver = fc_info.split(/:/)[2].gsub(/^\s+/,'').split(/ /)[0]
+        if fc_ver.match(/:/)
+          fc_ver = fc_info.split(/:/)[2].gsub(/^\s+/,'').split(/ /)[0]
+        else
+          fc_ver = fc_ver.split(/\s+/)[-2..-1].join(" ")
+        end
       else
         if fc_ver.match(/SPARC/)
           fc_ver = fc_info.split(/:/)[2].split(/ \s+/)[0].gsub(/\s+/,'')
