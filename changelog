@@ -351,3 +351,5 @@
 # Improved link information handling
 # 1.7.5: Mon 22 Feb 2016 14:56:25 AEDT
 # Improved explorer extraction code to reduce IO
+# 1.7.6: Wed  2 Mar 2016 13:55:08 AEDT
+# Fixed file extraction and added initial support for T5440

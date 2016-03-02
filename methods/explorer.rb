@@ -31,14 +31,15 @@ end
 def check_exp_file_exists(file_name)
   if !$exp_file_list[0]
     if $tar_bin.match(/star/)
-      command = "#{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t"
+      command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t"
     else
-      command = "#{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -tf -"
+      command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -tf -"
     end
     if $verbose_mode == 1
       handle_output("Executing: #{command}\n")
     end
-    $exp_file_list = %x[command].split("\n")
+    $exp_file_list = `#{command}`
+    $exp_file_list = $exp_file_list.split(/\n/)
   end
   check_file = $exp_file_list.grep(/#{file_name}/)[0]
   if check_file
