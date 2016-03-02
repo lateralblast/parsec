@@ -1,12 +1,46 @@
 # Kernel related code
 
+# Get information from /etc/path_to_inst
+
+def get_path_to_inst()
+  file_name  = "/etc/path_to_inst"
+  file_array = exp_file_to_array(file_name)
+  return file_array 
+end
+
+# Search /etc/path_to_inst
+
+def search_path_to_inst(io_path,dev_id,drv_name)
+  temp_path  = ""
+  temp_id    = ""
+  temp_name  = ""
+  file_array = get_path_to_inst()
+  file_array.each do |line|
+    if line.match(/^"/)
+      line      = line.chomp
+      info      = line.split(/\s+/)
+      temp_path = info[0].gsub(/"/,"")
+      temp_id   = info[1]
+      temp_name = info[2].gsub(/"/,"")
+      if temp_path.match(/#{io_path}/) or !io_path.match(/[a-z]/)
+        if temp_id.match(/#{dev_id}/) or !dev_id.match(/[0-9]/)
+          if temp_name.match(/#{drv_name}/) or !drv_name.match(/[a-z]/)
+            return temp_path,temp_id,temp_name
+          end
+        end
+      end
+    end
+  end
+  return temp_path,temp_id,temp_name
+end
+
 # Get driver info
 # Uses path_to_inst to get driver name
 
 def get_drv_info(io_path)
   file_name  = "/etc/path_to_inst"
   file_array = exp_file_to_array(file_name)
-  return(file_array)
+  return file_array 
 end
 
 # Process driver info

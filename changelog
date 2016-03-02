@@ -353,3 +353,7 @@
 # Improved explorer extraction code to reduce IO
 # 1.7.6: Wed  2 Mar 2016 13:55:08 AEDT
 # Fixed file extraction and added initial support for T5440
+# 1.7.7: Wed  2 Mar 2016 13:57:51 AEDT
+# Added initial support for V490
+# 1.7.8: Wed  2 Mar 2016 17:06:08 AEDT
+# Improved V490 Memory, CPU, and IO reports

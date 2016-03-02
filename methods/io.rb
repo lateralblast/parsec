@@ -50,7 +50,7 @@ def get_io_info()
   case model_name
   when /T2/
     io_info = search_prtdiag_info("IO Configuration")
-  when /V1|480R/
+  when /V1|480R|V490/
     io_info = search_prtdiag_info("IO Cards")
   when /O\.E\.M\./
     io_info = search_prtdiag_info("On-Board Devices")
@@ -127,11 +127,11 @@ def process_io()
     io_count   = 0
     sys_model  = get_sys_model()
     length     = io_info.grep(/[0-9]/).length
-    if !model_name.match(/480R|T2|V1/)
+    if !model_name.match(/480R|T2|V1|V490/)
       length = length/2
     end
     dev_count  = {}
-    if sys_model.match(/480|880|490|890|280/)
+    if sys_model.match(/480|880|890|280/)
       io_type  = "PCI"
       table    = handle_table("row","Type",io_type,table)
       io_speed = "33"
@@ -180,13 +180,21 @@ def process_io()
           next_line = next_line.split(/\s+/)
           io_status = next_line[1]
           io_path   = next_line[2]
-        when /480R|880R/
+        when /480R|880R|V490/
           io_type   = io_line[0]
           io_port   = io_line[1]
           io_bus    = io_line[2]
           io_slot   = io_line[3]
           io_speed  = io_line[4]
-          io_status = io_line[6]
+          if sys_model.match(/V490/)
+            inst_no   = io_line[6].split(/,/)[0]
+            inst_no   = inst_no.to_i-1
+            inst_no   = inst_no.to_s
+            io_status = io_line[7]
+          else
+            inst_no   = io_line[5].split(/,/)[0]
+            io_status = io_line[6]
+          end
           io_path   = io_line[-1]
           if io_path.match(/qlc/)
             io_name = io_path.split(/,/)[2].split(/\./)[0]
@@ -200,6 +208,19 @@ def process_io()
               dev_count[device] = temp_count+1
             end
             io_path = get_io_path(device,temp_count)
+          else
+            if io_path.match(/[0-9]/)
+              (io_vendid,io_devid) = io_path.split(/\,/)
+              if io_devid.match(/\./)
+                io_devid = io_devid.split(/\./)[0]
+              end
+              io_vendid = io_vendid.split(/-/)[1].gsub(/[a-z]/,"")
+              if io_path.match(/channel/)
+                io_path  = "fibre-channel"
+                drv_name = "qlc"
+              end
+              (io_path,inst_no,drv_name) = search_path_to_inst(io_path,inst_no,drv_name)
+            end
           end
         when /T[5,7]-/
           io_slot = io_line[0]
@@ -376,7 +397,7 @@ def process_io()
         if io_now
           table = handle_table("row","Max Speed",io_now,table)
         end
-        if !model_name.match(/480R/)
+        if !model_name.match(/480R|V490/)
           if model_name.match(/T2/)
             io_path = io_line[3]
           else
@@ -385,7 +406,7 @@ def process_io()
             end
           end
         end
-        if !model_name.match(/V1|480R/)
+        if !model_name.match(/V1|480R|V490/)
           io_path = io_path.to_s
           io_path = io_path.gsub(/\s+/,'')
           io_path = io_path.gsub(/okay/,'')

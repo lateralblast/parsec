@@ -242,7 +242,7 @@ def process_memory()
             end
           end
         end
-        if sys_model.match(/480R/)
+        if sys_model.match(/480R|V490/)
           sys_board_no   = mem_line[1]
           mem_controller = mem_line[2]
           mem_bank       = mem_line[3]
@@ -370,7 +370,7 @@ def process_memory()
             if block_count < base_length
               table = handle_table("line","","",table)
             end
-          when /480R/
+          when /480R|V490/
             if counter < length
               table = handle_table("line","","",table)
             end

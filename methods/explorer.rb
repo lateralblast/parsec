@@ -67,11 +67,11 @@ def extract_exp_file(file_to_extract)
           if $tar_bin.match(/star/)
             command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract}"
           else
-            command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf -  #{file_to_extract}"
+            command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf - #{file_to_extract}"
           end
         else
           if $tar_bin.match(/star/)
-            command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract} > /dev/null 2>&1"
+            command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -x #{file_to_extract} -silent > /dev/null 2>&1"
           else
             command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -xf - #{file_to_extract} > /dev/null 2>&1"
           end
