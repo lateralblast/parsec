@@ -363,3 +363,5 @@
 # Improved V480 Sensor report
 # 1.8.1: Thu  3 Mar 2016 09:29:28 AEDT
 # Fixed bug with getting OS update
+# 1.8.2: Thu  3 Mar 2016 09:55:10 AEDT
+# Improved CPU reporting

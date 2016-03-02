@@ -124,6 +124,12 @@ def process_cpu()
             cpu_type   = cpu_line[3]
             cpu_status = cpu_line[4]
           end
+          if line.match(/^M/)
+            board_no   = cpu_line[0]
+            cpu_thread = cpu_line[1]
+            cpu_speed  = cpu_line[2..3].join(" ")
+            cpu_type   = cpu_line[4]
+          end
         when /V1/
           if line.match(/^ [0-9]/)
             board_no   = cpu_line[1]
@@ -181,12 +187,14 @@ def process_cpu()
             cpu_type = get_cpu_type(cpu_id)
           end
         end
-        if sys_model.match(/T[0-9]|M10-/)
-          cpu_no  = (t_count / c_ratio)
+        if sys_model.match(/T[0-9]|M10-/) 
+          if !sys_model.match(/T200/)
+            cpu_no  = (t_count / c_ratio)
+          end
           core_no = (t_count / t_ratio)
           t_count = t_count+1
         end
-        row   = [ board_no, cpu_module, cpu_no, core_no, cpu_status, cpu_thread, cpu_speed, cpu_mask, cpu_cache, cpu_type, cpu_ids ]
+        row   = [ board_no, cpu_module, cpu_no, core_no, cpu_thread, cpu_status, cpu_speed, cpu_mask, cpu_cache, cpu_type, cpu_ids ]
         table = handle_table("row","",row,table)
       end
     end
