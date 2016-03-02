@@ -131,7 +131,7 @@ def search_prtdiag_info(search_val)
   file_array     = exp_file_to_array(file_name)
   file_array.each do |line|
     if prtdiag_output == 1
-      if line.match(/^=/)
+      if line.match(/\=\= [A-Z]/)
         prtdiag_output = 0
       else
         prtdiag_info.push(line)
