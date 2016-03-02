@@ -361,3 +361,5 @@
 # Improved V480 IO report
 # 1.8.0: Wed  2 Mar 2016 18:05:17 AEDT
 # Improved V480 Sensor report
+# 1.8.1: Thu  3 Mar 2016 09:29:28 AEDT
+# Fixed bug with getting OS update

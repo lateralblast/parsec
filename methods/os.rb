@@ -44,7 +44,7 @@ end
 
 def get_os_build()
   os_date = get_os_date()
-  if os_date.match(/^11/)
+  if os_date.match(/^11/) and !os_date.match(/\//)
     os_build = os_date.split(".")[1]
   else
     os_build = search_release(3)
