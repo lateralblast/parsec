@@ -48,7 +48,7 @@ end
 def get_io_info()
   model_name = get_model_name()
   case model_name
-  when /T2/
+  when /T2|T63/
     io_info = search_prtdiag_info("IO Configuration")
   when /V1|480R|V490/
     io_info = search_prtdiag_info("IO Cards")
@@ -127,7 +127,7 @@ def process_io()
     io_count   = 0
     sys_model  = get_sys_model()
     length     = io_info.grep(/[0-9]/).length
-    if !model_name.match(/480R|T2|V1|V490/)
+    if !model_name.match(/480R|T2|V1|V490|T63/)
       length = length/2
     end
     dev_count  = {}
@@ -164,6 +164,23 @@ def process_io()
         io_line      = line.split(/\s+/)
         sys_board_no = io_line[0]
         case sys_model
+        when /T63/
+          io_bus  = io_line[0]
+          io_type = io_line[1]
+          io_slot = io_line[2]
+          io_path = io_line[3]
+          io_name = io_line[4]
+          if io_name.match(/\,/)
+            if io_name.match(/SUNW/)
+              (header,io_vendid,io_devid) = io_name.split(/\,/)
+            else
+              (io_vendid,io_devid) = io_name.split(/\,/)
+            end
+            if io_devid.match(/\./)
+              io_devid = io_devid.split(/\./)[0]
+            end
+            io_vendid = io_vendid.split(/-/)[1].gsub(/[a-z]/,"")
+          end
         when /O\.E\.M\./
           io_type = io_line[1]
           io_name = io_line[2]
@@ -277,7 +294,7 @@ def process_io()
             io_path = get_io_path(device,temp_count)
           end
           if io_path.match(/network/)
-            device    = io_name.split(/\-/)[1]
+            device = io_name.split(/\-/)[1]
             if !dev_count[device]
               temp_count = 0
               dev_count[device] = temp_count+1
@@ -336,7 +353,7 @@ def process_io()
             io_name  = io_line[2]
             io_speed = io_line[-1]
           end
-        when /T[3,4,67]-/
+        when /T[3,4,6,7]-/
           io_slot  = io_line[0]
           io_type  = io_line[1].gsub(/PCI3/,"PCIE")
           io_speed = io_line[-1]

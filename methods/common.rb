@@ -184,7 +184,11 @@ def get_model_name()
     if model_name.match(/\(/)
       model_name = model_name.split(/ \(/)[0].split(/ /)[-1]
     else
-      model_name = model_name.split(/ /)[-1]
+      if model_name.match(/Server Module$/)
+        model_name = model_name.split(/ /)[-3]
+      else
+        model_name = model_name.split(/ /)[-1]
+      end
     end
   else
     model_name = $sys_config["model"]
