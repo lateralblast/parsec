@@ -87,14 +87,18 @@ def process_sensors()
       line = line.chomp
       line = line.gsub(/\[NO_FAULT\]/,"OK")
       line = line.gsub(/\[NO_FAULT\s+\]/,"OK")
-      if line.match(/[S,s]ensors:$|[S,s]tatus:$|[S,s]upplies:$|\):$/) and !line.match(/System LED/)
+      if line.match(/[S,s]ensors:$|[S,s]tatus:$|[S,s]upplies:$|\):$|^LEDs:$/) and !line.match(/System LED/)
         table = handle_table("end","","",table)
         sensor_name = line.split(/ /)[0]
-        title       = sensor_name+" Sensor Information"
+        if line.match(/^LEDs:$/)
+          title = "LEDs"
+        else
+          title = sensor_name+" Sensor Information"
+        end
         row         = [ 'Location', 'Sensor/Value', 'Status' ]
         table       = handle_table("title",title,row,"")
       else
-        if line.match(/^SYS|^CPU|^DISK|^DBP/)
+        if line.match(/^SYS|^CPU|^DISK|^DBP|^UM/)
           row   = line.split(/\s+/)
           table = handle_table("row","",row,table)
         end 
