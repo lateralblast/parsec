@@ -364,19 +364,45 @@ def process_io()
             io_name = "N/A"
           end
         when /T5[0-9][0-9]/
-          io_type = io_line[1].gsub(/PCI3/,"PCIE")
-          io_slot = io_line[0]
-          if line.match(/LSI|qlc|emlx/)
+          if sys_model.match(/T5440/)
+            io_slot = io_line[0]
+            io_type = io_line[1]
             io_name = io_line[-1]
-            if io_name.match(/Tx/)
-              io_name  = io_line[-2]
-              io_speed = io_line[-1]
+            if io_name.match(/\,[0-9][0-9][0-9][0-9]$/)
+              io_temp = io_line[-1]
+            else
+              io_temp = io_line[-2]
+            end
+            if io_temp.match(/\,/) and !io_temp.match(/^[A-R,T-Z]/)
+              if io_temp.match(/SUNW/)
+                (header,io_vendid,io_devid) = io_temp.split(/\,/)
+              else
+                (io_vendid,io_devid) = io_temp.split(/\,/)
+              end
+              if io_devid
+                if io_devid.match(/\./)
+                  io_devid = io_devid.split(/\./)[0]
+                end
+              else
+                io_devid = ""
+              end
+              io_vendid = io_vendid.split(/-/)[1].gsub(/[a-z]/,"")
             end
           else
-            io_speed = io_line[-1]
-            io_name  = "N/A"
+            io_type = io_line[1].gsub(/PCI3/,"PCIE")
+            io_slot = io_line[0]
+            if line.match(/LSI|qlc|emlx/)
+              io_name = io_line[-1]
+              if io_name.match(/Tx/)
+                io_name  = io_line[-2]
+                io_speed = io_line[-1]
+              end
+            else
+              io_speed = io_line[-1]
+              io_name  = "N/A"
+            end
+            sys_board_no = io_line[0].split(/\//)[0]
           end
-          sys_board_no = io_line[0].split(/\//)[0]
         when /T2/
           io_type = io_line[1]
           io_slot = io_line[0]
