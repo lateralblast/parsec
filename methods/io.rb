@@ -478,17 +478,17 @@ def process_io()
           io_path = io_path.gsub(/okay/,'')
         end
         if io_path
-          if io_path.match(/^ebus$/)
+          case io_path
+          when /^ebus$/
             io_desc = "PCI/ISA Bridge"
-          end
-          if io_path.match(/^isa$/)
+          when /^isa$/
             io_desc = "ISA Bridge"
-          end
-          if io_path.match(/^lomp$/)
+          when /^lomp$/
             io_desc = "Lights Out Management Device"
-          end
-          if io_path.match(/^pmu/)
+          when /^pmu/
             io_desc = "Power Management Unit"
+          when /usb\@/
+            io_desc = "USB Controller"
           end
           table = handle_table("row","Path",io_path,table)
         end
@@ -508,6 +508,11 @@ def process_io()
             if dev_name
               (dev_name,drv_name,inst_no) = process_drv_info(io_path)
             end
+          end
+        end
+        if !drv_name
+          if io_path or inst_no or drv_name
+            (io_path,inst_no,drv_name) = search_path_to_inst(io_path,inst_no,drv_name)
           end
         end
         if drv_name
@@ -541,7 +546,7 @@ def process_io()
               table = handle_table("row","Speed",link_speed,table)
             end
           end
-          if aggr_name
+          if aggr_name.match(/[a-z,A-Z,0-9]/)
             table = handle_table("row","Aggregate",aggr_name,table)
             if_hostname = get_if_hostname(aggr_name)
           else
