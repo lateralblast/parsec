@@ -216,6 +216,7 @@ end
 def get_aggregation()
   file_name  = "/etc/aggregation.conf"
   file_array = exp_file_to_array(file_name)
+  file_array = file_array.grep(/^[^#]/)
   return file_array
 end
 
@@ -232,7 +233,7 @@ end
 
 def process_aggregation()
   file_array = get_aggregation()
-  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+  if file_array.to_s.match(/[a-z][0-9]/)
     title = "Aggregate Configuration"
     row   = [ 'Interface', 'Type', 'Members', 'Devices', 'Config', 'Status', 'Timeout', 'Hostname', 'IP' ]
     table = handle_table("title",title,row,"")

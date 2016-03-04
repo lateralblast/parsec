@@ -377,4 +377,6 @@
 # Improved IO report for T5440
 # 1.8.8: Thu  3 Mar 2016 17:27:34 AEDT
 # Improvements to IO report
+# 1.8.9: Fri  4 Mar 2016 11:37:00 AEDT
+# Added hardware revision information to firmware report
 

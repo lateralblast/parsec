@@ -4,7 +4,9 @@
 
 def get_model_from_hostid(hostid)
   case hostid
-  when /^8480|^843/
+  when /^8501/
+    model = "M4000"
+  when /^8480|^843|^8528|^8545/
     model = "M5000"
   when /^809/
     model = "M3000"

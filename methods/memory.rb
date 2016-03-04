@@ -85,7 +85,7 @@ def process_memory()
     end
     if sys_model.match(/T3/)
       actual_mem = get_actual_mem()
-      table     = handle_table("row","Actual Memory",actual_mem,table)
+      table      = handle_table("row","Actual Memory",actual_mem,table)
     end
     if !sys_model.match(/V120|M[5-7]-|T[5-7]-|T2000/)
       table = handle_table("line","","",table)
