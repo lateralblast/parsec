@@ -379,4 +379,6 @@
 # Improvements to IO report
 # 1.8.9: Fri  4 Mar 2016 11:37:00 AEDT
 # Added hardware revision information to firmware report
+# 1.9.0: Fri  4 Mar 2016 12:41:51 AEDT
+# Added code to convert CPU IDs array to string
 

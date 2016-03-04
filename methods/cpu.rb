@@ -184,6 +184,9 @@ def process_cpu()
             cpu_id   = cpu_ids[0]
             cpu_id   = cpu_id.to_i.chr.unpack('H*')
             cpu_id   = cpu_id[0]
+            if cpu_ids.class != String
+              cpu_ids = cpu_ids.join(", ")
+            end
             cpu_type = get_cpu_type(cpu_id)
           end
         end
