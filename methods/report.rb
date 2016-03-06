@@ -291,15 +291,6 @@ def config_report(report,host_name)
   return
 end
 
-def clean_up()
-  exp_name = File.basename($exp_file,".tar.gz")
-  exp_dir  = $work_dir+"/"+exp_name
-  if Dir.exist?(exp_dir)
-    FileUtils.rm_rf(exp_dir)
-  end
-  return
-end
-
 # Open Disk firmware file
 # file generated from output of goofball
 # goofball.rb -d all -c

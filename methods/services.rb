@@ -97,9 +97,16 @@ def process_services()
     row   = [ 'Service', 'Status', 'Recommended', 'Complies' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line    = line.chomp
       items   = line.split(/\s+/)
       state   = items[0]
       service = items[4]
+      if !service
+        service = items[3]
+        while service.match(/^[0-9]/)
+          service = service.gsub(/^[0-9]/,"")
+        end
+      end
       line    = $manifest_services.select{|item| item.match(/^#{service}/)}
       if service.match(/^lrc/)
         type = "Legacy"

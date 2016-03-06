@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.9.0
+# Version:      1.9.1
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -25,6 +25,7 @@ require 'pathname'
 require 'etc'
 require 'unpack'
 require 'enumerator'
+require 'date'
 
 begin
   require 'prawn'
@@ -181,8 +182,6 @@ end
 # Set global variables
 
 $work_dir      = ""
-$exp_file      = ""
-$exp_dir       = ""
 $verbose       = 0
 $base_dir      = ""
 $do_disks      = 0
@@ -190,6 +189,8 @@ $host_info     = {}
 $sys_config    = {}
 $exp_file_list = []
 $masked        = 0
+$exp_file      = ""
+$exp_dir       = ""
 
 # Report types
 
@@ -289,12 +290,14 @@ begin
   option = Getopt::Long.getopts(
     [ "--prefix",       "-b", Getopt::REQUIRED ],   # Set base/prefix directory
     [ "--customer",     "-C", Getopt::REQUIRED ],   # Set customer name 
+    [ "--date",         "-T", Getopt::REQUIRED ],   # Set date (used in conjunction with list)
     [ "--dir",          "-d", Getopt::BOOLEAN ],    # Specify directory where explorers are (default is ./explorers)
     [ "--dodisks",      "-D", Getopt::BOOLEAN ],    # Do disks (reports information on all disks)
     [ "--format",       "-f", Getopt::REQUIRED ],   # Output format
     [ "--list",         "-l", Getopt::BOOLEAN ],    # List explorers (also lists dmidecodes and facters if present)
     [ "--masked",       "-m", Getopt::BOOLEAN ],    # Mask hostnames, IPs, MAC addresses etc
     [ "--model",        "-o", Getopt::REQUIRED ],   # Set model (used in conjunction with list)
+    [ "--input",        "-i", Getopt::REQUIRED ],   # Input file
     [ "--output",       "-o", Getopt::REQUIRED ],   # Output file
     [ "--pause",        "-p", Getopt::BOOLEAN ],    # Pause between each report when running against all hosts (useful for debugging)
     [ "--report",       "-R", Getopt::REQUIRED ],   # Report type (e.g. all, cpu, memory)
@@ -303,6 +306,7 @@ begin
     [ "--temp",         "-w", Getopt::REQUIRED ],   # Work directory
     [ "--usage",        "-u", Getopt::REQUIRED ],   # Display usage information
     [ "--use",          "-U", Getopt::REQUIRED ],   # Override defaults, e.g. use gzip rather than pgiz
+    [ "--year",         "-Y", Getopt::REQUIRED ],   # Set year(used in conjunction with list)
     [ "--help",         "-h", Getopt::BOOLEAN ],    # Display help information
     [ "--verbose",      "-v", Getopt::BOOLEAN ],    # Verbose output
     [ "--version",      "-V", Getopt::BOOLEAN ],    # Display version
@@ -551,6 +555,35 @@ else
   search_model = ""
 end
 
+# Get date string
+
+if option["date"]
+  search_date = option["date"] 
+  begin
+    search_date = Date.parse(search_date).to_s
+  rescue
+    puts "Invalid date"
+    exit
+  end
+else
+  search_date = ""
+end
+
+# Get year string
+
+if option["year"]
+  search_year = option["year"]
+  if search_year.length == 2
+    search_year = "20"+search_year
+  end
+  if search_year.match(/[a-z,A-Z]/)
+    puts "Invalid year"
+    exit
+  end
+else
+  search_year = ""
+end
+
 # Check local config
 
 if !option["help"] and !option["version"]
@@ -629,7 +662,7 @@ end
 
 if option["list"]
   if input_type.match(/all|explorer/)
-    list_explorers(search_model)
+    list_explorers(search_model,search_date,search_year)
   end
   if input_type.match(/all|facter/)
     list_facters()
@@ -658,6 +691,10 @@ if option["input"]
     puts "Input file: "+$exp_file+" does not exist"
     exit
   end
+  host_name  = get_hostname_from_explorer_File()
+  exp_data[host_name]["file"] = $exp_file
+  host_names = []
+  host_names.push(host_name)
 else
   if !option["server"] 
     if !option["help"]
@@ -667,8 +704,8 @@ else
     print_help()
     exit
   end
-  $exp_dir  = $base_dir.chomp()
-  $exp_dir  = $exp_dir+"/explorers"
+  $exp_dir   = $base_dir.chomp()
+  $exp_dir   = $exp_dir+"/explorers"
   file_list = Dir.entries($exp_dir).reject{|entry| entry.match(/\._/)}
   if option["server"]
     if option["server"].match(/^all$/)

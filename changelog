@@ -381,4 +381,5 @@
 # Added hardware revision information to firmware report
 # 1.9.0: Fri  4 Mar 2016 12:41:51 AEDT
 # Added code to convert CPU IDs array to string
-
+# 1.9.1: Sun  6 Mar 2016 16:03:11 AEDT
+# Added --date and --year flag, and fixed ethernet address determination

@@ -412,12 +412,17 @@ def get_if_ether(nic_name)
   file_array = exp_file_to_array(file_name)
   ether = ""
   file_array.each_with_index do |line,index|
-    if line.match(/^#{nic_name}:/)
+    if line.match(/^#{nic_name}:\s+/)
       ether = file_array[index+2]
-      if ether.match(/ether/)
-        ether = ether.gsub(/^\s+/,"").split(/\s+/)[1]
-      else
-        ether = ""
+      if ether
+        if ether.match(/group/)
+          ether = file_array[index+3]
+        end
+        if ether.match(/ether/)
+          ether = ether.gsub(/^\s+/,"").split(/\s+/)[1]
+        else
+          ether = ""
+        end
       end
     end
   end
