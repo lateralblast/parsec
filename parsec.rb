@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.9.1
+# Version:      1.9.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -662,7 +662,7 @@ end
 
 if option["list"]
   if input_type.match(/all|explorer/)
-    list_explorers(search_model,search_date,search_year)
+    list_explorers(search_model,search_date,search_year,host_name)
   end
   if input_type.match(/all|facter/)
     list_facters()

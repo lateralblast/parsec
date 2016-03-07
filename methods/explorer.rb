@@ -281,7 +281,7 @@ end
 
 # List explorers
 
-def list_explorers(search_model,search_date,search_year)
+def list_explorers(search_model,search_date,search_year,host_name)
   counter = 0
   if Dir.exist?($exp_dir) or File.symlink?($exp_dir)
     search_date = search_date.gsub(/-/,"")
@@ -301,21 +301,20 @@ def list_explorers(search_model,search_date,search_year)
           exp_date  = exp_year+exp_month+exp_day
           exp_time  = host_info[5..6].join(":")
           exp_date  = exp_time+" "+exp_day+"/"+exp_month+"/"+exp_year
+          exp_name  = host_info[2].split(/-/)[0..-2].join("-")
           if !search_model.match(/[a-z,A-Z,0-9]/) or search_model.downcase.match(/#{exp_model.downcase}/)
             if !search_date.match(/[0-9]/) or search_date.match(/#{exp_date}/)
               if !search_year.match(/[0-9]/) or search_year.match(/#{exp_year}/)
-                if $masked == 1
-                  orig_name = host_info[2].split(/-/)[0]
-                  orig_id   = host_info[1]
-                  host_name = "hostname"+counter.to_s
-                  counter   = counter+1
-                  host_id   = "MASKED"
-                  exp_file  = exp_file.gsub(/#{orig_id}/,host_id).gsub(/#{orig_name}/,host_name)
-                else
-                  host_name = host_info[2].split(/-/)[0..-2].join("-")
+                if !host_name.match(/[a-z]/) or host_name.match(/#{exp_name}/)
+                  if $masked == 1
+                    exp_name = "hostname"+counter.to_s
+                    counter  = counter+1
+                    host_id  = "MASKED"
+                    exp_file = exp_file.gsub(/#{host_id}/,host_id).gsub(/#{exp_name}/,exp_name)
+                  end
+                  table_row = [ exp_name, exp_model, exp_date, host_id, exp_file ]
+                  table     = handle_table("row","",table_row,table)
                 end
-                table_row = [ host_name, exp_model, exp_date, host_id, exp_file ]
-                table     = handle_table("row","",table_row,table)
               end
             end
           end

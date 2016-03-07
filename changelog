@@ -383,3 +383,5 @@
 # Added code to convert CPU IDs array to string
 # 1.9.1: Sun  6 Mar 2016 16:03:11 AEDT
 # Added --date and --year flag, and fixed ethernet address determination
+# 1.9.2: Mon  7 Mar 2016 15:30:45 AEDT
+# Added ability to list explorers based on a hostname search
