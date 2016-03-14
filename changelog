@@ -385,3 +385,5 @@
 # Added --date and --year flag, and fixed ethernet address determination
 # 1.9.2: Mon  7 Mar 2016 15:30:45 AEDT
 # Added ability to list explorers based on a hostname search
+# 1.9.3: Tue 15 Mar 2016 10:45:15 AEDT
+# Fixed bug with listing explorers

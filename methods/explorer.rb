@@ -282,10 +282,11 @@ end
 # List explorers
 
 def list_explorers(search_model,search_date,search_year,host_name)
-  counter = 0
+  counter  = 0
+  exp_list = []
   if Dir.exist?($exp_dir) or File.symlink?($exp_dir)
     search_date = search_date.gsub(/-/,"")
-    exp_list=Dir.entries($exp_dir).sort
+    exp_list    = Dir.entries($exp_dir).sort
     if exp_list.grep(/^explorer/)
       title = "Explorers in "+$exp_dir+":"
       row   = [ 'Hostname', 'Model', 'Date', 'Host ID', 'File' ]
