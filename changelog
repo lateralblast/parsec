@@ -387,3 +387,5 @@
 # Added ability to list explorers based on a hostname search
 # 1.9.3: Tue 15 Mar 2016 10:45:15 AEDT
 # Fixed bug with listing explorers
+# 1.9.4: Tue 15 Mar 2016 13:28:36 AEDT
+# Fixed hostname and date search for reports

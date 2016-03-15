@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.9.3
+# Version:      1.9.4
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -296,13 +296,14 @@ begin
     [ "--format",       "-f", Getopt::REQUIRED ],   # Output format
     [ "--list",         "-l", Getopt::BOOLEAN ],    # List explorers (also lists dmidecodes and facters if present)
     [ "--masked",       "-m", Getopt::BOOLEAN ],    # Mask hostnames, IPs, MAC addresses etc
-    [ "--model",        "-o", Getopt::REQUIRED ],   # Set model (used in conjunction with list)
+    [ "--model",        "-M", Getopt::REQUIRED ],   # Set model (used in conjunction with list)
     [ "--input",        "-i", Getopt::REQUIRED ],   # Input file
     [ "--output",       "-o", Getopt::REQUIRED ],   # Output file
     [ "--pause",        "-p", Getopt::BOOLEAN ],    # Pause between each report when running against all hosts (useful for debugging)
     [ "--report",       "-R", Getopt::REQUIRED ],   # Report type (e.g. all, cpu, memory)
     [ "--server",       "-s", Getopt::REQUIRED ],   # Server to run explorer report for
     [ "--type",         "-t", Getopt::REQUIRED ],   # Type of report (default is explorer)
+    [ "--date",         "-T", Getopt::REQUIRED ],   # Set date (used in conjunction with list)
     [ "--temp",         "-w", Getopt::REQUIRED ],   # Work directory
     [ "--usage",        "-u", Getopt::REQUIRED ],   # Display usage information
     [ "--use",          "-U", Getopt::REQUIRED ],   # Override defaults, e.g. use gzip rather than pgiz
@@ -716,13 +717,32 @@ else
       file_list.each do |file_name|
         if file_name.match(/\-/) and file_name.match(/tgz|tar/) and file_name.match(/explorer/)
           temp_name = file_name.split(/\./)[2].split(/\-/)[0..-2].join("-")
-          host_names.push(temp_name)
+          host_info = file_name.split(/\./)
+          host_id   = host_info[1]
+          exp_model = get_model_from_hostid(host_id)
+          exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
+          exp_month = host_info[3]
+          exp_day   = host_info[4]
+          exp_date  = exp_year+"."+exp_month+"."+exp_day
+          exp_date  = Date.parse(exp_date).to_s
+          exp_time  = host_info[5..6].join(":")
+          exp_name  = host_info[2].split(/-/)[0..-2].join("-")
+          if !search_model.match(/[a-z,A-Z,0-9]/) or search_model.downcase.match(/#{exp_model.downcase}/)
+            if !search_date.match(/[0-9]/) or search_date.match(/#{exp_date}/)
+              if !search_year.match(/[0-9]/) or search_year.match(/#{exp_year}/)
+                if !host_name.match(/[a-z]/) or host_name.match(/#{exp_name}/)
+                  host_names.push(temp_name)
+                end
+              end
+            end
+          end
         end
       end
       host_names = host_names.uniq
     else
       host_names    = []
       host_names[0] = option["server"]
+      search_name   = option["server"]
     end
   else
     host_names = file_list
@@ -798,42 +818,64 @@ if input_type.match(/explorer/)
     if $verbose_mode == 1 and !$output_format.match(/pdf/)
       puts "Processing explorer ("+$report_type+") report for "+temp_name
     end
-    $exp_file = file_list.grep(/tar\.gz/).grep(/#{temp_name}/)
-    if $exp_file.to_s.match(/\n/)
-      $exp_file = $exp_file.split(/\n/)
+    if !file_list[0].match(/[a-z]/)
+      file_list = Dir.entries($exp_dir).reject{|entry| entry.match(/\._/)}
     end
-    $exp_file = $exp_file[0].to_s.chomp
-    $exp_file = $exp_dir+"/"+$exp_file
-    if !$exp_file.match(/#{temp_name}/)
-      puts "Explorer for "+temp_name+" does not exist in "+$exp_dir
-      exit
-    end
-    config_report(report,temp_name)
-    if host_name.match(/^all$/) and pause_mode == 1
-      print "continue (y/n)? "
-      STDOUT.flush()
-      exit if 'n' == STDIN.gets.chomp
-    end
-    if $output_format.match(/pdf/)
-      pdf = Prawn::Document.new
-      if host_name.match(/^all$/)
-        output_pdf = $output_dir+"/"+temp_name+".pdf"
-      else
-        output_pdf = $output_file.gsub(/\.txt$/,".pdf")
+    file_list.each do |file_name|
+      if file_name.match(/\-/) and file_name.match(/tgz|tar/) and file_name.match(/explorer/)
+        temp_name = file_name.split(/\./)[2].split(/\-/)[0..-2].join("-")
+        host_info = file_name.split(/\./)
+        host_id   = host_info[1]
+        exp_model = get_model_from_hostid(host_id)
+        exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
+        exp_month = host_info[3]
+        exp_day   = host_info[4]
+        exp_date  = exp_year+"."+exp_month+"."+exp_day
+        exp_date  = Date.parse(exp_date).to_s
+        exp_time  = host_info[5..6].join(":")
+        exp_name  = host_info[2].split(/-/)[0..-2].join("-")
+        if !search_model.match(/[a-z,A-Z,0-9]/) or search_model.downcase.match(/#{exp_model.downcase}/)
+          if !search_date.match(/[0-9]/) or search_date.match(/#{exp_date}/)
+            if !search_year.match(/[0-9]/) or search_year.match(/#{exp_year}/)
+              if !search_name.match(/[a-z]/) or search_name.match(/#{exp_name}/)
+                $exp_file = file_name
+                $exp_file = $exp_dir+"/"+$exp_file
+                if !$exp_file.match(/#{temp_name}/)
+                  puts "Explorer for "+temp_name+" does not exist in "+$exp_dir
+                  exit
+                end
+                config_report(report,temp_name)
+                if host_name.match(/^all$/) and pause_mode == 1
+                  print "continue (y/n)? "
+                  STDOUT.flush()
+                  exit if 'n' == STDIN.gets.chomp
+                end
+                if $output_format.match(/pdf/)
+                  pdf = Prawn::Document.new
+                  if host_name.match(/^all$/)
+                    output_pdf = $output_dir+"/"+temp_name+".pdf"
+                  else
+                    output_pdf = $output_file.gsub(/\.txt$/,".pdf")
+                  end
+                  if $verbose_mode == 1
+                    puts "Input file:  "+$output_file
+                    puts "Output file: "+output_pdf
+                  end
+                  if $masked == 1
+                    document_title = "Explorer: masked"
+                  else
+                    document_title = "Explorer: "+temp_name
+                  end
+                  if !customer_name.match(/masked/) and host_name.match(/^all$/)
+                    customer_name = get_customer_name()
+                  end
+                  generate_pdf(pdf,document_title,output_pdf,customer_name)
+                end
+              end
+            end
+          end
+        end
       end
-      if $verbose_mode == 1
-        puts "Input file:  "+$output_file
-        puts "Output file: "+output_pdf
-      end
-      if $masked == 1
-        document_title = "Explorer: masked"
-      else
-        document_title = "Explorer: "+temp_name
-      end
-      if !customer_name.match(/masked/) and host_name.match(/^all$/)
-        customer_name = get_customer_name()
-      end
-      generate_pdf(pdf,document_title,output_pdf,customer_name)
     end
   end
 end

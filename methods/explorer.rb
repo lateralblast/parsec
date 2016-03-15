@@ -285,11 +285,10 @@ def list_explorers(search_model,search_date,search_year,host_name)
   counter  = 0
   exp_list = []
   if Dir.exist?($exp_dir) or File.symlink?($exp_dir)
-    search_date = search_date.gsub(/-/,"")
     exp_list    = Dir.entries($exp_dir).sort
     if exp_list.grep(/^explorer/)
       title = "Explorers in "+$exp_dir+":"
-      row   = [ 'Hostname', 'Model', 'Date', 'Host ID', 'File' ]
+      row   = [ 'Hostname', 'Model', 'Date', 'Time', 'Host ID', 'File' ]
       table = handle_table("title",title,row,"")
       exp_list.each do |exp_file|
         if exp_file.match(/^explorer/)
@@ -299,9 +298,9 @@ def list_explorers(search_model,search_date,search_year,host_name)
           exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
           exp_month = host_info[3]
           exp_day   = host_info[4]
-          exp_date  = exp_year+exp_month+exp_day
+          exp_date  = exp_year+"."+exp_month+"."+exp_day
+          exp_date  = Date.parse(exp_date).to_s
           exp_time  = host_info[5..6].join(":")
-          exp_date  = exp_time+" "+exp_day+"/"+exp_month+"/"+exp_year
           exp_name  = host_info[2].split(/-/)[0..-2].join("-")
           if !search_model.match(/[a-z,A-Z,0-9]/) or search_model.downcase.match(/#{exp_model.downcase}/)
             if !search_date.match(/[0-9]/) or search_date.match(/#{exp_date}/)
@@ -313,7 +312,7 @@ def list_explorers(search_model,search_date,search_year,host_name)
                     host_id  = "MASKED"
                     exp_file = exp_file.gsub(/#{host_id}/,host_id).gsub(/#{exp_name}/,exp_name)
                   end
-                  table_row = [ exp_name, exp_model, exp_date, host_id, exp_file ]
+                  table_row = [ exp_name, exp_model, exp_date, exp_time, host_id, exp_file ]
                   table     = handle_table("row","",table_row,table)
                 end
               end
