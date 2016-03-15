@@ -389,3 +389,6 @@
 # Fixed bug with listing explorers
 # 1.9.4: Tue 15 Mar 2016 13:28:36 AEDT
 # Fixed hostname and date search for reports
+# 1.9.5: Tue 15 Mar 2016 15:59:19 AEDT
+# Improved explorer file search capability
+

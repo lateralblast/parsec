@@ -279,49 +279,84 @@ def process_exp_modules(table)
   return table
 end
 
-# List explorers
+# Get a list of explorers based on search strings
 
-def list_explorers(search_model,search_date,search_year,host_name)
-  counter  = 0
+def get_explorer_file_list(search_model,search_date,search_year,search_name)
   exp_list = []
   if Dir.exist?($exp_dir) or File.symlink?($exp_dir)
-    exp_list    = Dir.entries($exp_dir).sort
-    if exp_list.grep(/^explorer/)
-      title = "Explorers in "+$exp_dir+":"
-      row   = [ 'Hostname', 'Model', 'Date', 'Time', 'Host ID', 'File' ]
-      table = handle_table("title",title,row,"")
-      exp_list.each do |exp_file|
-        if exp_file.match(/^explorer/)
-          host_info = exp_file.split(/\./)
-          host_id   = host_info[1]
-          exp_model = get_model_from_hostid(host_id)
-          exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
-          exp_month = host_info[3]
-          exp_day   = host_info[4]
-          exp_date  = exp_year+"."+exp_month+"."+exp_day
-          exp_date  = Date.parse(exp_date).to_s
-          exp_time  = host_info[5..6].join(":")
-          exp_name  = host_info[2].split(/-/)[0..-2].join("-")
-          if !search_model.match(/[a-z,A-Z,0-9]/) or search_model.downcase.match(/#{exp_model.downcase}/)
-            if !search_date.match(/[0-9]/) or search_date.match(/#{exp_date}/)
-              if !search_year.match(/[0-9]/) or search_year.match(/#{exp_year}/)
-                if !host_name.match(/[a-z]/) or host_name.match(/#{exp_name}/)
-                  if $masked == 1
-                    exp_name = "hostname"+counter.to_s
-                    counter  = counter+1
-                    host_id  = "MASKED"
-                    exp_file = exp_file.gsub(/#{host_id}/,host_id).gsub(/#{exp_name}/,exp_name)
-                  end
-                  table_row = [ exp_name, exp_model, exp_date, exp_time, host_id, exp_file ]
-                  table     = handle_table("row","",table_row,table)
-                end
+    file_list = Dir.entries($exp_dir).sort.reject{|entry| entry.match(/\._/)}
+    file_list.each do |file_name|
+      if file_name.match(/\-/) and file_name.match(/tgz|tar/) and file_name.match(/explorer/)
+        host_info = file_name.split(/\./)
+        file_name = $exp_dir+"/"+file_name
+        host_id   = host_info[1]
+        exp_model = get_model_from_hostid(host_id)
+        exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
+        exp_month = host_info[3]
+        exp_day   = host_info[4]
+        exp_date  = exp_year+"."+exp_month+"."+exp_day
+        exp_date  = Date.parse(exp_date).to_s
+        exp_time  = host_info[5..6].join(":")
+        exp_name  = host_info[2].split(/-/)[0..-2].join("-")
+        if !search_model.match(/[a-z,A-Z,0-9]/) or search_model.downcase.match(/#{exp_model.downcase}/) or search_model.match(/^all$/)
+          if !search_date.match(/[0-9]/) or search_date.match(/#{exp_date}/) or search_date.match(/^all$/)
+            if !search_year.match(/[0-9]/) or search_year.match(/#{exp_year}/) or search_year.match(/^all$/)
+              if !search_name.match(/[a-z]/) or search_name.match(/#{exp_name}/) or search_name.match(/^all$/)
+                exp_list.push(file_name)
               end
             end
           end
         end
       end
-      table = handle_table("end","","",table)
     end
+  end
+  if search_name.match(/[a-z]/) and !search_name.match(/all/)
+    if search_date.match(/last|latest/)
+      tmp_file = exp_list[-1]  
+      exp_list = []
+      exp_list.push(tmp_file)
+    end
+    if search_date.match(/first|earliest/)
+      tmp_file = exp_list[0]  
+      exp_list = []
+      exp_list.push(tmp_file)
+    end
+  end
+  return exp_list
+end
+
+# List explorers
+
+def list_explorers(search_model,search_date,search_year,search_name)
+  counter   = 0
+  file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
+  if file_list.to_s.match(/explorer/)
+    title = "Explorers in "+$exp_dir+":"
+    row   = [ 'Hostname', 'Model', 'Date', 'Time', 'Host ID', 'File' ]
+    table = handle_table("title",title,row,"")
+    file_list.each do |file_name|
+      host_info = file_name.split(/\./)
+      host_id   = host_info[1]
+      exp_model = get_model_from_hostid(host_id)
+      exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
+      exp_month = host_info[3]
+      exp_day   = host_info[4]
+      exp_date  = exp_year+"."+exp_month+"."+exp_day
+      exp_date  = Date.parse(exp_date).to_s
+      exp_time  = host_info[5..6].join(":")
+      exp_name  = host_info[2].split(/-/)[0..-2].join("-")
+      if $masked == 1
+        temp_name = "hostname"+counter.to_s
+        counter   = counter+1
+        temp_id   = "masked"
+        file_name = file_name.gsub(/#{host_id}/,temp_id).gsub(/#{exp_name}/,temp_name)
+        table_row = [ temp_name, exp_model, exp_date, exp_time, temp_id, file_name ]
+      else
+        table_row = [ exp_name, exp_model, exp_date, exp_time, host_id, file_name ]
+      end
+      table     = handle_table("row","",table_row,table)
+    end
+    table = handle_table("end","","",table)
   end
   return
 end
