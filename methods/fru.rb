@@ -83,21 +83,34 @@ def process_sensors()
     row         = ""
     sensor_name = ""
     table       = ""
-    sensor_info.each do |line|
-      line = line.chomp
+    sensor_info.each_with_index do |line,index|
+      line = line.chomp.gsub(/\s+$/,"")
+      line = line.gsub(/\[PRESENT\]/,"")
       line = line.gsub(/\[NO_FAULT\]/,"OK")
       line = line.gsub(/\[NO_FAULT\s+\]/,"OK")
+      line = line.gsub(/\[OK\s+\]/,"OK")
       if line.match(/[S,s]ensors:$|[S,s]tatus:$|[S,s]upplies:$|\):$|^LEDs:$/) and !line.match(/System LED/)
         table = handle_table("end","","",table)
-        sensor_name = line.split(/ /)[0]
+        sensor_name = line.split(/ /)[0..-2].join(" ")
         if line.match(/^LEDs:$/)
           title = "LEDs"
         else
           title = sensor_name+" Sensor Information"
         end
-        row         = [ 'Location', 'Sensor/Value', 'Status' ]
-        table       = handle_table("title",title,row,"")
+        row   = [ 'Location', 'Sensor/Value', 'Status' ]
+        table = handle_table("title",title,row,"")
       else
+        if line.match(/^cpu/)
+          if sensor_info[index+2].match(/[0-9]/)
+            if line.match(/\s+/)
+              loc = line.gsub(/\s+/,",")
+            end
+            status = "NA"
+            value  = sensor_info[index+2].gsub(/^\s+|\s+$/,"").gsub(/\s+/,",")
+            row    = [ loc, value, status ]
+            table  = handle_table("row","",row,table)
+          end
+        end
         if line.match(/^SYS|^CPU|^DISK|^DBP|^UM/)
           row   = line.split(/\s+/)
           table = handle_table("row","",row,table)

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.9.5
+# Version:      1.9.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -40,6 +40,16 @@ end
 # Script name
 
 $script = $0
+
+# Store all info in a hash
+
+$exp_info = {}
+
+# Global variables
+
+$exp_id   = ""
+$exp_key  = ""
+$exp_file = ""
 
 # Valid output formats
 
@@ -797,6 +807,7 @@ if input_type.match(/explorer/)
     if File.exist?(file_name)
       host_info = file_name.split(/\./)
       host_id   = host_info[1]
+      $exp_id   = host_id
       exp_model = get_model_from_hostid(host_id)
       exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
       exp_month = host_info[3]
@@ -804,6 +815,7 @@ if input_type.match(/explorer/)
       exp_date  = exp_year+"."+exp_month+"."+exp_day
       exp_date  = Date.parse(exp_date).to_s
       exp_time  = host_info[5..6].join(":")
+      $exp_key  = exp_date+"."+host_info[5..6].join(".")
       exp_name  = host_info[2].split(/-/)[0..-2].join("-")
       if search_name.match(/^all$/) and $output_format.match(/pdf/)
         $output_file = $output_dir+"/"+exp_name+"-"+$report_type+".txt"
@@ -812,6 +824,7 @@ if input_type.match(/explorer/)
         puts "Processing explorer ("+$report_type+") report for "+exp_name
       end
       $exp_file = file_name
+      #$exp_info[:$exp_id][:$exp_key][:file] = file_name
       config_report(report,exp_name)
       if host_name.match(/^all$/) and pause_mode == 1
          print "continue (y/n)? "

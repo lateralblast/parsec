@@ -4,6 +4,14 @@
 
 def get_model_from_hostid(hostid)
   case hostid
+  when /^8316d1/
+    model = "280R"
+  when /^8344bb/
+    model = "V480"
+  when /^83513/
+    model = "V240"
+  when /^83e96/
+    model = "V210"
   when /^8501/
     model = "M4000"
   when /^8480|^843|^8528|^8545/
@@ -12,7 +20,7 @@ def get_model_from_hostid(hostid)
     model = "M3000"
   when /^832/
     model = "480R"
-  when /^83db/
+  when /^83db|^83f2/
     model = "V490"
   when /^83a/
     model = "V440"

@@ -242,7 +242,7 @@ def process_memory()
             end
           end
         end
-        if sys_model.match(/480R|V490/)
+        if sys_model.match(/480R|V490|280R/)
           sys_board_no   = mem_line[1]
           mem_controller = mem_line[2]
           mem_bank       = mem_line[3]
@@ -253,6 +253,9 @@ def process_memory()
           else
             mem_dimm_size  = mem_line[5]
             mem_interleave = mem_line[6]
+          end
+          if sys_model.match(/280R/) and index > 5 and index < length*2+1
+            table = handle_table("line","","",table)
           end
         end
         if sys_model.match(/M[3-9]0/)

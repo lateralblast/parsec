@@ -50,7 +50,7 @@ def get_io_info()
   case model_name
   when /T2|T63/
     io_info = search_prtdiag_info("IO Configuration")
-  when /V1|480R|V490/
+  when /V1|480R|V490|280R/
     io_info = search_prtdiag_info("IO Cards")
   when /O\.E\.M\./
     io_info = search_prtdiag_info("On-Board Devices")
@@ -151,6 +151,7 @@ def process_io()
       io_vendor  = ""
       io_vendid  = ""
       io_devid   = ""
+      if_name    = ""
       counter = counter+1
       if line.match(/^[0-9]|^pci|^MB|^\/SYS|^IOBD|PCI|Onboard/) and !line.match(/Status/)
         io_desc     = ""
@@ -197,6 +198,29 @@ def process_io()
           next_line = next_line.split(/\s+/)
           io_status = next_line[1]
           io_path   = next_line[2]
+        when /280R/
+          io_board  = io_line[0]
+          io_type   = io_line[1]
+          io_slot   = io_line[4]
+          io_speed  = io_line[5]
+          io_status = io_line[-3]
+          io_path   = io_line[-2]
+          io_name   = io_line[-1]
+          io_inst   = io_line[7]
+          if io_name.match(/SUNW/)
+            if io_name.match(/pci|-/)
+              drv_name = io_name.split(/-/)[-1]
+            end
+          end
+          if io_inst.match(/,/)
+            io_inst1 = io_inst.split(/,/)[0]
+            io_inst2 = io_inst.split(/,/)[1]
+            if io_path.match(/-/)
+              temp_path = io_path.split(/-/)[0]
+            else
+              temp_path = io_path
+            end
+          end
         when /480R|880R|V490/
           io_type   = io_line[0]
           io_port   = io_line[1]
@@ -463,7 +487,7 @@ def process_io()
         if io_now
           table = handle_table("row","Max Speed",io_now,table)
         end
-        if !model_name.match(/480R|V490/)
+        if !model_name.match(/480R|V490|280R/)
           if model_name.match(/T2/)
             io_path = io_line[3]
           else
@@ -472,7 +496,7 @@ def process_io()
             end
           end
         end
-        if !model_name.match(/V1|480R|V490/)
+        if !model_name.match(/V1|480R|V490|280R/)
           io_path = io_path.to_s
           io_path = io_path.gsub(/\s+/,'')
           io_path = io_path.gsub(/okay/,'')
@@ -519,7 +543,18 @@ def process_io()
           table = handle_table("row","Driver",drv_name,table)
         end
         if inst_no
-          table = handle_table("row","Instance",inst_no,table)
+          if io_inst1 or io_inst2
+            if io_inst1
+              (io_path,inst_no,drv_name) = search_path_to_inst(io_path,io_inst1,drv_name)
+              table = handle_table("row","Instance 1",inst_no,table)
+            end
+            if io_inst2
+              (io_path,inst_no,drv_name) = search_path_to_inst(io_path,io_inst2,drv_name)
+              table = handle_table("row","Instance 2",inst_no,table)
+            end
+          else
+            table = handle_table("row","Instance",inst_no,table)
+          end
         end
         if io_path.match(/network|oce/)
           port_no = io_path[-1]
@@ -550,13 +585,28 @@ def process_io()
             table = handle_table("row","Aggregate",aggr_name,table)
             if_hostname = get_if_hostname(aggr_name)
           else
-            if_name = drv_name+inst_no
-            if $masked == 0
-              table = handle_table("row","Interface",if_name,table)
+            io_insts = []
+            if io_inst1 or io_inst2
+              if io_inst1
+                io_insts.push(io_inst1)
+              end
+              if io_inst2
+                io_insts.push(io_inst2)
+              end
             else
-              table = handle_table("row","Interface","MASKED",table)
+              if io_inst
+                io_insts.push(io_inst)
+              end
             end
-            if_hostname = get_if_hostname(if_name)
+            io_insts.each do |inst_no|
+              if_name = drv_name+inst_no
+              if $masked == 0
+                table = handle_table("row","Interface #{inst_no}",if_name,table)
+              else
+                table = handle_table("row","Interface #{inst_no}","MASKED",table)
+              end
+              if_hostname = get_if_hostname(if_name)
+            end
           end
           if if_hostname
             if $masked == 0
@@ -566,10 +616,15 @@ def process_io()
             end
             if_ip = get_hostname_ip(if_hostname)
             if if_ip
-              if $masked == 0
-                table = handle_table("row","IP",if_ip,table)
+              if if_name
+                ip_string = "IP ("+if_name+")"
               else
-                table = handle_table("row","IP","MASKED",table)
+                ip_string = "IP"
+              end
+              if $masked == 0
+                table = handle_table("row",ip_string,if_ip,table)
+              else
+                table = handle_table("row",ip_string,"MASKED",table)
               end
             end
           end

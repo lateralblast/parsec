@@ -11,10 +11,13 @@ end
 # Search /etc/path_to_inst
 
 def search_path_to_inst(io_path,dev_id,drv_name)
-  temp_path  = ""
-  temp_id    = ""
-  temp_name  = ""
-  file_array = get_path_to_inst()
+  actual_path = ""
+  actual_id   = ""
+  actual_name = ""
+  temp_path   = ""
+  temp_id     = ""
+  temp_name   = ""
+  file_array  = get_path_to_inst()
   file_array.each do |line|
     if line.match(/^"/)
       line      = line.chomp
@@ -25,13 +28,16 @@ def search_path_to_inst(io_path,dev_id,drv_name)
       if temp_path.match(/#{io_path}/) or !io_path.match(/[a-z]/)
         if temp_id.match(/#{dev_id}/) or !dev_id.match(/[0-9]/)
           if temp_name.match(/#{drv_name}/) or !drv_name.match(/[a-z]/)
-            return temp_path,temp_id,temp_name
+            actual_path = temp_path
+            actual_id   = temp_id
+            actual_name = temp_name
+            return actual_path,actual_id,actual_name
           end
         end
       end
     end
   end
-  return temp_path,temp_id,temp_name
+  return actual_path,actual_id,actual_name
 end
 
 # Get driver info

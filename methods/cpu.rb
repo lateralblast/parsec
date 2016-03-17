@@ -142,7 +142,7 @@ def process_cpu()
             cpu_list   = cpu_no
             cpu_type   = cpu_type.split(/\(/)[1].split(/ /)[0]
           end
-        when /480R|V490/
+        when /480R|V490|280R/
           if line.match(/^ [A-Z]/)
             board_no  = cpu_line[1]
             cpu_no    = cpu_line[2]
