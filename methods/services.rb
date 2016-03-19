@@ -107,7 +107,10 @@ def process_services()
           service = service.gsub(/^[0-9]/,"")
         end
       end
-      line    = $manifest_services.select{|item| item.match(/^#{service}/)}
+      if !service.match(/^[a-z]/)
+        service = service[1..-1]
+      end
+      line = $manifest_services.select{|item| item.match(/^#{service}/)}
       if service.match(/^lrc/)
         type = "Legacy"
       else

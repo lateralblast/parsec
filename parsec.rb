@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.9.6
+# Version:      1.9.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -261,6 +261,7 @@ report["suspend"]  = "Report on Suspend information"
 report["syslog"]   = "Report on syslog information"
 report["system"]   = "Report on system information"
 report["swap"]     = "Report on swap information"
+report["svm"]      = "Report on Solaris Volume Manager information"
 report["tcp"]      = "Report on TCP information"
 report["telnet"]   = "Report on Telnet information"
 report["udp"]      = "Report on UDP information"

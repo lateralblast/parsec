@@ -44,7 +44,7 @@ end
 
 def process_zfs_volumes()
   file_array = get_zfs_volumes()
-	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/) and !file_array.to_s.match(/no pools available|no datasets available/)
     title = "ZFS Volumes"
     row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
     table = handle_table("title",title,row,"")
@@ -76,7 +76,7 @@ end
 
 def process_zfs_list()
 	file_array = get_zfs_list()
-	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/) and !file_array.to_s.match(/no pools available|no datasets available/)
 		title = "ZFS Filesystems"
 		row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
 		table = handle_table("title",title,row,"")
@@ -108,7 +108,7 @@ end
 
 def process_zfs_snapshots()
 	file_array = get_zfs_snapshots()
-	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/) and !file_array.to_s.match(/no pools available|no datasets available/)
 		title = "ZFS Snapshots"
 		row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
 		table = handle_table("title",title,row,"")
@@ -144,27 +144,20 @@ end
 
 def process_zpool_list()
 	file_array = get_zpool_list()
-	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-		title = "ZFS Pools"
-		row   = [ 'Name', 'Size', 'Allocated', 'Free', 'Capacity', 'De-dupe', 'Health', 'Alt Root' ]
-		table = handle_table("title",title,row,"")
-		file_array.each do |line|
+	table = ""
+	if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/) and !file_array.to_s.match(/no pools available|no datasets available/)
+			file_array.each do |line|
+			line  = line.chomp.gsub(/\s+$/,"")
+			items = line.split(/\s+/)
 			if !line.match(/^NAME/)
 				items  = line.split(/\s+/)
 				if $masked == 1
-					name = "MASKED"
-				else
-					name = items[0]
+					items[0] = "MASKED"
 				end
-				size   = items[1]
-				alloc  = items[2]
-				free   = items[3]
-				cap    = items[4]
-				dedup  = items[5]
-				health = items[6]
-				alt    = items[7]
-				row    = [ name, size, alloc, free, cap, dedup, health, alt  ]
-				table  = handle_table("row","",row,table)
+				table  = handle_table("row","",items,table)
+			else
+				title = "ZFS Pools"
+				table = handle_table("title",title,items,"")
 			end
 		end
 		table = handle_table("end","","",table)

@@ -48,7 +48,7 @@ end
 def get_io_info()
   model_name = get_model_name()
   case model_name
-  when /T2|T63/
+  when /T2|T63[0,2]/
     io_info = search_prtdiag_info("IO Configuration")
   when /V1|480R|V490|280R/
     io_info = search_prtdiag_info("IO Cards")
@@ -127,7 +127,7 @@ def process_io()
     io_count   = 0
     sys_model  = get_sys_model()
     length     = io_info.grep(/[0-9]/).length
-    if !model_name.match(/480R|T2|V1|V490|T63/)
+    if !model_name.match(/480R|T2|V1|V490|T63[0,2]/)
       length = length/2
     end
     dev_count  = {}
@@ -165,7 +165,7 @@ def process_io()
         io_line      = line.split(/\s+/)
         sys_board_no = io_line[0]
         case sys_model
-        when /T63/
+        when /T63[0,2]/
           io_bus  = io_line[0]
           io_type = io_line[1]
           io_slot = io_line[2]
@@ -387,8 +387,8 @@ def process_io()
           else
             io_name = "N/A"
           end
-        when /T5[0-9][0-9]/
-          if sys_model.match(/T5440/)
+        when /T5[0-9][0-9]|T6340/
+          if sys_model.match(/T5440|T6340/)
             io_slot = io_line[0]
             io_type = io_line[1]
             io_name = io_line[-1]

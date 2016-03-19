@@ -393,4 +393,8 @@
 # Improved explorer file search capability
 # 1.9.6: Thu 17 Mar 2016 21:16:27 AEDT
 # Improved support 280R
+# 1.9.7: Fri 18 Mar 2016 10:46:20 AEDT
+# Added SVM support
+# 1.9.8: Sat 19 Mar 2016 16:28:40 AEDT
+# Various fixes and support for T6340
 

@@ -279,6 +279,10 @@ def config_report(report,host_name)
     valid_sw = 1
     process_pci_scan()
   end
+  if $report_type.match(/all|sds|svm|disksuite/)
+    valid_sw = 1
+    process_svm()
+  end
   if $output_format.match(/html/)
     puts "</body>"
     puts "</html>"

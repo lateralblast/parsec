@@ -87,7 +87,7 @@ def process_memory()
       actual_mem = get_actual_mem()
       table      = handle_table("row","Actual Memory",actual_mem,table)
     end
-    if !sys_model.match(/V120|M[5-7]-|T[5-7]-|T2000/)
+    if !sys_model.match(/V120|M[5-7]-|T[5-7]-|T200/)
       table = handle_table("line","","",table)
     end
     mem_info       = get_mem_info()
@@ -373,7 +373,7 @@ def process_memory()
             if block_count < base_length
               table = handle_table("line","","",table)
             end
-          when /480R|V490/
+          when /480R|V490|T5440|T6340/
             if counter < length
               table = handle_table("line","","",table)
             end
