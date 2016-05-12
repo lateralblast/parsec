@@ -373,8 +373,8 @@ def process_memory()
             if block_count < base_length
               table = handle_table("line","","",table)
             end
-          when /480R|V490|T5440|T6340/
-            if counter < length
+          when /480R|V490|T5440|T63/
+           if counter < length
               table = handle_table("line","","",table)
             end
           else
