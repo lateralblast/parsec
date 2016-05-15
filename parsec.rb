@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.9.8
+# Version:      1.9.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -300,7 +300,7 @@ end
 begin
   option = Getopt::Long.getopts(
     [ "--prefix",       "-b", Getopt::REQUIRED ],   # Set base/prefix directory
-    [ "--customer",     "-C", Getopt::REQUIRED ],   # Set customer name 
+    [ "--customer",     "-C", Getopt::REQUIRED ],   # Set customer name
     [ "--date",         "-T", Getopt::REQUIRED ],   # Set date (used in conjunction with list)
     [ "--dir",          "-d", Getopt::BOOLEAN ],    # Specify directory where explorers are (default is ./explorers)
     [ "--dodisks",      "-D", Getopt::BOOLEAN ],    # Do disks (reports information on all disks)
@@ -367,6 +367,7 @@ def check_local_config()
         puts "S tar not installed"
       end
       if os_name.match(/Darwin/)
+        brew_bin = %x[which brew]
         if brew_bin.match(/brew/)
           puts "Installing S tar"
           %x[brew install star]
@@ -518,7 +519,7 @@ if option["use"]
   when /tar/
     $tar_bin = %x[which tar].chomp
   when /pigz/
-    $gzip_bin = %x[which pigz].chomp 
+    $gzip_bin = %x[which pigz].chomp
     if !$gzip_bin.match(/pigz/) or $gzip_bin.match(/no pigz/)
       $gzip_bin = %x[which gzip].chomp
     end
@@ -562,7 +563,7 @@ end
 # Get model type
 
 if option["model"]
-  search_model = option["model"] 
+  search_model = option["model"]
 else
   search_model = ""
 end
@@ -570,7 +571,7 @@ end
 # Get date string
 
 if option["date"]
-  search_date = option["date"] 
+  search_date = option["date"]
   if !search_date.match(/latest|last|earliest|first/)
     begin
       search_date = Date.parse(search_date).to_s
@@ -612,7 +613,7 @@ if option["prefix"]
   $base_dir = option["prefix"]
 else
   $base_dir = Dir.pwd
-end  
+end
 
 # Print version
 
@@ -717,7 +718,7 @@ if option["input"]
   host_names = []
   host_names.push(host_name)
 else
-  if !option["server"] 
+  if !option["server"]
     if !option["help"]
       puts
       puts "Input file or hostname not specified"

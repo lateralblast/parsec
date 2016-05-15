@@ -397,4 +397,5 @@
 # Added SVM support
 # 1.9.8: Sat 19 Mar 2016 16:28:40 AEDT
 # Various fixes and support for T6340
-
+# 1.9.9: Sun 15 May 2016 16:21:54 AEST
+# Minor fix to brew detection
