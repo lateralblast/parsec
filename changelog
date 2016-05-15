@@ -400,4 +400,6 @@
 # 1.9.9: Sun 15 May 2016 16:21:54 AEST
 # Minor fix to brew detection
 # 2.0.0: Sun 15 May 2016 16:44:22 AEST
-# Fixed bug with directory creation
+# Fixed bug with output directory creation
+# 2.0.1: Sun 15 May 2016 20:29:59 AEST
+# Minor bug fix

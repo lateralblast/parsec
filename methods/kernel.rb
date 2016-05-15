@@ -5,7 +5,7 @@
 def get_path_to_inst()
   file_name  = "/etc/path_to_inst"
   file_array = exp_file_to_array(file_name)
-  return file_array 
+  return file_array
 end
 
 # Search /etc/path_to_inst
@@ -46,7 +46,7 @@ end
 def get_drv_info(io_path)
   file_name  = "/etc/path_to_inst"
   file_array = exp_file_to_array(file_name)
-  return file_array 
+  return file_array
 end
 
 # Process driver info
@@ -80,7 +80,9 @@ end
 def get_ips_kernel_ver()
   file_name  = "/patch+pkg/pkg_listing_ips"
   file_array = exp_file_to_array(file_name)
-  kernel_ver = file_array.grep(/system\/kernel\/platform/)[0].split(/ \s+/)[1]
+  if file_array.to_s.match(/[A-Z]|[a-z]/)
+    kernel_ver = file_array.grep(/system\/kernel\/platform/)[0].split(/ \s+/)[1]
+  end
   return kernel_ver
 end
 
