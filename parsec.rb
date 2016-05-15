@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      1.9.9
+# Version:      2.0.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -770,7 +770,7 @@ end
 if option["output"]
   $output_file = option["output"]
   $output_dir  = File.dirname($output_file)
-  if !File.directory?($output_dir)
+  if !File.directory?($output_dir) and !File.symlink?($output_dir)
     Dir.mkdir($output_dir)
   end
   if $verbose_mode == 1 and !host_name.match(/^all$/)
@@ -784,6 +784,9 @@ if option["output"]
   end
 else
   $output_dir = $base_dir+"/output"
+  if !File.directory?($output_dir) and !File.symlink?($output_dir)
+    Dir.mkdir($output_dir)
+  end
   if $output_format.match(/pdf/)
     if !host_name.match(/^all$/)
       $output_file = $output_dir+"/"+host_name+".txt"
