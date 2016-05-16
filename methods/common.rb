@@ -156,12 +156,16 @@ def get_sys_model()
     sys_model  = sys_model[0]
     sys_model  = sys_model.split(": ")
     sys_model  = sys_model[1]
-    sys_model  = sys_model.chomp
-    sys_model  = sys_model.gsub("sun4u","")
-    sys_model  = sys_model.gsub("sun4v","")
-    sys_model  = sys_model.gsub(/^ /,"")
-    sys_model  = sys_model.gsub(/\s+/," ")
-    sys_model  = sys_model.gsub(/ Server$/,"")
+    if sys_model.match(/VMware/)
+      sys_model = "VMware"
+    else
+      sys_model  = sys_model.chomp
+      sys_model  = sys_model.gsub("sun4u","")
+      sys_model  = sys_model.gsub("sun4v","")
+      sys_model  = sys_model.gsub(/^ /,"")
+      sys_model  = sys_model.gsub(/\s+/," ")
+      sys_model  = sys_model.gsub(/ Server$/,"")
+    end
     if sys_model.match(/To Be Filled By/)
       sys_model = "O.E.M."
     end

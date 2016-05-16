@@ -57,8 +57,7 @@ $inetd_services=[
 def process_inetd()
   file_name  = "/etc/inetd.conf"
   file_array = exp_file_to_array(file_name)
-  no_lines   = 0
-  if file_array.grep(/^[A-Z]|^[a-z]|^[0-9]/)
+  if file_array.to_s.match(/tcp|udp/)
     handle_output("\n")
     title = "Security Settings ("+file_name+")"
     row   = [ 'Service', 'Current', 'Recommended', 'Complies' ]

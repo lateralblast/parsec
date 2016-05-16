@@ -403,3 +403,5 @@
 # Fixed bug with output directory creation
 # 2.0.1: Sun 15 May 2016 20:29:59 AEST
 # Minor bug fix
+# 2.0.2: Mon 16 May 2016 12:48:12 AEST
+# Minor improvements for VMware

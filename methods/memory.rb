@@ -87,7 +87,7 @@ def process_memory()
       actual_mem = get_actual_mem()
       table      = handle_table("row","Actual Memory",actual_mem,table)
     end
-    if !sys_model.match(/V120|M[5-7]-|T[5-7]-|T200/)
+    if !sys_model.match(/V120|M[5-7]-|T[5-7]-|T200|VMware/)
       table = handle_table("line","","",table)
     end
     mem_info       = get_mem_info()
@@ -217,7 +217,7 @@ def process_memory()
                 table          = handle_table("row","Number",mem_dimm_no,table)
                 table          = handle_table("row","Modules",mem_modules.join("\n"),table)
                 table          = handle_table("line","","",table)
-                mem_base        = mem_line[0]
+                mem_base       = mem_line[0]
                 mem_bank_size  = mem_line[1..2].join(" ")
                 mem_interleave = mem_line[3]
                 mem_module     = mem_line[-1]
@@ -363,7 +363,7 @@ def process_memory()
             if line.match(/^[0-9,A-F]x/)
               block_count = block_count+1
             end
-            if block_count < base_length
+            if block_count < base_length and !sys_model.match(/VMware/)
               table = handle_table("line","","",table)
             end
           when /V440/
@@ -378,7 +378,7 @@ def process_memory()
               table = handle_table("line","","",table)
             end
           else
-            if counter < length-f_count-1
+            if counter < length-f_count-1 and !sys_model.match(/VMware/)
               table = handle_table("line","","",table)
             end
           end

@@ -7,6 +7,9 @@ def get_chassis_serial()
     serial_number = ""
   else
     serial_number = file_array[0].to_s
+    if serial_number.match(/VMware/)
+      serial_number = serial_number.split(/\-/)[1].gsub(/_/,"")
+    end
   end
   if !serial_number.match(/[0-9]/)
     file_name  = "/sysconfig/env.out"

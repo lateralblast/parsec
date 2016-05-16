@@ -4,6 +4,8 @@
 
 def get_model_from_hostid(hostid)
   case hostid
+  when /^00cf/
+    model = "VMware"
   when /^809a3/
     model = "E450"
   when /^856f9/
