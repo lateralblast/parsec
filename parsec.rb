@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.0.2
+# Version:      2.0.3
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -35,6 +35,23 @@ begin
   require 'rmagick'
   include Magick
 rescue LoadError
+end
+
+# Extend string class to remove non ascii chars
+
+class String
+  def remove_non_ascii
+    require 'iconv'
+    Iconv.conv('ASCII//IGNORE', 'UTF8', self)
+  end
+end
+
+# Extend string class to remove control chars
+
+class String
+  def strip_control_characters
+    self.chars.reject { |char| char.ascii_only? and (char.ord < 32 or char.ord == 127) }.join
+  end
 end
 
 # Script name

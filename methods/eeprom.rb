@@ -19,6 +19,8 @@ def process_eeprom()
       if !line.match(/data not available/)
         (parameter,value) = line.split(/\=/)
         if value
+          value = value.remove_non_ascii
+          value = value.strip_control_characters
           table = handle_table("row",parameter,value,table)
         end
       end
