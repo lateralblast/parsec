@@ -407,3 +407,5 @@
 # Minor improvements for VMware
 # 2.0.3: Mon 16 May 2016 17:45:20 AEST
 # Added code to strip non ascii and control characters
+# 2.0.4: Tue 17 May 2016 16:58:59 AEST
+# Improved memory report for E250/E450

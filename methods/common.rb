@@ -165,6 +165,9 @@ def get_sys_model()
       sys_model  = sys_model.gsub(/^ /,"")
       sys_model  = sys_model.gsub(/\s+/," ")
       sys_model  = sys_model.gsub(/ Server$/,"")
+      if sys_model.match(/^[2,4,6]50/)
+        sys_model = "E"+sys_model
+      end
     end
     if sys_model.match(/To Be Filled By/)
       sys_model = "O.E.M."
@@ -196,6 +199,9 @@ def get_model_name()
     end
   else
     model_name = $sys_config["model"]
+  end
+  if model_name.match(/^[2,4,6]50/)
+    model_name = "E"+model_name
   end
   return model_name
 end

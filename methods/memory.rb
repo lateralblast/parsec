@@ -70,16 +70,19 @@ def get_mem_info
   if !mem_info.to_s.match(/[0-9]/)
     mem_info=search_prtdiag_info("Memory Device Sockets")
   end
+  if !mem_info.to_s.match(/[0-9]/)
+    mem_info=search_prtdiag_info("Memory")
+  end
   return mem_info
 end
 
 # Process Memory information
 
 def process_memory()
-  sys_model      = get_sys_model()
-  sys_mem        = get_sys_mem()
+  sys_model = get_sys_model()
+  sys_mem   = get_sys_mem()
   if sys_mem.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-    table          = handle_table("title","Memory Information","","")
+    table = handle_table("title","Memory Information","","")
     if sys_mem and !sys_model.match(/M[5-7]-|T[5-7]-/)
       table = handle_table("row","System Memory",sys_mem,table)
     end
@@ -109,7 +112,7 @@ def process_memory()
       mem_dimm_no = 0
     end
     mem_info.each_with_index do |line,index|
-      if line.match(/[0-9][0-9]|D[0-9]$/) or line.match(/^DDR/)
+      if line.match(/[0-9][0-9]|D[0-9]$/) or line.match(/^DDR|OK$/)
         counter       = counter+1
         sys_board_no  = "1"
         if line.match(/in use/)
@@ -157,6 +160,15 @@ def process_memory()
                 end
               end
             end
+          end
+        end
+        if sys_model.match(/Enterprise [2,4]50/)
+          if line.match(/^\s+[0-9]/)
+            mem_bank       = mem_line[1]
+            mem_interleave = mem_line[2]
+            mem_group      = mem_line[3]
+            mem_bank_size  = mem_line[4]
+            mem_status     = mem_line[5]
           end
         end
         if sys_model.match(/M10-|M[5,6]-|T6-/)
@@ -371,6 +383,10 @@ def process_memory()
               block_count = block_count+1
             end
             if block_count < base_length
+              table = handle_table("line","","",table)
+            end
+          when /Enterprise [2,4]50/
+           if counter < length-1
               table = handle_table("line","","",table)
             end
           when /480R|V490|T5440|T63/
