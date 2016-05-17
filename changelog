@@ -409,3 +409,5 @@
 # Added code to strip non ascii and control characters
 # 2.0.4: Tue 17 May 2016 16:58:59 AEST
 # Improved memory report for E250/E450
+# 2.0.5: Tue 17 May 2016 18:59:55 AEST
+# Improved sensor reporting for E250/E450

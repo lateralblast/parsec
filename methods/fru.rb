@@ -109,13 +109,14 @@ def process_sensors()
     sensor_name = ""
     table       = ""
     labels      = ""
+    status      = "NA"
     sensor_info.each_with_index do |line,index|
       line = line.chomp.gsub(/\s+$/,"")
       line = line.gsub(/\[PRESENT\]/,"")
       line = line.gsub(/\[NO_FAULT\]/,"OK")
       line = line.gsub(/\[NO_FAULT\s+\]/,"OK")
       line = line.gsub(/\[OK\s+\]/,"OK")
-      if line.match(/[S,s]ensors:$|[S,s]tatus:$|[S,s]upplies:$|\):$|^LEDs:$|[S,s]peeds:$|[S,s]tate:$|[I,i]ndicators:$/) and !line.match(/System LED/)
+      if line.match(/[S,s]ensors:$|[S,s]tatus:$|[S,s]upplies:$|\):$|^LEDs:$|[S,s]peeds:$|[S,s]tate:$|[I,i]ndicators:$|Fans:$|Panel:$/) and !line.match(/System LED/)
         table = handle_table("end","","",table)
         sensor_name = line.split(/ /)[0..-2].join(" ")
         if line.match(/^LEDs:$/)
@@ -123,9 +124,14 @@ def process_sensors()
         else
           title = sensor_name+" Sensor Information"
         end
-        if !sys_model.match(/V240|T200/)
-          row   = [ 'Location', 'Sensor/Value', 'Status' ]
+        if sensor_name.match(/Power/) and sys_model.match(/250|450/)
+          row   = [ 'Supply', 'Rating', 'Temp', 'Status' ]
           table = handle_table("title",title,row,"")
+        else
+          if !sys_model.match(/V240|T200/)
+            row   = [ 'Location', 'Sensor/Value', 'Status' ]
+            table = handle_table("title",title,row,"")
+          end
         end
       else
         if sys_model.match(/V240|T200/)
@@ -161,14 +167,35 @@ def process_sensors()
               table  = handle_table("row","",row,table)
             end
           end
-          if line.match(/^SYS|^CPU|^DISK|^DBP|^UM/)
+          if sensor_name.match(/Power/) and sys_model.match(/250|450/) and line.match(/W/)
+            temp  = line.split(/\s+/)
+            row   = [ temp[1], temp[2..3].join, temp[4], temp[5] ]
+            table = handle_table("row","",row,table)
+          end
+          if sensor_name.match(/Front Status/) and line.match(/DISK\s+[0-9]/)
+            temp     = line.split(/\s+/)
+            location = "Front"
+            row      = [ location, temp[1..2].join(" ").gsub(/:/,""), temp[3].gsub(/\[|\]/,"") ]
+            table    = handle_table("row","",row,table)
+            row      = [ location, temp[4..5].join(" ").gsub(/:/,""), temp[6].gsub(/\[|\]/,"") ]
+            table    = handle_table("row","",row,table)
+          end
+          if line.match(/^SYS|^CPU|^DISK|^DBP|^UM|^AMBIENT|^PWR/)
             row = line.split(/\s+/)
             if row[2]
-              temp = [ row[0], row[1], row[2..-1].join(" ") ]
+              if row[0].match(/CPU/) and row[1].match(/[0-9]/) and row[2].match(/[0-9]/)
+                temp = [ row[0..1].join(" "), row[2], status ]
+              else
+                temp = [ row[0], row[1], row[2..-1].join(" ") ]
+              end
               row  = temp
+            else
+              if row[0].match(/AMBIENT/)
+                row = [ row[0], row[1], status ]
+              end
             end
             table = handle_table("row","",row,table)
-          end 
+          end
           if line.match(/^FAN|^PS/)
             values = line.split(/\s+/)
             if values[1].match(/FAN/)
@@ -178,7 +205,7 @@ def process_sensors()
             end
             table  = handle_table("row","",row,table)
           end
-        end 
+        end
       end
     end
     table = handle_table("end","","",table)
