@@ -35,17 +35,17 @@ Richard Spindler
  - Why build this?
 
 - Shallow-dive
- - A bit of a look at the script
- - What works and what doesn't
+  - Features
+  - Examples
 
 - To-Do
- - Potentially fixing what doesn't work
+ - Features I'd like to add
 
 - Questions
 
 ---
 
-# Introduction
+# Introduction - What is it?
 
 A ruby script to parse a Sun Oracle Solaris explorer file and extract information.
 There is some reporting capability being built into the script.
@@ -61,6 +61,104 @@ Some of the features include:
 
 ---
 
+# Introduction - Why did I write this?
+
+- There's a lot of good information in Explorer
+  - About the only thing that is missing is some ALOM, ILOM, XSCF information
+  - Newer systems are giving more access to this information at the OS layer and thus it's captured by Explorer
+- Most places have explorer installed and sync them to some central location
+  - People are generally OK with giving you access to Explorers but not systems
+- Can inspect a lot of systems without needing access
+  - Write scripts like this one to process multiple Explorers
+
+---
+
+# License
+
+This software is licensed as CC-BA (Creative Commons By Attrbution)
+
+http://creativecommons.org/licenses/by/4.0/legalcode
+
+---
+
+# Reports
+
+- Report on Aggregate information
+- Report on Everything
+- Report on Coreadm information
+- Report on CPU information
+- Report on Cron information
+- Report on Crypto information
+- Report on CUPS information
+- Report on Disks
+- Report on Dumpadm information
+- Report on EEPROM
+- Report on Explorer information
+- Report on Firmware information
+- Report on FRU information
+- Report on Filesystem information
+- Report on Firmware information
+- Report on FRU information
+- Report on Host information
+- Report on inetadm information
+- Report on inetd information
+- Report on inetinit information
+- Report on Zone information
+
+---
+
+# Reports
+
+- Report on IPMI information
+- Report on IO information
+- Report on LDom information
+- Report on Link information
+- Report on Locale information
+- Report on Live Upgrade information
+- Report on Kernel information
+- Report on Keyserv information
+- Report on Memory information
+- Report on Kernel Module information
+- Report on Mount information
+- Report on ndd information
+- Report on Network information
+- Report on NTP information
+- Report on OBP information
+- Report on OS information
+- Report on package information
+- Report on PAM information
+- Report on Password information
+- Report on Patch information
+- Report on PCI information
+
+---
+
+# Reports
+
+- Report on Power information
+- Report on Security information
+- Report on Sendmail settings
+- Report on Sensor information
+- Report on Chassis Serial information
+- Report on Component Serial information
+- Report on Services information
+- Report on SNMP information
+- Report on SSH information
+- Report on SU information
+- Report on Suspend information
+- Report on Syslog information
+- Report on System information
+- Report on Swap information
+- Report on TCP information
+- Report on Telnet information
+- Report on Upgradeable slot information
+- Report on UDP information
+- Report on VNIC information
+- Report on Veritas information
+- Report on ZFS information
+
+---
+
 # Required Tools
 
 - Uses pigz if available
@@ -68,9 +166,17 @@ Some of the features include:
 - S tar required for Operating Systems other than Solaris
 - ImageMagick required for image processing for PDF reports
 
+There is a very basic script to install gems:
+
+```
+./methods/install_gems.sh
+```
+
 ---
 
-# Required Ruby Gems (required for text reports)
+# Required Ruby Gems 
+
+Required for text reports:
 
 - rubygems
 - fileutils
@@ -85,7 +191,9 @@ Some of the features include:
 
 ---
 
-# Optional Ruby Gems (required for PDF reports)
+# Optional Ruby Gems
+
+Required for PDF reports:
 
 - prawn
 - prawn/table
@@ -95,7 +203,1339 @@ Some of the features include:
 
 ---
 
+# Firmware Information
 
+A base set of firmware information is provided.
+
+This information is created using [oort](https://github.com/lateralblast/oort).
+
+In order to keep this information up to date, a MOS (My Oracle Support) account is required.
+
+---
+
+# Directory structure
+
+In order to work, parsec requires three directories:
+
+- methods
+  - where the parsec modules are located
+  - cloning parsec from git will get these
+- information
+  - where firmware and other information is location
+  - parsec comes with some base information which can be updated using the [oort](https://github.com/lateralblast/oort) script
+  - see the [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started) wiki
+- firmware (under development)
+  - the actual firmware
+  - required for some machines to obtain further information
+  - can be the repository generated from the [oort](https://github.com/lateralblast/oort) script
+  - see the [Getting started with Parsec](https://github.com/lateralblast/parsec/wiki/3.-Getting-Started) wiki
+
+---
+
+# Usage
+
+The default output has changed to 'pipe' (white space delimited plain text).
+
+To get the old style terminal tables, use the table output format type, e.g.:
+
+```
+$ ./parsec.rb --server=hostname --report=all --format=table
+```
+
+To get the html formated output use the html output format type, e.g.:
+
+```
+$ ./parsec.rb --server=hostname --report=all --format=html
+```
+
+To get pdf output, use the pdf format output type, e.g.:
+
+```
+$ ./parsec.rb --server=hostname --report=all --format=pdf
+```
+
+---
+
+# Usage
+
+Usage information can be found by using the help option:
+
+```
+$ ./parsec.rb --help
+
+Usage: ./parsec.rb
+
+"--prefix",     "-b"    Set base/prefix directory
+"--customer",   "-C"    Set customer name 
+"--dir",        "-d"    Specify directory where explorers are (default is ./explorers)
+"--dodisks",    "-D"    Do disks (reports information on all disks)
+"--format",     "-f"    Output format
+"--list",       "-l"    List explorers (also lists dmidecodes and facters if present)
+"--masked",     "-m"    Mask hostnames, IPs, MAC addresses etc
+"--output",     "-o"    Output file
+"--pause",      "-p"    Pause between each report when running against all hosts (useful for debugging)
+"--report",     "-R"    Report type (e.g. all, cpu, memory)
+"--server",     "-s"    Server to run explorer report for
+"--type",       "-t"    Type of report (default is explorer)
+"--temp",       "-w"    Work directory
+"--usage",      "-u"    Display usage information
+"--help",       "-h"    Display help information
+"--verbose",    "-v"    Verbose output
+"--version",    "-V"    Display version
+"--changelog",  "-c"    Print changelog
+
+```
+
+---
+
+# Usage
+
+Get some examples of usage:
+
+```
+$ ./parsec.rb --usage=examples
+
+Run a CPU report against a specific host
+
+$ ./parsec.rb --server=hostname --report=cpu
+
+Run a CPU report against all hosts
+
+$ ./parsec.rb --server=all --report=cpu
+
+Run a all reports against a specific host
+
+$ ./parsec.rb --server=hostname --report=all
+
+Run all reports against all hosts
+
+$ ./parsec.rb --server=all --report=all
+```
+
+---
+
+# Usage
+
+```
+Run all reports against a specific host and output a PDF report
+(will create a file based on the hostname and report in the outputs directory)
+
+$ ./parsec.rb --server=hostname --report=all --format=pdf
+
+Run all reports against a specific host and output PDF a report to a specific file
+
+$ ./parsec.rb --server=hostname --report=all --format=pdf --output=hostename.pdf
+
+Run a all reports against a specific host and output it in a format that can be piped into another command
+
+$ ./parsec.rb --server=hostname --report=all --format=pipe
+
+Run a all reports against a specific host and output it in a table format
+
+$ ./parsec.rb --server=hostname --report=all --format=table
+```
+
+---
+
+# Usage
+
+More information can be found by using the usage option:
+
+```
+$ ./parsec.rb --usage=reports
+
+aggr:       Report on aggregate information
+all:        Report on everything
+coreadm:    Report on coreadm information
+cpu:        Report on CPU information
+cron:       Report on cron information
+crypto:     Report on crypto information
+cups:       Report on CUPS information
+disk:       Report on disks
+dumpadm:    Report on dumpadm information
+eeprom:     Report on EEPROM
+elfsign:    Report on elfsign information
+explorer:   Report on Explore information
+firmware:   Report on Firmware information
+fru:        Report on FRU information
+fs:         Report on filesystem information
+host:       Report on host information
+...
+```
+
+---
+
+# Installation
+
+Checkout Parsec code using git:
+
+```
+$ cd ~/Code
+$ git clone https://github.com/lateralblast/parsec.git
+```
+
+To keep firmware up to date checkout oort using git:
+
+```
+$ cd ~/Code
+$ git clone https://github.com/lateralblast/oort.git
+```
+
+The script looks for explorer files in the explorers subdirectory. This could
+be a symlink or NFS mount to your central repository.
+
+For example:
+
+```
+$ cd ~/Code/parsec
+$ ln -s /Volume/Media/Explorers ./explorers
+```
+
+---
+
+# General Examples
+
+List all explorers from a specific model:
+
+```
+$ ./parsec.rb --list --model t4-1 --masked
+
+::Explorers in /Users/spindler/Code/parsec/explorers:                                              
+Hostname    Model     Date        Time      Host ID   File                                                                                     
+hostname0   T4-1      2013-07-03  02:04     masked    /Users/spindler/Code/parsec/explorers/explorer.masked.hostname0-2013.07.03.02.04.tar.gz  
+hostname1   T4-1      2013-07-23  05:24     masked    /Users/spindler/Code/parsec/explorers/explorer.masked.hostname1-2013.07.23.05.24.tar.gz  
+```
+
+List all explorers from a specific date:
+
+```
+$ ./parsec.rb --list --date 2013-10-10 --masked
+
+::Explorers in /Users/spindler/Code/parsec/explorers:                                             
+Hostname   Model     Date        Time      Host ID   File                                                                                    
+hostname0  T4-1      2013-10-10  09:25     masked    /Users/spindler/Code/parsec/explorers/explorer.masked.hostname0-2013.10.10.09.25.tar    
+hostname1  T4-1      2013-10-10  09:25     masked    /Users/spindler/Code/parsec/explorers/explorer.masked.hostname1-2013.10.10.09.25.tar.gz 
+```
+
+List all explorers from a specific year:
+
+```
+$ ./parsec.rb --list --year 2015 --masked
+
+::Explorers in /Users/spindler/Code/parsec/explorers:                                             
+Hostname   Model     Date        Time      Host ID   File                                                                                    
+hostname0  T2000     2015-02-24  00:24     masked    /Users/spindler/Code/parsec/explorers/explorer.masked.hostname0-2015.02.24.00.24.tar.gz 
+hostname1  M5000     2015-03-18  21:51     masked    /Users/spindler/Code/parsec/explorers/explorer.masked.hostname1-2015.03.18.21.51.tar.gz 
+hostname2  M5000     2015-01-05  01:07     masked    /Users/spindler/Code/parsec/explorers/explorer.masked.hostname2-2015.01.05.01.07.tar.gz 
+```
+
+---
+
+# Memory example
+
+```
+$ ./parsec.rb --server=hostname --report=memory --format=table --masked
+
++--------------+----------+
+|   Memory Information    |
++--------------+----------+
+| Item         | Value    |
++--------------+----------+
+| System Board | 00       |
+| Group(s)     | A        |
+| Size         | 32768MB  |
+| Status       | okay     |
+| DIMMs        | 4        |
+| DIMM Size    | 8192MB   |
+| Mirror       | no       |
+| Interleave   | 2-way    |
+| System Board | 00       |
+| Group(s)     | B        |
+| Size         | 32768MB  |
+| Status       | okay     |
+| DIMMs        | 4        |
+| DIMM Size    | 8192MB   |
+| Mirror       | no       |
+| Interleave   | 2-way    |
++--------------+----------+
+```
+
+---
+
+# IO Example
+
+```
+$ ./parsec.rb --server=hostname --report=io --format=table --masked
+
++--------------------+---------------------------------------------------------+
+|                                IO Information                                |
++--------------------+---------------------------------------------------------+
+| Item               | Value                                                   |
++--------------------+---------------------------------------------------------+
+| IOU                | 00                                                      |
+| Type               | PCIe                                                    |
+| Name               | MASKED                                                  |
+| Path               | /pci@0,600000/pci@0                                     |
+| Slot               | 1                                                       |
+| Controller         | c0                                                      |
+| Vendor ID          | 10b5                                                    |
+| Vendor Name        | PLX Technology, Inc.                                    |
+| Device ID          | 8533                                                    |
+| Device Name        | PEX 8533 32-lane, 6-port PCI Express Switch             |
++--------------------+---------------------------------------------------------+
+```
+
+---
+
+# Power Example
+
+```
+$ ./parsec.rb --server=hostname --report=power --masked
+
++---------------+----------+-------------+----------+
+|      Security Settings (/etc/default/power)       |
++---------------+----------+-------------+----------+
+| Item          | Current  | Recommended | Complies |
++---------------+----------+-------------+----------+
+| PMCHANGEPERM  | -        | -           | Yes      |
+| CPRCHANGEPERM | -        | -           | Yes      |
++---------------+----------+-------------+----------+
+```
+
+---
+
+# Suspend Example
+
+```
+$ ./parsec.rb --server=hostname --report=suspend --masked
+
++-----------+-----------+-------------+-----------+
+|  Security Settings (/etc/default/sys-suspend)   |
++-----------+-----------+-------------+-----------+
+| Item      | Current   | Recommended | Complies  |
++-----------+-----------+-------------+-----------+
+| PERMS     | -         | -           | Yes       |
++-----------+-----------+-------------+-----------+
+```
+
+---
+
+# ILOM Example
+
+```
+$ ./parsec.rb --server=hostname --report=firmware --format=table --masked
+
++---------+--------------+--------------------+------------------------------+-------------+
+|                           System SP/BIOS Firmware Information                            |
++---------+--------------+--------------------+------------------------------+-------------+
+| ID      | Product Name | ILOM Version       | BIOS/OBP Version             | XML Support |
++---------+--------------+--------------------+------------------------------+-------------+
+| sp_bios | SPARC M7-8   | v3.2.5.5.d r103228 | OpenBoot 4.37.3.b 2015/10/01 | N/A         |
++---------+--------------+--------------------+------------------------------+-------------+
+```
+
+---
+
+# OBP Example
+
+```
+$ ./parsec.rb --server=hostname --report=obp --format=table --masked
+
++-----------------------+-------------------------------+
+|                    OBP Information                    |
++-----------------------+-------------------------------+
+| Item                  | Value                         |
++-----------------------+-------------------------------+
+| Model                 | Oracle Corporation SPARC T4-1 |
+| Installed OBP Version | 4.34.2.a                      |
+| Available OBP Version | 4.36.0 (Newer)                |
++-----------------------+-------------------------------+
+```
+
+---
+
+# FRU Example
+
+```
+$ ./parsec.rb -s hostname -R fru
+
++----------------------+--------+---------+
+|             FRU Information             |
++----------------------+--------+---------+
+| Location             | Name   | Status  |
++----------------------+--------+---------+
+| SYS                  | MB     | enabled |
+| SYS/MB/CMP0/BOB0/CH1 | D0     | enabled |
+| SYS/MB/CMP0/BOB1/CH1 | D0     | enabled |
+| SYS/MB/CMP0/BOB2/CH1 | D0     | enabled |
+| SYS/MB/CMP0/BOB3/CH1 | D0     | enabled |
+| SYS/MB               | SP     | enabled |
+| SYS/MB               | BAT    | enabled |
+| SYS/MB               | SCC    | enabled |
+| SYS/MB               | RISER0 | enabled |
+| SYS/MB               | RISER1 | enabled |
+| SYS/MB               | RISER2 | enabled |
+| SYS                  | MB_ENV | enabled |
+| SYS                  | USBBD  | enabled |
+| SYS                  | DVD    | enabled |
+| SYS                  | PS0    | enabled |
+| SYS                  | PS1    | enabled |
+| SYS                  | SASBP  | enabled |
+| SYS                  | PDB    | enabled |
+| SYS                  | CONNBD | enabled |
+| SYS                  | FANBD  | enabled |
++----------------------+--------+---------+
+```
+
+---
+
+# CPU Example
+
+```
+$ ./parsec.rb --server=hostname --report=cpu --format=table --masked
+
++--------------+-----------------+
+|        CPU Information         |
++--------------+-----------------+
+| Item         | Value           |
++--------------+-----------------+
+| System Board | 00              |
+| Socket       | 0               |
+| Mask         | 161             |
+| Speed        | 2750 MHz        |
+| Cache        | 5.0             |
+| IDs          | 0,1,2,3,4,5,6,7 |
+| Type         | SPARC64-VII     |
++--------------+-----------------+
+```
+
+---
+
+# Explorer Example
+
+
+```
+$ ./parsec.rb --server=hostname --report=explorer --format=table --masked
+
++-------------+---------------------------------------+
+|                Explorer Information                 |
++-------------+---------------------------------------+
+| Item        | Value                                 |
++-------------+---------------------------------------+
+| Customer    | Company X                             |
+| Contract ID |                                       |
+| User        | Customer X                            |
+| Email       | customre@company.com                  |
+| Phone       | XXX-XXXX-XXXX                         |
+| Country     | Country                               |
+| Directory   | /Users/spindler/Code/parsec/explorers |
+| File        | explorer.tar.gz                       |
+| STB Version | 7.2                                   |
+| Date        | 03/07/2013                            |
+| Time        | 02:29                                 |
++-------------+---------------------------------------+
+```
+
+---
+
+# Coreadm Example
+
+```
+$ ./parsec.rb --server=hostname --report=coreadm --format=table --masked
+
++------------------------------+----------------------------------+
+|                      Coreadm Configuration                      |
++------------------------------+----------------------------------+
+| Item                         | Value                            |
++------------------------------+----------------------------------+
+| global core file pattern     | /var/core/core_%n_%f_%u_%g_%t_%p |
+| global core file content     | default                          |
+| init core file pattern       | /var/core/core_%n_%f_%u_%g_%t_%p |
+| init core file content       | default                          |
+| global core dumps            | disabled                         |
+| per-process core dumps       | enabled                          |
+| global setid core dumps      | disabled                         |
+| per-process setid core dumps | enabled                          |
+| global core dump logging     | enabled                          |
++------------------------------+----------------------------------+
+```
+
+---
+
+# Dumpadm Example
+
+```
+$ ./parsec.rb --server=hostname --report=dumpadm --format=table --masked
+
++------------------+--------------------------------------+
+|                  Dumpadm Configuration                  |
++------------------+--------------------------------------+
+| Item             | Value                                |
++------------------+--------------------------------------+
+| Dump content     | kernel pages                         |
+| Dump device      | /dev/zvol/dsk/rpool/dump (dedicated) |
+| Savecore enabled | yes                                  |
+| Save compressed  | on                                   |
++------------------+--------------------------------------+
+```
+
+---
+
+# Network Information
+
+```
+$ ./parsec.rb --server=hostnmae --format=table --masked --report=network
+
+No dladm aggregate detailed information available
+
+No dladm aggregate configuration information available
+
++-----------+------+---------+---------+--------+--------+---------+----------+----+
+|                             Aggregate Configuration                              |
++-----------+------+---------+---------+--------+--------+---------+----------+----+
+| Interface | Type | Members | Devices | Config | Status | Timeout | Hostname | IP |
++-----------+------+---------+---------+--------+--------+---------+----------+----+
++-----------+------+---------+---------+--------+--------+---------+----------+----+
+
++-----------+---------------------------------------------+-----------+----------+--------+--------+
+|                                   Physical Network Interfaces                                    |
++-----------+---------------------------------------------+-----------+----------+--------+--------+
+| Interface | Path                                        | Aggregate | Hostname | IP     | Ether  |
++-----------+---------------------------------------------+-----------+----------+--------+--------+
+| bge0      | /pci@0,600000/pci@0/pci@1/pci@0/network@4   |           | MASKED   | MASKED | MASKED |
+| bge1      | /pci@0,600000/pci@0/pci@1/pci@0/network@4,1 |           | MASKED   | MASKED | MASKED |
+| bge2      | /pci@0,600000/pci@0/pci@2/pci@0/network@4   |           | MASKED   | MASKED | MASKED |
+| bge3      | /pci@0,600000/pci@0/pci@2/pci@0/network@4,1 |           | MASKED   | MASKED | MASKED |
+| nxge0     | /pci@0,600000/pci@0/pci@8/network@0         |           | MASKED   | MASKED | MASKED |
+| nxge1     | /pci@0,600000/pci@0/pci@8/network@0,1       |           | MASKED   | MASKED | MASKED |
+| nxge2     | /pci@0,600000/pci@0/pci@8/network@0,2       |           | MASKED   | MASKED | MASKED |
+| nxge3     | /pci@0,600000/pci@0/pci@8/network@0,3       |           | MASKED   | MASKED | MASKED |
++-----------+---------------------------------------------+-----------+----------+--------+--------+
+```
+
+---
+
+```
++-----------------------------+----------------+-----------+
+|            Kernel bge0 Paramater Information             |
++-----------------------------+----------------+-----------+
+| Parameter                   | Type           | Value     |
++-----------------------------+----------------+-----------+
+| min_allowed_mtu             | read only      | 1500      |
+| max_allowed_mtu             | read only      | 9000      |
+| adv_autoneg_cap             | read and write | 1         |
+| adv_1000fdx_cap             | read and write | 1         |
+| adv_1000hdx_cap             | read and write | 1         |
+| adv_100fdx_cap              | read and write | 1         |
+| adv_100hdx_cap              | read and write | 1         |
+| adv_10fdx_cap               | read and write | 1         |
+| adv_10hdx_cap               | read and write | 1         |
+| adv_100T4_cap               | read only      | 0         |
+| link_status                 | read only      | 1         |
+| link_speed                  | read only      | 1000      |
+| link_duplex                 | read only      | 2         |
+| autoneg_cap                 | read only      | 1         |
+| pause_cap                   | read only      | 1         |
+| asym_pause_cap              | read only      | 1         |
+| lp_autoneg_cap              | read only      | 1         |
+| lp_pause_cap                | read only      | 0         |
+| lp_asym_pause_cap           | read only      | 0         |
+| lp_1000hdx_cap              | read only      | 0         |
+| lp_1000fdx_cap              | read only      | 1         |
+| lp_100fdx_cap               | read only      | 1         |
+| lp_100hdx_cap               | read only      | 1         |
+| lp_10fdx_cap                | read only      | 1         |
+| lp_10hdx_cap                | read only      | 1         |
+| link_autoneg                | read only      | 1         |
+| adv_asym_pause_cap          | read and write | 0         |
+| adv_pause_cap               | read and write | 0         |
+| drain_max                   | read and write | 64        |
+| msi_cnt                     | read and write | 0         |
+| rx_intr_coalesce_blank_time | read and write | 128       |
+| tx_intr_coalesce_blank_time | read and write | 2048      |
+| rx_intr_coalesce_pkt_cnt    | read and write | 8         |
+| tx_intr_coalesce_pkt_cnt    | read and write | 128       |
++-----------------------------+----------------+-----------+
+```
+
+---
+
+# TCP Information
+
+```
+$ ./parsec.rb --server=hostname --report=tcp --format=table --masked
+
++-------------------------------+------------+
+|           TCP Kernel Information           |
++-------------------------------+------------+
+| Paramater                     | Value      |
++-------------------------------+------------+
+| tcp_time_wait_interval        | 60000      |
+| tcp_conn_req_max_q            | 1024       |
+| tcp_conn_req_max_q0           | 4096       |
+| tcp_conn_req_min              | 1          |
+| tcp_conn_grace_period         | 0          |
+| tcp_cwnd_max                  | 1048576    |
+| tcp_debug                     | 0          |
+| tcp_smallest_nonpriv_port     | 1024       |
+| tcp_ip_abort_cinterval        | 180000     |
+| tcp_ip_abort_linterval        | 180000     |
+| tcp_ip_abort_interval         | 300000     |
+| tcp_ip_notify_cinterval       | 10000      |
+| tcp_ip_notify_interval        | 10000      |
+| tcp_ipv4_ttl                  | 64         |
+| tcp_keepalive_interval        | 7200000    |
+| tcp_maxpsz_multiplier         | 10         |
+| tcp_mss_def_ipv4              | 536        |
+| tcp_mss_max_ipv4              | 65495      |
+| tcp_mss_min                   | 108        |
+| tcp_naglim_def                | 4095       |
+| tcp_rexmit_interval_initial   | 1000       |
+| tcp_rexmit_interval_max       | 60000      |
+| tcp_rexmit_interval_min       | 400        |
+| tcp_deferred_ack_interval     | 100        |
+| tcp_snd_lowat_fraction        | 0          |
+| tcp_sth_rcv_hiwat             | 0          |
+| tcp_reass_timeout             | 100000     |
+| tcp_dupack_fast_retransmit    | 3          |
+| tcp_ignore_path_mtu           | 0          |
+| tcp_smallest_anon_port        | 32768      |
+| tcp_largest_anon_port         | 65535      |
+| tcp_xmit_hiwat                | 49152      |
+| tcp_xmit_lowat                | 4096       |
+| tcp_recv_hiwat                | 49152      |
+| tcp_recv_hiwat_minmss         | 4          |
+| tcp_fin_wait_2_flush_interval | 675000     |
+| tcp_co_min                    | 64         |
+| tcp_max_buf                   | 1048576    |
+| tcp_strong_iss                | 2          |
+| tcp_rtt_updates               | 20         |
+| tcp_wscale_always             | 1          |
+| tcp_tstamp_always             | 0          |
+| tcp_tstamp_if_wscale          | 1          |
+| tcp_rexmit_interval_extra     | 0          |
+| tcp_deferred_acks_max         | 2          |
+| tcp_slow_start_after_idle     | 4          |
+| tcp_slow_start_initial        | 4          |
+| tcp_co_timer_interval         | 20         |
+| tcp_sack_permitted            | 2          |
+| tcp_trace                     | 0          |
+| tcp_compression_enabled       | 1          |
+| tcp_ipv6_hoplimit             | 60         |
+| tcp_mss_def_ipv6              | 1220       |
+| tcp_mss_max_ipv6              | 65475      |
+| tcp_rev_src_routes            | 0          |
+| tcp_local_dack_interval       | 50         |
+| tcp_ndd_get_info_interval     | 1000       |
+| tcp_local_dacks_max           | 8          |
+| tcp_ecn_permitted             | 1          |
+| tcp_rst_sent_rate_enabled     | 1          |
+| tcp_rst_sent_rate             | 40         |
+| tcp_push_timer_interval       | 50         |
+| tcp_use_smss_as_mss_opt       | 0          |
+| tcp_wroff_xtra                | 32         |
+| tcp_mdt_hdr_head_min          | 32         |
+| tcp_mdt_hdr_tail_min          | 32         |
+| tcp_mdt_max_pbufs             | 16         |
+| tcp_extra_priv_ports          | 2049       |
++-------------------------------+------------+
+```
+
+---
+
+# UDP Information
+
+```
+$ ./parsec.rb --server=hostname --report=udp --format=table --masked
+
++---------------------------+------------+
+|         UDP Kernel Information         |
++---------------------------+------------+
+| Paramater                 | Value      |
++---------------------------+------------+
+| udp_wroff_extra           | 32         |
+| udp_ipv4_ttl              | 255        |
+| udp_ipv6_hoplimit         | 60         |
+| udp_smallest_nonpriv_port | 1024       |
+| udp_do_checksum           | 1          |
+| udp_smallest_anon_port    | 32768      |
+| udp_largest_anon_port     | 65535      |
+| udp_xmit_hiwat            | 57344      |
+| udp_xmit_lowat            | 1024       |
+| udp_recv_hiwat            | 57344      |
+| udp_max_buf               | 2097152    |
+| udp_ndd_get_info_interval | 1000       |
+| udp_extra_priv_ports      | 2049       |
++---------------------------+------------+
+```
+
+---
+
+# SSH Information
+
+```
+$ ./parsec.rb --server=hostname --report=ssh --format=table --masked
+
++-------------------------+------------------+-------------+----------+
+|              Security Settings (/etc/ssh/sshd_config)               |
++-------------------------+------------------+-------------+----------+
+| Item                    | Current          | Recommended | Complies |
++-------------------------+------------------+-------------+----------+
+| Protocol                | 2                | 2           | Yes      |
+| X11Forwarding           | yes              | no          | *No*     |
+| MaxAuthTries            | N/A              | 3           | *No*     |
+| MaxAuthTriesLog         | N/A              | 0           | *No*     |
+| RhostsAuthentication    | no               | no          | Yes      |
+| IgnoreRhosts            | yes              | yes         | Yes      |
+| StrictModes             | yes              | yes         | Yes      |
+| AllowTcpForwarding      | no               | no          | Yes      |
+| ServerKeyBits           | 768              | MASKED      | *No*     |
+| GatewayPorts            | no               | no          | Yes      |
+| RhostsRSAAuthentication | no               | no          | Yes      |
+| PermitRootLogin         | without-password | no          | *No*     |
+| PermitRootLogin         | no               | no          | Yes      |
+| PermitEmptyPasswords    | no               | no          | Yes      |
+| PermitUserEnvironment   | N/A              | no          | *No*     |
+| HostbasedAuthentication | N/A              | no          | *No*     |
+| Banner                  | /etc/issue       | /etc/issue  | Yes      |
+| PrintMotd               | no               | no          | Yes      |
+| ClientAliveInterval     | N/A              | 300         | *No*     |
+| ClientAliveCountMax     | N/A              | 0           | *No*     |
+| LogLevel                | info             | VERBOSE     | *No*     |
+| RSAAuthentication       | yes              | no          | *No*     |
+| UsePrivilegeSeparation  | N/A              | yes         | *No*     |
+| LoginGraceTime          | 600              | 120         | *No*     |
+| ServerKeyBits           | 768              | MASKED      | *No*     |
++-------------------------+------------------+-------------+----------+
+```
+
+---
+
+# Telnet Information
+
+```
+$ ./parsec.rb --server=hostname --report=telnet --format=table --masked
+
++----------+---------------------+-------------+----------+
+|        Security Settings (/etc/default/telnetd)         |
++----------+---------------------+-------------+----------+
+| Item     | Current             | Recommended | Complies |
++----------+---------------------+-------------+----------+
+| BANNER   | "AuthorizedUseOnly" | /etc/issue  | *No*     |
++----------+---------------------+-------------+----------+
+```
+
+---
+
+# Kernel Information
+
+```
+$ ./parsec.rb --server=aumelora01 --report=kernel --format=table --masked
+
++----------------------------+----------------------+
+|    Kernel Parameter Information (/etc/system)     |
++----------------------------+----------------------+
+| Item                       | Value                |
++----------------------------+----------------------+
+| nfssrv:nfs_portmon         | 1                    |
+| noexec_user_stack_log      | 1                    |
+| noexec_user_stack          | 1                    |
+| forceload                  | drv/vxdmp            |
+| forceload                  | drv/vxio             |
+| forceload                  | drv/vxspec           |
+| lwp_default_stksize        | 0x6000               |
+| rpcmod:svc_default_stksize | 0x6000               |
++----------------------------+----------------------+
+```
+
+---
+
+# Kernel Module Information
+
+```
+$ ./parsec.rb --server=hostname --report=modinfo --format=table --masked
+
++-----------------+---------------------------------+------------------+
+|                      Kernel Module Information                       |
++-----------------+---------------------------------+------------------+
+| Module          | Information                     | Status           |
++-----------------+---------------------------------+------------------+
+| unix            |                                 | LOADED/INSTALLED |
+| genunix         |                                 | LOADED/INSTALLED |
+| platmod         |                                 | LOADED/INSTALLED |
+| SPARC-T4        |                                 | LOADED/INSTALLED |
+| specfs          | filesystem for specfs           | LOADED/INSTALLED |
+| fifofs          | filesystem for fifo             | LOADED/INSTALLED |
+| dtrace          | Dynamic Tracing                 | LOADED/INSTALLED |
+| devfs           | devices filesystem 1.16         | LOADED/INSTALLED |
+| procfs          | filesystem for proc             | LOADED/INSTALLED |
+| TS              | time sharing sched class        | LOADED/INSTALLED |
+| TS_DPTBL        | Time sharing dispatch table     | LOADED/INSTALLED |
+| zfs             | ZFS filesystem version 32       | LOADED/INSTALLED |
+| zfs             | ZFS storage pool                | LOADED/INSTALLED |
+| swrand          | Kernel Random number Provider 1 | LOADED/INSTALLED |
+| kcf             | Kernel Crypto Framework 1.12    | LOADED/INSTALLED |
+| sha1            | SHA1 Message-Digest Algorithm   | LOADED/INSTALLED |
+| sha1            | SHA1 Kernel SW Provider 1.1     | LOADED/INSTALLED |
++-----------------+---------------------------------+------------------+
+```
+
+---
+
+# Locale Information
+
+```
+$ ./parsec.rb --server=hostname --report=locale --format=table --masked
+
++-------------+----------+
+|   Locale Information   |
++-------------+----------+
+| Item        | Value    |
++-------------+----------+
+| LANG        |          |
+| LC_CTYPE    | C        |
+| LC_NUMERIC  | C        |
+| LC_TIME     | C        |
+| LC_COLLATE  | C        |
+| LC_MONETARY | C        |
+| LC_MESSAGES | C        |
+| LC_ALL      |          |
++-------------+----------+
+```
+
+---
+
+# Filesystem Information
+
+```
+$ ./parsec.rb --server=hostname --report=filesystem --format=table --masked
+
++--------------------------+---------+---------+
+|          File Systems (/etc/vfstab)          |
++--------------------------+---------+---------+
+| Device                   | Mount   | Type    |
++--------------------------+---------+---------+
+| /dev/zvol/dsk/rpool/swap | -       | swap    |
+| /dev/dsk/disk0           | /mount0 | devfs   |
++--------------------------+---------+---------+
+```
+
+---
+
+# LiveUpgrade Information
+
+```
+$ ./parsec.rb --server=hostname --report=liveupdate --format=table --masked
++---------+----------+------------+------------------+
+|                Live Upgrade Status                 |
++---------+----------+------------+------------------+
+| Name    | Complete | Active Now | Active on Reboot |
++---------+----------+------------+------------------+
+| luname0 | yes      | yes        | yes              |
++---------+----------+------------+------------------+
+
+
++---------+-----+------------+-----------------+----------------+
+|                   Live Upgrade Disk Layout                    |
++---------+-----+------------+-----------------+----------------+
+| Name    | ID  | Filesystem | Slice/Pool      | Device         |
++---------+-----+------------+-----------------+----------------+
+| luname1 | 1   | /          | /dev/dsk/disks1 | /dev/dsk/disk1 |
++---------+-----+------------+-----------------+----------------+
+
+
++--------------------------+------------------+------------------+
+|      Live Upgrade Filesystem Information (patch-20130424)      |
++--------------------------+------------------+------------------+
+| Filesystem               | Type             | Mount            |
++--------------------------+------------------+------------------+
+| /dev/zvol/dsk/rpool/swap | swap             | -                |
+| rpool/ROOT/luname0       | zfs              | /mount0          |
+| rpool/ROOT/luname1       | zfs              | /mount1          |
+| rpool/ROOT/luname2       | zfs              | /mount2          |
+| rpool                    | zfs              | /rpool           |
+| rpool/ROOT/luname3       | zfs              | /mount3          |
++--------------------------+------------------+------------------+
+```
+
+---
+
+# Host Information
+
+```
+$ ./parsec.rb --server=hostname --report=host --format=table --masked
+
++------------------+------------------------------+
+|                Host Information                 |
++------------------+------------------------------+
+| Item             | Value                        |
++------------------+------------------------------+
+| Hostname         | explorer-host                |
+| Timezone         | Country/State                |
+| HostID           | XXXXXXXX                     |
+| Serial           | XXXXXXXX                     |
+| OS Name          | SunOS                        |
+| Domain           | domain                       |
+| Name Server(s)   | nameserver                   |
+| Search Domain(s) | search                       |
+| Kernel Version   | Generic_147440-27            |
+| Architecture     | sun4u                        |
+| OS Version       | 5.10                         |
+| OS Update        | 7                            |
+| OS Release       | 5/09                         |
+| OS Build         | s10s_u7wos_08                |
+| Boot Time        | Sun 10 Nov 2013 10:41:47 EST |
+| System Uptime    | 1 day(s)                     |
+| Install Cluster  | SUNWCXall                    |
++------------------+------------------------------+
+```
+
+---
+
+```
++------------------------------+----------------------------------+
+|                      Coreadm Configuration                      |
++------------------------------+----------------------------------+
+| Item                         | Value                            |
++------------------------------+----------------------------------+
+| global core file pattern     | /var/core/core_%n_%f_%u_%g_%t_%p |
+| global core file content     | default                          |
+| init core file pattern       | /var/core/core_%n_%f_%u_%g_%t_%p |
+| init core file content       | default                          |
+| global core dumps            | enabled                          |
+| per-process core dumps       | disabled                         |
+| global setid core dumps      | enabled                          |
+| per-process setid core dumps | disabled                         |
+| global core dump logging     | enabled                          |
++------------------------------+----------------------------------+
+```
+
+---
+
+```
++------------------+--------------------------------------+
+|                  Dumpadm Configuration                  |
++------------------+--------------------------------------+
+| Item             | Value                                |
++------------------+--------------------------------------+
+| Dump content     | kernel pages                         |
+| Dump device      | /dev/zvol/dsk/rpool/dump (dedicated) |
+| Savecore enabled | yes                                  |
+| Save compressed  | on                                   |
++------------------+--------------------------------------+
+```
+
+---
+
+```
++-------------+---------------------------------------+
+|                Explorer Information                 |
++-------------+---------------------------------------+
+| Item        | Value                                 |
++-------------+---------------------------------------+
+| Customer    | Company X                             |
+| Contract ID |                                       |
+| User        | Customer X                            |
+| Email       | customre@company.com                  |
+| Phone       | XXX-XXXX-XXXX                         |
+| Country     | Country                               |
+| Directory   | /Users/spindler/Code/parsec/explorers |
+| File        | explorer.tar.gz                       |
+| STB Version | 7.2                                   |
+| Date        | 20/05/2013                            |
+| Time        | 07:03                                 |
++-------------+---------------------------------------+
+```
+
+---
+
+```
++-----------------------+------------------------------------------------------+
+|                              System Information                              |
++-----------------------+------------------------------------------------------+
+| Item                  | Value                                                |
++-----------------------+------------------------------------------------------+
+| Model                 | Oracle Corporation Sun SPARC Enterprise M3000 Server |
+| OBP Version           | OBP 4.24.13 2010/02/08 13:17                         |
+| Available OBP Version | OBP 4.33.5.d (Newer)                                 |
+| Memory                | 65536 Megabytes                                      |
++-----------------------+------------------------------------------------------+
+```
+
+---
+
+# EEPROM Information
+
+```
+$./parsec.rb --server=hostname --report=eeprom --format=table --masked
+
++----------------------+--------------------------------------------------------------+
+|                                 EEPROM Information                                  |
++----------------------+--------------------------------------------------------------+
+| Item                 | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| ttya-rts-dtr-off     | false                                                        |
+| ttya-ignore-cd       | true                                                         |
+| keyboard-layout      | US-English                                                   |
+| security-mode        | none                                                         |
+| verbosity            | min                                                          |
+| diag-switch?         | false                                                        |
+| local-mac-address?   | true                                                         |
+| fcode-debug?         | false                                                        |
+| scsi-initiator-id    | 7                                                            |
+| oem-logo?            | false                                                        |
+| oem-banner?          | false                                                        |
+| ansi-terminal?       | true                                                         |
+| screen-#columns      | 80                                                           |
+| screen-#rows         | 34                                                           |
+| ttya-mode            | 9600,8,n,1,-                                                 |
+| output-device        | virtual-console                                              |
+| input-device         | virtual-console                                              |
+| auto-boot-on-error?  | false                                                        |
+| load-base            | 16384                                                        |
+| auto-boot?           | false                                                        |
+| boot-command         | boot                                                         |
++----------------------+--------------------------------------------------------------+
+```
+
+---
+
+# LDom Information
+
+```
+$ ./parsec.rb --server=hostname --report=ldoms --format==table --masked
+
++-------------------------------------+---------------+
+|                  LDom Information                   |
++-------------------------------------+---------------+
+| Item                                | Value         |
++-------------------------------------+---------------+
+| Hypervisor Control Protocol Version | 1.9           |
+| Hypervisor MD Version               | 1.4           |
+| Hostconfig Version                  | 1.2.0.a       |
+| Hypervisor Version                  | 1.11.0.a      |
+| Installed LDom Version              | 2.2_149668-01 |
+| Available LDom Version              | 3.1.1 (Newer) |
+| Domain 0                            | domain0       |
+| Domain 1                            | domain1       |
++-------------------------------------+---------------+
+```
+
+---
+
+```
++----------------------+--------------------------------------------------------------+
+|                               Logical Domain domain0                                |
++----------------------+--------------------------------------------------------------+
+| Domain Items         | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| Hostname             | domain0                                                      |
+| State                | active                                                       |
+| Flags                | normal,control,vio-service                                   |
+| Console Port         | UART                                                         |
+| CPUs                 | 8                                                            |
+| Memory               | 2 GB                                                         |
+| Util                 | 14.7                                                         |
+| Uptime               | 450                                                          |
+| Status               | Solaris running                                              |
+| UUID                 | xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx                         |
+| MAC Address          | XX:XX:XX:XX:XX:XX                                            |
+| Host ID              | XXXXXXXXXX                                                   |
+| Failure-policy       | ignore                                                       |
+| Extended-mapin-space | off                                                          |
+| CPU Architecture     | native                                                       |
+| Master               |                                                              |
++----------------------+--------------------------------------------------------------+
+| Core                 | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| CPU ID               | 0                                                            |
+| CPU Set              | 0,1,2,3,4,5,6,7                                              |
++----------------------+--------------------------------------------------------------+
+```
+
+---
+
+```
++----------------------+--------------------------------------------------------------+
+| MAU                  | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| ID                   | 0                                                            |
+| CPU Set              | 0,1,2,3,4,5,6,7                                              |
++----------------------+--------------------------------------------------------------+
+| Variables            | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| Auto-boot?           | false                                                        |
+| Boot-device          | /pci@400/pci@1/pci@0/pci@4/scsi@0/disk@w5000c5001c8398a9,0:a |
+| Keyboard-layout      | US-English                                                   |
+| NVRAMRC              | cr                                                           |
++----------------------+--------------------------------------------------------------+
+```
+
+---
+
+```
++----------------------+--------------------------------------------------------------+
+| IO                   | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| Device               | pci@400                                                      |
+| Alias                | pci_0                                                        |
+| Device               | niu@480                                                      |
+| Alias                | niu_0                                                        |
+| Device               | pci@400/pci@1/pci@0/pci@8                                    |
+| Alias                | /SYS/MB/RISER0/PCIE0                                         |
+| Device               | pci@400/pci@2/pci@0/pci@8                                    |
+| Alias                | /SYS/MB/RISER1/PCIE1                                         |
+| Device               | pci@400/pci@1/pci@0/pci@6                                    |
+| Alias                | /SYS/MB/RISER2/PCIE2                                         |
+| Device               | pci@400/pci@2/pci@0/pci@c                                    |
+| Alias                | /SYS/MB/RISER0/PCIE3                                         |
+| Device               | pci@400/pci@1/pci@0/pci@0                                    |
+| Alias                | /SYS/MB/RISER1/PCIE4                                         |
+| Device               | pci@400/pci@2/pci@0/pci@a                                    |
+| Alias                | /SYS/MB/RISER2/PCIE5                                         |
+| Device               | pci@400/pci@1/pci@0/pci@4                                    |
+| Alias                | /SYS/MB/SASHBA0                                              |
+| Device               | pci@400/pci@2/pci@0/pci@4                                    |
+| Alias                | /SYS/MB/SASHBA1                                              |
+| Device               | pci@400/pci@2/pci@0/pci@6                                    |
+| Alias                | /SYS/MB/NET0                                                 |
+| Device               | pci@400/pci@2/pci@0/pci@7                                    |
+| Alias                | /SYS/MB/NET2                                                 |
++----------------------+--------------------------------------------------------------+
+```
+
+---
+
+```
++----------------------+--------------------------------------------------------------+
+| VCC                  | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| Name                 | primary-vcc0                                                 |
+| Clients              | 4                                                            |
+| Console Port-range   | 5000-5100                                                    |
++----------------------+--------------------------------------------------------------+
+| VSW                  | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| Name                 | primary-vsw0                                                 |
+| Clients              | 4                                                            |
+| MAC Address          | XX:XX:XX:XX:XX:XX                                            |
+| Network Device       | aggr1                                                        |
+| Device               | switch@0                                                     |
+| Default-vlan-id      | 1                                                            |
+| Pvid                 | 1                                                            |
+| Vid                  |                                                              |
+| Mode                 |                                                              |
+| MTU                  | 1500                                                         |
+| Link Property        |                                                              |
+| Inter-vnet-link      | on                                                           |
+| ID                   | 0                                                            |
++----------------------+--------------------------------------------------------------+
+```
+
+---
+
+```
++----------------------+--------------------------------------------------------------+
+| VDS                  | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| Name                 | primary-vds0                                                 |
+| Clients              | 8                                                            |
+| Volume               | disk0                                                        |
+| Opts                 |                                                              |
+| Device               | /dev/rdsk/c0t60060E8010058200052FB4D000000399d0s2            |
+| MP Group             |                                                              |
+| Volume               | disk1                                                        |
+| Opts                 |                                                              |
+| Device               | /dev/rdsk/c0t60060E8010058200052FB4D0000004A7d0s2            |
+| MP Group             |                                                              |
+| Volume               | disk2                                                        |
+| Opts                 |                                                              |
+| Device               | /dev/rdsk/c0t60060E8010058200052FB4D00000039Dd0s2            |
+| MP Group             |                                                              |
+| Volume               | disk3                                                        |
+| Opts                 |                                                              |
+| Device               | /dev/rdsk/c0t60060E8010058200052FB4D0000004ABd0s2            |
+| MP Group             |                                                              |
++----------------------+--------------------------------------------------------------+
+| VCONS                | Value                                                        |
++----------------------+--------------------------------------------------------------+
+| Type                 | UART                                                         |
++----------------------+--------------------------------------------------------------+
+```
+
+---
+
+# Zone Information
+
+```
+$ ./parsec.rb --server=hostname --report=zones --format=table --masked
+
++---------+-------------------------------------------------------------------------+
+|                                 Zone Information                                  |
++---------+-------------------------------------------------------------------------+
+| Item    | Value                                                                   |
++---------+-------------------------------------------------------------------------+
+| Zone    |   ID NAME         STATUS     PATH                       BRAND    IP     |
+| Zone    |    0 global       running    /                          native   shared |
++---------+-------------------------------------------------------------------------+
+```
+
+---
+
+# System Information
+
+```
+$ ./parsec.rb --server=hostname --report=system --format=table --masked
+
++---------------------------+---------+-------------+----------+
+|               Security Settings (/etc/system)                |
++---------------------------+---------+-------------+----------+
+| Item                      | Current | Recommended | Complies |
++---------------------------+---------+-------------+----------+
+| set nfssrv:nfs_portmon    | N/A     | 1           | *No*     |
+| set noexec_user_stack_log | N/A     | 1           | *No*     |
+| set noexec_user_stack     | N/A     | 1           | *No*     |
++---------------------------+---------+-------------+----------+
+```
+
+---
+
+# Password Information
+
+```
+$ ./parsec.rb --server=hostname --report=passwd --format=table --masked
+
++--------------+---------------------------+---------------------------+----------+
+|                     Security Settings (/etc/default/passwd)                     |
++--------------+---------------------------+---------------------------+----------+
+| Item         | Current                   | Recommended               | Complies |
++--------------+---------------------------+---------------------------+----------+
+| MAXWEEKS     | 8                         | 13                        | *No*     |
+| MINWEEKS     | 1                         | 1                         | Yes      |
+| WARNWEEKS    | 1                         | 4                         | *No*     |
+| PASSLENGTH   | 8                         | 8                         | Yes      |
+| NAMECHECK    | YES                       | YES                       | Yes      |
+| HISTORY      | 10                        | 10                        | Yes      |
+| MINDIFF      | 1                         | 3                         | *No*     |
+| MINALPHA     | 1                         | 2                         | *No*     |
+| MINUPPER     | 1                         | 1                         | Yes      |
+| MINLOWER     | 1                         | 1                         | Yes      |
+| MINDIGIT     | 1                         | 1                         | Yes      |
+| MINNONALPHA  | N/A                       | 1                         | *No*     |
+| MAXREPEATS   | 2                         | 0                         | *No*     |
+| WHITESPACE   | YES                       | YES                       | Yes      |
+| DICTIONDBDIR | /var/passwd               | /var/passwd               | Yes      |
+| DICTIONLIST  | /usr/share/lib/dict/words | /usr/share/lib/dict/words | Yes      |
++--------------+---------------------------+---------------------------+----------+
+```
+
+---
+
+# Login Information
+
+```
+$ ./parsec.rb --server=hostname --report=login --format=table --masked
+
++----------------------+--------------+--------------+----------+
+|            Security Settings (/etc/default/login)             |
++----------------------+--------------+--------------+----------+
+| Item                 | Current      | Recommended  | Complies |
++----------------------+--------------+--------------+----------+
+| UMASK                | 022          | 077          | *No*     |
+| SYSLOG_FAILED_LOGINS | N/A          | 0            | *No*     |
+| SYSLOG               | YES          | YES          | Yes      |
+| PASSREQ              | YES          | YES          | Yes      |
+| SLEEPTIME            | N/A          | 4            | *No*     |
+| RETRIES              | 3            | 3            | Yes      |
+| DISABLETIME          | N/A          | 3600         | *No*     |
+| CONSOLE              | /dev/console | /dev/console | Yes      |
++----------------------+--------------+--------------+----------+
+```
+
+---
+
+# Inetinit Information
+
+```
+./parsec.rb --server=hostname --report=inetinit --format=table --masked
+
++----------------+----------+-------------+----------+
+|     Security Settings (/etc/default/inetinit)      |
++----------------+----------+-------------+----------+
+| Item           | Current  | Recommended | Complies |
++----------------+----------+-------------+----------+
+| TCP_STRONG_ISS | 2        | 2           | Yes      |
++----------------+----------+-------------+----------+
+```
+
+---
+
+# Su / Sys-suspend Information
+
+```
+$ ./parsec.rb --server=hostname --report=su --format=table --masked
+
++---------+---------+-------------+----------+
+|    Security Settings (/etc/default/su)     |
++---------+---------+-------------+----------+
+| Item    | Current | Recommended | Complies |
++---------+---------+-------------+----------+
+| SYSLOG  | YES     | YES         | Yes      |
++---------+---------+-------------+----------+
+
+
++-----------+-----------+-------------+-----------+
+|  Security Settings (/etc/default/sys-suspend)   |
++-----------+-----------+-------------+-----------+
+| Item      | Current   | Recommended | Complies  |
++-----------+-----------+-------------+-----------+
+| PERMS     | -         | -           | Yes       |
++-----------+-----------+-------------+-----------+
+```
+
+---
+
+# Cron information
+
+```
+$ ./parsec.rb --server=hostname --report=cron --format=table --masked
+
++---------+---------+-------------+----------+
+|   Security Settings (/etc/default/cron)    |
++---------+---------+-------------+----------+
+| Item    | Current | Recommended | Complies |
++---------+---------+-------------+----------+
+| CRONLOG | YES     | YES         | Yes      |
++---------+---------+-------------+----------+
+```
+
+---
+
+# Keyserv Information
+
+```
+$ ./parsec.rb --server=hostname --report=keyserv --format=table --masked
+
++--------------------+----------+-------------+----------+
+|        Security Settings (/etc/default/keyserv)        |
++--------------------+----------+-------------+----------+
+| Item               | Current  | Recommended | Complies |
++--------------------+----------+-------------+----------+
+| ENABLE_NOBODY_KEYS | NO       | NO          | Yes      |
++--------------------+----------+-------------+----------+
+```
+
+---
+
+# What Next?
+
+- System device layout using SVGs
+  - Have exported Visio template to SVGs
+  - Prawn PDF module has a SVG module
+- Put information in a SQLite DB so it can be searched
+  - Looking at some fingerprinting capability for fault detection
+- Web front end using something like Sinatra
+  - Have done some work in this 
 
 ---
 
