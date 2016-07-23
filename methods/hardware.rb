@@ -54,7 +54,7 @@ def get_model_from_hostid(hostid)
     model = "M6-32"
   when /^864/
     model = "M7-8"
-  when /^008/
+  when /^008|^00cf/
     model = "x86"
   when /^00019f/
     model = "IBM System x3200 M3"

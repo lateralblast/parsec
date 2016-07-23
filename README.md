@@ -204,6 +204,7 @@ Tools:
 - Uses pigz if available
 - S tar required for Operating Systems other than Solaris
 - ImageMagick required for image processing for PDF reports
+- libiconv
 
 Required Ruby Gems (required for text reports):
 
@@ -217,6 +218,7 @@ Required Ruby Gems (required for text reports):
 - etc
 - unpack
 - enumerator
+- iconv
 
 Optional Ruby Gems (required for PDF reports)
 

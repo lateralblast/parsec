@@ -16,6 +16,7 @@ def process_upgrade_slots()
     row   = [ 'ID', 'Status', 'Type', 'Description' ]
     table = handle_table("title",title,row,"")
     slot_info.each do |line|
+      line = line.gsub(/available PCI/,"available  PCI")
       if line.match(/^[0-9]/)
         row   = line.split(/ \s+/)
         table = handle_table("row","",row,table)

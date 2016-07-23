@@ -83,7 +83,12 @@ end
 def get_ips_build()
   file_name  = "/patch+pkg/pkg_listing_ips"
   file_array = exp_file_to_array(file_name)
-  ips_build  = file_array.grep(/system\/kernel\/platform/)[0].split(/ \s+/)[1].split(/-/)[1]
+  ips_build  = file_array.grep(/system\/kernel\/platform/)[0]
+  if ips_build
+    ips_build = ips_build.split(/ \s+/)[1].split(/-/)[1]
+  else
+    ips_build = ""
+  end
   return ips_build
 end
 

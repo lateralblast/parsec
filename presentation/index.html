@@ -188,6 +188,7 @@ Required for text reports:
 - etc
 - unpack
 - enumerator
+- iconv
 
 ---
 
@@ -220,6 +221,16 @@ The PDF report will attempt to put in system pictures if they exist.
 I've bundle up some of the system pictures from the Sun System Handbook in a github repository.
 
 [Sun System Pictures](https://github.com/lateralblast/ssp)
+
+Example installation:
+
+```
+$ cd ~/Code
+$ git clone https://github.com/lateralblast/ssp.git
+$ cd parsec/data
+$ rmdir images
+$ ln -s ../../ssp/images .
+```
 
 ---
 

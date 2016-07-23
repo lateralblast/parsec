@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.0.5
+# Version:      2.0.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -16,25 +16,73 @@
 # Load gems
 
 require 'rubygems'
-require 'fileutils'
-require 'getopt/long'
-require 'pathname'
-require 'hex_string'
-require 'terminal-table'
 require 'pathname'
 require 'etc'
-require 'unpack'
-require 'enumerator'
 require 'date'
 
+def install_gem(gem_name)
+  puts "Information:\tInstalling #{gem_name}"
+  %x[gem install #{gem_name}]
+  Gem.clear_paths
+end
+
+begin
+  require 'getopt/long'
+rescue LoadError
+  install_gem("getopt")
+end
+begin
+  require 'fileutils'
+rescue LoadError
+  install_gem("fileutils")
+end
+begin
+  require 'hex_string'
+rescue LoadError
+  install_gem("hex_string")
+end
+begin
+  require 'terminal-table'
+rescue LoadError
+  install_gem("terminal-table")
+end
+begin
+  require 'unpack'
+rescue LoadError
+  install_gem("unpack")
+end
+begin
+  require 'enumerator'
+rescue LoadError
+  install_gem("enumerator")
+end
 begin
   require 'prawn'
+rescue LoadError
+  install_gem("prawn")
+end
+begin
   require 'prawn/table'
+rescue LoadError
+  install_gem("prawn-table")
+end
+begin
   require 'fastimage'
+rescue LoadError
+  install_gem("fastimage")
+end
+begin
   require 'nokogiri'
+rescue LoadError
+  install_gem("nokogiri -- --use-system-libraries")
+end
+begin
   require 'rmagick'
   include Magick
 rescue LoadError
+  install_gem("rmagick")
+  require 'rmagick'
+  include Magick
 end
 
 # Extend string class to remove non ascii chars
