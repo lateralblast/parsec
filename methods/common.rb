@@ -156,6 +156,9 @@ def get_sys_model()
     sys_model  = sys_model[0]
     sys_model  = sys_model.split(": ")
     sys_model  = sys_model[1]
+    if !sys_model.match(/[a-z]/)
+      sys_model = "Unknown" 
+    end
     if sys_model.match(/VMware/)
       sys_model = "VMware"
     else
