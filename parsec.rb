@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.0.6
+# Version:      2.0.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -26,6 +26,11 @@ def install_gem(gem_name)
   Gem.clear_paths
 end
 
+begin
+  require 'iconv'
+rescue LoadError
+  install_gem("iconv")
+end
 begin
   require 'getopt/long'
 rescue LoadError
@@ -227,7 +232,7 @@ $info_dir     = $data_dir+"/information"
 $images_dir   = $data_dir+"/images"
 
 [ $data_dir, $images_dir, $handbook_dir, $fact_dir, $decode_dir, $info_dir ].each do |test_dir|
-  if !File.directory?(test_dir) and !File.symlink?(test_dir)
+  if !File.directory?(test_dir) and !File.symlink?(test_dir) and !File.exist?(test_dir)
     puts "Cannot locate "+test_dir+" directory ("+test_dir+")"
     puts "Creating "+test_dir+" directory ("+test_dir+")"
     Dir.mkdir(test_dir)
