@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.0.7
+# Version:      2.0.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -429,7 +429,7 @@ opt = option
 # Check local config
 
 def check_local_config()
-  os_name = %x[uname -v]
+  os_name = %x[uname -a]
   if !os_name.match(/SunOS/)
     $tar_bin = %x[which star].chomp
     if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
@@ -457,7 +457,7 @@ def check_local_config()
     $tar_bin = %x[which star].chomp
     if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
       if $verbose_mode == 1
-        puts "Using gzip"
+        puts "Using tar"
       end
       $tar_bin = "/usr/bin/tar"
     end
@@ -894,6 +894,10 @@ if input_type.match(/explorer/)
       exp_name  = host_info[2].split(/-/)[0..-2].join("-")
       if search_name.match(/^all$/) and $output_format.match(/pdf/)
         $output_file = $output_dir+"/"+exp_name+"-"+$report_type+".txt"
+      else
+        if File.exist?($output_file)
+          File.delete($output_file)
+        end
       end
       if $verbose_mode == 1 and !$output_format.match(/pdf/)
         puts "Processing explorer ("+$report_type+") report for "+exp_name

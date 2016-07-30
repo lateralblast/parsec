@@ -397,8 +397,8 @@ end
 
 def process_model_info(pdf,toc,model)
   header    = get_handbook_header(model)
-  if !File.directory?($images_dir) and !File.symlink($images_dir)
-    return poc
+  if !File.directory?($images_dir) and !File.symlink?($images_dir)
+    return toc
   end
   counter = 0
   image_names = [ "Front", "Front Open", "Top", "Top Open", "Left", "Left Open", "Right", "Right Open", "Rear", "Rear Open" ]

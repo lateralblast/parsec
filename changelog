@@ -415,3 +415,5 @@
 # Minor bug fixes
 # 2.0.7: Sat 30 Jul 2016 21:17:42 AEST
 # Fixes for Solaris
+# 2.0.8: Sat 30 Jul 2016 22:13:29 AEST
+# Removed sysprop from all report on Solaris 11 to reduce report size

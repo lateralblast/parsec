@@ -181,7 +181,7 @@ def config_report(report,host_name)
       process_liveupgrade()
     end
   end
-  if $report_type.match(/all|svcprop/)
+  if $report_type.match(/svcprop/)
     valid_sw = 1
     os_ver = get_os_version()
     if os_ver.match(/11/)

@@ -6,3 +6,4 @@ pkg install imagemagick
 pkg install pigz
 pkg install wget
 pkg install pkg-config
+pkg install git
