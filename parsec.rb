@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.0.8
+# Version:      2.0.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -11,7 +11,7 @@
 # Distribution: UNIX
 # Vendor:       Lateral Blast
 # Packager:     Richard Spindler <richard@lateralblast.com.au>
-# Description:  Ruby script wrapper for processing explorer
+# Description:  Ruby script for processing explorer
 
 # Load gems
 
@@ -24,6 +24,23 @@ def install_gem(gem_name)
   puts "Information:\tInstalling #{gem_name}"
   %x[gem install #{gem_name}]
   Gem.clear_paths
+  return
+end
+
+def install_pkg(pkg_name)
+  $os_name = %[uname -a].chomp
+  if $os_name.match(/SunOS/) and $os_name.match(/5\.11/)
+    puts "Information:\tInstalling #{pkg_name}"
+    %x[pkg install #{pkg_name}]
+  else
+    if $os_name.match(/Darwin/)
+      if File.exist?("/usr/local/bin/brew")
+        puts "Information:\tInstalling #{pkg_name}"
+        %x[brew install #{pkg_name}]
+      end
+    end
+  end
+  return
 end
 
 begin
@@ -85,6 +102,7 @@ begin
   require 'rmagick'
   include Magick
 rescue LoadError
+  install_pkg("imagemagick")
   install_gem("rmagick")
   require 'rmagick'
   include Magick
@@ -892,13 +910,14 @@ if input_type.match(/explorer/)
       exp_time  = host_info[5..6].join(":")
       $exp_key  = exp_date+"."+host_info[5..6].join(".")
       exp_name  = host_info[2].split(/-/)[0..-2].join("-")
-      if search_name.match(/^all$/) and $output_format.match(/pdf/)
-        $output_file = $output_dir+"/"+exp_name+"-"+$report_type+".txt"
-      else
+      $output_file = $output_dir+"/"+exp_name+"-"+$report_type+".txt"
+#      if search_name.match(/^all$/) and $output_format.match(/pdf/)
+#        puts $output_file
+#        exit
         if File.exist?($output_file)
           File.delete($output_file)
         end
-      end
+#      end
       if $verbose_mode == 1 and !$output_format.match(/pdf/)
         puts "Processing explorer ("+$report_type+") report for "+exp_name
       end
