@@ -151,10 +151,8 @@ def process_veritas()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No Veritas disk information"
-    end
+    handle_output("\n")
+    handle_output("No Veritas disk information")
   end
   return
 end

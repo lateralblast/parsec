@@ -46,10 +46,8 @@ def process_ntp_config()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No syslog information available"
-    end
+    handle_output("\n")
+    handle_output("No syslog information available")
   end
   return
 end
@@ -78,10 +76,8 @@ def process_ntpq()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No ntpq information available"
-    end
+    handle_output("\n")
+    handle_output("No ntpq information available")
   end
   return
 end

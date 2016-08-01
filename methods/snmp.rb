@@ -29,9 +29,7 @@ def process_cups_snmp()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts "No CUPS SNMP information available"
-    end
+    handle_output("No CUPS SNMP information available")
   end
   return
 end

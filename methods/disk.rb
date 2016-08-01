@@ -117,10 +117,8 @@ def process_disk_info()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No disk information available"
-    end
+    handle_output("\n")
+    handle_output("No disk information available")
   end
   return
 end

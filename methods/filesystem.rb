@@ -38,10 +38,8 @@ def process_file_systems()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No filesystem information available"
-    end
+    handle_output("\n")
+    handle_output("No filesystem information available")
   end
   return
 end

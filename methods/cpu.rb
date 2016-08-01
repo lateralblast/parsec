@@ -203,10 +203,8 @@ def process_cpu()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No CPU information available"
-    end
+    handle_output("\n")
+    handle_output("No CPU information available")
   end
   return
 end

@@ -138,10 +138,8 @@ def process_zfs_snapshots()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/) 
-      puts
-      puts "No ZFS snapshot information available"
-    end
+    handle_output("\n")
+    handle_output("No ZFS snapshot information available")
   end
   return
 end
@@ -168,10 +166,8 @@ def process_zpool_list()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No ZFS pool information available"
-    end
+    handle_output("\n")
+    handle_output("No ZFS pool information available")
   end
   return
 end

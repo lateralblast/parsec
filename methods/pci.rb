@@ -66,10 +66,8 @@ def process_pci_scan()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No PCI scan information available"
-    end
+    handle_output("\n")
+    handle_output("No PCI scan information available")
   end
   return
 end

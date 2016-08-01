@@ -29,10 +29,8 @@ def process_domain()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No domain information available"
-    end
+    handle_output("\n")
+    handle_output("No domain information available")
   end
   return
 end

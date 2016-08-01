@@ -29,10 +29,8 @@ def process_elfsign()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No elfsign information"
-    end
+    handle_output("\n")
+    handle_output("No elfsign information")
   end
   return
 end
@@ -58,9 +56,7 @@ def process_security(report_type)
         if curr_name != ""
           table = handle_table("end","","",table)
         end
-        if !$output_file.match(/[A-z]/)
-          puts
-        end
+        handle_output("\n")
         curr_name  = file_name
         title      = "Security Settings ("+file_name+")"
         row        = ['Item', 'Current','Recommended','Complies']
@@ -96,9 +92,7 @@ def process_security(report_type)
     end
     if item == $defaults.last
       table = handle_table("end","","",table)
-      if !$output_file.match(/[A-z]/)
-        puts
-      end
+      handle_output("\n")
     end
   end
   case report_type

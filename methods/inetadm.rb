@@ -25,10 +25,8 @@ def process_inetadm()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No inetadm information available"
-    end
+    handle_output("\n")
+    handle_output("No inetadm information available")
   end
   return
 end

@@ -105,10 +105,8 @@ def config_report(report,host_name)
     if get_os_version.match(/11/)
       process_vnic()
     else
-      if !$output_file.match(/[A-z]/)
-        puts
-        puts "No VNIC information available"
-      end
+      handle_output("\n")
+      handle_output("No VNIC information available")
     end
   end
   if $report_type.match(/all|link/)
@@ -117,10 +115,8 @@ def config_report(report,host_name)
     if get_os_version.match(/11/)
       process_link()
     else
-      if !$output_file.match(/[A-z]/)
-        puts
-        puts "No link information available"
-      end
+      handle_output("\n")
+      handle_output("No link information available")
     end
   end
   if $report_type.match(/all|kernel|ndd/)
@@ -166,10 +162,8 @@ def config_report(report,host_name)
     if os_ver.match(/10|11/)
       process_zfs()
     else
-      if !$output_file.match(/[A-z]/)
-        puts
-        puts "No ZFS information available"
-      end
+      handle_output("\n")
+      handle_output("No ZFS information available")
     end
   end
   if $report_type.match(/all|services/)
@@ -193,10 +187,8 @@ def config_report(report,host_name)
     if os_ver.match(/11/)
       process_svcprop()
     else
-      if !$output_file.match(/[A-z]/)
-        puts
-        puts "No service property information available"
-      end
+      handle_output("\n")
+      handle_output("No service property information available")
     end
   end
   if $report_type.match(/all|locale/)
@@ -217,10 +209,8 @@ def config_report(report,host_name)
     if !os_ver.match(/11/)
       process_patches()
     else
-      if !$output_file.match(/[A-z]/)
-        puts
-        puts "No patch information available"
-      end
+      handle_output("\n")
+      handle_output("No patch information available")
     end
   end
   if $report_type.match(/all|tcp/)
@@ -266,7 +256,7 @@ def config_report(report,host_name)
   if $report_type.match(/^serial$/)
     valid_sw = 1
     serial = get_chassis_serial()
-    puts serial
+    handle_output(serial)
     exit
   end
   if $report_type.match(/all|serials/)

@@ -45,10 +45,8 @@ def process_pkg_history()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No package history information available"
-    end
+    handle_output("\n")
+    handle_output("No package history information available")
   end
   return
 end
@@ -79,10 +77,8 @@ def process_pkg_mediator()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No package mediator information available"
-    end
+    handle_output("\n")
+    handle_output("No package mediator information available")
   end
   return
 end
@@ -118,10 +114,8 @@ def process_pkg_properties()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No package property information available"
-    end
+    handle_output("\n")
+    handle_output("No package property information available")
   end
   return
 end
@@ -162,9 +156,7 @@ def process_pkg_publisher()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts "No package publisher information available"
-    end
+    handle_output("No package publisher information available")
   end
   return
 end
@@ -212,8 +204,8 @@ def process_pkg_ips()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No IPS package information available"
+    handle_output("\n")
+    handle_output("No IPS package information available")
   end
   return
 end
@@ -255,8 +247,8 @@ def process_packages()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No System V package information available"
+    handle_output("\n")
+    handle_output("No System V package information available")
   end
   os_version = get_os_version()
   if os_version == "5.11"
@@ -266,8 +258,8 @@ def process_packages()
     process_pkg_properties()
     process_pkg_publisher()
   else
-    puts
-    puts "No IPS package information available"
+    handle_output("\n")
+    handle_output("No IPS package information available")
   end
   return
 end

@@ -690,10 +690,8 @@ def process_io()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No IO information available"
-    end
+    handle_output("\n")
+    handle_output("No IO information available")
   end
   if $io_fw_urls[0]
     handle_output("\n")

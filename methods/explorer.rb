@@ -108,7 +108,7 @@ def exp_file_to_array(file_name)
     if !File.symlink?(ext_file)
       arc_file = exp_name+file_name
       if $verbose_mode == 1
-        puts "Extracting "+arc_file+" from "+$exp_file+" to "+ext_file
+        handle_output("Extracting #{arc_file} from #{$exp_file} to #{ext_file}")
       end
       extract_exp_file(arc_file)
     end
@@ -358,10 +358,8 @@ def list_explorers(search_model,search_date,search_year,search_name)
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No explorer information available"
-    end
+    handle_output("\n")
+    handle_output("No explorer information available")
   end
   return
 end
