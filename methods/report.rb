@@ -26,11 +26,11 @@ end
 def config_report(report,host_name)
   valid_sw = 0
   if $output_format.match(/html/)
-    puts "<html>"
-    puts "<head>"
-    puts "<title>Explorer report for #{host_name}</title>"
-    puts "</head>"
-    puts "<body>"
+    handle_output("<html>")
+    handle_output("<head>")
+    handle_output("<title>Explorer report for #{host_name}</title>")
+    handle_output("</head>")
+    handle_output("<body>")
   end
   if $report_type.match(/all|host/)
     valid_sw = 1
@@ -284,8 +284,8 @@ def config_report(report,host_name)
     process_svm()
   end
   if $output_format.match(/html/)
-    puts "</body>"
-    puts "</html>"
+    handle_output("</body>")
+    handle_output("</html>")
   end
   handle_output("\n")
   if valid_sw == 0
@@ -352,7 +352,16 @@ end
 def handle_output(output)
   if $output_file.match(/[A-z]/)
     file = File.open($output_file,"a")
-    file.write(output)
+    if $output_format.match(/html/)
+      if output.to_s.match(/\</)
+        if output.class == Array
+          outut = output.join
+        end
+        file.write(output)
+      end
+    else
+      file.write(output)
+    end
     file.write("\n")
     file.close()
   else
@@ -372,13 +381,15 @@ def handle_output(output)
     end
     if $output_format.match(/html/)
       if output.class == String
-        if output.match(/[A-z]/)
+        if output.match(/[0-9]|[A-Z]|[a-z]/)
           puts "<p>#{output}</p>"
         end
       else
         puts "<p>"
         output.each do |line|
-          puts "#{line}"
+          if line.match(/[0-9]|[A-Z]|[a-z]/)
+            puts "#{line}"
+          end
         end
         puts "<br>"
       end

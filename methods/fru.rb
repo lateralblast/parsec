@@ -108,7 +108,11 @@ def process_sensors()
     title       = ""
     row         = ""
     sensor_name = ""
-    table       = ""
+    if $output_format.match(/html/)
+      table = []
+    else
+      table = ""
+    end
     labels      = ""
     status      = "NA"
     sensor_info.each_with_index do |line,index|
