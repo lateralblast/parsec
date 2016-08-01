@@ -29,8 +29,10 @@ def process_cups()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No CUPS information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No CUPS information available"
+    end
   end
   return
 end

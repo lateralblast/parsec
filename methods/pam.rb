@@ -35,8 +35,10 @@ def process_pam()
         end
         table = handle_table("end","","",table)
       else
-        puts
-        puts "No PAM information available for "+file_name
+        if !$output_file.match(/[A-z]/)
+          puts
+          puts "No PAM information available for "+file_name
+        end
       end
     end
   else
@@ -60,8 +62,10 @@ def process_pam()
       end
       table = handle_table("end","","",table)
     else
-      puts
-      puts "No PAM information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No PAM information available"
+      end
     end
   end
   return

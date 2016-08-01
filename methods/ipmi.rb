@@ -55,8 +55,10 @@ def process_ipmi_sel()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No IPMI System Event Log information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No IPMI System Event Log information available"
+    end
   end
   return
 end
@@ -76,8 +78,10 @@ def process_ipmi_sel_events()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No IPMI System Event Log event information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No IPMI System Event Log event information available"
+    end
   end
   return
 end
@@ -101,8 +105,10 @@ def process_ipmi_mc()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No IPMI Machine Controller information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No IPMI Machine Controller information available"
+    end
   end
   return
 end
@@ -125,8 +131,10 @@ def process_ipmi_chassis()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No IPMI Chassis information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No IPMI Chassis information available"
+    end
   end
   return
 end
@@ -165,8 +173,10 @@ def process_ipmi_fru()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No IPMI FRU information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No IPMI FRU information available"
+    end
   end
   return
 end

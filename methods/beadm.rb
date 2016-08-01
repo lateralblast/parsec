@@ -34,8 +34,10 @@ def process_beadm()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No BE information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No BE information available"
+    end
   end
   return
 end

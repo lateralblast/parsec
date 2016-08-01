@@ -36,8 +36,10 @@ def list_facters()
       end
       table = handle_table("end","","",table)
     else
-      puts
-      puts "No facter information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No facter information available"
+      end
     end
   end
   return
@@ -179,7 +181,9 @@ def process_puppet_facter(host_name,file_name)
     end
     process_puppet_facter_configs(config)
   else
-    puts "Facter file does not exist for host: "+host_name
+    if !$output_file.match(/[A-z]/)
+      puts "Facter file does not exist for host: "+host_name
+    end
   end
 end
 

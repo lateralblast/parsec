@@ -23,8 +23,10 @@ def process_coreadm()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No coreadm infomation available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No coreadm infomation available"
+    end
   end
   return
 end

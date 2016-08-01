@@ -98,8 +98,10 @@ def process_inetd()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No inetd information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No inetd information available"
+    end
   end
   return
 end

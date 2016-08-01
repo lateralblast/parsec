@@ -105,8 +105,10 @@ def config_report(report,host_name)
     if get_os_version.match(/11/)
       process_vnic()
     else
-      puts
-      puts "No VNIC information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No VNIC information available"
+      end
     end
   end
   if $report_type.match(/all|link/)
@@ -115,8 +117,10 @@ def config_report(report,host_name)
     if get_os_version.match(/11/)
       process_link()
     else
-      puts
-      puts "No link information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No link information available"
+      end
     end
   end
   if $report_type.match(/all|kernel|ndd/)
@@ -162,8 +166,10 @@ def config_report(report,host_name)
     if os_ver.match(/10|11/)
       process_zfs()
     else
-      puts
-      puts "No ZFS information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No ZFS information available"
+      end
     end
   end
   if $report_type.match(/all|services/)
@@ -187,8 +193,10 @@ def config_report(report,host_name)
     if os_ver.match(/11/)
       process_svcprop()
     else
-      puts
-      puts "No service property information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No service property information available"
+      end
     end
   end
   if $report_type.match(/all|locale/)
@@ -209,8 +217,10 @@ def config_report(report,host_name)
     if !os_ver.match(/11/)
       process_patches()
     else
-      puts
-      puts "No patch information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No patch information available"
+      end
     end
   end
   if $report_type.match(/all|tcp/)
@@ -350,7 +360,7 @@ end
 # Handle output
 
 def handle_output(output)
-  if $output_file
+  if $output_file.match(/[A-z]/)
     file = File.open($output_file,"a")
     file.write(output)
     file.write("\n")

@@ -27,8 +27,10 @@ def process_syslog()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No syslog information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No syslog information available"
+    end
   end
   return
 end

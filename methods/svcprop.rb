@@ -38,8 +38,10 @@ def process_svcprop()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No service property information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No service property information available"
+    end
   end
   return
 end

@@ -413,8 +413,10 @@ def process_memory()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No memory information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No memory information available"
+    end
   end
   return
 end

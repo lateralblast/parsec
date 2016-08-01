@@ -24,8 +24,10 @@ def process_upgrade_slots()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No Upgradeable slot information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No Upgradeable slot information available"
+    end
   end
   return
 end
@@ -86,8 +88,10 @@ def process_fru()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No FRU information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No FRU information available"
+    end
   end
   return
 end
@@ -211,8 +215,10 @@ def process_sensors()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No sensor information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No sensor information available"
+    end
   end
   return
 end

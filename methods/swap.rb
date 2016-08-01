@@ -26,8 +26,10 @@ def process_swap()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No swap information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No swap information available"
+    end
   end
   return
 end

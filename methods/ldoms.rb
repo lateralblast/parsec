@@ -108,9 +108,11 @@ def process_ldom_ver(table)
     end
     table = handle_table("row","Available LDom Version",avail_ldom,table)
   else
-    puts
-    puts "No T-Series LDom version information available"
-    puts
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No T-Series LDom version information available"
+      puts
+    end
   end
   return table
 end
@@ -129,8 +131,10 @@ def get_ldom_hosts()
       end
     end
   else
-    puts
-    puts "No LDoms configured"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No LDoms configured"
+    end
   end
   return ldom_hosts
 end
@@ -349,8 +353,10 @@ def process_t_series_logical_domains()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No LDom information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No LDom information available"
+    end
   end
   return
 end
@@ -378,8 +384,10 @@ def process_ldom()
       process_m_series_logical_domains()
     end
   else
-    puts
-    puts "No LDom configuration information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No LDom configuration information available"
+    end
   end
   return
 end

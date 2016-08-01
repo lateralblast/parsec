@@ -38,8 +38,10 @@ def process_service_deps()
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No service dependency information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No service dependency information available"
+    end
   end
   return
 end
@@ -81,8 +83,10 @@ def process_service_descs()
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No service description information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No service description information available"
+    end
   end
   return
 end
@@ -143,8 +147,10 @@ def process_services()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No service manifest information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No service manifest information available"
+    end
   end
   return
 end

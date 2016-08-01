@@ -62,8 +62,10 @@ def process_mounts()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No mount information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No mount information available"
+    end
   end
   return
 end

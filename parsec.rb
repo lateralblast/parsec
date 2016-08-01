@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.0.9
+# Version:      2.1.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -879,6 +879,8 @@ else
     if !host_name.match(/^all$/)
       $output_file = $output_dir+"/"+host_name+".txt"
     end
+  else
+    $output_file = ""
   end
 end
 
@@ -910,7 +912,9 @@ if input_type.match(/explorer/)
       exp_time  = host_info[5..6].join(":")
       $exp_key  = exp_date+"."+host_info[5..6].join(".")
       exp_name  = host_info[2].split(/-/)[0..-2].join("-")
-      $output_file = $output_dir+"/"+exp_name+"-"+$report_type+".txt"
+      if !$output_file.match(/[A-z]/) and $output_format.match(/pdf/)
+        $output_file = $output_dir+"/"+exp_name+"-"+$report_type+".txt"
+      end
 #      if search_name.match(/^all$/) and $output_format.match(/pdf/)
 #        puts $output_file
 #        exit

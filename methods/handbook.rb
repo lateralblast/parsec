@@ -44,6 +44,11 @@ def process_handbook_info_file(info_file)
       end
     end
     table = handle_table("end","","",table)
+  else
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No handbook information available"
+    end
   end
   return
 end

@@ -46,8 +46,10 @@ def process_liveupgrade()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No Live Upgrade status information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No Live Upgrade status information available"
+    end
   end
   file_array = get_lu_tab()
   lu_name    = ""
@@ -99,8 +101,10 @@ def process_liveupgrade()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No Live Upgrade disk layout information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No Live Upgrade disk layout information available"
+    end
   end
   if lu_current.match(/[A-z]/)
     file_array = get_lu_fs_info(lu_current)
@@ -141,8 +145,10 @@ def process_liveupgrade()
       end
       table = handle_table("end","","",table)
     else
-      puts
-      puts "No Live Upgrade filesystem information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No Live Upgrade filesystem information available"
+      end
     end
   end
   return

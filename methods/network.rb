@@ -105,8 +105,10 @@ def process_vnic()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No VNIC information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No VNIC information available"
+    end
   end
   return
 end
@@ -181,8 +183,10 @@ def process_link_speed()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No link information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No link information available"
+    end
   end
   return
 end
@@ -261,8 +265,10 @@ def process_aggregation()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No aggregate configuration information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No aggregate configuration information available"
+    end
   end
   return
 end
@@ -298,8 +304,10 @@ def process_dladm_aggr_config()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No dladm aggregate configuration information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No dladm aggregate configuration information available"
+    end
   end
   return
 end
@@ -348,8 +356,10 @@ def process_dladm_aggr_detail()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No dladm aggregate detailed information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No dladm aggregate detailed information available"
+    end
   end
   return
 end
@@ -364,7 +374,9 @@ def process_ndd_nic_driver(nic_name)
   file_array = exp_file_to_array(file_name)
   if nic_name.match(/[a-z]/)
     if file_array.to_s.match(/[A-Z]|[a-z][0-9]/)
-      puts
+      if !$output_file.match(/[A-z]/)
+        puts
+      end
       title = "Kernel "+nic_name+" Paramater Information"
       row   = ['Parameter', 'Type', 'Value']
       table = handle_table("title",title,row,"")
@@ -574,8 +586,10 @@ def process_nic_info()
       process_ndd_nic_driver(nic_name)
     end
   else
-    puts
-    puts "No network interface information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No network interface information available"
+    end
   end
   return
 end
@@ -602,8 +616,10 @@ def process_network(type)
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No "+type.upcase+" kernel information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No "+type.upcase+" kernel information available"
+    end
   end
   return
 end

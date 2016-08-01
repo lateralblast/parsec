@@ -53,8 +53,10 @@ def process_md()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No SVM information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No Solaris Volume Manager information available"
+    end
   end
   return
 end
@@ -77,8 +79,10 @@ def process_mddb()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No SVM information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No Solaris Volume Manager information available"
+    end
   end
   return
 end

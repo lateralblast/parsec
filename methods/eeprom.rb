@@ -27,8 +27,10 @@ def process_eeprom()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No EEPROM information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No EEPROM information available"
+    end
   end
   return
 end

@@ -45,8 +45,10 @@ def process_pkg_history()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No package history information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No package history information available"
+    end
   end
   return
 end
@@ -77,8 +79,10 @@ def process_pkg_mediator()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No package mediator information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No package mediator information available"
+    end
   end
   return
 end
@@ -114,8 +118,10 @@ def process_pkg_properties()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No package property information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No package property information available"
+    end
   end
   return
 end
@@ -156,7 +162,9 @@ def process_pkg_publisher()
     end
     table = handle_table("end","","",table)
   else
-    puts "No package publisher information available"
+    if !$output_file.match(/[A-z]/)
+      puts "No package publisher information available"
+    end
   end
   return
 end

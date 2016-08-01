@@ -220,8 +220,10 @@ def process_ndd_info(ndd_type)
       end
       table = handle_table("end","","",table)
     else
-      puts
-      puts "No "+ndd_type+" tcp information available"
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No "+ndd_type+" tcp information available"
+      end
     end
   end
   return
@@ -276,8 +278,10 @@ def process_modules()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No kernel module information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No kernel module information available"
+    end
   end
   return
 end

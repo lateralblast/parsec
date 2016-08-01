@@ -23,8 +23,10 @@ def process_locale()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No locale information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No locale information available"
+    end
   end
   return
 end

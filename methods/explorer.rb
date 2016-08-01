@@ -357,6 +357,11 @@ def list_explorers(search_model,search_date,search_year,search_name)
       table     = handle_table("row","",table_row,table)
     end
     table = handle_table("end","","",table)
+  else
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No explorer information available"
+    end
   end
   return
 end

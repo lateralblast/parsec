@@ -52,8 +52,10 @@ def process_hardware_revision_info()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No hardware revision information"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No hardware revision information"
+    end
   end
   return
 end
@@ -103,8 +105,10 @@ def process_firmware_update_info()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No firmware information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No firmware information available"
+    end
   end
   return
 end

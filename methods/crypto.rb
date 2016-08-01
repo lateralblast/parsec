@@ -51,8 +51,10 @@ def process_crypto_list()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No crypto information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No crypto information available"
+    end
   end
   return
 end
@@ -93,8 +95,10 @@ def process_crypto_providers()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No crypto provider information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No crypto provider information available"
+    end
   end
   return
 end

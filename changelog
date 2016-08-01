@@ -419,3 +419,5 @@
 # Removed sysprop from all report on Solaris 11 to reduce report size
 # 2.0.9: Mon  1 Aug 2016 08:20:18 AEST
 # Minor bug fixes
+# 2.1.0: Mon  1 Aug 2016 10:29:57 AEST
+# Initial clean up of console output

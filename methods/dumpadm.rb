@@ -23,8 +23,10 @@ def process_dumpadm()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No dumpadm information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No dumpadm information available"
+    end
   end
   return
 end

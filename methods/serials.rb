@@ -46,8 +46,10 @@ def process_other_serials()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No component serial number information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No component serial number information available"
+    end
   end
   return
 end

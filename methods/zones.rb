@@ -22,8 +22,10 @@ def process_running_zones()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No running zone information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No running zone information available"
+    end
   end
   return
 end
@@ -81,8 +83,10 @@ def process_zone_configs()
       end
     end
   else
-    puts
-    puts "No configured zone information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No configured zone information available"
+    end
   end
   return
 end
@@ -108,8 +112,10 @@ def process_configured_zones()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No configured zone information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No configured zone information available"
+    end
   end
   return
 end

@@ -44,8 +44,10 @@ def process_patches()
     end
     table = handle_table("end","","",table)
   else
-    puts
-    puts "No patch information available"
+    if !$output_file.match(/[A-z]/)
+      puts
+      puts "No patch information available"
+    end
   end
   return
 end

@@ -91,12 +91,16 @@ def process_etc_system()
       end
       table = handle_table("end","","",table)
     else
+      if !$output_file.match(/[A-z]/)
+        puts
+        puts "No Kernel Parameter information available in /etc/system"
+      end
+    end
+  else
+    if !$output_file.match(/[A-z]/)
       puts
       puts "No Kernel Parameter information available in /etc/system"
     end
-  else
-    puts
-    puts "No Kernel Parameter information available in /etc/system"
   end
   return
 end
