@@ -388,8 +388,12 @@ def handle_output(output)
     end
     if $output_format.match(/html/)
       if output.class == String
-        if output.match(/[0-9]|[A-Z]|[a-z]/)
-          puts "<p>#{output}</p>"
+        if output.match(/[0-9]|[A-Z]|[a-z]/) 
+          if output.match(/\</)
+            puts "#{output}"
+          else
+            puts "<p>#{output}</p>"
+          end
         end
       else
         puts "<p>"
