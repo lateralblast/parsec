@@ -47,7 +47,7 @@ def process_ntp_config()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No syslog information available")
+    handle_output("No syslog information available\n")
   end
   return
 end
@@ -77,7 +77,7 @@ def process_ntpq()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No ntpq information available")
+    handle_output("No ntpq information available\n")
   end
   return
 end

@@ -39,7 +39,7 @@ def process_svcprop()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No service property information available")
+    handle_output("No service property information available\n")
   end
   return
 end

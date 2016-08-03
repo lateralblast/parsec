@@ -106,7 +106,7 @@ def process_vnic()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No VNIC information available")
+    handle_output("No VNIC information available\n")
   end
   return
 end
@@ -147,7 +147,7 @@ def process_link_slots()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No link slot information available")
+    handle_output("No link slot information available\n")
   end
   return
 end
@@ -182,7 +182,7 @@ def process_link_speed()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No link information available")
+    handle_output("No link information available\n")
   end
   return
 end
@@ -262,7 +262,7 @@ def process_aggregation()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No aggregate configuration information available")
+    handle_output("No aggregate configuration information available\n")
   end
   return
 end
@@ -299,7 +299,7 @@ def process_dladm_aggr_config()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No dladm aggregate configuration information available")
+    handle_output("No dladm aggregate configuration information available\n")
   end
   return
 end
@@ -349,7 +349,7 @@ def process_dladm_aggr_detail()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No dladm aggregate detailed information available")
+    handle_output("No dladm aggregate detailed information available\n")
   end
   return
 end
@@ -577,7 +577,7 @@ def process_nic_info()
     end
   else
     handle_output("\n")
-    handle_output("No network interface information available")
+    handle_output("No network interface information available\n")
   end
   return
 end
@@ -605,7 +605,7 @@ def process_network(type)
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No #{type.upcase} kernel information available")
+    handle_output("No #{type.upcase} kernel information available\n")
   end
   return
 end

@@ -46,7 +46,7 @@ def process_handbook_info_file(info_file)
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No handbook information available")
+    handle_output("No handbook information available\n")
   end
   return
 end

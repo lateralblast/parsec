@@ -28,7 +28,7 @@ def process_eeprom()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No EEPROM information available")
+    handle_output("No EEPROM information available\n")
   end
   return
 end

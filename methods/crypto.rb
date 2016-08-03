@@ -52,7 +52,7 @@ def process_crypto_list()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No crypto information available")
+    handle_output("No crypto information available\n")
   end
   return
 end
@@ -94,7 +94,7 @@ def process_crypto_providers()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No crypto provider information available")
+    handle_output("No crypto provider information available\n")
   end
   return
 end

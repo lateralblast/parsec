@@ -204,7 +204,7 @@ def process_cpu()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No CPU information available")
+    handle_output("No CPU information available\n")
   end
   return
 end

@@ -92,11 +92,11 @@ def process_etc_system()
       table = handle_table("end","","",table)
     else
       handle_output("\n")
-      handle_output("No Kernel Parameter information available in /etc/system")
+      handle_output("No Kernel Parameter information available in /etc/system\n")
     end
   else
     handle_output("\n")
-    handle_output("No Kernel Parameter information available in /etc/system")
+    handle_output("No Kernel Parameter information available in /etc/system\n")
   end
   return
 end

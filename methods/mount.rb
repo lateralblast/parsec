@@ -63,7 +63,7 @@ def process_mounts()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No mount information available")
+    handle_output("No mount information available\n")
   end
   return
 end

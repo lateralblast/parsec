@@ -39,7 +39,7 @@ def process_file_systems()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No filesystem information available")
+    handle_output("No filesystem information available\n")
   end
   return
 end

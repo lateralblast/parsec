@@ -691,7 +691,7 @@ def process_io()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No IO information available")
+    handle_output("No IO information available\n")
   end
   if $io_fw_urls[0]
     handle_output("\n")

@@ -24,7 +24,7 @@ def process_locale()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No locale information available")
+    handle_output("No locale information available\n")
   end
   return
 end

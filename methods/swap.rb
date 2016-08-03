@@ -27,7 +27,7 @@ def process_swap()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No swap information available")
+    handle_output("No swap information available\n")
   end
   return
 end

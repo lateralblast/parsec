@@ -46,7 +46,7 @@ def process_pkg_history()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No package history information available")
+    handle_output("No package history information available\n")
   end
   return
 end
@@ -78,7 +78,7 @@ def process_pkg_mediator()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No package mediator information available")
+    handle_output("No package mediator information available\n")
   end
   return
 end
@@ -115,7 +115,7 @@ def process_pkg_properties()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No package property information available")
+    handle_output("No package property information available\n")
   end
   return
 end
@@ -156,7 +156,8 @@ def process_pkg_publisher()
     end
     table = handle_table("end","","",table)
   else
-    handle_output("No package publisher information available")
+    handle_output("\n")
+    handle_output("No package publisher information available\n")
   end
   return
 end
@@ -205,7 +206,7 @@ def process_pkg_ips()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No IPS package information available")
+    handle_output("No IPS package information available\n")
   end
   return
 end
@@ -259,7 +260,7 @@ def process_packages()
     process_pkg_publisher()
   else
     handle_output("\n")
-    handle_output("No IPS package information available")
+    handle_output("No IPS package information available\n")
   end
   return
 end

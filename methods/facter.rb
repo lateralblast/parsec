@@ -37,7 +37,7 @@ def list_facters()
       table = handle_table("end","","",table)
     else
       handle_output("\n")
-      handle_output("No facter information available")
+      handle_output("No facter information available\n")
     end
   end
   return
@@ -137,14 +137,14 @@ def process_puppet_facter(host_name,file_name)
   if file_name.match(/[A-z]/)
     if !File.exist?(file_name)
       handle_output("\n")
-      handle_output("Puppet Fact file: #{file_name} does not exist")
+      handle_output("Puppet Fact file: #{file_name} does not exist\n")
       exit
     end
   else
     file_name = %x[grep -l "hostname => #{host_name}" #{$fact_dir}/*].split("\n")[0]
   end
   if !file_name
-    handle_output("Could not find Puppet Fact file for host: #{host_name}")
+    handle_output("Could not find Puppet Fact file for host: #{host_name}\n")
     exit
   end
   if File.exist?(file_name)
@@ -180,7 +180,7 @@ def process_puppet_facter(host_name,file_name)
     end
     process_puppet_facter_configs(config)
   else
-    handle_output("Facter file does not exist for host: #{host_name}")
+    handle_output("Facter file does not exist for host: #{host_name}\n")
   end
 end
 
@@ -231,14 +231,14 @@ end
 def process_ansible_facter(host_name,file_name)
   if file_name.match(/[A-z]/)
     if !File.exist?(file_name)
-      handle_output("Ansible Fact file: #{file_name} does not exist")
+      handle_output("Ansible Fact file: #{file_name} does not exist\n")
       exit
     end
   else
     file_name = %x[grep -l '"ansible_hostname": "#{host_name}"' #{$fact_dir}/*].split("\n")[0]
   end
   if !file_name
-    handle_output("Could not find Ansible Fact file for host: #{host_name}")
+    handle_output("Could not find Ansible Fact file for host: #{host_name}\n")
     exit
   end
   if File.exist?(file_name)

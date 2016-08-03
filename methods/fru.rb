@@ -25,7 +25,7 @@ def process_upgrade_slots()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No Upgradeable slot information available")
+    handle_output("No Upgradeable slot information available\n")
   end
   return
 end
@@ -87,7 +87,7 @@ def process_fru()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No FRU information available")
+    handle_output("No FRU information available\n")
   end
   return
 end
@@ -216,7 +216,7 @@ def process_sensors()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No sensor information available")
+    handle_output("No sensor information available\n")
   end
   return
 end

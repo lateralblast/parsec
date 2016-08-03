@@ -47,7 +47,7 @@ def process_liveupgrade()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No Live Upgrade status information available")
+    handle_output("No Live Upgrade status information available\n")
   end
   file_array = get_lu_tab()
   lu_name    = ""
@@ -100,7 +100,7 @@ def process_liveupgrade()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No Live Upgrade disk layout information available")
+    handle_output("No Live Upgrade disk layout information available\n")
   end
   if lu_current.match(/[A-z]/)
     file_array = get_lu_fs_info(lu_current)
@@ -142,7 +142,7 @@ def process_liveupgrade()
       table = handle_table("end","","",table)
     else
       handle_output("\n")
-      handle_output("No Live Upgrade filesystem information available")
+      handle_output("No Live Upgrade filesystem information available\n")
     end
   end
   return

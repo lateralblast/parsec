@@ -99,7 +99,7 @@ def process_inetd()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No inetd information available")
+    handle_output("No inetd information available\n")
   end
   return
 end

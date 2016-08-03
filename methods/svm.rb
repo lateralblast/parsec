@@ -54,8 +54,8 @@ def process_md()
     table = handle_table("end","","",table)
   else
     if !$output_file.match(/[A-z]/)
-      puts
-      puts "No Solaris Volume Manager information available"
+      handle_output("\n")
+      handle_output("No Solaris Volume Manager information available\n")
     end
   end
   return
@@ -80,7 +80,7 @@ def process_mddb()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No Solaris Volume Manager information available")
+    handle_output("No Solaris Volume Manager information available\n")
   end
   return
 end

@@ -36,7 +36,7 @@ def process_pam()
         table = handle_table("end","","",table)
       else
         handle_output("\n")
-        handle_output("No PAM information available for #{file_name}")
+        handle_output("No PAM information available for #{file_name}\n")
       end
     end
   else
@@ -61,7 +61,7 @@ def process_pam()
       table = handle_table("end","","",table)
     else
       handle_output("\n")
-      handle_output("No PAM information available")
+      handle_output("No PAM information available\n")
     end
   end
   return

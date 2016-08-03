@@ -152,7 +152,7 @@ def process_veritas()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No Veritas disk information")
+    handle_output("No Veritas disk information\n")
   end
   return
 end

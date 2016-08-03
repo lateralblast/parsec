@@ -67,7 +67,7 @@ def process_pci_scan()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No PCI scan information available")
+    handle_output("No PCI scan information available\n")
   end
   return
 end

@@ -221,7 +221,7 @@ def process_ndd_info(ndd_type)
       table = handle_table("end","","",table)
     else
       handle_output("\n")
-      handle_output("No #{ndd_type} tcp information available")
+      handle_output("No #{ndd_type} tcp information available\n")
     end
   end
   return
@@ -277,7 +277,7 @@ def process_modules()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No kernel module information available")
+    handle_output("No kernel module information available\n")
   end
   return
 end

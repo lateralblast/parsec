@@ -39,7 +39,7 @@ def process_service_deps()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No service dependency information available")
+    handle_output("No service dependency information available\n")
   end
   return
 end
@@ -82,7 +82,7 @@ def process_service_descs()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No service description information available")
+    handle_output("No service description information available\n")
   end
   return
 end
@@ -144,7 +144,7 @@ def process_services()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No service manifest information available")
+    handle_output("No service manifest information available\n")
   end
   return
 end

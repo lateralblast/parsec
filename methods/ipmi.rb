@@ -56,7 +56,7 @@ def process_ipmi_sel()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No IPMI System Event Log information available")
+    handle_output("No IPMI System Event Log information available\n")
   end
   return
 end
@@ -77,7 +77,7 @@ def process_ipmi_sel_events()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No IPMI System Event Log event information available")
+    handle_output("No IPMI System Event Log event information available\n")
   end
   return
 end
@@ -102,7 +102,7 @@ def process_ipmi_mc()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No IPMI Machine Controller information available")
+    handle_output("No IPMI Machine Controller information available\n")
   end
   return
 end
@@ -126,7 +126,7 @@ def process_ipmi_chassis()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No IPMI Chassis information available")
+    handle_output("No IPMI Chassis information available\n")
   end
   return
 end
@@ -166,7 +166,7 @@ def process_ipmi_fru()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No IPMI FRU information available")
+    handle_output("No IPMI FRU information available\n")
   end
   return
 end

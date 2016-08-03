@@ -23,7 +23,7 @@ def process_running_zones()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No running zone information available")
+    handle_output("No running zone information available\n")
   end
   return
 end
@@ -82,7 +82,7 @@ def process_zone_configs()
     end
   else
     handle_output("\n")
-    handle_output("No configured zone information available")
+    handle_output("No configured zone information available\n")
   end
   return
 end
@@ -109,7 +109,7 @@ def process_configured_zones()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No configured zone information available")
+    handle_output("No configured zone information available\n")
   end
   return
 end

@@ -29,7 +29,7 @@ def process_cups_snmp()
     end
     table = handle_table("end","","",table)
   else
-    handle_output("No CUPS SNMP information available")
+    handle_output("No CUPS SNMP information available\n")
   end
   return
 end

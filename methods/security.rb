@@ -30,7 +30,7 @@ def process_elfsign()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No elfsign information")
+    handle_output("No elfsign information\n")
   end
   return
 end

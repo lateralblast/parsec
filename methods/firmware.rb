@@ -53,7 +53,7 @@ def process_hardware_revision_info()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No hardware revision information")
+    handle_output("No hardware revision information\n")
   end
   return
 end
@@ -104,7 +104,7 @@ def process_firmware_update_info()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No firmware information available")
+    handle_output("No firmware information available\n")
   end
   return
 end

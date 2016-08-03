@@ -47,7 +47,7 @@ def process_other_serials()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No component serial number information available")
+    handle_output("No component serial number information available\n")
   end
   return
 end

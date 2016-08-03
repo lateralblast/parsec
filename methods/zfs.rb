@@ -67,8 +67,8 @@ def process_zfs_volumes()
     table = handle_table("end","","",table)
   else
     if !$output_file.match(/[A-z]/)
-      puts
-      puts "No ZFS volume information available"
+      handle_output("\n")
+      handle_output("No ZFS volume information available\n")
     end
   end
   return
@@ -139,7 +139,7 @@ def process_zfs_snapshots()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No ZFS snapshot information available")
+    handle_output("No ZFS snapshot information available\n")
   end
   return
 end
@@ -167,7 +167,7 @@ def process_zpool_list()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No ZFS pool information available")
+    handle_output("No ZFS pool information available\n")
   end
   return
 end

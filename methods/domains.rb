@@ -30,7 +30,7 @@ def process_domain()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No domain information available")
+    handle_output("No domain information available\n")
   end
   return
 end

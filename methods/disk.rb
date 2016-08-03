@@ -118,7 +118,7 @@ def process_disk_info()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No disk information available")
+    handle_output("No disk information available\n")
   end
   return
 end

@@ -30,7 +30,7 @@ def process_cups()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No CUPS information available")
+    handle_output("No CUPS information available\n")
   end
   return
 end

@@ -24,7 +24,7 @@ def process_coreadm()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No coreadm infomation available")
+    handle_output("No coreadm infomation available\n")
   end
   return
 end

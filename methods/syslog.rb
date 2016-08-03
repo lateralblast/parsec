@@ -28,7 +28,7 @@ def process_syslog()
     table = handle_table("end","","",table)
   else
     handle_output("\n")
-    handle_output("No syslog information available")
+    handle_output("No syslog information available\n")
   end
   return
 end
