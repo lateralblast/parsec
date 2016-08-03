@@ -352,19 +352,26 @@ end
 def handle_output(output)
   if $output_file.match(/[A-z]/)
     file = File.open($output_file,"a")
-    if $output_format.match(/html/)
-      if output.to_s.match(/\</)
-        if output.class == Array
-          outut = output.join
-        end
-        file.write(output)
+    if $output_format.match(/html|wiki/)
+      if output.class == Array
+        outut = output.join
       end
+      file.write(output)
     else
       file.write(output)
     end
     file.write("\n")
     file.close()
   else
+    if $output_format.match(/wiki/)
+      if output.class == String
+        puts output
+      else
+        output.each do |line|
+          print line
+        end
+      end
+    end
     if $output_format.match(/table|pdf|pipe/)
       if $output_format.match(/pipe/)
         output = output.to_s
@@ -408,10 +415,19 @@ def handle_table(type,title,row,table)
       table.push("<h1>#{title}</h1>")
       table.push("<table border=\"1\">")
     end
+    if $output_format.match(/wiki/)
+      table = []
+      table.push("%TABLE{ sort=\"on\" tableborder=\"0\" cellborder=\"0\" }%\n")
+      table.push("|*#{title}*|\n|")
+    end
     if row.to_s.match(/[A-z]/)
-      if $output_format.match(/html/)
+      if $output_format.match(/|wiki|html/)
         row.each do |heading|
-          table.push("<th>#{heading}</th>")
+          if $output_format.match(/html/)
+            table.push("<th>#{heading}</th>")
+          else
+            table.push("#{heading}|")
+          end
         end
       else
         if $output_format.match(/pipe/)
@@ -422,9 +438,14 @@ def handle_table(type,title,row,table)
         end
       end
     else
-      if $output_format.match(/html/)
-        table.push("<th>Item</th>")
-        table.push("<th>Value</th>")
+      if $output_format.match(/html|wiki/)
+        if $output_format.match(/html/)
+          table.push("<th>Item</th>")
+          table.push("<th>Value</th>")
+        end
+        if $output_format.match(/wiki/)
+          table.push("|Item|Value|\n")
+        end
       else
         if $output_format.match(/pipe/)
           title = "::"+title
@@ -445,7 +466,7 @@ def handle_table(type,title,row,table)
     end
   end
   if type.match(/line/)
-    if !$output_format.match(/html/)
+    if !$output_format.match(/html|wiki/)
       table.add_separator
     end
   end
@@ -481,16 +502,30 @@ def handle_table(type,title,row,table)
         $host_info[item] = value
       end
     end
-    if $output_format.match(/html/)
-      table.push("<tr>")
+    if $output_format.match(/html|wiki/)
+      if $output_format.match(/html/)
+        table.push("<tr>")
+      else
+        table.push("\n|")
+      end
       row.each do |value|
         if value.to_s.match(/[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]|[0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F]/) and !value.match(/sd\@|ssd|c[0-9]|_|pci/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/)
-          table.push("<td>MASKED</td>")
+          if $output_format.match(/html/)
+            table.push("<td>MASKED</td>")
+          else
+            table.push("MASKED|")
+          end
         else
-          table.push("<td>#{value}</td>")
+          if $output_format.match(/html/)
+            table.push("<td>#{value}</td>")
+          else
+            table.push("#{value}|")
+          end
         end
       end
-      table.push("</tr>")
+      if $output_format.match(/html/)
+        table.push("</tr>")
+      end
     else
       table.add_row(row)
     end
