@@ -18,6 +18,7 @@ def process_avail_ql_fw(table,ql_model,ql_fw)
     fw_urls     = []
     if fw_info
       fw_info.each do |fw_line|
+        fw_line = fw_line.chomp
         if fw_line.match(/^#{uc_ql_model}/)
           fw_line      = fw_line.split(/,/)
           avail_fw     = fw_line[1].split(/ /)[-1]

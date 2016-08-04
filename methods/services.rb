@@ -13,6 +13,7 @@ def process_service_deps()
     row    = [ 'Service', 'Dependencies' ]
     table  = handle_table("title",title,row,"")
     file_array.each_with_index do |line,index|
+      line = line.chomp
       if line.match(/^fmri/)
         if index > 2
           row   = [ fmri, deps ]
@@ -38,10 +39,13 @@ def process_service_deps()
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No service dependency information available\n")
   end
-  return
+  return table
 end
 
 # Get service names
@@ -57,6 +61,7 @@ def process_service_descs()
     row    = [ 'Service', 'Description' ]
     table  = handle_table("title",title,row,"")
     file_array.each_with_index do |line,index|
+      line = line.chomp
       if line.match(/^fmri/)
         if index > 2
           row   = [ fmri, name ]
@@ -81,15 +86,35 @@ def process_service_descs()
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No service description information available\n")
   end
-  return
+  return table
 end
 
 # Process services
 
 def process_services()
+  table = []
+  t_table = process_service_descs()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_service_status()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_service_deps()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
+end
+
+def process_service_status()
   file_array = get_manifests_services()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
@@ -143,8 +168,11 @@ def process_services()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No service manifest information available\n")
   end
-  return
+  return table
 end

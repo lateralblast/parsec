@@ -45,10 +45,13 @@ def process_pkg_history()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No package history information available\n")
   end
-  return
+  return table
 end
 
 # Get package mediator
@@ -77,10 +80,12 @@ def process_pkg_mediator()
     end
     table = handle_table("end","","",table)
   else
-    handle_output("\n")
+    if !$output_format.match(/table/)
+      handle_output("\n")
+    end
     handle_output("No package mediator information available\n")
   end
-  return
+  return table
 end
 
 # Get package properties
@@ -114,10 +119,13 @@ def process_pkg_properties()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No package property information available\n")
   end
-  return
+  return table
 end
 
 # Get package publisher information
@@ -156,10 +164,13 @@ def process_pkg_publisher()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No package publisher information available\n")
   end
-  return
+  return table
 end
 
 # Process package info
@@ -205,15 +216,19 @@ def process_pkg_ips()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No IPS package information available\n")
   end
-  return
+  return table
 end
 
 # Main routine for processing packages
 
 def process_packages()
+  table      = []
   file_array = get_pkg_info()
   pkg_name   = ""
   pkg_ver    = ""
@@ -248,19 +263,40 @@ def process_packages()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No System V package information available")
   end
   os_version = get_os_version()
   if os_version == "5.11"
-    process_pkg_ips()
-    process_pkg_history()
-    process_pkg_mediator()
-    process_pkg_properties()
-    process_pkg_publisher()
+    t_table = process_pkg_ips()
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_pkg_history()
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_pkg_mediator()
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_pkg_properties()
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_pkg_publisher()
+    if t_table.class == Array
+      table = table + t_table
+    end
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No IPS package information available\n")
   end
-  return
+  return table
 end

@@ -49,6 +49,7 @@ def get_link_details(link_name)
   file_array = get_ether_info()
   if file_array
     file_array.each do |line|
+      line = line.chomp
       items = line.split(/\s+/)
       if items[0] == link_name
         return items[3],items[4],items[5]
@@ -69,6 +70,11 @@ end
 # Process VNIC info
 
 def process_vnic()
+  os_ver = get_os_version()
+  if !os_ver.match(/11/)
+    handle_output("\n")
+    handle_output("No VNIC information available\n")
+  end
   file_array = get_vnic_info()
   table = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
@@ -105,6 +111,9 @@ def process_vnic()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No VNIC information available\n")
   end
@@ -126,6 +135,7 @@ def process_link_slots()
   table = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each_with_index do |line, index|
+      line = line.chomp
       if line.match(/^LINK/) and index < 1
         title = "Link Slot Information"
         row   = [ 'Link', 'Device', 'Slot' ]
@@ -146,6 +156,9 @@ def process_link_slots()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No link slot information available\n")
   end
@@ -161,6 +174,7 @@ def process_link_speed()
     row   = [ 'Link', 'Zone', 'Type', 'State', 'Auto', 'Speed', 'Pause' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/^LINK/)
         items = line.split(/\s+/)
         link  = items[0]
@@ -181,6 +195,9 @@ def process_link_speed()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No link information available\n")
   end
@@ -190,9 +207,21 @@ end
 # Process Link information
 
 def process_link()
-  process_link_speed()
-  process_link_slots()
-  return
+  table  = []
+  os_ver = get_os_version()
+  if !os_ver.match(/11/)
+    handle_output("\n")
+    handle_output("No link information available\n")
+  end
+  t_table = process_link_speed()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_link_slots()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end
 
 # Get Aggregate details
@@ -223,10 +252,20 @@ end
 # Process aggregate information (report)
 
 def process_aggr()
-  process_dladm_aggr_detail()
-  process_dladm_aggr_config()
-  process_aggregation()
-  return
+  table = []
+  t_table = process_dladm_aggr_detail()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_dladm_aggr_config()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_aggregation()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end
 
 # Process aggregation config file
@@ -238,8 +277,8 @@ def process_aggregation()
     row   = [ 'Interface', 'Type', 'Members', 'Devices', 'Config', 'Status', 'Timeout', 'Hostname', 'IP' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/^#/) and line.match(/[a-z]|[0-9]/)
-        line  = line.chomp
         items  = line.split(/\s+/)
         aggr   = "aggr"+items[0]
         type   = items[1]
@@ -261,17 +300,19 @@ def process_aggregation()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No aggregate configuration information available\n")
   end
-  return
+  return table
 end
 
 # Process Aggregate config
 
 def process_dladm_aggr_config()
   file_array = get_dladm_aggr_config()
-  table = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line  = line.chomp
@@ -298,10 +339,13 @@ def process_dladm_aggr_config()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No dladm aggregate configuration information available\n")
   end
-  return
+  return table
 end
 
 # Process Aggregate detail
@@ -348,10 +392,13 @@ def process_dladm_aggr_detail()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No dladm aggregate detailed information available\n")
   end
-  return
+  return table
 end
 
 # Process ndd info for network interface
@@ -371,8 +418,8 @@ def process_ndd_nic_driver(nic_name)
       row   = ['Parameter', 'Type', 'Value']
       table = handle_table("title",title,row,"")
       file_array.each do |line|
+        line  = line.chop
         if line.match(/^[a-z]/) and !line.match(/^\?/)
-          line  = line.chop
           param = line.split(/\(/)[0].gsub(/\s+/,"")
           type  = line.split(/\(/)[1].split(/\)/)[0]
           value_name  = "/netinfo/ndd/"+nic_dir+"/"+param+".out"
@@ -389,7 +436,7 @@ def process_ndd_nic_driver(nic_name)
       table = handle_table("end","","",table)
     end
   end
-  return
+  return table
 end
 
 # Get aggregate NIC name
@@ -398,6 +445,7 @@ def get_aggr_nic(nic_name)
   aggr_nic   = ""
   file_array = get_aggregation()
   file_array.each do |line|
+    line = line.chomp
     if !line.match(/^#/)
       if line.match(/#{nic_name}/)
         aggr_nic = "aggr"+line.split(/\s+/)[0]
@@ -414,6 +462,7 @@ def get_if_ether(nic_name)
   file_array = exp_file_to_array(file_name)
   ether = ""
   file_array.each_with_index do |line,index|
+    line = line.chomp
     if line.match(/^#{nic_name}:\s+/)
       ether = file_array[index+2]
       if ether
@@ -438,6 +487,7 @@ def get_if_ip(nic_name)
   file_array = exp_file_to_array(file_name)
   ip = ""
   file_array.each_with_index do |line,index|
+    line = line.chomp
     if line.match(/^#{nic_name}:/)
       ip = file_array[index+1]
       if ip.match(/inet/)
@@ -516,7 +566,7 @@ end
 
 # Process network interface information
 
-def process_nic_info()
+def process_network()
   file_name  = "/etc/path_to_inst"
   file_array = exp_file_to_array(file_name)
   nic_list   = []
@@ -530,6 +580,7 @@ def process_nic_info()
     end
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if line.match(/network|igb/)
         line = line.gsub(/"/,"")
         (path,inst,driver) = line.split(/\s+/)
@@ -576,21 +627,25 @@ def process_nic_info()
       process_ndd_nic_driver(nic_name)
     end
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No network interface information available\n")
   end
-  return
+  return table
 end
 
 # Process network information
 
-def process_network(type)
+def process_network_info(type)
   file_array = get_ip_info(type)
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = type.upcase+" Kernel Information"
     row   = [ 'Paramater', 'Value' ]
     table = handle_table("title",title,row,"")
     file_array.each_with_index do |line,counter|
+      line = line.chomp
       if line.match(/\(/)
         param = line.split(/\(/)[0]
         param = param.gsub(/\s+/,'')
@@ -604,10 +659,13 @@ def process_network(type)
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No #{type.upcase} kernel information available\n")
   end
-  return
+  return table
 end
 
 # Process aggregate information
@@ -675,6 +733,7 @@ def get_hostname_ip(hostname)
       file_array  = exp_file_to_array(file_name)
     end
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/^#/)
         (hostname_ip,entry1,entry2) = line.split(/\s+/)
         if entry1

@@ -46,6 +46,7 @@ def process_liveupgrade()
     end
     table = handle_table("end","","",table)
   else
+    table = ""
     handle_output("\n")
     handle_output("No Live Upgrade status information available\n")
   end
@@ -99,6 +100,7 @@ def process_liveupgrade()
     end
     table = handle_table("end","","",table)
   else
+    table = ""
     handle_output("\n")
     handle_output("No Live Upgrade disk layout information available\n")
   end
@@ -141,9 +143,12 @@ def process_liveupgrade()
       end
       table = handle_table("end","","",table)
     else
+      if !$output_format.match(/table/)
+        table = ""
+      end
       handle_output("\n")
       handle_output("No Live Upgrade filesystem information available\n")
     end
   end
-  return
+  return table
 end

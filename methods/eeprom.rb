@@ -15,7 +15,7 @@ def process_eeprom()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     table = handle_table("title","EEPROM Information","","")
     file_array.each do |line|
-      line.chomp
+      line = line.chomp
       if !line.match(/data not available/)
         (parameter,value) = line.split(/\=/)
         if value
@@ -27,8 +27,11 @@ def process_eeprom()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No EEPROM information available\n")
   end
-  return
+  return table
 end

@@ -21,10 +21,147 @@ def report_help(report)
   end
 end
 
+# List of reports
+
+# I've used pushes here so it's easier to comment out one when debugging
+
+def get_full_report_list()
+  report_list = []
+  report_list.push("host")
+  report_list.push("inetadm")
+  report_list.push("syslog")
+  report_list.push("cups")
+  report_list.push("obp")
+  report_list.push("eeprom")
+  report_list.push("cpu")
+  report_list.push("memory")
+  report_list.push("hardware")
+  report_list.push("coreadm")
+  report_list.push("dumpadm")
+  report_list.push("explorer")
+  report_list.push("disk")
+  report_list.push("io")
+  report_list.push("swap")
+  report_list.push("vnic")
+  report_list.push("link")
+  report_list.push("zones")
+  report_list.push("filesystem")
+  report_list.push("services")
+  report_list.push("liveupgrade")
+  report_list.push("beadm")
+  report_list.push("locale")
+  report_list.push("modules")
+  report_list.push("packages")
+  report_list.push("patches")
+  report_list.push("tcp")
+  report_list.push("udp")
+  report_list.push("ldom")
+  report_list.push("domain")
+  report_list.push("fru")
+  report_list.push("sensors")
+  report_list.push("handbook")
+  report_list.push("veritas")
+  report_list.push("aggr")
+  report_list.push("network")
+  report_list.push("serials")
+  report_list.push("firmware")
+  report_list.push("ipmi")
+  report_list.push("slots")
+  report_list.push("pci")
+  report_list.push("svm")
+  report_list.push("ntp")
+  report_list.push("pam")
+  report_list.push("elfsign")
+  report_list.push("system")
+  report_list.push("passwd")
+  report_list.push("login")
+  report_list.push("sendmail")
+  report_list.push("inetinit")
+  report_list.push("su")
+  report_list.push("inet")
+  report_list.push("cron")
+  report_list.push("keyserv")
+  report_list.push("telnet")
+  report_list.push("power")
+  report_list.push("suspend")
+  report_list.push("ssh")
+  report_list.push("crypto")
+  report_list.push("snmp")
+  report_list.push("cups")
+  report_list.push("ip")
+  report_list.push("tcp")
+  report_list.push("udp")
+  report_list.push("arp")
+  report_list.push("icmp")
+  report_list.push("sctp")
+  return report_list
+end
+
+# get list of reports
+
+def get_report_list()
+  report_list = []
+  case $report_type
+  when /,/
+    full_report_list = get_full_report_list() 
+    test_report_list = $report_type.split(/,/)
+    full_report_text = full_report_list.join(",")
+    test_report_list.each do |test_report|
+      if full_report_text.match(/,#{test_report},/)
+        report_list.push(test_report)
+      end
+    end
+  when /^all$/
+    report_list = get_full_report_list()
+  when /security/
+    report_list = []
+    report_list.push("ntp")
+    report_list.push("pam")
+    report_list.push("elfsign")
+    report_list.push("system")
+    report_list.push("passwd")
+    report_list.push("login")
+    report_list.push("sendmail")
+    report_list.push("inetinit")
+    report_list.push("su")
+    report_list.push("inet")
+    report_list.push("cron")
+    report_list.push("keyserv")
+    report_list.push("telnet")
+    report_list.push("power")
+    report_list.push("suspend")
+    report_list.push("ssh")
+    report_list.push("crypto")
+    report_list.push("snmp")
+    report_list.push("cups")
+    report_list.push("crypto")
+  when /^os$/
+    report_list.push("hardware")
+    report_list.push("coreadm")
+    report_list.push("dumpadm")
+    report_list.push("explorer")
+  when /kernel|ndd/
+    report_list.push("system")
+    report_list.push("ip")
+    report_list.push("tcp")
+    report_list.push("udp")
+    report_list.push("arp")
+    report_list.push("icmp")
+    report_list.push("sctp")
+  when /sds|svm|disksuite/
+    report_list = [ "svm" ]
+  else
+    report_list = [ $report_type ]
+  end
+  return report_list
+end
+
 # Do configuration report
 
 def config_report(report,host_name)
-  valid_sw = 0
+  report_list = get_report_list()
+  full_report = []
+  valid_sw    = 0
   if $output_format.match(/html/)
     handle_output("<html>")
     handle_output("<head>")
@@ -32,256 +169,14 @@ def config_report(report,host_name)
     handle_output("</head>")
     handle_output("<body>")
   end
-  if $report_type.match(/all|host/)
+  report_list.each do |report_name|
     valid_sw = 1
-    process_host()
-  end
-  if $report_type.match(/all|security|ntp/)
-    process_ntp()
-  end
-  if $report_type.match(/all|inetadm/)
-    valid_sw = 1
-    process_inetadm()
-  end
-  if $report_type.match(/all|security|pam/)
-    valid_sw = 1
-    process_pam()
-  end
-  if $report_type.match(/all|syslog/)
-    valid_sw = 1
-    process_syslog()
-  end
-  if $report_type.match(/all|cups/)
-    valid_sw = 1
-    process_cups()
-  end
-  if $report_type.match(/all|obp/)
-    valid_sw = 1
-    process_obp()
-  end
-  if $report_type.match(/all|eeprom/)
-    valid_sw = 1
-    process_eeprom()
-  end
-  if $report_type.match(/all|os|core/)
-    valid_sw = 1
-    process_coreadm()
-  end
-  if $report_type.match(/all|os|dump/)
-    valid_sw = 1
-    process_dumpadm()
-  end
-  if $report_type.match(/all|os|exp/)
-    valid_sw = 1
-    process_explorer()
-  end
-  if $report_type.match(/all|os/)
-    valid_sw = 1
-    process_system()
-  end
-  if $report_type.match(/all|cpu/)
-    valid_sw = 1
-    process_cpu()
-  end
-  if $report_type.match(/all|mem/)
-    valid_sw = 1
-    process_memory()
-  end
-  if $report_type.match(/all|disk/)
-    valid_sw = 1
-    process_disk_info()
-  end
-  if $report_type.match(/all|io/)
-    valid_sw = 1
-    process_io()
-  end
-  if $report_type.match(/all|swap/)
-    valid_sw = 1
-    process_swap()
-  end
-  if $report_type.match(/all|vnic/)
-    valid_sw = 1
-    os_ver = get_os_version()
-    if get_os_version.match(/11/)
-      process_vnic()
-    else
-      handle_output("\n")
-      handle_output("No VNIC information available")
+    t_report = eval"[process_#{report_name}]"
+    if t_report
+      if t_report.class == Array
+        full_report = full_report + t_report
+      end
     end
-  end
-  if $report_type.match(/all|link/)
-    valid_sw = 1
-    os_ver = get_os_version()
-    if get_os_version.match(/11/)
-      process_link()
-    else
-      handle_output("\n")
-      handle_output("No link information available")
-    end
-  end
-  if $report_type.match(/all|kernel|ndd/)
-    valid_sw = 1
-    process_etc_system()
-    process_ndd_ip_info()
-    process_ndd_tcp_info()
-    process_ndd_udp_info()
-    process_ndd_arp_info()
-    process_ndd_icmp_info()
-    process_ndd_sctp_info()
-  end
-  if $report_type.match(/all|security|elfsign/)
-    valid_sw = 1
-    process_elfsign()
-  end
-  if $report_type.match(/all|zone/)
-    valid_sw = 1
-    process_zones()
-  end
-  if $report_type.match(/all|security|system|passwd|password|login|sendmail|inetinit|su|inet|cron|keyserv|telnet|power|suspend|ssh|crypto|snmp|cups/)
-    $report_type.gsub(/password/,"passwd")
-    valid_sw = 1
-    process_security($report_type)
-  end
-  if $report_type.match(/all|security|inetd/)
-    valid_sw = 1
-    process_inetd()
-  end
-  if $report_type.match(/all|^fs|filesystem/)
-    valid_sw = 1
-    process_file_systems()
-  end
-  if $report_type.match(/all|^fs|filesystem|mount/)
-    valid_sw = 1
-    if $masked == 0
-      process_mounts()
-    end
-  end
-  if $report_type.match(/all|filesystem|zfs/)
-    valid_sw = 1
-    os_ver = get_os_version()
-    if os_ver.match(/10|11/)
-      process_zfs()
-    else
-      handle_output("\n")
-      handle_output("No ZFS information available")
-    end
-  end
-  if $report_type.match(/all|services/)
-    valid_sw = 1
-    process_service_descs()
-    process_services()
-    process_service_deps()
-  end
-  if $report_type.match(/all|lu|liveupgrade|be/)
-    valid_sw = 1
-    os_ver = get_os_version()
-    if os_ver.match(/11/)
-      process_beadm()
-    else
-      process_liveupgrade()
-    end
-  end
-  if $report_type.match(/svcprop/)
-    valid_sw = 1
-    os_ver = get_os_version()
-    if os_ver.match(/11/)
-      process_svcprop()
-    else
-      handle_output("\n")
-      handle_output("No service property information available")
-    end
-  end
-  if $report_type.match(/all|locale/)
-    valid_sw = 1
-    process_locale()
-  end
-  if $report_type.match(/all|modinfo|module/)
-    valid_sw = 1
-    process_modules()
-  end
-  if $report_type.match(/all|package/)
-    valid_sw = 1
-    process_packages()
-  end
-  if $report_type.match(/all|patch/)
-    valid_sw = 1
-    os_ver = get_os_version
-    if !os_ver.match(/11/)
-      process_patches()
-    else
-      handle_output("\n")
-      handle_output("No patch information available")
-    end
-  end
-  if $report_type.match(/all|tcp/)
-    valid_sw = 1
-    process_network("tcp")
-  end
-  if $report_type.match(/all|udp/)
-    valid_sw = 1
-    process_network("udp")
-  end
-  if $report_type.match(/all|ldom/)
-    valid_sw = 1
-    process_ldom()
-  end
-  if $report_type.match(/all|^dom/)
-    valid_sw = 1
-    process_domain()
-  end
-  if $report_type.match(/all|fru/)
-    valid_sw = 1
-    process_fru()
-  end
-  if $report_type.match(/all|sensor/)
-    valid_sw = 1
-    process_sensors()
-  end
-  if $report_type.match(/all|handbook/)
-    valid_sw = 1
-    process_handbook()
-  end
-  if $report_type.match(/all|veritas|vx/)
-    valid_sw = 1
-    process_veritas()
-  end
-  if $report_type.match(/all|aggr|network/)
-    valid_sw = 1
-    process_aggr()
-  end
-  if $report_type.match(/all|network/)
-    valid_sw = 1
-    process_nic_info()
-  end
-  if $report_type.match(/^serial$/)
-    valid_sw = 1
-    serial = get_chassis_serial()
-    handle_output(serial)
-    exit
-  end
-  if $report_type.match(/all|serials/)
-    valid_sw = 1
-    process_serials()
-  end
-  if $report_type.match(/all|firmware/)
-    valid_sw = 1
-    process_firmware()
-  end
-  if $report_type.match(/all|ipmi/)
-    valid_sw = 1
-    process_ipmi()
-  end
-  if $report_type.match(/all|slots/)
-    valid_sw = 1
-    process_upgrade_slots()
-  end
-  if $report_type.match(/all|pci/)
-    valid_sw = 1
-    process_pci_scan()
-  end
-  if $report_type.match(/all|sds|svm|disksuite/)
-    valid_sw = 1
-    process_svm()
   end
   if $output_format.match(/html/)
     handle_output("</body>")
@@ -292,7 +187,7 @@ def config_report(report,host_name)
     report_help(report)
     handle_output("\n")
   end
-  return
+  return full_report
 end
 
 # Open Disk firmware file
@@ -425,7 +320,7 @@ def handle_table(type,title,row,table)
       table.push("|*#{title}*|\n|")
     end
     if row.to_s.match(/[A-z]/)
-      if $output_format.match(/|wiki|html/)
+      if $output_format.match(/wiki|html/)
         row.each do |heading|
           if $output_format.match(/html/)
             table.push("<th>#{heading}</th>")
@@ -448,7 +343,7 @@ def handle_table(type,title,row,table)
           table.push("<th>Value</th>")
         end
         if $output_format.match(/wiki/)
-          table.push("|Item|Value|\n")
+          table.push("Item|Value|")
         end
       else
         if $output_format.match(/pipe/)

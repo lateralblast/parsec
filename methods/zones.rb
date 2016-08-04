@@ -22,10 +22,13 @@ def process_running_zones()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No running zone information available\n")
   end
-  return
+  return table
 end
 
 # Process zone config
@@ -35,6 +38,7 @@ def process_zone_configs()
   file_array = exp_file_to_array(file_name)
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/^#/) and line.match(/^[a-z]|^[0-9]/)
         hostname   = line.split(/:/)[0]
         zone_file  = "/etc/zones/"+hostname+".xml"
@@ -81,10 +85,13 @@ def process_zone_configs()
       end
     end
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No configured zone information available\n")
   end
-  return
+  return table
 end
 
 # Process the configured zone information.
@@ -97,6 +104,7 @@ def process_configured_zones()
     row   =  [ 'Name', 'Status', 'Path', 'UUID' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/^#/)
         row  = line.split(/:/)
         if $masked == 1
@@ -108,15 +116,34 @@ def process_configured_zones()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No configured zone information available\n")
   end
-  return
+  return table
 end
 
 def process_zones()
-  process_running_zones()
-  process_configured_zones()
-  process_zone_configs()
-  return
+  if !$output_format.match(/table|pipe/)
+    table   = []
+    t_table = process_running_zones()
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_configured_zones()
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_zone_configs()
+    if t_table.class == Array
+      table = table + t_table
+    end
+  else
+     table = process_running_zones()
+     table = process_configured_zones()
+     table = process_zone_configs()
+  end
+  return table
 end

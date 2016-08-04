@@ -19,6 +19,11 @@ end
 # Process patch info
 
 def process_patches()
+  os_ver = get_os_version()
+  if os_ver.match(/11/)
+    handle_output("\n")
+    handle_output("No VNIC information available\n")
+  end
   file_array   = get_patch_dates()
   patch_info   = get_patch_info()
   patch_date   = ""
@@ -28,6 +33,7 @@ def process_patches()
     row   = [ 'Patch', 'Install Date', 'Packages' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if line.match(/^d/)
         items      = line.split(/\s+/)
         patch_no   = items[-1]
@@ -44,8 +50,11 @@ def process_patches()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No patch information available\n")
   end
-  return
+  return table
 end

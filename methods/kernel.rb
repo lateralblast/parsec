@@ -19,8 +19,8 @@ def search_path_to_inst(io_path,dev_id,drv_name)
   temp_name   = ""
   file_array  = get_path_to_inst()
   file_array.each do |line|
+    line = line.chomp
     if line.match(/^"/)
-      line      = line.chomp
       info      = line.split(/\s+/)
       temp_path = info[0].gsub(/"/,"")
       temp_id   = info[1]
@@ -131,51 +131,75 @@ end
 
 # Process ndd tcp information
 
-def process_ndd_tcp_info()
+def process_tcp()
+  table    = []
   ndd_type = "tcp"
-  process_ndd_info(ndd_type)
-  return
+  t_table = process_network_info(ndd_type)
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_ndd_info(ndd_type)
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end
 
 # Process ndd arp information
 
-def process_ndd_arp_info()
+def process_arp()
   ndd_type = "arp"
-  process_ndd_info(ndd_type)
-  return
+  table = process_ndd_info(ndd_type)
+  return table
 end
 
 # Process ndd icmp information
 
-def process_ndd_icmp_info()
+def process_icmp()
   ndd_type = "icmp"
-  process_ndd_info(ndd_type)
-  return
+  table = process_ndd_info(ndd_type)
+  return table
 end
 
 # Process ndd stcp information
 
-def process_ndd_sctp_info()
+def process_sctp()
   ndd_type = "sctp"
-  process_ndd_info(ndd_type)
-  return
+  table = process_ndd_info(ndd_type)
+  return table
 end
 
 # Process ndd udp information
 
-def process_ndd_udp_info()
+def process_udp()
+  table    = []
   ndd_type = "udp"
-  process_ndd_info(ndd_type)
-  return
+  t_table = process_network_info(ndd_type)
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_ndd_info(ndd_type)
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end
 
 
 # Process ndd ip information
 
-def process_ndd_ip_info()
+def process_ip()
+  table    = []
   ndd_type = "ip"
-  process_ndd_info(ndd_type)
-  return
+  t_table  = process_network_info(ndd_type)
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_ndd_info(ndd_type)
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end
 
 # Generic routine for processing ndd information
@@ -184,10 +208,11 @@ def process_ndd_info(ndd_type)
   file_array = get_ndd_info(ndd_type)
   if ndd_type.match(/[a-z]/)
     if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-      title = "Kernel "+ndd_type+" Parameter Information"
+      title = "Kernel "+ndd_type.upcase+" Parameter Information"
       row   = ['Parameter', 'Type', 'Value']
       table = handle_table("title",title,row,"")
       file_array.each_with_index do |line,index|
+        line = line.chomp
         if line.match(/^#{ndd_type}/) and !line.match(/status|hash|obsolete|host_param/)
           (param,type) = line.split(/\(/)
           param = param.gsub(/\s+/,"")
@@ -213,6 +238,7 @@ def process_ndd_info(ndd_type)
             type  = type.split(/\)/)[0]
             row   = [ param, type, "" ]
           else
+            value = value.chomp
             row   = [ param, type, value ]
             table = handle_table("row","",row,table)
           end
@@ -220,11 +246,14 @@ def process_ndd_info(ndd_type)
       end
       table = handle_table("end","","",table)
     else
+      if !$output_format.match(/table/)
+        table = ""
+      end
       handle_output("\n")
-      handle_output("No #{ndd_type} tcp information available\n")
+      handle_output("No #{ndd_type.upcase} information available\n")
     end
   end
-  return
+  return table
 end
 
 # Get module information
@@ -245,6 +274,7 @@ def process_modules()
     row   = ['Module','Information','Status']
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/Loadaddr/)
         mod_name = line[29..-1]
         mod_name = mod_name.split(/ \(/)[0]
@@ -276,8 +306,11 @@ def process_modules()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No kernel module information available\n")
   end
-  return
+  return table
 end

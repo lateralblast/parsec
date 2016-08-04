@@ -125,6 +125,7 @@ def process_veritas()
     row   = ['Device', 'Configuration', 'Disk', 'Group', 'Status', 'Feature(s)', 'OS Device', 'Attribute', 'Type' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/DEVICE|ZFS/)
         items  = line.split(/\s+/)
         vxname = items[0]
@@ -151,10 +152,13 @@ def process_veritas()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No Veritas disk information\n")
   end
-  return
+  return table
 end
 
 # Process Veritas Disk information

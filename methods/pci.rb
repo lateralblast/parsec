@@ -8,7 +8,7 @@ end
 
 # Process PCI Scan
 
-def process_pci_scan()
+def process_pci()
   file_array = get_pci_scan()
   counter = 0
   if file_array.to_s.match(/[0-9]|[A-Z]|[a-z]/)
@@ -16,6 +16,7 @@ def process_pci_scan()
     row   = ['Item','Information']
     table = handle_table("title",title,row,"")
     file_array.each_with_index do |line,index|
+      line = line.chomp
       pci_info = line.split(/\s+/)
       if line.match(/^pci bus/)
         counter = 0
@@ -66,8 +67,11 @@ def process_pci_scan()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No PCI scan information available\n")
   end
-  return
+  return table
 end

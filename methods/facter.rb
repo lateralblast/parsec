@@ -36,11 +36,12 @@ def list_facters()
       end
       table = handle_table("end","","",table)
     else
+      table = ""
       handle_output("\n")
       handle_output("No facter information available\n")
     end
   end
-  return
+  return table
 end
 
 # Handle Puppet Fact names/items
@@ -129,6 +130,7 @@ def process_puppet_facter_configs(config)
     end
     table = handle_table("end","","",table)
   end
+  return table
 end
 
 # Process Puppet Fact file
@@ -182,6 +184,7 @@ def process_puppet_facter(host_name,file_name)
   else
     handle_output("Facter file does not exist for host: #{host_name}\n")
   end
+  return
 end
 
 # Handle facter item
@@ -251,8 +254,8 @@ def process_ansible_facter(host_name,file_name)
     info["network"] = []
     info["system"]  = []
     lines.each_with_index do |line,index|
+      line = line.chomp
       if !line.match(/\{\}|\[\]|key|rsa|dsa/) and line.match(/[0-9]|[A-z]/)
-        line = line.chomp
         if line.match(/": /)
           item = line.split(/"/)[1].gsub(/\s+/,"")
           item = process_ansible_item(item)
@@ -353,5 +356,5 @@ def process_ansible_facter(host_name,file_name)
     end
     table = handle_table("end","","",table)
   end
-  return
+  return table
 end

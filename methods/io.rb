@@ -690,6 +690,9 @@ def process_io()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No IO information available\n")
   end
@@ -702,5 +705,5 @@ def process_io()
     end
     handle_output("\n")
   end
-  return
+  return table
 end

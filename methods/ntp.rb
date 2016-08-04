@@ -19,9 +19,16 @@ end
 # Process NTP insformation
 
 def process_ntp()
-  process_ntp_config()
-  process_ntpq()
-  return
+  table   = []
+  t_table = process_ntp_config()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_ntpq()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end
 
 # Process NTP config
@@ -46,10 +53,13 @@ def process_ntp_config()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
-    handle_output("No syslog information available\n")
+    handle_output("No NTP information available\n")
   end
-  return
+  return table
 end
 
 # Process ntpq information
@@ -76,8 +86,11 @@ def process_ntpq()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
-    handle_output("No ntpq information available\n")
+    handle_output("No NTPQ information available\n")
   end
-  return
+  return table
 end

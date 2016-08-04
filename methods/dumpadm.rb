@@ -15,6 +15,7 @@ def process_dumpadm()
   if dumpadm_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     table = handle_table("title","Dumpadm Configuration","","")
     dumpadm_info.each do |line|
+      line = line.chomp
       (param,value) = line.split(": ")
       param         = param.gsub(/^\s+/,'')
       if value
@@ -23,8 +24,11 @@ def process_dumpadm()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No dumpadm information available\n")
   end
-  return
+  return table
 end

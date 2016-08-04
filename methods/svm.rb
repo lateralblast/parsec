@@ -19,9 +19,16 @@ end
 # Process SVM insformation
 
 def process_svm()
-  process_mddb()
-  process_md()
-  return
+  table   = []
+  t_table = process_mddb()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_md()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end
 
 # Process md config
@@ -53,12 +60,13 @@ def process_md()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      handle_output("\n")
-      handle_output("No Solaris Volume Manager information available\n")
+    if !$output_format.match(/table/)
+      table = ""
     end
+    handle_output("\n")
+    handle_output("No Solaris Volume Manager information available\n")
   end
-  return
+  return table
 end
 
 # Process md config
@@ -79,8 +87,11 @@ def process_mddb()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No Solaris Volume Manager information available\n")
   end
-  return
+  return table
 end

@@ -9,13 +9,14 @@ end
 
 # Process slot information
 
-def process_upgrade_slots()
+def process_slots()
   slot_info = get_upgrade_slot_info()
   if slot_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     title = "Upgradeable Slot Information"
     row   = [ 'ID', 'Status', 'Type', 'Description' ]
     table = handle_table("title",title,row,"")
     slot_info.each do |line|
+      line = line.chomp
       line = line.gsub(/available PCI/,"available  PCI")
       if line.match(/^[0-9]/)
         row   = line.split(/ \s+/)
@@ -24,10 +25,13 @@ def process_upgrade_slots()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No Upgradeable slot information available\n")
   end
-  return
+  return table
 end
 
 # Get FRU information
@@ -50,6 +54,7 @@ def process_fru()
       table = handle_table("title",title,row,"")
     end
     fru_info.each do |line|
+      line = line.chomp
       if sys_model.match(/V240|T200/)
         row = line.split(/\s+/)
         if line.match(/^Location/)
@@ -86,10 +91,13 @@ def process_fru()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No FRU information available\n")
   end
-  return
+  return table
 end
 
 # Get environmental Information
@@ -215,8 +223,11 @@ def process_sensors()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No sensor information available\n")
   end
-  return
+  return table
 end

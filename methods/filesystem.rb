@@ -18,6 +18,7 @@ def process_file_systems()
     row   = [ 'Device', 'Mount', 'Type' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if line.match(/^\/dev/)
         items    = line.split(/\s+/)
         fs_dev   = items[0]
@@ -38,10 +39,13 @@ def process_file_systems()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No filesystem information available\n")
   end
-  return
+  return table
 end
 
 # Get file system mount point and filesystem information
@@ -56,6 +60,7 @@ end
 def process_vfstab_info(table,search)
   vfstab_info = get_vfstab_info(search)
   vfstab_info.each do |fs_line|
+    fs_line = fs_line.chomp
     if !fs_line.match(/^#/)
       fs_line     = fs_line.split(/\s+/)
       mount_point = fs_line[2]
@@ -76,5 +81,10 @@ def process_vfstab_info(table,search)
       end
     end
   end
+  return table
+end
+
+def process_filesystem()
+  table = process_file_systems()
   return table
 end

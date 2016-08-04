@@ -63,6 +63,7 @@ def process_inetd()
     row   = [ 'Service', 'Current', 'Recommended', 'Complies' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if line.match(/udp|tcp|rpc/)
         if !line.match(/^#/) and line.match(/[A-z]|[0-9]/)
           service       = line.split(/\s+/)[0]
@@ -98,8 +99,11 @@ def process_inetd()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No inetd information available\n")
   end
-  return
+  return table
 end

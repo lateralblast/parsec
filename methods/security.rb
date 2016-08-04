@@ -29,6 +29,9 @@ def process_elfsign()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No elfsign information\n")
   end
@@ -56,7 +59,6 @@ def process_security(report_type)
         if curr_name != ""
           table = handle_table("end","","",table)
         end
-        handle_output("\n")
         curr_name  = file_name
         title      = "Security Settings ("+file_name+")"
         row        = ['Item', 'Current','Recommended','Complies']
@@ -92,24 +94,91 @@ def process_security(report_type)
     end
     if item == $defaults.last
       table = handle_table("end","","",table)
-      handle_output("\n")
     end
   end
-  case report_type
-  when /all|security|cups|snmp/
-    process_cups_snmp()
-  when /all|security|cups/
-    process_cups()
-  end
-  os_version = get_os_version
-  if os_version == "5.11"
-    case report_type
-    when /all|security|crypto/
-      process_crypto_providers()
-      process_crypto_list()
-    when /all|security|elf/
-      process_elfsign()
-    end
-  end
-  return
+  return table
+end
+
+# Process passwd defaults
+
+def process_passwd()
+  table = process_security("passwd")
+  return table
+end
+
+# Process login defaults
+
+def process_login()
+  table = process_security("login")
+  return table
+end
+
+# Process sendmail defaults
+
+def process_sendmail()
+  table = process_security("sendmail")
+  return table
+end
+
+# Process inetinit defaults
+
+def process_inetinit()
+  table = process_security("inetinit")
+  return table
+end
+
+# Process su defaults
+
+def process_su()
+  table = process_security("su")
+  return table
+end
+
+# Process inet defaults
+
+def process_inet()
+  table = process_security("inet")
+  return table
+end
+
+# Process cron defaults
+
+def process_cron()
+  table = process_security("cron")
+  return table
+end
+
+# Process keyserv defaults
+
+def process_keyserv()
+  table = process_security("keyserv")
+  return table
+end
+
+# Process telnet defaults
+
+def process_telnet()
+  table = process_security("telnetd")
+  return table
+end
+
+# Process power defaults
+
+def process_power()
+  table = process_security("power")
+  return table
+end
+
+# Process telnet defaults
+
+def process_suspend()
+  table = process_security("suspend")
+  return table
+end
+
+# Process telnet defaults
+
+def process_ssh()
+  table = process_security("ssh")
+  return table
 end

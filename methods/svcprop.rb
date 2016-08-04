@@ -9,6 +9,11 @@ end
 # Process Beadm info
 
 def process_svcprop()
+  os_ver = get_os_version()
+  if !os_ver.match(/11/)
+    handle_output("\n")
+    handle_output("No Service Property information available\n")
+  end
   file_array = get_svcprop_info()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
@@ -38,8 +43,11 @@ def process_svcprop()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
-    handle_output("No service property information available\n")
+    handle_output("No Service Property information available\n")
   end
-  return
+  return table
 end

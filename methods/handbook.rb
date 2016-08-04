@@ -48,7 +48,7 @@ def process_handbook_info_file(info_file)
     handle_output("\n")
     handle_output("No handbook information available\n")
   end
-  return
+  return table
 end
 
 # Handle handbook spec file
@@ -225,6 +225,7 @@ end
 # Process handbook
 
 def process_handbook()
+  table      = []
   model      = get_model_name()
   test_file  = $handbook_dir+"/current.html"
   if File.exist?(test_file)
@@ -258,13 +259,22 @@ def process_handbook()
     end
   end
   if info_file
-    process_handbook_info_file(info_file)
+    t_table = process_handbook_info_file(info_file)
+    if t_table
+      table = table + t_table
+    end
   end
   if spec_file
-    process_handbook_spec_file(spec_file)
+    t_table = process_handbook_spec_file(spec_file)
+    if t_table
+      table = table + t_table
+    end
   end
   if list_file
-    process_handbook_list_file(list_file)
+    t_table = process_handbook_list_file(list_file)
+    if t_table
+      table = table + t_table
+    end
   end
-  return
+  return table
 end

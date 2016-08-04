@@ -9,6 +9,11 @@ end
 # Process Beadm info
 
 def process_beadm()
+  os_ver = get_os_version()
+  if !os_ver.match(/11/)
+    handle_output("\n")
+    handle_output("No beadm information available\n")
+  end
   file_array = get_beadm_status()
   lu_current = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
@@ -34,8 +39,11 @@ def process_beadm()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No BE information available\n")
   end
-  return
+  return table
 end

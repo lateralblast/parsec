@@ -15,6 +15,7 @@ def process_coreadm()
   if coreadm_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     table = handle_table("title","Coreadm Configuration","","")
     coreadm_info.each do |line|
+      line = line.chomp
       (param,value) = line.split(": ")
       if param and value
         param = param.gsub(/^\s+/,'')
@@ -23,8 +24,11 @@ def process_coreadm()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No coreadm infomation available\n")
   end
-  return
+  return table
 end

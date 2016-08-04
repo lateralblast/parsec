@@ -65,7 +65,7 @@ end
 
 # Process diskinfo insformation
 
-def process_disk_info()
+def process_disk()
   file_array = get_disk_info()
   disk_paths = get_disk_paths()
   disk_sizes = get_disk_sizes()
@@ -117,10 +117,13 @@ def process_disk_info()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No disk information available\n")
   end
-  return
+  return table
 end
 
 # Get disk information
@@ -330,6 +333,7 @@ def process_avail_disk_fw(table,disk_model,disk_fw)
   fw_info = get_avail_disk_fw(disk_model)
   if fw_info
     fw_info.each do |fw_line|
+      fw_line = fw_line.chomp
       if fw_line.match(/^#{disk_model}/)
         fw_line    = fw_line.split(/,/)
         avail_fw   = fw_line[1]

@@ -55,10 +55,13 @@ def process_ipmi_sel()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No IPMI System Event Log information available\n")
   end
-  return
+  return table
 end
 
 # Process IPMI SEL Event Information
@@ -76,10 +79,13 @@ def process_ipmi_sel_events()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No IPMI System Event Log event information available\n")
   end
-  return
+  return table
 end
 
 # Process IPMI MC Information
@@ -101,10 +107,13 @@ def process_ipmi_mc()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No IPMI Machine Controller information available\n")
   end
-  return
+  return table
 end
 
 # Process IPMI chassis information
@@ -125,10 +134,13 @@ def process_ipmi_chassis()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No IPMI Chassis information available\n")
   end
-  return
+  return table
 end
 
 # Process IPMI FRU information
@@ -165,19 +177,38 @@ def process_ipmi_fru()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No IPMI FRU information available\n")
   end
-  return
+  return table
 end
 
 # Process IPMI
 
 def process_ipmi()
-  process_ipmi_fru()
-  process_ipmi_chassis()
-  process_ipmi_mc()
-  process_ipmi_sel()
-  process_ipmi_sel_events()
-  return
+  table   = []
+  t_table = process_ipmi_fru()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_ipmi_chassis()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_ipmi_mc()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_ipmi_sel()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_tabbe = process_ipmi_sel_events()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end

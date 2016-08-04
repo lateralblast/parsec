@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.1.2
+# Version:      2.1.3
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -108,23 +108,6 @@ rescue LoadError
   include Magick
 end
 
-# Extend string class to remove non ascii chars
-
-class String
-  def remove_non_ascii
-    require 'iconv'
-    Iconv.conv('ASCII//IGNORE', 'UTF8', self)
-  end
-end
-
-# Extend string class to remove control chars
-
-class String
-  def strip_control_characters
-    self.chars.reject { |char| char.ascii_only? and (char.ord < 32 or char.ord == 127) }.join
-  end
-end
-
 # Script name
 
 $script = $0
@@ -162,24 +145,6 @@ $author_name  = "Richard Spindler"
 # Defaults for output
 
 $output_format  = "pipe"
-
-# Get version
-
-def get_version()
-  file_array = IO.readlines $0
-  version    = file_array.grep(/^# Version/)[0].split(":")[1].gsub(/^\s+/,'').chomp
-  packager   = file_array.grep(/^# Packager/)[0].split(":")[1].gsub(/^\s+/,'').chomp
-  name       = file_array.grep(/^# Name/)[0].split(":")[1].gsub(/^\s+/,'').chomp
-  return version,packager,name
-end
-
-# Print script version information
-
-def print_version()
-  (version,packager,name) = get_version()
-  puts name+" v. "+version+" "+packager
-  exit
-end
 
 # Print usage
 
@@ -226,10 +191,6 @@ ARGV[0..-1].each do |switch|
     exit
   end
 end
-
-# Check for pigz to accelerate decompression
-
-$gzip_bin = %x[which pigz].chomp
 
 # Set up some script related variables
 
@@ -443,77 +404,6 @@ def check_output_format()
 end
 
 opt = option
-
-# Check local config
-
-def check_local_config()
-  os_name = %x[uname -a]
-  if !os_name.match(/SunOS/)
-    $tar_bin = %x[which star].chomp
-    if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
-      if $verbose_mode == 1
-        puts "S tar not installed"
-      end
-      if os_name.match(/Darwin/)
-        brew_bin = %x[which brew]
-        if brew_bin.match(/brew/)
-          puts "Installing S tar"
-          %x[brew install star]
-        else
-          puts "Cannot find S tar"
-          puts "S tar is required"
-          exit
-        end
-      else
-        if !$tar_bin.match(/star/)
-          puts "Cannot find S tar"
-          puts "S tar is required"
-        end
-      end
-    end
-  else
-    $tar_bin = %x[which star].chomp
-    if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
-      if $verbose_mode == 1
-        puts "Using tar"
-      end
-      $tar_bin = "/usr/bin/tar"
-    end
-  end
-  if !$gzip_bin.match(/pigz/)
-    if $verbose_mode == 1
-      puts "Parallel GZip (pigz) not installed"
-    end
-    if os_name.match(/Darwin/)
-      brew_bin = %x[which brew]
-      if brew_bin.match(/brew/) and !brew_bin.match(/no brew/)
-        puts "Installing Parallel GZip"
-        %x[brew install pigz]
-      else
-        $gzip_bin = %x[which gzip].chomp
-        if !$gzip_bin.match(/gzip/) or $gzip_bin.match(/no gzip/)
-          puts "Cannot find gzip"
-          exit
-        else
-          if $verbose_mode == 1
-            puts "Using gzip"
-          end
-        end
-      end
-    else
-      $gzip_bin = %x[which gzip].chomp
-      if !$gzip_bin.match(/gzip/) or $gzip_bin.match(/no gzip/)
-        puts "Cannot find gzip"
-        exit
-      else
-        if $verbose_mode == 1
-          puts "Using gzip"
-        end
-      end
-    end
-  end
-  return
-end
 
 # Print examples
 
@@ -887,73 +777,5 @@ end
 # Handle explorer output
 
 if input_type.match(/explorer/)
-  if !file_list
-    file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
-  else
-    if !file_list[0]
-      file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
-      if file_list[0] == nil
-        puts "No explorer files found"
-        exit
-      end
-    end
-  end
-  file_list.each do |file_name|
-    if File.exist?(file_name)
-      host_info = file_name.split(/\./)
-      host_id   = host_info[1]
-      $exp_id   = host_id
-      exp_model = get_model_from_hostid(host_id)
-      exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
-      exp_month = host_info[3]
-      exp_day   = host_info[4]
-      exp_date  = exp_year+"."+exp_month+"."+exp_day
-      exp_date  = Date.parse(exp_date).to_s
-      exp_time  = host_info[5..6].join(":")
-      $exp_key  = exp_date+"."+host_info[5..6].join(".")
-      exp_name  = host_info[2].split(/-/)[0..-2].join("-")
-      if !$output_file.match(/[A-z]/) and $output_format.match(/pdf/)
-        $output_file = $output_dir+"/"+exp_name+"-"+$report_type+".txt"
-      end
-#      if search_name.match(/^all$/) and $output_format.match(/pdf/)
-#        puts $output_file
-#        exit
-        if File.exist?($output_file)
-          File.delete($output_file)
-        end
-#      end
-      if $verbose_mode == 1 and !$output_format.match(/pdf/)
-        puts "Processing explorer ("+$report_type+") report for "+exp_name
-      end
-      $exp_file = file_name
-      #$exp_info[:$exp_id][:$exp_key][:file] = file_name
-      config_report(report,exp_name)
-      if host_name.match(/^all$/) and pause_mode == 1
-         print "continue (y/n)? "
-         STDOUT.flush()
-         exit if 'n' == STDIN.gets.chomp
-      end
-      if $output_format.match(/pdf/)
-        pdf = Prawn::Document.new
-        if search_name.match(/^all$/)
-          output_pdf = $output_dir+"/"+exp_name+".pdf"
-        else
-          output_pdf = $output_file.gsub(/\.txt$/,".pdf")
-        end
-        if $verbose_mode == 1
-          puts "Input file:  "+$output_file
-          puts "Output file: "+output_pdf
-        end
-        if $masked == 1
-          document_title = "Explorer: masked"
-        else
-          document_title = "Explorer: "+exp_name
-        end
-        if !customer_name.match(/masked/) and search_name.match(/^all$/)
-          customer_name = get_customer_name()
-        end
-        generate_pdf(pdf,document_title,output_pdf,customer_name)
-      end
-    end
-  end
+ handle_explorer(report,file_list,host_name)
 end

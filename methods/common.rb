@@ -1,5 +1,115 @@
 # Common code
 
+# Check for pigz to accelerate decompression
+
+$gzip_bin = %x[which pigz].chomp
+
+# Extend string class to remove non ascii chars
+
+class String
+  def remove_non_ascii
+    require 'iconv'
+    Iconv.conv('ASCII//IGNORE', 'UTF8', self)
+  end
+end
+
+# Extend string class to remove control chars
+
+class String
+  def strip_control_characters
+    self.chars.reject { |char| char.ascii_only? and (char.ord < 32 or char.ord == 127) }.join
+  end
+end
+
+# Get version
+
+def get_version()
+  file_array = IO.readlines $0
+  version    = file_array.grep(/^# Version/)[0].split(":")[1].gsub(/^\s+/,'').chomp
+  packager   = file_array.grep(/^# Packager/)[0].split(":")[1].gsub(/^\s+/,'').chomp
+  name       = file_array.grep(/^# Name/)[0].split(":")[1].gsub(/^\s+/,'').chomp
+  return version,packager,name
+end
+
+# Print script version information
+
+def print_version()
+  (version,packager,name) = get_version()
+  puts name+" v. "+version+" "+packager
+  exit
+end
+
+# Check local config
+
+def check_local_config()
+  os_name = %x[uname -a]
+  if !os_name.match(/SunOS/)
+    $tar_bin = %x[which star].chomp
+    if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
+      if $verbose_mode == 1
+        puts "S tar not installed"
+      end
+      if os_name.match(/Darwin/)
+        brew_bin = %x[which brew]
+        if brew_bin.match(/brew/)
+          puts "Installing S tar"
+          %x[brew install star]
+        else
+          puts "Cannot find S tar"
+          puts "S tar is required"
+          exit
+        end
+      else
+        if !$tar_bin.match(/star/)
+          puts "Cannot find S tar"
+          puts "S tar is required"
+        end
+      end
+    end
+  else
+    $tar_bin = %x[which star].chomp
+    if !$tar_bin.match(/star/) or $tar_bin.match(/no star/)
+      if $verbose_mode == 1
+        puts "Using tar"
+      end
+      $tar_bin = "/usr/bin/tar"
+    end
+  end
+  if !$gzip_bin.match(/pigz/)
+    if $verbose_mode == 1
+      puts "Parallel GZip (pigz) not installed"
+    end
+    if os_name.match(/Darwin/)
+      brew_bin = %x[which brew]
+      if brew_bin.match(/brew/) and !brew_bin.match(/no brew/)
+        puts "Installing Parallel GZip"
+        %x[brew install pigz]
+      else
+        $gzip_bin = %x[which gzip].chomp
+        if !$gzip_bin.match(/gzip/) or $gzip_bin.match(/no gzip/)
+          puts "Cannot find gzip"
+          exit
+        else
+          if $verbose_mode == 1
+            puts "Using gzip"
+          end
+        end
+      end
+    else
+      $gzip_bin = %x[which gzip].chomp
+      if !$gzip_bin.match(/gzip/) or $gzip_bin.match(/no gzip/)
+        puts "Cannot find gzip"
+        exit
+      else
+        if $verbose_mode == 1
+          puts "Using gzip"
+        end
+      end
+    end
+  end
+  return
+end
+
 # Check file type
 
 def check_file_type(file_name)

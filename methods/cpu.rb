@@ -114,6 +114,7 @@ def process_cpu()
     cpu_type   = ""
     cpu_ids    = ""
     cpu_info.each do |line|
+      line = line.chomp
       if line.match(/[0-9][0-9]/)
         cpu_line = line.split(/\s+/)
         case sys_model
@@ -203,8 +204,11 @@ def process_cpu()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No CPU information available\n")
   end
-  return
+  return table
 end

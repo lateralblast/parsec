@@ -14,17 +14,25 @@ def process_locale()
     title = "Locale Information"
     table = handle_table("title",title,"","")
     file_array.each do |line|
+      line       = line.chomp
       items      = line.split(/\=/)
       locale_str = items[0]
       locale_val = items[1]
-      locale_val = locale_val.gsub(/"/,'')
+      if locale_val
+        locale_val = locale_val.gsub(/"/,'')
+      else
+        locale_val = ""
+      end
       row        = [locale_str,locale_val]
       table      = handle_table("row","",row,table)
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No locale information available\n")
   end
-  return
+  return table
 end

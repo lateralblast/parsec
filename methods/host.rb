@@ -20,7 +20,7 @@ def process_host()
   table = process_sys_uptime(table)
   table = process_install_cluster(table)
   table = handle_table("end","","",table)
-  return
+  return table
 end
 
 # Get Sys/Host ID

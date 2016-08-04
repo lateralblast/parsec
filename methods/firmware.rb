@@ -52,10 +52,13 @@ def process_hardware_revision_info()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No hardware revision information\n")
   end
-  return
+  return table
 end
 
 # Process Firmware update information
@@ -103,16 +106,26 @@ def process_firmware_update_info()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table  = ""
+    end
     handle_output("\n")
     handle_output("No firmware information available\n")
   end
-  return
+  return table
 end
 
 # Process firmware information
 
 def process_firmware()
-  process_firmware_update_info()
-  process_hardware_revision_info()
-  return
+  table   = []
+  t_table = process_firmware_update_info()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_hardware_revision_info()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end

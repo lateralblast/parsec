@@ -1,13 +1,87 @@
 # Explorer related code
 
+# Handle explorer
+
+def handle_explorer(report,file_list,host_name)
+    if !file_list
+    file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
+  else
+    if !file_list[0]
+      file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
+      if file_list[0] == nil
+        puts "No explorer files found"
+        exit
+      end
+    end
+  end
+  file_list.each do |file_name|
+    if File.exist?(file_name)
+      host_info = file_name.split(/\./)
+      host_id   = host_info[1]
+      $exp_id   = host_id
+      exp_model = get_model_from_hostid(host_id)
+      exp_year  = host_info[2].split(/-/)[-1].split(/\./)[0]
+      exp_month = host_info[3]
+      exp_day   = host_info[4]
+      exp_date  = exp_year+"."+exp_month+"."+exp_day
+      exp_date  = Date.parse(exp_date).to_s
+      exp_time  = host_info[5..6].join(":")
+      $exp_key  = exp_date+"."+host_info[5..6].join(".")
+      exp_name  = host_info[2].split(/-/)[0..-2].join("-")
+      if !$output_file.match(/[A-z]/) and $output_format.match(/pdf/)
+        $output_file = $output_dir+"/"+exp_name+"-"+$report_type+".txt"
+      end
+#      if search_name.match(/^all$/) and $output_format.match(/pdf/)
+#        puts $output_file
+#        exit
+        if File.exist?($output_file)
+          File.delete($output_file)
+        end
+#      end
+      if $verbose_mode == 1 and !$output_format.match(/pdf/)
+        puts "Processing explorer ("+$report_type+") report for "+exp_name
+      end
+      $exp_file = file_name
+      #$exp_info[:$exp_id][:$exp_key][:file] = file_name
+      config_report(report,exp_name)
+      if host_name.match(/^all$/) and pause_mode == 1
+         print "continue (y/n)? "
+         STDOUT.flush()
+         exit if 'n' == STDIN.gets.chomp
+      end
+      if $output_format.match(/pdf/)
+        pdf = Prawn::Document.new
+        if search_name.match(/^all$/)
+          output_pdf = $output_dir+"/"+exp_name+".pdf"
+        else
+          output_pdf = $output_file.gsub(/\.txt$/,".pdf")
+        end
+        if $verbose_mode == 1
+          puts "Input file:  "+$output_file
+          puts "Output file: "+output_pdf
+        end
+        if $masked == 1
+          document_title = "Explorer: masked"
+        else
+          document_title = "Explorer: "+exp_name
+        end
+        if !customer_name.match(/masked/) and search_name.match(/^all$/)
+          customer_name = get_customer_name()
+        end
+        generate_pdf(pdf,document_title,output_pdf,customer_name)
+      end
+    end
+  end
+end
+
+# Get hostname from explorer filename
+
 def get_hostname_from_explorer_file(exp_file)
   file_name = File.basename(exp_file) 
   host_info = file_name.split(/\./) 
   host_name = host_info[2].split(/-/)[0..-2].join("-")
   return host_name
 end
-
-
 
 # Process explorers
 
@@ -25,6 +99,7 @@ def process_explorer()
   table = process_file_date(table)
   table = process_file_time(table)
   table = handle_table("end","","",table)
+  return table
 end
 
 # Get file date
@@ -139,6 +214,13 @@ def exp_file_to_array(file_name)
       handle_output("File #{file_name} does not exist\n")
     end
   end
+  if !file_array.class == Array
+    if !file_array.match(/[A-Z]|[a-z]|[0-9]/)
+      file_array = []
+    else
+      file_array = file_array.split("")
+    end
+  end
   return file_array
 end
 
@@ -155,7 +237,7 @@ end
 def get_exp_ver()
   file_name  = "/rev"
   file_array = exp_file_to_array(file_name)
-  exp_ver    = file_array[0].to_s
+  exp_ver    = file_array[0].chomp
   return exp_ver
 end
 
@@ -163,6 +245,7 @@ def search_exp_defaults(search_val)
   file_name  = "/defaults"
   file_array = exp_file_to_array(file_name)
   file_array.each do |line|
+    line = line.chomp
     if !line.match(/^#/)
       exp_info = line.split("=")
       exp_val  = exp_info[1].to_s.gsub(/"/,"")
@@ -361,5 +444,5 @@ def list_explorers(search_model,search_date,search_year,search_name)
     handle_output("\n")
     handle_output("No explorer information available\n")
   end
-  return
+  return table
 end

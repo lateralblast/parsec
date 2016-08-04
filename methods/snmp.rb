@@ -10,7 +10,7 @@ end
 
 # Process CUPS SNMP insformation
 
-def process_cups_snmp()
+def process_snmp()
   file_array = get_cups_snmp()
   if file_array.to_s.match(/[A-Z]|[a-z]/)
     source = ""
@@ -29,7 +29,11 @@ def process_cups_snmp()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
+    handle_output("\n")
     handle_output("No CUPS SNMP information available\n")
   end
-  return
+  return table
 end

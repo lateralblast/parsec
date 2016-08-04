@@ -33,11 +33,29 @@ end
 # Process ZFS
 
 def process_zfs()
-  process_zfs_list()
-  process_zpool_list()
-  process_zfs_volumes()
-  process_zfs_snapshots()
-  return
+  os_ver = get_os_version()
+  if !os_ver.match(/10|11/)
+    handle_output("\n")
+    handle_output("No ZFS information available\n")
+  end
+  table   = []
+  t_table = process_zfs_list()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_zpool_list()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_zfs_volumes()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_zfs_snapshots()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end
 
 # Proces ZFS volumes
@@ -49,6 +67,7 @@ def process_zfs_volumes()
     row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/^NAME/)
         items = line.split(/\s+/)
         name  = items[0]
@@ -66,12 +85,13 @@ def process_zfs_volumes()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      handle_output("\n")
-      handle_output("No ZFS volume information available\n")
+    if !$output_format.match(/table/)
+      table = ""
     end
+    handle_output("\n")
+    handle_output("No ZFS volume information available\n")
   end
-  return
+  return table
 end
 
 # Process ZFS list
@@ -83,6 +103,7 @@ def process_zfs_list()
     row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/^NAME/)
         items = line.split(/\s+/)
         name  = items[0]
@@ -100,12 +121,13 @@ def process_zfs_list()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_file.match(/[A-z]/)
-      puts
-      puts "No ZFS filesystem information available"
+    if !$output_format.match(/table/)
+      table = ""
     end
+    handle_output("\n")
+    handle_output("No ZFS filesystem information available\n")
   end
-  return
+  return table
 end
 
 # Process ZFS list
@@ -117,6 +139,7 @@ def process_zfs_snapshots()
     row   = [ 'Name', 'Used', 'Avail', 'Refer', 'Mount' ]
     table = handle_table("title",title,row,"")
     file_array.each do |line|
+      line = line.chomp
       if !line.match(/^NAME/)
         items = line.split(/\s+/)
         if $masked == 1
@@ -138,10 +161,13 @@ def process_zfs_snapshots()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No ZFS snapshot information available\n")
   end
-  return
+  return table
 end
 
 # Process ZFS pool list
@@ -166,8 +192,11 @@ def process_zpool_list()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No ZFS pool information available\n")
   end
-  return
+  return table
 end

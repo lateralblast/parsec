@@ -51,10 +51,13 @@ def process_crypto_list()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No crypto information available\n")
   end
-  return
+  return table
 end
 
 # Get cryptoadm information
@@ -93,8 +96,24 @@ def process_crypto_providers()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No crypto provider information available\n")
   end
-  return
+  return table
+end
+
+def process_crypto()
+  table   = []
+  t_table = process_crypto_list()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_crypto_providers()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  return table
 end

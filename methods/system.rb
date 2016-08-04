@@ -42,14 +42,40 @@ def process_sys_uptime(table)
   return table
 end
 
-def process_system()
-  table = handle_table("title","System Information","","")
-  table = process_sys_model(table)
-  table = process_obp_ver(table)
-  table = process_ilom_ver(table)
-  table = process_ldom_ver(table)
-  table = process_sys_mem(table)
-  table = handle_table("end","","",table)
+def process_hardware()
+  if $output_format.match(/html|wiki/)
+    table = handle_table("title","System Information","","")
+    t_table = process_sys_model(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_obp_ver(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_ilom_ver(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_ldom_ver(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_sys_mem(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    table = handle_table("end","","",table)
+  else
+    table = handle_table("title","System Information","","")
+    table = process_sys_model(table)
+    table = process_obp_ver(table)
+    table = process_ilom_ver(table)
+    table = process_ldom_ver(table)
+    table = process_sys_mem(table)
+    table = handle_table("end","","",table)
+  end
+  return table
 end
 
 # Get /etc/system info
@@ -62,7 +88,7 @@ end
 
 # Process /etc/system info
 
-def process_etc_system()
+def process_system()
   etc_sys_info = get_etc_sys_info()
   if etc_sys_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     etc_sys_info = etc_sys_info.grep(/^[a-z]/)
@@ -95,8 +121,11 @@ def process_etc_system()
       handle_output("No Kernel Parameter information available in /etc/system\n")
     end
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No Kernel Parameter information available in /etc/system\n")
   end
-  return
+  return table
 end

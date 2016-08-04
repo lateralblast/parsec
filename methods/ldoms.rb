@@ -108,6 +108,9 @@ def process_ldom_ver(table)
     end
     table = handle_table("row","Available LDom Version",avail_ldom,table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No T-Series LDom version information available\n")
   end
@@ -239,10 +242,13 @@ def process_m_series_logical_domains()
       table = handle_table("end","","",table)
     end
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No LDom information available\n")
   end
-  return
+  return table
 end
 
 # Process T Series Logical Domain information
@@ -349,10 +355,13 @@ def process_t_series_logical_domains()
     end
     table = handle_table("end","","",table)
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No LDom information available\n")
   end
-  return
+  return table
 end
 
 # Process LDOM information
@@ -373,13 +382,16 @@ def process_ldom()
     end
     table = handle_table("end","","",table)
     if model_name.match(/^T/)
-      process_t_series_logical_domains()
+      table = process_t_series_logical_domains()
     else
-      process_m_series_logical_domains()
+      table = process_m_series_logical_domains()
     end
   else
+    if !$output_format.match(/table/)
+      table = ""
+    end
     handle_output("\n")
     handle_output("No LDom configuration information available\n")
   end
-  return
+  return table
 end
