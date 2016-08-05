@@ -19,6 +19,12 @@ Some of the features include:
   - Report if newer version is available
 - Security checks for defaults and kernel parameters
 - Mask customer information, WWNs, etc
+- Output in the following formats:
+  - Plain console text which can be piped into other applications
+  - Text table console output
+  - HTML output
+  - Wiki output
+- A Sinatra based webserver to serve up configs
 
 Usage
 -----
@@ -42,6 +48,14 @@ To get pdf output, use the pdf format output type, e.g.:
 ```
 $ ./parsec.rb --server=hostname --report=all --format=pdf
 ```
+
+To run the Sinatra based webserver:
+
+```
+$ ./webserver
+```
+
+This will start up a webserver on port 9494
 
 Reports
 -------
@@ -227,6 +241,11 @@ Optional Ruby Gems (required for PDF reports)
 - fastimage
 - nokogiri
 - rmagick
+
+Aditional gems required for webserver:
+
+- erb
+- sinatra
 
 There is a very basic script to install gems
 
