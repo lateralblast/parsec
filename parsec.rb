@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.1.3
+# Version:      2.1.4
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -655,6 +655,36 @@ else
   input_type = "explorer"
 end
 
+# Set output file
+
+if option["output"]
+  $output_file = option["output"]
+  $output_dir  = File.dirname($output_file)
+  if !File.directory?($output_dir) and !File.symlink?($output_dir)
+    Dir.mkdir($output_dir)
+  end
+  if $verbose_mode == 1 and !host_name.match(/^all$/)
+    puts "Setting output file to: "+$output_file
+  end
+  if File.exist?($output_file)
+    File.delete($output_file)
+    FileUtils.touch($output_file)
+  else
+    FileUtils.touch($output_file)
+  end
+else
+  $output_file = ""
+  $output_dir  = $base_dir+"/output"
+  if !File.directory?($output_dir) and !File.symlink?($output_dir)
+    Dir.mkdir($output_dir)
+  end
+  if $output_format.match(/pdf/)
+    if !host_name.match(/^all$/)
+      $output_file = $output_dir+"/"+host_name+".txt"
+    end
+  end
+end
+
 # List explorers
 
 if option["list"]
@@ -741,37 +771,6 @@ if option["customer"]
   end
 else
   customer_name = ""
-end
-
-# Set output file
-
-if option["output"]
-  $output_file = option["output"]
-  $output_dir  = File.dirname($output_file)
-  if !File.directory?($output_dir) and !File.symlink?($output_dir)
-    Dir.mkdir($output_dir)
-  end
-  if $verbose_mode == 1 and !host_name.match(/^all$/)
-    puts "Setting output file to: "+$output_file
-  end
-  if File.exist?($output_file)
-    File.delete($output_file)
-    FileUtils.touch($output_file)
-  else
-    FileUtils.touch($output_file)
-  end
-else
-  $output_dir = $base_dir+"/output"
-  if !File.directory?($output_dir) and !File.symlink?($output_dir)
-    Dir.mkdir($output_dir)
-  end
-  if $output_format.match(/pdf/)
-    if !host_name.match(/^all$/)
-      $output_file = $output_dir+"/"+host_name+".txt"
-    end
-  else
-    $output_file = ""
-  end
 end
 
 # Handle explorer output

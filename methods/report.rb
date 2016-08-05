@@ -245,7 +245,7 @@ end
 # Handle output
 
 def handle_output(output)
-  if $output_file.match(/[A-z]/)
+  if $output_file.match(/[0-9]|[A-Z]|[a-z]/)
     file = File.open($output_file,"a")
     if $output_format.match(/html|wiki/)
       if output.class == Array
