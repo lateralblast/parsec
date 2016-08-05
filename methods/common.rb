@@ -4,6 +4,49 @@
 
 $gzip_bin = %x[which pigz].chomp
 
+# Set up some script related variables
+
+$methods_dir     = ""
+$information_dir = ""
+$firmware_dir    = ""
+
+# Set up script dir
+
+script_dir = File.basename($0)
+if !script_dir.match(/\//)
+  script_dir = Dir.pwd
+end
+
+# Set up directories
+
+$data_dir     = script_dir+"/data"
+$handbook_dir = $data_dir+"/handbook"
+$fact_dir     = $data_dir+"/facters"
+$decode_dir   = $data_dir+"/dmidecode"
+$info_dir     = $data_dir+"/information"
+$images_dir   = $data_dir+"/images"
+
+# Create directories
+
+[ $data_dir, $images_dir, $handbook_dir, $fact_dir, $decode_dir, $info_dir ].each do |test_dir|
+  if !File.directory?(test_dir) and !File.symlink?(test_dir) and !File.exist?(test_dir)
+    puts "Cannot locate "+test_dir+" directory ("+test_dir+")"
+    puts "Creating "+test_dir+" directory ("+test_dir+")"
+    Dir.mkdir(test_dir)
+  end
+end
+
+# Set up PCI ID information
+
+$pci_ids_url  = "http://pci-ids.ucw.cz/v2.2/pci.ids"
+$pci_ids_file = script_dir+"/information/pci.ids"
+
+$pci_ids = []
+
+if File.exist?($pci_ids_file)
+  $pci_ids = File.readlines($pci_ids_file)
+end
+
 # Extend string class to remove non ascii chars
 
 class String

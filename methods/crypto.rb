@@ -106,7 +106,9 @@ def process_crypto_providers()
 end
 
 def process_crypto()
-  table   = []
+  if $output_format.match(/html|wiki/)
+    table   = []
+  end
   t_table = process_crypto_list()
   if t_table.class == Array
     table = table + t_table

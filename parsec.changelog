@@ -431,3 +431,5 @@
 # Fixed explorer listing
 # 2.1.5: Fri  5 Aug 2016 16:55:55 AEST
 # Fixed bugs with aggr process
+# 2.1.6: Fri  5 Aug 2016 17:57:30 AEST
+# Fixed IO output for webserver

@@ -258,6 +258,8 @@ $scsi_part_list["QLA10162"]               = ",PCI Dual Ultra-3 SCSI Host Adapter
 $scsi_part_list["Symbios,53C896"]         = ",Symbios 64-bit PCI Dual Channel Ultra2 SCSI 53C896 HBA,,"
 $scsi_part_list["SUNW,socal/sf"]          = ",Sun differential SCSI,,"
 
+# Get IO description from driver
+
 def get_io_desc_from_driver(io_driver)
   io_desc = ""
   case io_driver
@@ -277,13 +279,20 @@ def get_io_desc_from_driver(io_driver)
   return io_desc
 end
 
+# Get vendor from vendor ID
+
 def get_io_vendor_from_vendor_id(io_vendid)
   io_vendor = $pci_ids.grep(/^#{io_vendid}/)
   if io_vendor
     io_vendor = io_vendor[0].chomp.split(/\s+/)[1..-1].join(" ")
   end
+  if !io_vendor
+    io_vendor = ""
+  end
   return io_vendor
 end
+
+# Get device from vendor ID
 
 def get_io_device_from_vendor_id(io_vendid,io_devid)
   found_vendor = 0
@@ -297,6 +306,9 @@ def get_io_device_from_vendor_id(io_vendid,io_devid)
         io_devid = line.split(/\s+/)[2..-1].join(" ")
       end
     end
+  end
+  if !io_devid
+    io_devid = ""
   end
   return io_devid
 end
