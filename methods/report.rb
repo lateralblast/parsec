@@ -395,7 +395,7 @@ def handle_table(type,title,row,table)
     if row.length == 2
       item  = row[0]
       value = row[1]
-      if value.to_s.match(/[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]|[0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F]/) and !value.match(/sd\@|ssd|c[0-9]|_|pci/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/)
+      if value.to_s.match(/[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]|[0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F]/) and !value.match(/sd\@|ssd|c[0-9]|_|pci/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/) and $masked == 1
         $host_info[item] = "MASKED"
       else
         $host_info[item] = value
@@ -408,7 +408,7 @@ def handle_table(type,title,row,table)
         table.push("\n|")
       end
       row.each do |value|
-        if value.to_s.match(/[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]|[0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F]/) and !value.match(/sd\@|ssd|c[0-9]|_|pci/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/)
+        if value.to_s.match(/[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]|[0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F][0-9,a-f,A-F]/) and !value.match(/sd\@|ssd|c[0-9]|_|pci/) and !$report_type.match(/kernel|module|modinfo|services|tcp|udp/) and $masked == 1
           if $output_format.match(/html/)
             table.push("<td>MASKED</td>")
           else
