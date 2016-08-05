@@ -252,18 +252,24 @@ end
 # Process aggregate information (report)
 
 def process_aggr()
-  table = []
-  t_table = process_dladm_aggr_detail()
-  if t_table.class == Array
-    table = table + t_table
-  end
-  t_table = process_dladm_aggr_config()
-  if t_table.class == Array
-    table = table + t_table
-  end
-  t_table = process_aggregation()
-  if t_table.class == Array
-    table = table + t_table
+  if $output_format.match(/html|wiki/)
+    table = []
+    t_table = process_dladm_aggr_detail()
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_dladm_aggr_config()
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_aggregation()
+    if t_table.class == Array
+      table = table + t_table
+    end
+  else
+    table = process_dladm_aggr_detail()
+    table = process_dladm_aggr_config()
+    table = process_aggregation()
   end
   return table
 end
@@ -312,6 +318,7 @@ end
 # Process Aggregate config
 
 def process_dladm_aggr_config()
+  table = ""
   file_array = get_dladm_aggr_config()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
@@ -322,19 +329,22 @@ def process_dladm_aggr_config()
         row   = [ 'Link', 'Zone', 'Mode', 'Policy', 'Address Policy', 'LACP Activity', 'LACP Timer', 'Flags' ]
         table = handle_table("title",title,row,"")
       else
-        name   = items[0]
-        zone   = items[1]
-        mode   = items[2]
-        policy = items[3]
-        addr   = items[4]
-        lacp   = items[5]
-        timer  = items[6]
-        flags  = items[7]
-        if $masked == 1
-          name = "MASKED"
+        if line.match(/[A-Z]|[a-z]|[0-9]/)
+          name   = items[0]
+          zone   = items[1]
+          mode   = items[2]
+          policy = items[3]
+          addr   = items[4]
+          lacp   = items[5]
+          timer  = items[6]
+          flags  = items[7]
+          flags  = flags.gsub(/\-/,"")
+          if $masked == 1
+            name = "MASKED"
+          end
+          row   = [ name, zone, mode, policy, addr, lacp, timer, flags ]
+          table = handle_table("row","",row,table)
         end
-        row = [ name, zone, mode, policy, addr, lacp, timer, flags ]
-        table = handle_table("row","",row,table)
       end
     end
     table = handle_table("end","","",table)

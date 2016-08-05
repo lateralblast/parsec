@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.1.4
+# Version:      2.1.5
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -776,5 +776,5 @@ end
 # Handle explorer output
 
 if input_type.match(/explorer/)
- handle_explorer(report,file_list,host_name)
+ handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
 end

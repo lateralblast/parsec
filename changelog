@@ -429,3 +429,5 @@
 # Added initial plumbing for sinatra web interface
 # 2.1.4: Fri  5 Aug 2016 14:24:05 AEST
 # Fixed explorer listing
+# 2.1.5: Fri  5 Aug 2016 16:55:55 AEST
+# Fixed bugs with aggr process

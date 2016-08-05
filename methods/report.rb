@@ -319,7 +319,7 @@ def handle_table(type,title,row,table)
       table.push("%TABLE{ sort=\"on\" tableborder=\"0\" cellborder=\"0\" }%\n")
       table.push("|*#{title}*|\n|")
     end
-    if row.to_s.match(/[A-z]/)
+    if row.to_s.match(/[0-9]|[A-Z]|[a-z]/)
       if $output_format.match(/wiki|html/)
         row.each do |heading|
           if $output_format.match(/html/)
@@ -389,7 +389,7 @@ def handle_table(type,title,row,table)
         end
       end
     end
-    if title.match(/[A-z]/)
+    if title.match(/[0-9]|[A-Z]|[a-z]/)
       row = [title,row]
     end
     if row.length == 2
@@ -415,10 +415,12 @@ def handle_table(type,title,row,table)
             table.push("MASKED|")
           end
         else
-          if $output_format.match(/html/)
-            table.push("<td>#{value}</td>")
-          else
-            table.push("#{value}|")
+          if $output_format.match(/html|wiki/)
+            if $output_format.match(/html/)
+              table.push("<td>#{value}</td>")
+            else
+              table.push("#{value}|")
+            end
           end
         end
       end

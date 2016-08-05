@@ -2,8 +2,8 @@
 
 # Handle explorer
 
-def handle_explorer(report,file_list,host_name)
-    if !file_list
+def handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
+  if !file_list
     file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
   else
     if !file_list[0]
@@ -44,7 +44,7 @@ def handle_explorer(report,file_list,host_name)
       $exp_file = file_name
       #$exp_info[:$exp_id][:$exp_key][:file] = file_name
       config_report(report,exp_name)
-      if host_name.match(/^all$/) and pause_mode == 1
+      if search_name.match(/^all$/) and pause_mode == 1
          print "continue (y/n)? "
          STDOUT.flush()
          exit if 'n' == STDIN.gets.chomp
