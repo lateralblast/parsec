@@ -45,14 +45,43 @@ end
 def process_hardware()
   if $output_format.match(/html|wiki/)
     table = []
+    t_table = handle_table("title","System Information","","")
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_sys_model(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_obp_ver(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_ilom_ver(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_ldom_ver(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = process_sys_mem(table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+    t_table = handle_table("end","","",table)
+    if t_table.class == Array
+      table = table + t_table
+    end
+  else
+    table = handle_table("title","System Information","","")
+    table = process_sys_model(table)
+    table = process_obp_ver(table)
+    table = process_ilom_ver(table)
+    table = process_ldom_ver(table)
+    table = process_sys_mem(table)
+    table = handle_table("end","","",table)
   end
-  table = handle_table("title","System Information","","")
-  table = process_sys_model(table)
-  table = process_obp_ver(table)
-  table = process_ilom_ver(table)
-  table = process_ldom_ver(table)
-  table = process_sys_mem(table)
-  table = handle_table("end","","",table)
   return table
 end
 

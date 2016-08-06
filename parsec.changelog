@@ -435,3 +435,5 @@
 # Fixed IO output for webserver
 # 2.1.7: Sat  6 Aug 2016 10:14:42 AEST
 # HTML output fixes
+# 2.1.8: Sat  6 Aug 2016 10:25:56 AEST
+# more HTML output fixes
