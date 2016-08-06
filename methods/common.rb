@@ -1,5 +1,15 @@
 # Common code
 
+# Store all info in a hash
+
+$exp_info = {}
+
+# Global variables
+
+$exp_id   = ""
+$exp_key  = ""
+$exp_file = ""
+
 # Check for pigz to accelerate decompression
 
 $gzip_bin = %x[which pigz].chomp

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.2.0
+# Version:      2.2.1
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -111,16 +111,6 @@ end
 # Script name
 
 $script = $0
-
-# Store all info in a hash
-
-$exp_info = {}
-
-# Global variables
-
-$exp_id   = ""
-$exp_key  = ""
-$exp_file = ""
 
 # Valid output formats
 
