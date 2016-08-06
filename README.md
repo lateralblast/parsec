@@ -57,6 +57,8 @@ $ ./webserver
 
 This will start up a webserver on port 9494
 
+![alt tag](https://raw.githubusercontent.com/lateralblast/parsec/master/webserver_example.png)
+
 Reports
 -------
 
@@ -250,7 +252,7 @@ Aditional gems required for webserver:
 There is a very basic script to install gems
 
 ```
-./methods/install_gems.sh
+./utils/generic/install_gems.sh
 ```
 
 A base set of firmware information is provided.
