@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.0.5
+# Version:      0.0.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -101,7 +101,8 @@ get '/' do
   head  = File.readlines("./views/layout.html")
   body  = File.readlines("./views/help.html")
   array = head + body
-  "#{array.join}"
+  array = array.join("\n")
+  "#{array}"
 end
 
 # handle 404
@@ -110,7 +111,8 @@ not_found do
   head  = File.readlines("./views/layout.html")
   body  = File.readlines("./views/help.html")
   array = head + body
-  "#{array.join}"
+  array = array.join("\n")
+  "#{array}"
 end
 
 # List explorers
@@ -158,7 +160,8 @@ get '/list' do
   head  = File.readlines("./views/layout.html")
   body  = list_explorers(search_model,search_date,search_year,search_name)
   array = head + body
-  "#{array.join}"
+  array = array.join("\n")
+  "#{array}"
 end
 
 # Do report
@@ -210,6 +213,7 @@ get '/report' do
   head  = File.readlines("./views/layout.html")
   body  = config_report(report,search_name)
   array = head + body
-  "#{array.join}"
+  array = array.join("\n")
+  "#{array}"
 end
 

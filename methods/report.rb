@@ -319,7 +319,7 @@ def handle_table(type,title,row,table)
     if $output_format.match(/html/)
       table = []
       table.push("<h1>#{title}</h1>")
-      table.push("<table border=\"1\">")
+      table.push("<table border=\"1\" class=\"sortable\">")
     end
     if $output_format.match(/wiki/)
       table = []
