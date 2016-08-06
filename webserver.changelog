@@ -6,3 +6,5 @@
 # Added help and stopped processing views inline
 # 0.0.4: Sat  6 Aug 2016 10:14:42 AEST
 # Initial webserver help information
+# 0.0.5: Sat  6 Aug 2016 15:13:03 AEST
+# more HTML output fixes

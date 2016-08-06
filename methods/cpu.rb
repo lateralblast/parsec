@@ -94,7 +94,7 @@ def process_cpu()
     cpu_info = get_general_cpu_info()
     table    = handle_table("row","CPU",cpu_info,table)
     table    = handle_table("end","","",table)
-    return
+    return table
   end
   if cpu_info.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     row        = [ 'Bo.', 'Mo.', 'So.', 'Co.', 'Th.', 'Status', 'Speed', 'Mask', 'Cache', 'Type', 'IDs' ]

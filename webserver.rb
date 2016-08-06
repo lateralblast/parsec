@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.0.4
+# Version:      0.0.5
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -16,7 +16,6 @@
 # Load required gems
 
 require 'rubygems'
-require 'tilt/erb'
 require 'pathname'
 require 'etc'
 require 'date'
@@ -61,6 +60,7 @@ end
 
 # Set global variables
 
+$script_name   = "Parsec"
 $verbose       = 0
 $base_dir      = ""
 $do_disks      = 0
@@ -98,47 +98,22 @@ check_local_config()
 # handle /
 
 get '/' do
-  erb :help
+  head  = File.readlines("./views/layout.html")
+  body  = File.readlines("./views/help.html")
+  array = head + body
+  "#{array.join}"
 end
 
 # handle 404
 
 not_found do
-  erb :help
+  head  = File.readlines("./views/layout.html")
+  body  = File.readlines("./views/help.html")
+  array = head + body
+  "#{array.join}"
 end
 
-# handle requests
-
-get '/files' do
-  if params['example']
-    $exp_dir = Dir.pwd+"/examples"
-  else
-    $exp_dir = Dir.pwd+"/explorers"
-  end
-  if params['model']
-    search_model = params['model']
-  else
-    search_model = ""
-  end
-  if params['date']
-    search_date  = params['date']
-  else
-    search_date = ""
-  end
-  if params['year']
-    search_year  = params['year']
-  else
-    search_year = ""
-  end
-  if params['server']
-    search_name  = params['server']
-  else
-    search_name = ""
-  end
-  $masked = 0
-  @array = get_explorer_file_list(search_model,search_date,search_year,search_name)  
-  erb :files
-end
+# List explorers
 
 get '/list' do
   if params['example']
@@ -180,10 +155,13 @@ get '/list' do
   else
     search_name = ""
   end
-  @array = list_explorers(search_model,search_date,search_year,search_name)
-  erb :list
+  head  = File.readlines("./views/layout.html")
+  body  = list_explorers(search_model,search_date,search_year,search_name)
+  array = head + body
+  "#{array.join}"
 end
 
+# Do report
 
 get '/report' do
   if params['example']
@@ -221,15 +199,17 @@ get '/report' do
     search_year = ""
   end
   if params['server']
-    $search_name  = params['server']
+    search_name  = params['server']
   else
-    $search_name = ""
+    search_name = ""
   end
   report     = ""
-  file_array = get_explorer_file_list(search_model,search_date,search_year,$search_name) 
+  file_array = get_explorer_file_list(search_model,search_date,search_year,search_name) 
   file_name  = file_array[0]
   $exp_file  = file_name
-  @array = config_report(report,$search_name)
-  erb :report
+  head  = File.readlines("./views/layout.html")
+  body  = config_report(report,search_name)
+  array = head + body
+  "#{array.join}"
 end
 

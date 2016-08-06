@@ -161,13 +161,19 @@ end
 def config_report(report,host_name)
   report_list = get_report_list()
   full_report = []
+  t_report    = []
   valid_sw    = 0
   if $output_format.match(/html/)
     handle_output("<html>")
+    full_report.push("<html>")
     handle_output("<head>")
+    full_report.push("<head>")
     handle_output("<title>Explorer report for #{host_name}</title>")
+    full_report.push("<title>Explorer report for #{host_name}</title>")
     handle_output("</head>")
+    full_report.push("</head>")
     handle_output("<body>")
+    full_report.push("<body>")
   end
   report_list.each do |report_name|
     valid_sw = 1
@@ -180,7 +186,9 @@ def config_report(report,host_name)
   end
   if $output_format.match(/html/)
     handle_output("</body>")
+    full_report.push("</body>")
     handle_output("</html>")
+    full_report.push("</html>")
   end
   handle_output("\n")
   if valid_sw == 0
@@ -291,7 +299,6 @@ def handle_output(output)
           end
         end
       else
-        puts "<p>"
         output.each do |line|
           if line.match(/[0-9]|[A-Z]|[a-z]/)
             puts "#{line}"
