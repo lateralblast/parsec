@@ -1,146 +1,146 @@
 <style type="text/css">
-body, html  { height: 100%; }
-html, body, div, span, applet, object, iframe,
-/*h1, h2, h3, h4, h5, h6,*/ p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, font, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  font-size: 100%;
-  vertical-align: baseline;
-  background: transparent;
-}
-body { line-height: 1; }
-ol, ul { list-style: none; }
-blockquote, q { quotes: none; }
-blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
-:focus { outline: 0; }
-del { text-decoration: line-through; }
-table {border-spacing: 0; }
 
-body{
-  font-family:Arial, Helvetica, sans-serif;
-  background: url(background.jpg);
-  margin:0 auto;
-}
-a:link {
-  color: #666;
-  font-weight: bold;
-  text-decoration:none;
-}
-a:visited {
-  color: #666;
-  font-weight:bold;
-  text-decoration:none;
-}
-a:active,
-a:hover {
-  color: #bd5a35;
-  text-decoration:underline;
+body {
+  background-color: #fafafa;
+  font-family:      helvetica, arial, sans-serif;
+  font-size:        14px;
+  font-weight:      400;
+  text-rendering:   optimizeLegibility;
 }
 
-table a:link {
-  color: #666;
-  font-weight: bold;
-  text-decoration:none;
+div.table-title {
+  display:    block;
+  margin:     auto;
+  max-width:  600px;
+  padding:    1px;
+  width:      100%;
 }
-table a:visited {
-  color: #999999;
-  font-weight:bold;
-  text-decoration:none;
-}
-table a:active,
-table a:hover {
-  color: #bd5a35;
-  text-decoration:underline;
-}
-table {
-  font-family:Arial, Helvetica, sans-serif;
-  color:#666;
-  font-size:12px;
-  text-shadow: 1px 1px 0px #fff;
-  background:#eaebec;
-  margin:20px;
-  border:#ccc 1px solid;
 
-  -moz-border-radius:3px;
-  -webkit-border-radius:3px;
-  border-radius:3px;
+.table-title h3 {
+   color:           #fafafa;
+   font-size:       14px;
+   font-weight:     400;
+   font-style:      bold;
+   font-family:     helvetica, arial, sans-serif;
+   text-shadow:     -1px -1px 1px rgba(0, 0, 0, 0.1);
+   text-transform:  uppercase;
+}
 
-  -moz-box-shadow: 0 1px 2px #d1d1d1;
-  -webkit-box-shadow: 0 1px 2px #d1d1d1;
-  box-shadow: 0 1px 2px #d1d1d1;
-}
-table th {
-  padding:21px 25px 22px 25px;
-  border-top:1px solid #fafafa;
-  border-bottom:1px solid #e0e0e0;
 
-  background: #ededed;
-  background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
-  background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+/*** Table Styles **/
+
+.table-fill {
+  background:       white;
+  border-radius:    1px;
+  border-collapse:  collapse;
+  height:           100px;
+  margin:           auto;
+  max-width:        600px;
+  padding:          5px;
+  width:            100%;
+  box-shadow:       0 5px 10px rgba(0, 0, 0, 0.1);
+  animation:        float 5s infinite;
 }
-table th:first-child{
-  text-align: left;
-  padding-left:20px;
+ 
+th {
+  color:          #D5DDE5;;
+  background:     #1b1e24;
+  border-bottom:  1px solid #9ea7af;
+  border-right:   1px solid #343a45;
+  font-size:      14px;
+  font-style:      bold;
+  font-weight:    100;
+  padding:        10px;
+  text-align:     left;
+  text-shadow:    0 1px 1px rgba(0, 0, 0, 0.1);
+  vertical-align: middle;
 }
-table tr:first-child th:first-child{
-  -moz-border-radius-topleft:3px;
-  -webkit-border-top-left-radius:3px;
-  border-top-left-radius:3px;
+
+th:first-child {
+  border-top-left-radius: 1px;
 }
-table tr:first-child th:last-child{
-  -moz-border-radius-topright:3px;
-  -webkit-border-top-right-radius:3px;
-  border-top-right-radius:3px;
+ 
+th:last-child {
+  border-top-right-radius:  1px;
+  border-right:             none;
 }
-table tr{
-  text-align: center;
-  padding-left:20px;
-}
-table tr td:first-child{
-  text-align: left;
-  padding-left:20px;
-  border-left: 0;
-}
-table tr td {
-  padding:18px;
-  border-top: 1px solid #ffffff;
-  border-bottom:1px solid #e0e0e0;
-  border-left: 1px solid #e0e0e0;
   
-  background: #fafafa;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
-  background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+tr {
+  border-top:     1px solid #C1C3D1;
+  border-bottom-: 1px solid #C1C3D1;
+  color:          #666B85;
+  font-size:      14px;
+  font-weight:    normal;
+  text-shadow:    0 1px 1px rgba(256, 256, 256, 0.1);
 }
-table tr.even td{
-  background: #f6f6f6;
-  background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
-  background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+ 
+tr:hover td {
+  background:     #4E5066;
+  color:          #FFFFFF;
+  border-top:     1px solid #22262e;
+  border-bottom:  1px solid #22262e;
 }
-table tr:last-child td{
-  border-bottom:0;
+ 
+tr:first-child {
+  border-top: none;
 }
-table tr:last-child td:first-child{
-  -moz-border-radius-bottomleft:3px;
-  -webkit-border-bottom-left-radius:3px;
-  border-bottom-left-radius:3px;
+
+tr:last-child {
+  border-bottom:  none;
 }
-table tr:last-child td:last-child{
-  -moz-border-radius-bottomright:3px;
-  -webkit-border-bottom-right-radius:3px;
-  border-bottom-right-radius:3px;
+ 
+tr:nth-child(odd) td {
+  background: #EBEBEB;
 }
-table tr:hover td{
-  background: #f2f2f2;
-  background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
-  background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);  
+ 
+tr:nth-child(odd):hover td {
+  background: #4E5066;
+}
+
+tr:last-child td:first-child {
+  border-bottom-left-radius:  3px;
+}
+ 
+tr:last-child td:last-child {
+  border-bottom-right-radius: 3px;
+}
+ 
+td {
+  background:       #FFFFFF;
+  padding:          10px;
+  text-align:       left;
+  vertical-align:   middle;
+  font-weight:      300;
+  font-size:        14px;
+  text-shadow:      -1px -1px 1px rgba(0, 0, 0, 0.1);
+  border-right:     1px solid #C1C3D1;
+}
+
+td:last-child {
+  border-right: 0px;
+}
+
+th.text-left {
+  text-align: left;
+}
+
+th.text-center {
+  text-align: center;
+}
+
+th.text-right {
+  text-align: right;
+}
+
+td.text-left {
+  text-align: left;
+}
+
+td.text-center {
+  text-align: center;
+}
+
+td.text-right {
+  text-align: right;
 }
 </style>
