@@ -339,8 +339,10 @@ def handle_table(type,title,row,table)
     else
       if $output_format.match(/html|wiki/)
         if $output_format.match(/html/)
+          table.push("<tr>")
           table.push("<th>Item</th>")
           table.push("<th>Value</th>")
+          table.push("</tr>")
         end
         if $output_format.match(/wiki/)
           table.push("Item|Value|")

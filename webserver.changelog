@@ -4,3 +4,5 @@
 # Created seperate changelogs
 # 0.0.3: Sat  6 Aug 2016 05:44:31 AEST
 # Added help and stopped processing views inline
+# 0.0.4: Sat  6 Aug 2016 10:14:42 AEST
+# Initial webserver help information

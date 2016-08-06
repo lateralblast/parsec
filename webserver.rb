@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.0.3
+# Version:      0.0.4
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -74,7 +74,6 @@ $exp_dir       = ""
 # Set defaults
 # Unlike the reporting script, these currently don't get auto detected
 
-$exp_dir       = Dir.pwd+"/explorers"
 $work_dir      = "/tmp"
 $output_format = "html"
 $output_file   = ""
@@ -111,6 +110,11 @@ end
 # handle requests
 
 get '/files' do
+  if params['example']
+    $exp_dir = Dir.pwd+"/examples"
+  else
+    $exp_dir = Dir.pwd+"/explorers"
+  end
   if params['model']
     search_model = params['model']
   else
@@ -126,8 +130,8 @@ get '/files' do
   else
     search_year = ""
   end
-  if params['name']
-    search_name  = params['name']
+  if params['server']
+    search_name  = params['server']
   else
     search_name = ""
   end
@@ -137,6 +141,11 @@ get '/files' do
 end
 
 get '/list' do
+  if params['example']
+    $exp_dir = Dir.pwd+"/examples"
+  else
+    $exp_dir = Dir.pwd+"/explorers"
+  end
   if params['masked']
     if params['masked'].to_s.downcase.match(/true|1/)
       $masked = 1
@@ -166,8 +175,8 @@ get '/list' do
   else
     search_year = ""
   end
-  if params['host']
-    search_name  = params['host']
+  if params['server']
+    search_name  = params['server']
   else
     search_name = ""
   end
@@ -177,6 +186,11 @@ end
 
 
 get '/report' do
+  if params['example']
+    $exp_dir = Dir.pwd+"/examples"
+  else
+    $exp_dir = Dir.pwd+"/explorers"
+  end
   if params['masked']
     if params['masked'].to_s.downcase.match(/true|1/)
       $masked = 1
@@ -206,8 +220,8 @@ get '/report' do
   else
     search_year = ""
   end
-  if params['host']
-    $search_name  = params['host']
+  if params['server']
+    $search_name  = params['server']
   else
     $search_name = ""
   end

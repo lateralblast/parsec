@@ -433,3 +433,5 @@
 # Fixed bugs with aggr process
 # 2.1.6: Fri  5 Aug 2016 17:57:30 AEST
 # Fixed IO output for webserver
+# 2.1.7: Sat  6 Aug 2016 10:14:42 AEST
+# HTML output fixes
