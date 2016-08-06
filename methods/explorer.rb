@@ -415,7 +415,7 @@ def list_explorers(search_model,search_date,search_year,search_name)
   file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
   if file_list.to_s.match(/explorer/)
     title = "Explorers in "+$exp_dir+":"
-    row   = [ 'Hostname', 'Model', 'Date', 'Time', 'Host ID', 'File' ]
+    row   = [ 'Hostname', 'Model', 'Year', 'Date', 'Time', 'Host ID', 'File' ]
     table = handle_table("title",title,row,"")
     file_list.each do |file_name|
       host_info = file_name.split(/\./)
@@ -433,9 +433,16 @@ def list_explorers(search_model,search_date,search_year,search_name)
         counter   = counter+1
         temp_id   = "masked"
         file_name = file_name.gsub(/#{host_id}/,temp_id).gsub(/#{exp_name}/,temp_name)
-        table_row = [ temp_name, exp_model, exp_date, exp_time, temp_id, file_name ]
+        table_row = [ temp_name, exp_model, exp_year, exp_date, exp_time, temp_id, file_name ]
       else
-        table_row = [ exp_name, exp_model, exp_date, exp_time, host_id, file_name ]
+        if $output_format.match(/serverhtml/)
+          exp_name  = "<a href=\"/report?server=#{exp_name}&report=host\">#{exp_name}</a>"
+          exp_model = "<a href=\"/list?model=#{exp_model}\">#{exp_model}</a>"
+          exp_year  = "<a href=\"/list?year=#{exp_year}\">#{exp_year}</a>"
+          exp_date  = "<a href=\"/list?date=#{exp_date}\">#{exp_date}</a>"
+          file_name = File.basename(file_name)
+        end
+        table_row = [ exp_name, exp_model, exp_year, exp_date, exp_time, host_id, file_name ]
       end
       table     = handle_table("row","",table_row,table)
     end

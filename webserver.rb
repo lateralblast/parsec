@@ -75,7 +75,7 @@ $exp_dir       = ""
 # Unlike the reporting script, these currently don't get auto detected
 
 $work_dir      = "/tmp"
-$output_format = "html"
+$output_format = "serverhtml"
 $output_file   = ""
 
 set :port, 9494

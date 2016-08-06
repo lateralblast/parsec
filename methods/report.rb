@@ -171,6 +171,12 @@ def config_report(report,host_name)
     handle_output("<title>Explorer report for #{host_name}</title>")
     full_report.push("<title>Explorer report for #{host_name}</title>")
     handle_output("</head>")
+    if $output_format.match(/serverhtml/)
+      full_report_list = get_full_report_list()
+      full_report_list.each do |report_name|
+        full_report.push("<a href=\"/report?server=#{host_name}&report=#{report_name}\">#{report_name.upcase}</a>")
+      end
+    end
     full_report.push("</head>")
     handle_output("<body>")
     full_report.push("<body>")
