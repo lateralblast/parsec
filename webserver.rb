@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.0.6
+# Version:      0.0.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -94,6 +94,16 @@ end
 # setup config
 
 check_local_config()
+
+# handle error - redirect to help
+
+error do
+  head  = File.readlines("./views/layout.html")
+  body  = File.readlines("./views/help.html")
+  array = head + body
+  array = array.join("\n")
+  "#{array}"
+end
 
 # handle /
 
