@@ -36,3 +36,4 @@ else
 	sudo sh -c "gem install rmagick"
 	sudo sh -c "gem install sinatra"
 fi
+
