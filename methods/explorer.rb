@@ -447,6 +447,13 @@ def list_explorers(search_model,search_date,search_year,search_name)
       table     = handle_table("row","",table_row,table)
     end
     table = handle_table("end","","",table)
+    if $output_format.match(/serverhtml/)
+      new_table = []
+      new_table.push("<a href=\"/help\">HELP</a>")
+      new_table.push("<a href=\"/list\">LIST</a>")
+      new_table = new_table + table
+      table     = new_table
+    end
   else
     if $output_format.match(/table|pipe/)
       handle_output("\n")

@@ -172,6 +172,8 @@ def config_report(report,host_name)
     full_report.push("<title>Explorer report for #{host_name}</title>")
     handle_output("</head>")
     if $output_format.match(/serverhtml/)
+      full_report.push("<a href=\"/help\">HELP</a>")
+      full_report.push("<a href=\"/list\">LIST</a>")
       full_report_list = get_full_report_list()
       full_report_list.each do |report_name|
         full_report.push("<a href=\"/report?server=#{host_name}&report=#{report_name}\">#{report_name.upcase}</a>")
@@ -205,8 +207,6 @@ def config_report(report,host_name)
 end
 
 # Open Disk firmware file
-# file generated from output of goofball
-# goofball.rb -d all -c
 
 def info_file_to_array(file_name)
   info_file = $base_dir+"/information/"+file_name
