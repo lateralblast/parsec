@@ -1,25 +1,61 @@
+# Code to deal with serials
+
+# get chassis serial from env.out
+
+def get_chassis_serial_from_env_out()
+  file_name     = "/sysconfig/env.out"
+  file_array    = exp_file_to_array(file_name)
+  serial_number = file_array.grep(/EXP_SERIAL/)[0]
+  if !serial_number
+    serial_number = "Unknown"
+  else
+    if !serial_number.match(/[0-9]/)
+      serial_number = "Unknown"
+    else
+      serial_number = serial_number.split(/\=/)[1]
+    end
+  end
+  return serial_number
+end
+
+# Get chassis serial from serials
+
+def get_chassis_serial_from_serials()
+  file_name     = "/sysconfig/serials"
+  file_array    = exp_file_to_array(file_name)
+  serial_number = file_array.grep(/Explorer/)[0]
+  if !serial_number
+    serial_number = "Unknown"
+  else
+    if !serial_number.match(/[0-9]/)
+      serial_number = "Unknown"
+    else
+      serial_number = serial_number.split(/\|/)[2].gsub(/\s+/,"")
+    end
+  end
+  return serial_number
+end
+
 # Get the chassis serial number.
 
 def get_chassis_serial()
   file_name  = "/sysconfig/chassis_serial.out"
   file_array = exp_file_to_array(file_name)
   if !file_array
-    serial_number = ""
+    serial_number = "Unknown"
   else
     serial_number = file_array[0].to_s
     if serial_number.match(/VMware/)
-      serial_number = serial_number.split(/\-/)[1].gsub(/_/,"")
+      if serial_number.match(/\-/)
+        serial_number = serial_number.split(/\-/)[1].gsub(/_/,"")
+      end
     end
   end
   if !serial_number.match(/[0-9]/)
-    file_name  = "/sysconfig/env.out"
-    file_array = exp_file_to_array(file_name)
-    serial_number = file_array.grep(/EXP_SERIAL/)[0].split(/\=/)[1]
+    serial_number = get_chassis_serial_from_env_out()
   end
   if !serial_number.match(/[0-9]/)
-    file_name  = "/sysconfig/serials"
-    file_array = exp_file_to_array(file_name)
-    serial_number = file_array.grep(/Explorer/)[0].split(/\|/)[2].gsub(/\s+/,"")
+    serial_number = get_chassis_serial_from_serials()
   end
   return serial_number
 end

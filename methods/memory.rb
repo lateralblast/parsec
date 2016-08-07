@@ -14,6 +14,17 @@ def get_total_mem()
   return total_mem
 end
 
+# Get System memory from prtconf-vD
+
+def get_sys_mem_from_prtconf()
+  file_name  = "/sysconfig/prtconf-vD.out"
+  file_array = exp_file_to_array(file_name)
+  sys_mem    = file_array.grep(/^Memory size:/)
+  sys_mem    = sys_mem[0]
+  return sys_mem
+end
+
+
 # Get the System memory
 
 def get_sys_mem()
@@ -22,14 +33,23 @@ def get_sys_mem()
   sys_mem    = file_array.grep(/^Memory size:/)
   sys_mem    = sys_mem[0]
   if !sys_mem
-    file_name  = "/sysconfig/prtconf-vD.out"
-    file_array = exp_file_to_array(file_name)
-    sys_mem    = file_array.grep(/^Memory size:/)
-    sys_mem    = sys_mem[0]
+    sys_mem = get_sys_mem_from_prtconf()
+  else
+    if !sys_mem.match(/[0-9]/)
+      sys_mem = get_sys_mem_from_prtconf()
+    end
   end
-  sys_mem    = sys_mem.split(": ")
-  sys_mem    = sys_mem[1]
-  sys_mem    = sys_mem.chomp
+  if !sys_mem
+    sys_mem = "Unknown"
+  else
+    if !sys_mem.match(/[0-9]/)
+      sys_mem = "Unknown"
+    else
+      sys_mem    = sys_mem.split(": ")
+      sys_mem    = sys_mem[1]
+      sys_mem    = sys_mem.chomp
+    end
+  end
   return sys_mem
 end
 

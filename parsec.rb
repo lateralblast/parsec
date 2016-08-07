@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.2.4
+# Version:      2.2.5
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -193,19 +193,6 @@ if Dir.exist?("./methods")
   end
 end
 
-# Set global variables
-
-$work_dir      = ""
-$verbose       = 0
-$base_dir      = ""
-$do_disks      = 0
-$host_info     = {}
-$sys_config    = {}
-$exp_file_list = []
-$masked        = 0
-$exp_file      = ""
-$exp_dir       = ""
-
 # Report types
 
 report             = {}
@@ -274,28 +261,6 @@ report["veritas"]  = "Report on Veritas information"
 report["zfs"]      = "Report on ZFS information"
 report["zone"]     = "Report on Zone information"
 #report[""]=""
-
-# Get script name
-
-def get_code_name()
-  code_name = $0
-  code_name = Pathname.new(code_name)
-  code_name = code_name.basename.to_s
-  code_name = code_name.gsub(".rb","")
-  return code_name
-end
-
-$script_name = get_code_name()
-
-# Get version of script
-
-def get_code_ver()
-  code_ver = IO.readlines($0)
-  code_ver = code_ver.grep(/^# Version/)
-  code_ver = code_ver[0].to_s.split(":")
-  code_ver = code_ver[1].to_s.gsub(" ","")
-  return code_ver
-end
 
 # Options
 

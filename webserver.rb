@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.0.8
+# Version:      0.0.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -58,26 +58,6 @@ rescue LoadError
   install_gem("iconv")
 end
 
-# Set global variables
-
-$script_name   = "Parsec"
-$verbose       = 0
-$base_dir      = ""
-$do_disks      = 0
-$host_info     = {}
-$sys_config    = {}
-$exp_file_list = []
-$masked        = 0
-$exp_file      = ""
-$exp_dir       = ""
-
-# Set defaults
-# Unlike the reporting script, these currently don't get auto detected
-
-$work_dir      = "/tmp"
-$output_format = "serverhtml"
-$output_file   = ""
-
 # Some webserver defaults
 
 default_bind      = "127.0.0.1"
@@ -105,6 +85,25 @@ end
 # setup config
 
 check_local_config()
+
+# Set global variables
+# Set defaults
+# Unlike the reporting script, these currently don't get auto detected
+
+$work_dir      = "/tmp"
+$output_format = "serverhtml"
+$output_file   = ""
+$script_name   = "Parsec"
+$verbose       = 0
+$base_dir      = Dir.pwd
+$do_disks      = 0
+$host_info     = {}
+$sys_config    = {}
+$exp_file_list = []
+$masked        = 0
+$exp_file      = ""
+$exp_dir       = $base_dir+"/explorers"
+
 
 # handle error - redirect to help
 

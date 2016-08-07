@@ -382,9 +382,9 @@ def get_explorer_file_list(search_model,search_date,search_year,search_name)
         exp_time  = host_info[5..6].join(":")
         exp_name  = host_info[2].split(/-/)[0..-2].join("-")
         if !search_model.match(/[a-z,A-Z,0-9]/) or search_model.downcase.match(/#{exp_model.downcase}/) or search_model.match(/^all$/)
-          if !search_date.match(/[0-9]/) or search_date.match(/#{exp_date}/) or search_date.match(/^all$/)
-            if !search_year.match(/[0-9]/) or search_year.match(/#{exp_year}/) or search_year.match(/^all$/)
-              if !search_name.match(/[a-z]/) or search_name.match(/#{exp_name}/) or search_name.match(/^all$/)
+          if !search_date.match(/[0-9]/) or exp_date.match(/#{search_date}/) or search_date.match(/^all$/)
+            if !search_year.match(/[0-9]/) or exp_year.match(/#{search_year}/) or search_year.match(/^all$/)
+              if !search_name.match(/[a-z]/) or exp_name.match(/#{search_name}/) or search_name.match(/^all$/)
                 exp_list.push(file_name)
               end
             end

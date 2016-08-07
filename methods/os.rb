@@ -6,8 +6,12 @@ def search_uname(field)
   file_name   = "/sysconfig/uname-a.out"
   file_array  = exp_file_to_array(file_name)
   uname_array = file_array[0]
-  uname_array = uname_array.split(" ")
-  os_name     = uname_array[field]
+  if !uname_array
+    os_name = "Unknown"
+  else
+    uname_array = uname_array.split(" ")
+    os_name     = uname_array[field]
+  end
   return os_name
 end
 
@@ -20,9 +24,10 @@ end
 
 def process_os_name(table)
   os_name = get_os_name()
-  if os_name
-    table = handle_table("row","OS Name",os_name,table)
+  if !os_name
+    os_name = "Unknown"
   end
+  table = handle_table("row","OS Name",os_name,table)
   return table
 end
 
@@ -35,9 +40,10 @@ end
 
 def process_os_ver(table)
   os_ver = get_os_ver()
-  if os_ver
-    table = handle_table("row","OS Version",os_ver,table)
+  if !os_ver
+    os_ver = "Unknown"
   end
+  table = handle_table("row","OS Version",os_ver,table)
   return table
 end
 # Get OS build
@@ -57,9 +63,10 @@ end
 
 def process_os_build(table)
   os_build = get_os_build()
-  if os_build
-    table = handle_table("row","OS Build",os_build,table)
+  if !os_build
+    os_build = "Unknown"
   end
+  table = handle_table("row","OS Build",os_build,table)
   return table
 end
 
@@ -72,9 +79,10 @@ end
 
 def process_os_date(table)
   os_date = get_os_date()
-  if os_date
-    table = handle_table("row","OS Release",os_date,table)
+  if !os_date
+    os_date = "Unknown"
   end
+  table = handle_table("row","OS Release",os_date,table)
   return table
 end
 
@@ -138,9 +146,10 @@ end
 
 def process_os_update(table)
   os_update = get_os_update()
-  if os_update
-    table = handle_table("row","OS Update",os_update,table)
+  if !os_update
+    os_update = "Unknown"
   end
+  table = handle_table("row","OS Update",os_update,table)
   return table
 end
 
@@ -153,7 +162,11 @@ def search_release(field)
   if release_array.match(/HW/)
     field = field+1
   end
-  release_array = release_array.split(" ")
-  search_result = release_array[field].to_s
+  if release_array.match(/[0-9]/)
+    release_array = release_array.split(" ")
+    search_result = release_array[field].to_s
+  else
+    search_result = "Unknown"
+  end
   return search_result
 end

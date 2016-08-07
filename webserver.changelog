@@ -14,3 +14,5 @@
 # Redirected error page to help page
 # 0.0.8: Sun  7 Aug 2016 18:16:48 AEST
 # Added ability to set bind and sessions
+# 0.0.9: Sun  7 Aug 2016 20:44:34 AEST
+# Bug fixes

@@ -57,6 +57,41 @@ if File.exist?($pci_ids_file)
   $pci_ids = File.readlines($pci_ids_file)
 end
 
+# Set global variables
+
+$work_dir      = ""
+$verbose       = 0
+$base_dir      = ""
+$do_disks      = 0
+$host_info     = {}
+$sys_config    = {}
+$exp_file_list = []
+$masked        = 0
+$exp_file      = ""
+$exp_dir       = ""
+
+# Get script name
+
+def get_code_name()
+  code_name = $0
+  code_name = Pathname.new(code_name)
+  code_name = code_name.basename.to_s
+  code_name = code_name.gsub(".rb","")
+  return code_name
+end
+
+$script_name = get_code_name()
+
+# Get version of script
+
+def get_code_ver()
+  code_ver = IO.readlines($0)
+  code_ver = code_ver.grep(/^# Version/)
+  code_ver = code_ver[0].to_s.split(":")
+  code_ver = code_ver[1].to_s.gsub(" ","")
+  return code_ver
+end
+
 # Extend string class to remove non ascii chars
 
 class String
@@ -316,9 +351,17 @@ def get_sys_model()
     file_name  = "/sysconfig/prtdiag-v.out"
     file_array = exp_file_to_array(file_name)
     sys_model  = file_array.grep(/^System Configuration:/)
-    sys_model  = sys_model[0]
-    sys_model  = sys_model.split(": ")
-    sys_model  = sys_model[1]
+    if !sys_model
+      sys_model = "Unknown"
+    else
+      if !sys_model.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+        sys_model = "Unknown"
+      else
+        sys_model  = sys_model[0]
+        sys_model  = sys_model.split(": ")
+        sys_model  = sys_model[1]
+      end
+    end
     if !sys_model.match(/[a-z]/)
       sys_model = "Unknown" 
     end
@@ -368,6 +411,9 @@ def get_model_name()
   end
   if model_name.match(/^[2,4,6]50/)
     model_name = "E"+model_name
+  end
+  if !model_name
+    model_name = "Unknown"
   end
   return model_name
 end
