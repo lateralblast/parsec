@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.0.7
+# Version:      0.0.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -78,7 +78,18 @@ $work_dir      = "/tmp"
 $output_format = "serverhtml"
 $output_file   = ""
 
-set :port, 9494
+# Some webserver defaults
+
+default_bind      = "127.0.0.1"
+default_port      = "9494"
+default_sessions  = "true"
+default_errors    = "false"
+
+
+set :port,        default_port
+set :bind,        default_bind
+set :sessions,    default_sessions
+set :dump_errors, default_errors
 
 # Load methods
 
