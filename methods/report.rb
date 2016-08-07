@@ -259,6 +259,9 @@ end
 # Handle output
 
 def handle_output(output)
+  if $output_format.match(/serverhtml/)
+    table = []
+  end
   if $output_file.match(/[0-9]|[A-Z]|[a-z]/)
     file = File.open($output_file,"a")
     if $output_format.match(/html|wiki/)
@@ -299,22 +302,38 @@ def handle_output(output)
       if output.class == String
         if output.match(/[0-9]|[A-Z]|[a-z]/) 
           if output.match(/\</)
-            puts "#{output}"
+            if $output_format.match(/serverhtml/)
+              table.push("#{output}")
+            else
+              puts "#{output}"
+            end
           else
-            puts "<p>#{output}</p>"
+            if $output_format.match(/serverhtml/)
+              table.push("<p>#{output}</p>")
+            else
+              puts "<p>#{output}</p>"
+            end
           end
         end
       else
         output.each do |line|
           if line.match(/[0-9]|[A-Z]|[a-z]/)
-            puts "#{line}"
+            if $output_format.match(/serverhtml/)
+              table.push("#{line}")
+            else
+              puts "#{line}"
+            end
           end
         end
-        puts "<br>"
+        if $output_format.match(/serverhtml/)
+          table.push("<br>")
+        else
+          puts "<br>"
+        end
       end
     end
   end
-  return
+  return table
 end
 
 # Generic output routine which formats text appropriately.

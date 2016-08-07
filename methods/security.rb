@@ -32,8 +32,8 @@ def process_elfsign()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No elfsign information\n")
+    table = handle_output("\n")
+    table = handle_output("No elfsign information\n")
   end
   return
 end

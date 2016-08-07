@@ -416,8 +416,8 @@ def process_memory()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No memory information available\n")
+    table = handle_output("\n")
+    htable = andle_output("No memory information available\n")
   end
   return table
 end

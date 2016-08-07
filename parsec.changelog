@@ -441,3 +441,7 @@
 # more HTML output fixes
 # 2.2.0: Sun  7 Aug 2016 08:56:58 AEST
 # Improved webserver output
+# 2.2.1: Sun  7 Aug 2016 09:04:19 AEST
+# Moved global exp_info to common code so it's available for parsec and webserver
+# 2.2.2: Sun  7 Aug 2016 11:33:36 AEST
+# Improved webserver output

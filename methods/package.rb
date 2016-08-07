@@ -48,8 +48,8 @@ def process_pkg_history()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No package history information available\n")
+    table = handle_output("\n")
+    table = handle_output("No package history information available\n")
   end
   return table
 end
@@ -81,9 +81,10 @@ def process_pkg_mediator()
     table = handle_table("end","","",table)
   else
     if !$output_format.match(/table/)
-      handle_output("\n")
+      table = ""
     end
-    handle_output("No package mediator information available\n")
+    table = handle_output("\n")
+    table = handle_output("No package mediator information available\n")
   end
   return table
 end
@@ -122,8 +123,8 @@ def process_pkg_properties()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No package property information available\n")
+    table = handle_output("\n")
+    table = handle_output("No package property information available\n")
   end
   return table
 end
@@ -266,8 +267,8 @@ def process_packages()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No System V package information available")
+    table = handle_output("\n")
+    table = handle_output("No System V package information available")
   end
   os_version = get_os_version()
   if os_version == "5.11"
@@ -295,8 +296,8 @@ def process_packages()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No IPS package information available\n")
+    table = handle_output("\n")
+    table = handle_output("No IPS package information available\n")
   end
   return table
 end

@@ -5,6 +5,7 @@ def process_obp()
   table = process_sys_model(table)
   table = process_obp_ver(table)
   table = handle_table("end","","",table)
+  return table
 end
 
 # Get XCP version

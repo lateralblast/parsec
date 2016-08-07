@@ -114,8 +114,8 @@ def process_vnic()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No VNIC information available\n")
+    table = handle_output("\n")
+    table = handle_output("No VNIC information available\n")
   end
   return
 end
@@ -159,8 +159,8 @@ def process_link_slots()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No link slot information available\n")
+    table = handle_output("\n")
+    table = handle_output("No link slot information available\n")
   end
   return
 end
@@ -198,8 +198,8 @@ def process_link_speed()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No link information available\n")
+    table = handle_output("\n")
+    table = handle_output("No link information available\n")
   end
   return
 end
@@ -309,8 +309,8 @@ def process_aggregation()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No aggregate configuration information available\n")
+    table = handle_output("\n")
+    table = handle_output("No aggregate configuration information available\n")
   end
   return table
 end
@@ -352,8 +352,8 @@ def process_dladm_aggr_config()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No dladm aggregate configuration information available\n")
+    table = handle_output("\n")
+    table = handle_output("No dladm aggregate configuration information available\n")
   end
   return table
 end
@@ -405,8 +405,8 @@ def process_dladm_aggr_detail()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No dladm aggregate detailed information available\n")
+    table = handle_output("\n")
+    table = handle_output("No dladm aggregate detailed information available\n")
   end
   return table
 end
@@ -640,8 +640,8 @@ def process_network()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No network interface information available\n")
+    table = handle_output("\n")
+    table = handle_output("No network interface information available\n")
   end
   return table
 end
@@ -672,8 +672,8 @@ def process_network_info(type)
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No #{type.upcase} kernel information available\n")
+    table = handle_output("\n")
+    table = handle_output("No #{type.upcase} kernel information available\n")
   end
   return table
 end

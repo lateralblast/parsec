@@ -55,8 +55,8 @@ def process_hardware_revision_info()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No hardware revision information\n")
+    table = handle_output("\n")
+    table = handle_output("No hardware revision information\n")
   end
   return table
 end
@@ -109,8 +109,8 @@ def process_firmware_update_info()
     if !$output_format.match(/table/)
       table  = ""
     end
-    handle_output("\n")
-    handle_output("No firmware information available\n")
+    table = handle_output("\n")
+    table = handle_output("No firmware information available\n")
   end
   return table
 end

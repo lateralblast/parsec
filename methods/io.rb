@@ -693,8 +693,8 @@ def process_io()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No IO information available\n")
+    table = handle_output("\n")
+    table = handle_output("No IO information available\n")
   end
   if $io_fw_urls[0]
     handle_output("\n")

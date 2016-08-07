@@ -56,8 +56,8 @@ def process_ntp_config()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No NTP information available\n")
+    table = handle_output("\n")
+    table = handle_output("No NTP information available\n")
   end
   return table
 end
@@ -89,8 +89,8 @@ def process_ntpq()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No NTPQ information available\n")
+    table = handle_output("\n")
+    table = handle_output("No NTPQ information available\n")
   end
   return table
 end

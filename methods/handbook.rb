@@ -45,8 +45,11 @@ def process_handbook_info_file(info_file)
     end
     table = handle_table("end","","",table)
   else
-    handle_output("\n")
-    handle_output("No handbook information available\n")
+    if !$output_format.match(/table/)
+      table = ""
+    end
+    table = handle_output("\n")
+    table = handle_output("No handbook information available\n")
   end
   return table
 end

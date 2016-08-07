@@ -28,8 +28,8 @@ def process_inetadm()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No inetadm information available\n")
+    table = handle_output("\n")
+    table = handle_output("No inetadm information available\n")
   end
   return table
 end

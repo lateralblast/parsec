@@ -249,8 +249,8 @@ def process_ndd_info(ndd_type)
       if !$output_format.match(/table/)
         table = ""
       end
-      handle_output("\n")
-      handle_output("No #{ndd_type.upcase} information available\n")
+      table = handle_output("\n")
+      table = handle_output("No #{ndd_type.upcase} information available\n")
     end
   end
   return table
@@ -309,8 +309,8 @@ def process_modules()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No kernel module information available\n")
+    table = handle_output("\n")
+    table = handle_output("No kernel module information available\n")
   end
   return table
 end

@@ -42,8 +42,8 @@ def process_service_deps()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No service dependency information available\n")
+    table = handle_output("\n")
+    table = handle_output("No service dependency information available\n")
   end
   return table
 end
@@ -89,8 +89,8 @@ def process_service_descs()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No service description information available\n")
+    table = handle_output("\n")
+    table = handle_output("No service description information available\n")
   end
   return table
 end
@@ -171,8 +171,8 @@ def process_service_status()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No service manifest information available\n")
+    table = handle_output("\n")
+    table = handle_output("No service manifest information available\n")
   end
   return table
 end

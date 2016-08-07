@@ -31,8 +31,8 @@ def process_locale()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No locale information available\n")
+    table = handle_output("\n")
+    table = handle_output("No locale information available\n")
   end
   return table
 end

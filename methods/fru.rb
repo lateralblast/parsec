@@ -28,8 +28,8 @@ def process_slots()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No Upgradeable slot information available\n")
+    table = handle_output("\n")
+    table = handle_output("No Upgradeable slot information available\n")
   end
   return table
 end
@@ -94,8 +94,8 @@ def process_fru()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No FRU information available\n")
+    table = handle_output("\n")
+    table = handle_output("No FRU information available\n")
   end
   return table
 end
@@ -226,8 +226,8 @@ def process_sensors()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No sensor information available\n")
+    table = handle_output("\n")
+    table = handle_output("No sensor information available\n")
   end
   return table
 end

@@ -99,8 +99,8 @@ def process_crypto_providers()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No crypto provider information available\n")
+    table = handle_output("\n")
+    table = handle_output("No crypto provider information available\n")
   end
   return table
 end

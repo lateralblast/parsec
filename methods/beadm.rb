@@ -42,8 +42,8 @@ def process_beadm()
     if !$output_format.match(/table/)
       table = ""
     end
-    handle_output("\n")
-    handle_output("No BE information available\n")
+    table = handle_output("\n")
+    table = handle_output("No Boot Environment information available\n")
   end
   return table
 end
