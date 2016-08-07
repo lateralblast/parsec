@@ -414,7 +414,11 @@ def list_explorers(search_model,search_date,search_year,search_name)
   counter   = 0
   file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
   if file_list.to_s.match(/explorer/)
-    title = "Explorers in "+$exp_dir+":"
+    if $output_format.match(/serverhtml/)
+      title = "Explorers:"
+    else
+      title = "Explorers in "+$exp_dir+":"
+    end
     row   = [ 'Hostname', 'Model', 'Year', 'Date', 'Time', 'Host ID', 'File' ]
     table = handle_table("title",title,row,"")
     file_list.each do |file_name|
