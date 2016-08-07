@@ -60,11 +60,14 @@ def process_pam()
       end
       table = handle_table("end","","",table)
     else
-      if !$output_format.match(/table/)
+      if $output_format.match(/table|pipe/)
+        handle_output("\n")
+        handle_output("No PAM information available\n")
+      else
         table = ""
+        table = handle_output("\n")
+        table = handle_output("No PAM information available\n")
       end
-      table = handle_output("\n")
-      table = handle_output("No PAM information available\n")
     end
   end
   return table

@@ -120,11 +120,14 @@ def process_pkg_properties()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
-      table = ""
-    end
+    if $output_format.match(/table|pipe/)
     table = handle_output("\n")
     table = handle_output("No package property information available\n")
+    else
+      table = ""
+    table = handle_output("\n")
+    table = handle_output("No package property information available\n")
+    end
   end
   return table
 end
@@ -165,11 +168,14 @@ def process_pkg_publisher()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No package publisher information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No package publisher information available\n")
     end
-    handle_output("\n")
-    handle_output("No package publisher information available\n")
   end
   return table
 end
@@ -217,11 +223,14 @@ def process_pkg_ips()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No IPS package information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No IPS package information available\n")
     end
-    handle_output("\n")
-    handle_output("No IPS package information available\n")
   end
   return table
 end
@@ -293,11 +302,14 @@ def process_packages()
       table = table + t_table
     end
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No IPS package information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No IPS package information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No IPS package information available\n")
   end
   return table
 end

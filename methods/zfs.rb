@@ -85,11 +85,14 @@ def process_zfs_volumes()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No ZFS volume information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No ZFS volume information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No ZFS volume information available\n")
   end
   return table
 end
@@ -121,11 +124,14 @@ def process_zfs_list()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No ZFS filesystem information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No ZFS filesystem information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No ZFS filesystem information available\n")
   end
   return table
 end
@@ -161,11 +167,14 @@ def process_zfs_snapshots()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No ZFS snapshot information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No ZFS snapshot information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No ZFS snapshot information available\n")
   end
   return table
 end
@@ -192,11 +201,14 @@ def process_zpool_list()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No ZFS pool information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No ZFS pool information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No ZFS pool information available\n")
   end
   return table
 end

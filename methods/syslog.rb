@@ -27,11 +27,14 @@ def process_syslog()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No syslog information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No syslog information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No syslog information available\n")
   end
   return table
 end

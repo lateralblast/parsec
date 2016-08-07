@@ -53,11 +53,14 @@ def process_ntp_config()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No NTP information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No NTP information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No NTP information available\n")
   end
   return table
 end
@@ -86,11 +89,14 @@ def process_ntpq()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No NTPQ information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No NTPQ information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No NTPQ information available\n")
   end
   return table
 end

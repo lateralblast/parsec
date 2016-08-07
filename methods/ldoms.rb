@@ -108,11 +108,14 @@ def process_ldom_ver(table)
     end
     table = handle_table("row","Available LDom Version",avail_ldom,table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No T-Series LDom version information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No T-Series LDom version information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No T-Series LDom version information available\n")
   end
   return table
 end
@@ -242,11 +245,14 @@ def process_m_series_logical_domains()
       table = handle_table("end","","",table)
     end
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No LDom information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No LDom information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No LDom information available\n")
   end
   return table
 end
@@ -355,11 +361,14 @@ def process_t_series_logical_domains()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No LDom information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No LDom information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No LDom information available\n")
   end
   return table
 end
@@ -372,7 +381,9 @@ def process_ldom()
     title   = "LDom Information"
     row     = ['Item','Value']
     table   = handle_table("title",title,row,"")
+    puts table.class
     table   = process_ldom_ver(table)
+    puts table.class
     counter = 0
     ldom_hosts = get_ldom_hosts()
     ldom_hosts.each do |ldom_host|
@@ -387,11 +398,14 @@ def process_ldom()
       table = process_m_series_logical_domains()
     end
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No LDom configuration information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No LDom configuration information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No LDom configuration information available\n")
   end
   return table
 end

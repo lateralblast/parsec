@@ -113,11 +113,14 @@ def process_system()
       table = handle_output("No Kernel Parameter information available in /etc/system\n")
     end
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No Kernel Parameter information available in /etc/system\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No Kernel Parameter information available in /etc/system\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No Kernel Parameter information available in /etc/system\n")
   end
   return table
 end

@@ -448,8 +448,14 @@ def list_explorers(search_model,search_date,search_year,search_name)
     end
     table = handle_table("end","","",table)
   else
-    table = handle_output("\n")
-    table = handle_output("No explorer information available\n")
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No explorer information available\n")
+    else 
+      table = ""
+      table = handle_output("\n")
+      table = handle_output("No explorer information available\n")
+    end
   end
   return table
 end

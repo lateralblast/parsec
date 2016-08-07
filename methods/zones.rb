@@ -22,11 +22,14 @@ def process_running_zones()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No running zone information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No running zone information available\n")
     end
-    table = handle_output("\n")
-    table = handle_output("No running zone information available\n")
   end
   return table
 end
@@ -85,11 +88,14 @@ def process_zone_configs()
       end
     end
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No configured zone information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No configured zone information available\n")
     end
-    handle_output("\n")
-    handle_output("No configured zone information available\n")
   end
   return table
 end
@@ -116,11 +122,14 @@ def process_configured_zones()
     end
     table = handle_table("end","","",table)
   else
-    if !$output_format.match(/table/)
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No configured zone information available\n")
+    else
       table = ""
+      table = handle_output("\n")
+      table = handle_output("No configured zone information available\n")
     end
-    handle_output("\n")
-    handle_output("No configured zone information available\n")
   end
   return table
 end
