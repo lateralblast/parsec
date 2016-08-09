@@ -18,3 +18,5 @@
 # Bug fixes
 # 0.1.0: Tue  9 Aug 2016 13:25:44 AEST
 # Added SSL support for webserver
+# 0.1.1: Tue  9 Aug 2016 21:37:00 AES
+# Added basic htpasswd support

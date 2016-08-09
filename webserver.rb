@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.0
+# Version:      0.1.1
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -64,7 +64,8 @@ default_bind      = "127.0.0.1"
 default_port      = "9494"
 default_sessions  = "true"
 default_errors    = "false"
-enable_ssl        = 1
+enable_ssl        = true
+enable_auth       = false
 ssl_certificate   = "ssl/cert.crt"
 ssl_key           = "ssl/pkey.pem"
 $ssl_password     = "123456"
@@ -88,7 +89,7 @@ end
 
 # SSL config
 
-if enable_ssl == 1
+if enable_ssl == true
   require 'webrick/ssl'
   require 'webrick/https'
   if !File.exist?(ssl_certificate) or !File.exist?(ssl_key)
@@ -114,6 +115,40 @@ if enable_ssl == 1
           [:INT, :TERM].each { |sig| trap(sig) { server.stop } }
           server.threaded = settings.threaded if server.respond_to? :threaded=
           set :running, true
+        end
+      end
+    end
+  end
+end
+
+# htpasswd authentication
+
+# Set up global files
+
+$htpasswd_file = Dir.pwd+"/views/.htpasswd"
+
+if enable_auth == true
+  module Sinatra
+    class Application
+      HTPASSWD_PATH = $htpasswd_file
+    
+      helpers do
+        def protect!
+          unless authorized?
+            response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+            throw(:halt, [401, "Not authorized\n"])
+          end
+        end
+  
+        def authorized?
+          @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+          passwd = File.open(HTPASSWD_PATH).read.split("\n").map {|credential| credential.split(':')}
+          if @auth.provided? && @auth.basic? && @auth.credentials
+            user, pass = @auth.credentials
+            auth = passwd.assoc(user)
+            return false unless auth
+            [user, pass.crypt(auth[1][0..2])] == auth
+          end
         end
       end
     end
@@ -176,6 +211,7 @@ end
 # List explorers
 
 get '/list' do
+  protect!
   if params['example']
     $exp_dir = Dir.pwd+"/examples"
   else
