@@ -35,10 +35,11 @@ $fact_dir     = $data_dir+"/facters"
 $decode_dir   = $data_dir+"/dmidecode"
 $info_dir     = $data_dir+"/information"
 $images_dir   = $data_dir+"/images"
+$ssl_dir      = script_dir+"ssl"
 
 # Create directories
 
-[ $data_dir, $images_dir, $handbook_dir, $fact_dir, $decode_dir, $info_dir ].each do |test_dir|
+[ $data_dir, $images_dir, $handbook_dir, $fact_dir, $decode_dir, $info_dir, $ssl_dir ].each do |test_dir|
   if !File.directory?(test_dir) and !File.symlink?(test_dir) and !File.exist?(test_dir)
     puts "Cannot locate "+test_dir+" directory ("+test_dir+")"
     puts "Creating "+test_dir+" directory ("+test_dir+")"

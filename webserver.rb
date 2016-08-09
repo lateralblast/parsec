@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.0.9
+# Version:      0.1.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -64,6 +64,10 @@ default_bind      = "127.0.0.1"
 default_port      = "9494"
 default_sessions  = "true"
 default_errors    = "false"
+enable_ssl        = 1
+ssl_certificate   = "ssl/cert.crt"
+ssl_key           = "ssl/pkey.pem"
+$ssl_password     = "123456"
 
 
 set :port,        default_port
@@ -78,6 +82,40 @@ if Dir.exist?("./methods")
   for file in file_list
     if file =~ /rb$/
       require "./methods/#{file}"
+    end
+  end
+end
+
+# SSL config
+
+if enable_ssl == 1
+  require 'webrick/ssl'
+  require 'webrick/https'
+  if !File.exist?(ssl_certificate) or !File.exist?(ssl_key)
+    %x[openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout #{ssl_key} -out #{ssl_certificate}]
+  end
+  set :ssl_certificate, ssl_certificate
+  set :ssl_key, ssl_key
+  module Sinatra
+    class Application
+      def self.run!
+        certificate_content = File.open(ssl_certificate).read
+        key_content = File.open(ssl_key).read
+  
+        server_options = {
+          :Host => bind,
+          :Port => port,
+          :SSLEnable => true,
+          :SSLCertificate => OpenSSL::X509::Certificate.new(certificate_content),
+          :SSLPrivateKey => OpenSSL::PKey::RSA.new(key_content,$ssl_password)
+        }
+  
+        Rack::Handler::WEBrick.run self, server_options do |server|
+          [:INT, :TERM].each { |sig| trap(sig) { server.stop } }
+          server.threaded = settings.threaded if server.respond_to? :threaded=
+          set :running, true
+        end
+      end
     end
   end
 end

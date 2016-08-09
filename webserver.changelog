@@ -16,3 +16,5 @@
 # Added ability to set bind and sessions
 # 0.0.9: Sun  7 Aug 2016 20:44:34 AEST
 # Bug fixes
+# 0.1.0: Tue  9 Aug 2016 13:25:44 AEST
+# Added SSL support for webserver
