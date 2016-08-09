@@ -183,7 +183,7 @@ def exp_file_to_array(file_name)
     if !File.symlink?(ext_file)
       arc_file = exp_name+file_name
       if $verbose_mode == 1
-        handle_output("Extracting #{arc_file} from #{$exp_file} to #{ext_file}")
+        handle_output("Extracting #{arc_file} from #{$exp_file} to #{ext_file}\n")
       end
       extract_exp_file(arc_file)
     end

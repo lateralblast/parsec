@@ -57,6 +57,11 @@ begin
 rescue LoadError
   install_gem("iconv")
 end
+begin
+  require 'unix_crypt'
+rescue LoadError
+  install_gem("unix-crypt")
+end
 
 # Some webserver defaults
 
@@ -65,7 +70,7 @@ default_port      = "9494"
 default_sessions  = "true"
 default_errors    = "false"
 enable_ssl        = true
-enable_auth       = false
+enable_auth       = true
 ssl_certificate   = "ssl/cert.crt"
 ssl_key           = "ssl/pkey.pem"
 $ssl_password     = "123456"
@@ -92,6 +97,10 @@ end
 if enable_ssl == true
   require 'webrick/ssl'
   require 'webrick/https'
+  if !File.directory?($ssl_dir)
+    puts "Information: Creating "+$ssl_dir
+    Dir.mkdir($ssl_dir)
+  end
   if !File.exist?(ssl_certificate) or !File.exist?(ssl_key)
     %x[openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout #{ssl_key} -out #{ssl_certificate}]
   end
@@ -147,7 +156,7 @@ if enable_auth == true
             user, pass = @auth.credentials
             auth = passwd.assoc(user)
             return false unless auth
-            [user, pass.crypt(auth[1][0..2])] == auth
+            [user, UnixCrypt::MD5.build(auth[1][0..2])] == auth
           end
         end
       end

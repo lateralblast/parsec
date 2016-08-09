@@ -277,7 +277,7 @@ def process_packages()
       table = ""
     end
     table = handle_output("\n")
-    table = handle_output("No System V package information available")
+    table = handle_output("No System V package information available\n")
   end
   os_version = get_os_version()
   if os_version == "5.11"

@@ -111,7 +111,7 @@ def process_liveupgrade()
   if lu_current.match(/[A-z]/)
     file_array = get_lu_fs_info(lu_current)
     if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-      handle_output("")
+      handle_output("\n")
       lu_id = 0
       title = "Live Upgrade Filesystem Information ("+lu_current+")"
       row   = ['Filesystem','Type','Mount']

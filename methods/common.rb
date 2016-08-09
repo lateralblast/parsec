@@ -35,7 +35,7 @@ $fact_dir     = $data_dir+"/facters"
 $decode_dir   = $data_dir+"/dmidecode"
 $info_dir     = $data_dir+"/information"
 $images_dir   = $data_dir+"/images"
-$ssl_dir      = script_dir+"ssl"
+$ssl_dir      = script_dir+"/ssl"
 
 # Create directories
 
