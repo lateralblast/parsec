@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.2
+# Version:      0.1.3
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -62,6 +62,11 @@ begin
 rescue LoadError
   install_gem("bcrypt")
 end
+begin
+  require 'fileutils'
+rescue LoadError
+  install_gem("fileutils")
+end
 
 # Some webserver defaults
 
@@ -71,10 +76,16 @@ default_sessions  = "true"
 default_errors    = "false"
 enable_ssl        = true
 enable_auth       = false
+enable_upload     = false
 ssl_certificate   = "ssl/cert.crt"
 ssl_key           = "ssl/pkey.pem"
 $ssl_password     = "123456"
 
+# Only allow uploads if we has authentication
+
+if !enable_auth == true
+  enable_upload = false
+end
 
 set :port,        default_port
 set :bind,        default_bind
@@ -186,6 +197,32 @@ $masked        = 0
 $exp_file      = ""
 $exp_dir       = $base_dir+"/explorers"
 
+# Enable uploads
+
+if enable_upload == true
+  include FileUtils::Verbose
+
+  get '/upload' do
+    protect!
+    head  = File.readlines("./views/layout.html")
+    body  = File.readlines("./views/upload.html")
+    array = head + body
+    array = array.join("\n")
+    "#{array}"
+  end
+
+  post '/upload' do
+    protect!
+    tempfile = params[:file][:tempfile] 
+    filename = params[:file][:filename] 
+    if filename.match(/explorer/) and filename.match(/gz$/)
+      FileUtils.copy(tempfile.path, "#{$exp_dir}/#{filename}")
+    else
+      redirect '/help'
+    end
+    redirect '/list'
+  end
+end
 
 # handle error - redirect to help
 
@@ -270,6 +307,7 @@ end
 # Do report
 
 get '/report' do
+  protect!
   if params['example']
     $exp_dir = Dir.pwd+"/examples"
   else

@@ -455,6 +455,7 @@ def list_explorers(search_model,search_date,search_year,search_name)
       new_table = []
       new_table.push("<a href=\"/help\">HELP</a>")
       new_table.push("<a href=\"/list\">LIST</a>")
+      new_table.push("<a href=\"/upload\">UPLOAD</a>")
       new_table = new_table + table
       table     = new_table
     end
