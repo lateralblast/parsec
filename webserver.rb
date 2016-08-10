@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.3
+# Version:      0.1.4
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -203,7 +203,9 @@ if enable_upload == true
   include FileUtils::Verbose
 
   get '/upload' do
-    protect!
+    if enable_auth == true
+      protect!
+    end
     head  = File.readlines("./views/layout.html")
     body  = File.readlines("./views/upload.html")
     array = head + body
@@ -212,7 +214,9 @@ if enable_upload == true
   end
 
   post '/upload' do
-    protect!
+    if enable_auth == true
+      protect!
+    end
     tempfile = params[:file][:tempfile] 
     filename = params[:file][:filename] 
     if filename.match(/explorer/) and filename.match(/gz$/)
@@ -257,7 +261,9 @@ end
 # List explorers
 
 get '/list' do
-  protect!
+  if enable_auth == true
+    protect!
+  end
   if params['example']
     $exp_dir = Dir.pwd+"/examples"
   else
@@ -307,7 +313,9 @@ end
 # Do report
 
 get '/report' do
-  protect!
+  if enable_auth == true
+    protect!
+  end
   if params['example']
     $exp_dir = Dir.pwd+"/examples"
   else
@@ -356,5 +364,28 @@ get '/report' do
   array = head + body
   array = array.join("\n")
   "#{array}"
+end
+
+# photos
+
+get '/photos' do
+  if enable_auth == true
+    protect!
+  end
+  if params['image']
+    photo_file = params['image'] 
+  else
+    redirect '/help'
+  end
+  if !photo_file.match(/^[A-Z]|[a-z]/) and !photo_file.match(/jpg$|gif$|png$/)
+    redirect '/help'
+  end
+  photo_dir  = $base_dir+"/photos"
+  image_file = photo_dir+"/"+photo_file 
+  if File.exist?(image_file)
+    send_file(image_file)
+  else
+    redirect '/help'
+  end
 end
 

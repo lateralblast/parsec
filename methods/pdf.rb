@@ -396,7 +396,7 @@ def process_handbook_info(pdf,toc,model)
 end
 
 def process_model_info(pdf,toc,model)
-  header    = get_handbook_header(model)
+  header = get_handbook_header(model)
   if !File.directory?($images_dir) and !File.symlink?($images_dir)
     return toc
   end
@@ -405,7 +405,7 @@ def process_model_info(pdf,toc,model)
   image_views = [ "Zoom", "Callout" ]
   image_names.each do |image_name|
     image_views.each do |image_view|
-      image_file = $images_dir+"/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_"+image_view.downcase+".jpg"
+      image_file = $images_dir+"/hardware/"+header+"_"+image_name.downcase.gsub(/ /,"")+"_"+image_view.downcase+".jpg"
       file_type = get_file_type(image_file)
       if file_type.match(/jpeg/)
         if $verbose == 1

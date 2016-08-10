@@ -28,6 +28,9 @@ end
 def get_full_report_list()
   report_list = []
   report_list.push("host")
+  if $output_format.match(/serverhtml/)
+    report_list.push("photos")
+  end
   report_list.push("inetadm")
   report_list.push("syslog")
   report_list.push("cups")

@@ -422,6 +422,8 @@ end
 # Get header for handbook file
 
 def get_handbook_header(model)
+  model = model.gsub(/Sun Microsystems /,"")
+  model = model.gsub(/Sun Fire /,"")
   model = model.gsub(/M2$/,"_M2")
   case model
   when /X[2,4][0-9][0-9][0-9]/

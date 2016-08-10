@@ -98,6 +98,17 @@ Password entries can be created using htpasswd, eg:
 $ htpasswd -n -b -B spindler test >> ./views/.htpasswd 
 ```
 
+If you want photos to be displayed, you'll need the <a href="https://github.com/lateralblast/ssp">Sun System Pictures</a> archive.
+
+To enable photos, clone the archive to a location of your choice and symlink it to the photos directory in the root directory of parsec, e.g.:
+
+```
+$ cd /export
+$ git clone https://github.com/lateralblast/ssp.git
+$ cd /export/parsec
+$ ln -s /export/ssp/images ./photos
+```
+
 Reports
 -------
 
