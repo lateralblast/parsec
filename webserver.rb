@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.1
+# Version:      0.1.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -58,9 +58,9 @@ rescue LoadError
   install_gem("iconv")
 end
 begin
-  require 'unix_crypt'
+  require 'bcrypt'
 rescue LoadError
-  install_gem("unix-crypt")
+  install_gem("bcrypt")
 end
 
 # Some webserver defaults
@@ -139,7 +139,6 @@ $htpasswd_file = Dir.pwd+"/views/.htpasswd"
 if enable_auth == true
   module Sinatra
     class Application
-      HTPASSWD_PATH = $htpasswd_file
     
       helpers do
         def protect!
@@ -151,12 +150,13 @@ if enable_auth == true
   
         def authorized?
           @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-          passwd = File.open(HTPASSWD_PATH).read.split("\n").map {|credential| credential.split(':')}
+          passwd = File.open($htpasswd_file).read.split("\n").map {|credential| credential.split(':')}
           if @auth.provided? && @auth.basic? && @auth.credentials
             user, pass = @auth.credentials
             auth = passwd.assoc(user)
+            crypt = BCrypt::Password.create(auth[1])
             return false unless auth
-            [user, UnixCrypt::MD5.build(auth[1][0..2])] == auth
+            [user, crypt] == auth
           end
         end
       end
