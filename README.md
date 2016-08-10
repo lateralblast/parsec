@@ -59,6 +59,45 @@ This will start up a webserver on port 9494
 
 ![alt tag](https://raw.githubusercontent.com/lateralblast/parsec/master/webserver_example.png)
 
+Authentication can be enable by setting the enable_auth flag in webserver.rb:
+
+```
+enable_auth = true
+```
+
+Certificates and keys are stored in the ssl directory:
+
+```
+$ ls -l ssl
+total 16
+-rw-r--r--  1 spindler  staff  1383  9 Aug 23:27 cert.crt
+-rw-r--r--  1 spindler  staff   891  9 Aug 23:27 pkey.pem
+```
+
+If they don't exist the script will try to create them on startup.
+
+Otherwise use the openssl command:
+
+```
+$ cd ssl
+$ openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout pkey.pem -out cert.crt
+```
+
+The server looks for users in a .htpasswd file in the views directory, eg:
+
+```
+$ cat ./views/.htpasswd 
+spindler:$2y$05$0Ntm14Sl3Ix.qUSd537V8eUuhM6nJiqSM9mB18Pp5bnbg0ZhtxQAq
+```
+
+The password algorithm is bcrypt.
+
+Password entries can be created using htpasswd, eg:
+
+```
+$ htpasswd -n -b -m spindler test >> ./views/.htpasswd 
+```
+
 Reports
 -------
 
