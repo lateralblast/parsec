@@ -424,8 +424,12 @@ end
 def get_handbook_header(model)
   model = model.gsub(/Sun Microsystems /,"")
   model = model.gsub(/Sun Fire /,"")
+  model = model.gsub(/Oracle Corporation /,"")
+  model = model.gsub(/SPARC Enterprise /,"")
   model = model.gsub(/M2$/,"_M2")
   case model
+  when /^M/
+    header = "SE_"+model
   when /X[2,4][0-9][0-9][0-9]/
     header = "SunFire"+model
   when /^N/

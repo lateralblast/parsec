@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.4
+# Version:      0.1.5
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -190,8 +190,6 @@ $script_name   = "Parsec"
 $verbose       = 0
 $base_dir      = Dir.pwd
 $do_disks      = 0
-$host_info     = {}
-$sys_config    = {}
 $exp_file_list = []
 $masked        = 0
 $exp_file      = ""
@@ -261,6 +259,8 @@ end
 # List explorers
 
 get '/list' do
+  $host_info  = {}
+  $sys_config = {}
   if enable_auth == true
     protect!
   end
@@ -313,6 +313,8 @@ end
 # Do report
 
 get '/report' do
+  $host_info  = {}
+  $sys_config = {}
   if enable_auth == true
     protect!
   end
