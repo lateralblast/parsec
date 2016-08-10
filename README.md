@@ -95,7 +95,7 @@ The password algorithm is bcrypt.
 Password entries can be created using htpasswd, eg:
 
 ```
-$ htpasswd -n -b -m spindler test >> ./views/.htpasswd 
+$ htpasswd -n -b -B spindler test >> ./views/.htpasswd 
 ```
 
 Reports
