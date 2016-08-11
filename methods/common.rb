@@ -427,8 +427,13 @@ def get_handbook_header(model)
   model = model.gsub(/Oracle Corporation /,"")
   model = model.gsub(/SPARC Enterprise /,"")
   model = model.gsub(/M2$/,"_M2")
+  model = model.gsub(/SPARC /,"")
   case model
-  when /^M/
+  when /Sun Enterprise [0-9][0-9][0-9] /
+    header = "E"
+    model  = model.split(/\s+/)[2]
+    header = "E"+model
+  when /^M[0-9][0-9][0-9][0-9]/
     header = "SE_"+model
   when /X[2,4][0-9][0-9][0-9]/
     header = "SunFire"+model
@@ -438,7 +443,7 @@ def get_handbook_header(model)
     header = "SunFire"+model
   when /X6[0-9][0-9][0-9]|X8[0-9][0-9][0-9]|T6[0-9][0-9][0-9]/
     header = "SunBlade"+model
-  when /T3-|T4-|T5-|M10-|M5-|M6-/
+  when /T3-|T4-|T5-|T6-|T7-|M10-|M5-|M6-|M7-/
     header = "SPARC_"+model
   when /X[3,4][-,_]/
     header = "Sun_Server_"+model

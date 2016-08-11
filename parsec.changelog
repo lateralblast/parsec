@@ -457,3 +457,5 @@
 # Added photos
 # 2.2.8: Thu 11 Aug 2016 09:32:06 AEST
 # Fixed bug with photos code and some model header determination 
+# 2.2.9: Thu 11 Aug 2016 10:48:13 AEST
+# Photo file determination improvements
