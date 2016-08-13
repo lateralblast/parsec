@@ -381,9 +381,7 @@ def process_ldom()
     title   = "LDom Information"
     row     = ['Item','Value']
     table   = handle_table("title",title,row,"")
-    puts table.class
     table   = process_ldom_ver(table)
-    puts table.class
     counter = 0
     ldom_hosts = get_ldom_hosts()
     ldom_hosts.each do |ldom_host|

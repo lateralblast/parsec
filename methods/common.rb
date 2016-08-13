@@ -429,6 +429,14 @@ def get_handbook_header(model)
   model = model.gsub(/M2$/,"_M2")
   model = model.gsub(/SPARC /,"")
   case model
+  when /^480R|^V120/
+    model  = model.split(/\s+/)[0].gsub(/V|R/,"")
+    header = "SunFireV"+model
+  when /^T200$/
+    header = "SunFireT2000"
+  when /^280R/
+    model  = model.split(/\s+/)[0]
+    header = "SunFire"+model
   when /Sun Enterprise [0-9][0-9][0-9] /
     header = "E"
     model  = model.split(/\s+/)[2]

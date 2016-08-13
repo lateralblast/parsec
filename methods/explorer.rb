@@ -65,7 +65,9 @@ def handle_explorer(report,file_list,search_model,search_date,search_year,search
         else
           document_title = "Explorer: "+exp_name
         end
-        if !customer_name.match(/masked/) and search_name.match(/^all$/)
+        if $masked == 1
+          customer_name = "Masked"
+        else
           customer_name = get_customer_name()
         end
         generate_pdf(pdf,document_title,output_pdf,customer_name)
