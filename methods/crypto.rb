@@ -18,6 +18,11 @@ def process_crypto_list()
       line = line.chomp
       if line.match(/[A-Z]|[a-z]|[0-9]/) and !line.match(/User-level/)
         if line.match(/Mechanisms:|providers:|Provider:/)
+          if line.match(/Provider: \//)
+            (prefix,suffix) = line.split(/\: /)
+            suffix = File.basename(suffix)
+            line   = prefix+" "+suffix
+          end
           table = handle_table("end","","",table)
           if line.match(/Mechanisms/)
             row   = [ "Mechanism Name", "Min", "Max", "H\nW", "E\nn\nc",
@@ -28,13 +33,13 @@ def process_crypto_list()
           else
             row = [ 'Item', 'Value' ]
           end
-          title = line.gsub(/:$/,"")
+          title = line.gsub(/:/,"")
           table = handle_table("title",title,row,"")
         end
         if line.match(/^Kernel/)
           table = handle_table("title",title,row,"")
         end
-        if line.match(/: [A-z,0-9]/)
+        if line.match(/: [A-z,0-9]/) and !line.match(/rovider/)
           (item,value) = line.split(/: /)
           value = value.gsub(/,/,",\n")
           row   = [ item, value ]

@@ -307,11 +307,11 @@ def create_code_box(pdf,x,y,text_file)
 end
 
 def line_to_cells(line,section)
-  mdeol    = ""
   row_data = []
   cells    = line.split("\|")
   cells    = cells[0..-2]
   cell_1   = cells[1].gsub(/^\s+/,"").gsub(/\s+$/,"")
+  counter  = 0
   if !cells[2]
     row_data = [cell_1]
   else
@@ -333,41 +333,13 @@ def line_to_cells(line,section)
         if cell_4.match(/Yes/)
           cell_4 = "<color rgb='#{$green}'>Yes</color>"
         end
-        if !cells[5]
-          row_data = [cell_1,cell_2,cell_3,cell_4]
-        else
-          cell_5 = cells[5].gsub(/^\s+/,"").gsub(/\s+$/,"")
-          if !cells[6]
-            row_data = [cell_1,cell_2,cell_3,cell_4,cell_5]
-          else
-            cell_6 = cells[6].gsub(/^\s+/,"").gsub(/\s+$/,"")
-            if !cells[7]
-              row_data = [cell_1,cell_2,cell_3,cell_4,cell_5,cell_6]
-            else
-              cell_7 = cells[7].gsub(/^\s+/,"").gsub(/\s+$/,"")
-              if !cells[8]
-                row_data = [cell_1,cell_2,cell_3,cell_4,cell_5,cell_6,cell_7]
-              else
-                cell_8 = cells[8].gsub(/^\s+/,"").gsub(/\s+$/,"")
-                if !cells[9]
-                  row_data = [cell_1,cell_2,cell_3,cell_4,cell_5,cell_6,cell_7,cell_8]
-                else
-                  cell_9 = cells[9].gsub(/^\s+/,"").gsub(/\s+$/,"")
-                  if !cells[10]
-                    row_data = [cell_1,cell_2,cell_3,cell_4,cell_5,cell_6,cell_7,cell_8,cell_9]
-                  else
-                    cell_10 = cells[10].gsub(/^\s+/,"").gsub(/\s+$/,"")
-                    if !cells[11]
-                      row_data = [cell_1,cell_2,cell_3,cell_4,cell_5,cell_6,cell_7,cell_8,cell_9,cell_10]
-                    else
-                      cell_11 = cells[11].gsub(/^\s+/,"").gsub(/\s+$/,"").gsub(/\[|\]|"/,"")
-                      row_data = [cell_1,cell_2,cell_3,cell_4,cell_5,cell_6,cell_7,cell_8,cell_9,cell_10,cell_11]
-                    end
-                  end
-                end
-              end
-            end
+        row_data = [cell_1,cell_2,cell_3,cell_4]
+        for item in cells[5..-1]
+          item = item.gsub(/^\s+/,"").gsub(/\s+$/,"").gsub(/\[|\]|"/,"")
+          if !item.match(/[a-z]|[A-Z]|[0-9]|\./)
+            item = ""
           end
+          row_data.push(item)
         end
       end
     end
