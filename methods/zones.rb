@@ -6,9 +6,10 @@ def process_running_zones()
   file_name  = "/sysconfig/zoneadm-list-iv.out"
   file_array = exp_file_to_array(file_name)
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-    title = "Running Zone Information"
-    row   =  [ 'ID', 'Name', 'Status', 'Path', 'Brand', 'IP' ]
-    table = handle_table("title",title,row,"")
+    title  = "Running Zone Information"
+    row    =  [ 'ID', 'Name', 'Status', 'Path', 'Brand', 'IP' ]
+    length = 6
+    table  = handle_table("title",title,row,"")
     file_array.each do |line|
       if !line.match(/STATUS/)
         line = line.gsub(/^\s+/,"")
@@ -17,6 +18,7 @@ def process_running_zones()
           row[1] = "MASKED"
           row[3] = "MASKED"
         end
+        row   = row.pad_right(6,"NA")
         table = handle_table("row","",row,table)
       end
     end
@@ -103,12 +105,13 @@ end
 # Process the configured zone information.
 
 def process_configured_zones()
+  row_length = 4
   file_name  = "/etc/zones/index"
   file_array = exp_file_to_array(file_name)
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
-    title = "Configured Zone Information"
-    row   =  [ 'Name', 'Status', 'Path', 'UUID' ]
-    table = handle_table("title",title,row,"")
+    title  = "Configured Zone Information"
+    row    =  [ 'Name', 'Status', 'Path', 'UUID' ]
+    table  = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
       if !line.match(/^#/)
@@ -117,6 +120,7 @@ def process_configured_zones()
           row[0] = "MASKED"
           row[2] = "MASKED"
         end
+        row   = row.pad_right(4,"NA")
         table = handle_table("row","",row,table)
       end
     end

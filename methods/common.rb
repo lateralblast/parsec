@@ -110,6 +110,17 @@ class String
   end
 end
 
+# Extend Array class to provide padding
+
+class Array
+  def pad_right(s, char=nil)
+    self + [char] * (s - size) if (size < s)
+  end
+  def pad_left(s, char=nil)
+    (size < s) ? [char] * (s - size) + self : self
+  end
+end
+
 # Get version
 
 def get_version()

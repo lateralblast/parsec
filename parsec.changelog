@@ -463,3 +463,5 @@
 # Fixed bug with OS build determination
 # 2.3.1: Sat 13 Aug 2016 20:19:20 AEST
 # Improved PDF photo page creation
+# 2.3.2: Sat 13 Aug 2016 20:29:59 AEST
+# Added code to pad table rows
