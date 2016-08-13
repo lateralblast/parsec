@@ -28,3 +28,5 @@
 # Added photos
 # 0.1.5: Thu 11 Aug 2016 09:32:06 AEST
 # Fixed bug with photos code and some model header determination 
+# 0.1.6: Sat 13 Aug 2016 17:46:50 AEST
+# Fix issue with configs not loading after inital load

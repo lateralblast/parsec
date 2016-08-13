@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.5
+# Version:      0.1.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -70,16 +70,17 @@ end
 
 # Some webserver defaults
 
-default_bind      = "127.0.0.1"
-default_port      = "9494"
-default_sessions  = "true"
-default_errors    = "false"
-enable_ssl        = true
-enable_auth       = false
-enable_upload     = false
-ssl_certificate   = "ssl/cert.crt"
-ssl_key           = "ssl/pkey.pem"
-$ssl_password     = "123456"
+default_bind       = "127.0.0.1"
+default_exceptions = false
+default_port       = "9494"
+default_sessions   = "true"
+default_errors     = "false"
+enable_ssl         = true
+enable_auth        = false
+enable_upload      = false
+ssl_certificate    = "ssl/cert.crt"
+ssl_key            = "ssl/pkey.pem"
+$ssl_password      = "123456"
 
 # Only allow uploads if we has authentication
 
@@ -87,10 +88,11 @@ if !enable_auth == true
   enable_upload = false
 end
 
-set :port,        default_port
-set :bind,        default_bind
-set :sessions,    default_sessions
-set :dump_errors, default_errors
+set :port,            default_port
+set :bind,            default_bind
+set :sessions,        default_sessions
+set :dump_errors,     default_errors
+set :show_exceptions, default_exceptions
 
 # Load methods
 
@@ -183,17 +185,27 @@ check_local_config()
 # Set defaults
 # Unlike the reporting script, these currently don't get auto detected
 
-$work_dir      = "/tmp"
-$output_format = "serverhtml"
-$output_file   = ""
-$script_name   = "Parsec"
-$verbose       = 0
-$base_dir      = Dir.pwd
-$do_disks      = 0
-$exp_file_list = []
-$masked        = 0
-$exp_file      = ""
-$exp_dir       = $base_dir+"/explorers"
+def set_global_vars()
+  $work_dir      = "/tmp"
+  $output_format = "serverhtml"
+  $output_file   = ""
+  $script_name   = "Parsec"
+  $verbose       = 0
+  $base_dir      = Dir.pwd
+  $do_disks      = 0
+  $exp_file_list = []
+  $masked        = 0
+  $exp_file      = ""
+  $exp_dir       = $base_dir+"/explorers"
+  $work_dir      = "/tmp"
+end
+
+set_global_vars()
+
+before do
+  check_local_config()
+  set_global_vars()
+end
 
 # Enable uploads
 
@@ -313,9 +325,7 @@ end
 # Do report
 
 get '/report' do
-  $host_info  = {}
-  $sys_config = {}
-  if enable_auth == true
+    if enable_auth == true
     protect!
   end
   if params['example']
@@ -338,33 +348,35 @@ get '/report' do
     $report_type = "all"
   end
   if params['model']
-    search_model = params['model']
+    $search_model = params['model']
   else
-    search_model = ""
+    $search_model = ""
   end
   if params['date']
-    search_date  = params['date']
+    $search_date  = params['date']
   else
-    search_date = ""
+    $search_date = ""
   end
   if params['year']
-    search_year  = params['year']
+    $search_year  = params['year']
   else
-    search_year = ""
+    $search_year = ""
   end
   if params['server']
-    search_name  = params['server']
+    $search_name  = params['server']
   else
-    search_name = ""
+    $search_name = ""
   end
-  report     = ""
-  file_array = get_explorer_file_list(search_model,search_date,search_year,search_name) 
+  $host_info  = {}
+  $sys_config = {}
+  file_array = get_explorer_file_list($search_model,$search_date,$search_year,$search_name) 
   file_name  = file_array[0]
   $exp_file  = file_name
-  head  = File.readlines("./views/layout.html")
-  body  = config_report(report,search_name)
-  array = head + body
-  array = array.join("\n")
+  layout = $base_dir+"/views/layout.html"
+  head   = File.readlines(layout)
+  body   = config_report($report_type,$search_name)
+  array  = head + body
+  array  = array.join("\n")
   "#{array}"
 end
 

@@ -162,8 +162,8 @@ end
 # Do configuration report
 
 def config_report(report,host_name)
-  report_list = get_report_list()
   full_report = []
+  report_list = get_report_list()
   t_report    = []
   valid_sw    = 0
   if $output_format.match(/html/)
