@@ -16,10 +16,10 @@ def process_crypto_list()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     file_array.each do |line|
       line = line.chomp
-      if line.match(/[A-z]/) and !line.match(/^Slot|^Provider|^=/)
-        if line.match(/:$/)
+      if line.match(/[A-Z]|[a-z]|[0-9]/) and !line.match(/User-level/)
+        if line.match(/Mechanisms:|providers:|Provider:/)
+          table = handle_table("end","","",table)
           if line.match(/Mechanisms/)
-            table = handle_table("end","","",table)
             row   = [ "Mechanism Name", "Min", "Max", "H\nW", "E\nn\nc",
                       "D\ne\nc", "D\ni\ng", "S\ni\nn\ng", "S\ni\ng\n+\nR",
                       "V\ne\nr\ni", "V\ne\nr\ni\n+\nR", "K\ne\ny\nG\ne\nn",
@@ -31,6 +31,9 @@ def process_crypto_list()
           title = line.gsub(/:$/,"")
           table = handle_table("title",title,row,"")
         end
+        if line.match(/^Kernel/)
+          table = handle_table("title",title,row,"")
+        end
         if line.match(/: [A-z,0-9]/)
           (item,value) = line.split(/: /)
           value = value.gsub(/,/,",\n")
@@ -38,8 +41,11 @@ def process_crypto_list()
           table = handle_table("row","",row,table)
         else
           if line.match(/^CKM/)
-            line = line.gsub(/_DH/,"_DH ")
-            row = line.split(/\s+/)
+            if line.match(/DH[0-9][0-9]/)
+              line  = line.gsub(/_DH/,"_DH ")
+            end
+            row   = line.split(/\s+/)
+            table = handle_table("row","",row,table)
           end
         end
       else
