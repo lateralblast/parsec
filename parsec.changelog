@@ -465,3 +465,9 @@
 # Improved PDF photo page creation
 # 2.3.2: Sat 13 Aug 2016 20:29:59 AEST
 # Added code to pad table rows
+# 2.3.3: Sat 13 Aug 2016 21:17:44 AEST
+# Improved crypto report output
+# 2.3.4: Sat 13 Aug 2016 22:02:28 AEST
+# Improved table processing for PDF generation
+# 2.3.5: Sun 14 Aug 2016 15:52:12 AEST
+# Improved photo file name determination
