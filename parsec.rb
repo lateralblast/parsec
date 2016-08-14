@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.3.5
+# Version:      2.3.6
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -74,9 +74,9 @@ rescue LoadError
   install_gem("unpack")
 end
 begin
-  require 'enumerator'
+  require 'enumerate'
 rescue LoadError
-  install_gem("enumerator")
+  install_gem("enumerate")
 end
 begin
   require 'prawn'

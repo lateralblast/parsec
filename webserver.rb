@@ -48,9 +48,9 @@ rescue LoadError
   install_gem("unpack")
 end
 begin
-  require 'enumerator'
+  require 'enumerate'
 rescue LoadError
-  install_gem("enumerator")
+  install_gem("enumerate")
 end
 begin
   require 'iconv'

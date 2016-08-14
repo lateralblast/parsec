@@ -471,3 +471,5 @@
 # Improved table processing for PDF generation
 # 2.3.5: Sun 14 Aug 2016 15:52:12 AEST
 # Improved photo file name determination
+# 2.3.6: Sun 14 Aug 2016 20:48:37 AEST
+# Added initial MacOS install scripts
