@@ -1,4 +1,14 @@
-# Code for creating image pages for webserver
+# Image related code
+
+# the svg name of a file
+
+def get_svg_file(exp_model)
+  svg_dir  = $base_dir+"/public/images"
+  svg_file = svg_dir+"/"+exp_model.downcase.gsub(/-| /,"_")+"_front.svg"
+  return svg_file
+end
+
+# Create a list of photo images 
 
 def get_photo_list()
   model       = get_sys_model()
@@ -52,6 +62,8 @@ def get_photo_list()
   end
   return photo_list
 end
+
+# Code for creating image pages for webserver or PDF generation
 
 def process_photos()
   if !$output_format.match(/serverhtml/)

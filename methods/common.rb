@@ -427,6 +427,9 @@ def get_model_name()
   if !model_name
     model_name = "Unknown"
   end
+  if model_name.match(/^T200$/)
+    model_name = "T2000"
+  end
   return model_name
 end
 
