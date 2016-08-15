@@ -18,6 +18,7 @@ if [ $id == 0 ]; then
 	gem install nokogiri -- --use-system-libraries
 	gem install rmagick
 	gem install sinatra
+	gem install bcrypt
 else
 	echo "Not running as root"
 	echo "Require sudo password to install gems"
@@ -35,4 +36,5 @@ else
 	sudo sh -c "gem install nokogiri -- --use-system-libraries"
 	sudo sh -c "gem install rmagick"
 	sudo sh -c "gem install sinatra"
+	sudo sh -c "gem install bcrypt"
 fi

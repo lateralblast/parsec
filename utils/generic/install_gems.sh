@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 id=`id -u`
 
@@ -11,13 +11,14 @@ if [ $id == 0 ]; then
 	gem install hex_string
 	gem install terminal-table
 	gem install unpack
-	gem install enumerator
+	gem install enumerate
 	gem install prawn
 	gem install prawn-table
 	gem install fastimage
 	gem install nokogiri -- --use-system-libraries
 	gem install rmagick
 	gem install sinatra
+	gem install bcrypt
 else
 	echo "Not running as root"
 	echo "Require sudo password to install gems"
@@ -28,12 +29,13 @@ else
 	sudo sh -c "gem install hex_string"
 	sudo sh -c "gem install terminal-table"
 	sudo sh -c "gem install unpack"
-	sudo sh -c "gem install enumerator"
+	sudo sh -c "gem install enumerate"
 	sudo sh -c "gem install prawn"
 	sudo sh -c "gem install prawn-table"
 	sudo sh -c "gem install fastimage"
 	sudo sh -c "gem install nokogiri -- --use-system-libraries"
 	sudo sh -c "gem install rmagick"
 	sudo sh -c "gem install sinatra"
+	sudo sh -c "gem install bcrypt"
 fi
 
