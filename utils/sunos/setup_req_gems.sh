@@ -11,7 +11,7 @@ if [ $id == 0 ]; then
 	gem install hex_string
 	gem install terminal-table
 	gem install unpack
-	gem install enumerator
+	gem install enumerate
 	gem install prawn
 	gem install prawn-table
 	gem install fastimage
@@ -28,7 +28,7 @@ else
 	sudo sh -c "gem install hex_string"
 	sudo sh -c "gem install terminal-table"
 	sudo sh -c "gem install unpack"
-	sudo sh -c "gem install enumerator"
+	sudo sh -c "gem install enumerate"
 	sudo sh -c "gem install prawn"
 	sudo sh -c "gem install prawn-table"
 	sudo sh -c "gem install fastimage"
