@@ -6,8 +6,9 @@ if [ $id == 0 ]; then
   echo "Running as root"
   echo "Installing required packages"
   apt-get install -y ruby
+  apt-get install -y ruby-dev
   apt-get install -y gcc
-  apt-get install -y imagemagick
+  apt-get install -y libmagickwand-dev imagemagick
   apt-get install -y libxml2
   apt-get install -y pigz
   apt-get install -y wget
@@ -24,8 +25,9 @@ else
   echo "Require sudo password to install packages"
   sudo -Sv
   sudo sh -c "apt-get install -y ruby"
+  sudo sh -c "apt-get install -y ruby-dev"
   sudo sh -c "apt-get install -y gcc"
-  sudo sh -c "apt-get install -y imagemagick"
+  sudo sh -c "apt-get install -y libmagickwand-dev imagemagick"
   sudo sh -c "apt-get install -y libxml2"
   sudo sh -c "apt-get install -y pigz"
   sudo sh -c "apt-get install -y wget"
