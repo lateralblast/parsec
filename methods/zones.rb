@@ -18,7 +18,9 @@ def process_running_zones()
           row[1] = "MASKED"
           row[3] = "MASKED"
         end
-        row   = row.pad_right(6,"NA")
+        if !row[5]
+          row   = row.pad_right(6,"NA")
+        end
         table = handle_table("row","",row,table)
       end
     end
@@ -120,7 +122,9 @@ def process_configured_zones()
           row[0] = "MASKED"
           row[2] = "MASKED"
         end
-        row   = row.pad_right(4,"NA")
+        if !row[3]
+          row   = row.pad_right(4,"NA")
+        end
         table = handle_table("row","",row,table)
       end
     end

@@ -473,3 +473,5 @@
 # Improved photo file name determination
 # 2.3.6: Sun 14 Aug 2016 20:48:37 AEST
 # Added initial MacOS install scripts
+# 2.3.7: Sun 11 Sep 2016 14:47:05 AEST
+# Fixed zone output
