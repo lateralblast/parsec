@@ -483,3 +483,5 @@
 # Fixed network report
 # 2.4.1: Sun 11 Sep 2016 16:39:55 AEST
 # Fixed FRU report on V240
+# 2.4.2: Sun 11 Sep 2016 16:48:13 AEST
+# Improved valid report name test

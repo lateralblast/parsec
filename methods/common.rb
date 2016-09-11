@@ -438,9 +438,15 @@ end
 def check_valid_report_type(report_name)
   counter  = 0
   position = 0
+  valid    = 0
   if !report_name.match(/all/)
     valid_report_list = get_full_report_list()
-    if !valid_report_list.to_s.match(/#{report_name}/)
+    valid_report_list.each do |test_name|
+      if test_name == report_name
+        valid = 1
+      end
+    end
+    if valid == 0
       puts
       puts "Invalid report type: "+$report_type
       puts
