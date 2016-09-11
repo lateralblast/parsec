@@ -19,8 +19,12 @@ def process_eeprom()
       if !line.match(/data not available/)
         (parameter,value) = line.split(/\=/)
         if value
-          value = value.remove_non_ascii
-          value = value.strip_control_characters
+          #value = value.remove_non_ascii
+          if $masked == 1 and parameter.match(/nvramrc/) and value.match(/[A-Z]|[a-z]|[0-9]/)
+            value = "MASKED"
+          else
+            value = value.strip_control_characters
+          end
           table = handle_table("row",parameter,value,table)
         end
       end

@@ -433,6 +433,40 @@ def get_model_name()
   return model_name
 end
 
+# Check valid report type
+
+def check_valid_report_type(report_name)
+  counter  = 0
+  position = 0
+  if !report_name.match(/all/)
+    valid_report_list = get_full_report_list()
+    if !valid_report_list.to_s.match(/#{report_name}/)
+      puts
+      puts "Invalid report type: "+$report_type
+      puts
+      puts "Valid reports:"
+      puts
+      list_length = valid_report_list.length
+      valid_report_list.each do |report_name|
+        position = position + report_name.length + 1
+        if position > 70
+          print "\n"
+          position = 0
+        end
+        counter = counter + 1
+        if counter < list_length
+          print report_name+", "
+        else
+          print report_name
+        end
+      end
+      puts
+      exit
+    end
+  end
+  return
+end
+
 # Get header for handbook file
 
 def get_handbook_header(model)

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.3.7
+# Version:      2.3.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -674,6 +674,7 @@ end
 
 if option["report"]
   $report_type = option["report"]
+  check_valid_report_type($report_type)
   if !option["input"] and !option["server"]
     puts "Input file or home name not specified"
     print_help()

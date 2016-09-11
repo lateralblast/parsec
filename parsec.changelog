@@ -475,3 +475,5 @@
 # Added initial MacOS install scripts
 # 2.3.7: Sun 11 Sep 2016 14:47:05 AEST
 # Fixed zone output
+# 2.3.8: Sun 11 Sep 2016 16:00:42 AEST
+# Added check for report type
