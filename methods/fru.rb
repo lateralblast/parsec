@@ -158,7 +158,7 @@ def process_sensors()
           end
         end
       else
-        if sys_model.match(/V240|T200/)
+        if sys_model.match(/V240|T200|V440/)
           if line.match(/^Location/) and !line.match(/Keyswitch/)
             row    = line.split(/\s+/)
             labels = row
@@ -210,9 +210,12 @@ def process_sensors()
               if row[0].match(/CPU/) and row[1].match(/[0-9]/) and row[2].match(/[0-9]/)
                 temp = [ row[0..1].join(" "), row[2], status ]
               else
-                temp = [ row[0], row[1], row[2..-1].join(" ") ]
+                temp   = [ row[0], row[1], row[2..-1].join(" ") ]
               end
               row  = temp
+              if !row[2].match(/\-|[A-Z]|[a-z]|[0-9]/)
+                row[2] = "-"
+              end
             else
               if row[0].match(/AMBIENT/)
                 row = [ row[0], row[1], status ]

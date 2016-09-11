@@ -485,3 +485,5 @@
 # Fixed FRU report on V240
 # 2.4.2: Sun 11 Sep 2016 16:48:13 AEST
 # Improved valid report name test
+# 2.4.3: Sun 11 Sep 2016 17:09:01 AEST
+# Improved sensor reporting on V440
