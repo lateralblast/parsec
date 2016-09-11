@@ -637,8 +637,12 @@ def process_network()
             nic_ip   = get_hostname_ip(nic_host)
             nic_eth  = get_if_ether(nic_name)
           end
-          if !nic_ip.match(/[0-9]/)
+          if !nic_ip
             nic_ip = get_if_ip(nic_name)
+          else
+            if !nic_ip.match(/[0-9]/)
+              nic_ip = get_if_ip(nic_name)
+            end
           end
         end
         if os_ver.match(/11/)
