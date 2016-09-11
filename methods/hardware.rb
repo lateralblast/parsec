@@ -26,9 +26,9 @@ def get_model_from_hostid(hostid)
     model = "M3000"
   when /^832/
     model = "480R"
-  when /^83db|^83f2/
+  when /^83db|^83f2|^837b/
     model = "V490"
-  when /^83a/
+  when /^83[5,a]/
     model = "V440"
   when /^83c/
     model = "V120"
