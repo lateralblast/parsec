@@ -481,3 +481,5 @@
 # Improved hardware quick lookup for V440 and V490
 # 2.4.0: Sun 11 Sep 2016 16:27:23 AEST
 # Fixed network report
+# 2.4.1: Sun 11 Sep 2016 16:39:55 AEST
+# Fixed FRU report on V240

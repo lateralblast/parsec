@@ -55,6 +55,11 @@ def process_fru()
     if !sys_model.match(/V240|T200/)
       row   = [ 'Location', 'Name', 'Status' ]
       table = handle_table("title",title,row,"")
+    else
+      if sys_model.match(/V240/)
+        row   = [ 'Location', 'Status' ]
+        table = handle_table("title",title,row,"")
+      end
     end
     fru_info.each do |line|
       line = line.chomp
