@@ -147,10 +147,19 @@ def process_cpu()
           if line.match(/^ [A-Z]/)
             board_no  = cpu_line[1]
             cpu_no    = cpu_line[2]
-            cpu_speed = cpu_line[3]+" MHz"
-            cpu_cache = cpu_line[4]
-            cpu_type  = cpu_line[5]
-            cpu_mask  = cpu_line[6]
+            if cpu_no.match(/\,/)
+              cpu_no    = cpu_no.gsub(/\,/,"")
+              core_no   = cpu_line[2]+cpu_line[3]
+              cpu_speed = cpu_line[4]+" MHz"
+              cpu_cache = cpu_line[5]
+              cpu_type  = cpu_line[6]
+              cpu_mask  = cpu_line[7]
+            else
+              cpu_speed = cpu_line[3]+" MHz"
+              cpu_cache = cpu_line[4]
+              cpu_type  = cpu_line[5]
+              cpu_mask  = cpu_line[6]
+            end
           end
         when /V4/
           if line.match(/^[0-9]/)

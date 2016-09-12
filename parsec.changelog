@@ -489,3 +489,5 @@
 # Improved sensor reporting on V440
 # 2.4.4: Mon 12 Sep 2016 14:55:59 AEST
 # Improved handling of hostname search and added sds, cpus, disks and zone report name remap
+# 2.4.5: Tue 13 Sep 2016 00:04:32 AEST
+# Fixed CPU report for V490
