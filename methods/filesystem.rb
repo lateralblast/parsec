@@ -88,6 +88,14 @@ def process_vfstab_info(table,search)
 end
 
 def process_filesystem()
-  table = process_file_systems()
+  table   = []
+  t_table = process_file_systems()
+  if t_table.class == Array
+    table = table + t_table
+  end
+  t_table = process_zfs_list()
+  if t_table.class == Array
+    table = table + t_table
+  end
   return table
 end

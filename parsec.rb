@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.4.6
+# Version:      2.4.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -674,7 +674,7 @@ end
 
 if option["report"]
   $report_type = option["report"]
-  $report_type = $report_type.gsub(/cpus/,"cpu").gsub(/zone$/,"zones").gsub(/disks/,"disk").gsub(/sds/,"svm")
+  $report_type = $report_type.gsub(/cpus/,"cpu").gsub(/zone$/,"zones").gsub(/disks/,"disk").gsub(/sds/,"svm").gsub(/filesystems/,"filesystem")
   check_valid_report_type($report_type)
   if !option["input"] and !option["server"]
     puts "Input file or home name not specified"

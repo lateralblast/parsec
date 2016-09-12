@@ -30,6 +30,35 @@ def get_zfs_volumes()
   return file_array
 end
 
+# Get ZFS pool status
+
+def get_zfs_pool_status()
+  file_name = "/disks/zfs/zpool_status_-v.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Get ZFS pool info
+
+def get_zpool_status(zpool_name)
+  file_array   = get_zfs_pool_status()
+  found_zpool  = 0
+  zpool_status = []
+  file_array.each do |line|
+    line = line.chomp
+    if line.match(/pool:/)
+      found_zpool = 0
+    end
+    if line.match(/pool: #{zpool_name}$/)
+      found_zpool = 1
+    end
+    if found_zpool = 1
+      zpool_status.push(line)
+    end
+  end
+  return zpool_status
+end
+
 # Process ZFS
 
 def process_zfs()
@@ -39,10 +68,6 @@ def process_zfs()
     handle_output("No ZFS information available\n")
   end
   table   = []
-  t_table = process_zfs_list()
-  if t_table.class == Array
-    table = table + t_table
-  end
   t_table = process_zpool_list()
   if t_table.class == Array
     table = table + t_table
@@ -179,11 +204,32 @@ def process_zfs_snapshots()
   return table
 end
 
+# Get zpool disks
+
+def get_zpool_disks(zpool_name)
+  zpool_disks = []
+  file_array  = get_zpool_status(zpool_name)
+  file_array.each do |line|
+    line = line.chomp
+    if line.match(/c[0-9]t[0-9]/)
+      disk = line.split(/\s+/)[1]
+      zpool_disks.push(disk)
+    end
+  end
+  if zpool_disks.length < 2
+    zpool_disks = zpool_disks.join
+  else
+    zpool_disks = zpool_disks.join(",")
+  end
+  return zpool_disks
+end
+
 # Process ZFS pool list
 
 def process_zpool_list()
   file_array = get_zpool_list()
-  table = ""
+  zpool_name = ""
+  table      = ""
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/) and !file_array.to_s.match(/no pools available|no datasets available/)
       file_array.each do |line|
       line  = line.chomp.gsub(/\s+$/,"")
@@ -192,6 +238,10 @@ def process_zpool_list()
         items  = line.split(/\s+/)
         if $masked == 1
           items[0] = "MASKED"
+        else
+          zpool_name  = items[0]
+          zpool_disks = get_zpool_disks(zpool_name)
+          items[0]    = zpool_name+" ("+zpool_disks+")"
         end
         table  = handle_table("row","",items,table)
       else
