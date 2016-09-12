@@ -149,7 +149,7 @@ def process_cpu()
             cpu_no    = cpu_line[2]
             if cpu_no.match(/\,/)
               cpu_no    = cpu_no.gsub(/\,/,"")
-              core_no   = cpu_line[2]+cpu_line[3]
+              cpu_ids   = cpu_line[2]+cpu_line[3]
               cpu_speed = cpu_line[4]+" MHz"
               cpu_cache = cpu_line[5]
               cpu_type  = cpu_line[6]
@@ -206,6 +206,20 @@ def process_cpu()
           end
           core_no = (t_count / t_ratio)
           t_count = t_count+1
+        end
+        case cpu_type
+        when /SPARC64-VII/
+          cpu_thread = "2"
+          core_no    = "4"
+        when /SPARC64-VI/
+          cpu_thread = "2"
+          core_no    = "2"
+        when /US-IV/
+          cpu_thread = "1"
+          core_no    = "2"
+        when /US-I/
+          cpu_thread = "1"
+          core_no    = "1"
         end
         row   = [ board_no, cpu_module, cpu_no, core_no, cpu_thread, cpu_status, cpu_speed, cpu_mask, cpu_cache, cpu_type, cpu_ids ]
         table = handle_table("row","",row,table)

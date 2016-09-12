@@ -491,3 +491,5 @@
 # Improved handling of hostname search and added sds, cpus, disks and zone report name remap
 # 2.4.5: Tue 13 Sep 2016 00:04:32 AEST
 # Fixed CPU report for V490
+# 2.4.6: Tue 13 Sep 2016 00:31:14 AEST
+# Improved CPU reporting
