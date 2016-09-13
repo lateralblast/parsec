@@ -118,6 +118,14 @@ def process_cpu()
       if line.match(/[0-9][0-9]/)
         cpu_line = line.split(/\s+/)
         case sys_model
+        when /E[2,4]50|Enterprise [2,4]50/
+          board_no   = cpu_line[0]
+          cpu_module = cpu_line[2]
+          cpu_no     = cpu_line[1]
+          cpu_speed  = cpu_line[3]+" MHz"
+          cpu_cache  = cpu_line[4]+" MB"
+          cpu_type   = cpu_line[5]
+          cpu_mask   = cpu_line[6]
         when /T[0-9]|M10-|M[5,6,7]-/
           if line.match(/^[0-9]/)
             cpu_thread = cpu_line[0]
