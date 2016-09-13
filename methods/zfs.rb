@@ -52,7 +52,7 @@ def get_zpool_status(zpool_name)
     if line.match(/pool: #{zpool_name}$/)
       found_zpool = 1
     end
-    if found_zpool = 1
+    if found_zpool == 1
       zpool_status.push(line)
     end
   end
@@ -211,7 +211,7 @@ def get_zpool_disks(zpool_name)
   file_array  = get_zpool_status(zpool_name)
   file_array.each do |line|
     line = line.chomp
-    if line.match(/c[0-9]t[0-9]/)
+    if line.match(/c[0-9]t[0-9]|c[0-9][0-9]t[0-9]/)
       disk = line.split(/\s+/)[1]
       zpool_disks.push(disk)
     end
@@ -219,7 +219,11 @@ def get_zpool_disks(zpool_name)
   if zpool_disks.length < 2
     zpool_disks = zpool_disks.join
   else
-    zpool_disks = zpool_disks.join(",")
+    if zpool_disks.length > 2
+      zpool_disks = zpool_disks.join(",\n")
+    else
+      zpool_disks = zpool_disks.join(",")
+    end
   end
   return zpool_disks
 end

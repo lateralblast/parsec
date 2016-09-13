@@ -493,3 +493,5 @@
 # Fixed CPU report for V490
 # 2.4.6: Tue 13 Sep 2016 00:31:14 AEST
 # Improved CPU reporting
+# 2.4.7: Tue 13 Sep 2016 11:15:48 AEST
+# Improved ZFS pool reporting
