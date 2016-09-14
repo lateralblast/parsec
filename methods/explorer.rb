@@ -39,38 +39,42 @@ def handle_explorer(report,file_list,search_model,search_date,search_year,search
         end
 #      end
       if $verbose_mode == 1 and !$output_format.match(/pdf/)
-        puts "Processing explorer ("+$report_type+") report for "+exp_name
+        print "Processing explorer ("+$report_type+") report for "+exp_name
       end
       $exp_file = file_name
-      #$exp_info[:$exp_id][:$exp_key][:file] = file_name
-      config_report(report,exp_name)
-      if search_name.match(/^all$/) and pause_mode == 1
-         print "continue (y/n)? "
-         STDOUT.flush()
-         exit if 'n' == STDIN.gets.chomp
-      end
-      if $output_format.match(/pdf/)
-        pdf = Prawn::Document.new
+      if exp_name.match(/[a-z]|[0-9]/)
         if search_name.match(/^all$/)
-          output_pdf = $output_dir+"/"+exp_name+".pdf"
-        else
-          output_pdf = $output_file.gsub(/\.txt$/,".pdf")
+          puts "Host: "+exp_name+" Report: "+$report_type
         end
-        if $verbose_mode == 1
-          puts "Input file:  "+$output_file
-          puts "Output file: "+output_pdf
+        config_report(report,exp_name)
+        if search_name.match(/^all$/) and $pause_mode == 1
+           print "continue (y/n)? "
+           STDOUT.flush()
+           exit if 'n' == STDIN.gets.chomp
         end
-        if $masked == 1
-          document_title = "Explorer: masked"
-        else
-          document_title = "Explorer: "+exp_name
+        if $output_format.match(/pdf/)
+          pdf = Prawn::Document.new
+          if search_name.match(/^all$/)
+            output_pdf = $output_dir+"/"+exp_name+".pdf"
+          else
+            output_pdf = $output_file.gsub(/\.txt$/,".pdf")
+          end
+          if $verbose_mode == 1
+            puts "Input file:  "+$output_file
+            puts "Output file: "+output_pdf
+          end
+          if $masked == 1
+            document_title = "Explorer: masked"
+          else
+            document_title = "Explorer: "+exp_name
+          end
+          if $masked == 1
+            customer_name = "Masked"
+          else
+            customer_name = get_customer_name()
+          end
+          generate_pdf(pdf,document_title,output_pdf,customer_name)
         end
-        if $masked == 1
-          customer_name = "Masked"
-        else
-          customer_name = get_customer_name()
-        end
-        generate_pdf(pdf,document_title,output_pdf,customer_name)
       end
     end
   end
@@ -367,7 +371,8 @@ end
 # Get a list of explorers based on search strings
 
 def get_explorer_file_list(search_model,search_date,search_year,search_name)
-  exp_list = []
+  exp_list  = []
+  host_list = []
   if Dir.exist?($exp_dir) or File.symlink?($exp_dir)
     file_list = Dir.entries($exp_dir).sort.reject{|entry| entry.match(/\._/)}
     file_list.each do |file_name|
@@ -387,7 +392,14 @@ def get_explorer_file_list(search_model,search_date,search_year,search_name)
           if !search_date.match(/[0-9]/) or exp_date.match(/#{search_date}/) or search_date.match(/^all$/)
             if !search_year.match(/[0-9]/) or exp_year.match(/#{search_year}/) or search_year.match(/^all$/)
               if !search_name.match(/[a-z]/) or exp_name.match(/^#{search_name}$/) or search_name.match(/^all$/)
-                exp_list.push(file_name)
+                if search_name.match(/^all$/)
+                  if !host_list.include?(exp_name)
+                    exp_list.push(file_name)
+                    host_list.push(exp_name)
+                  end
+                else
+                  exp_list.push(file_name)
+                end
               end
             end
           end

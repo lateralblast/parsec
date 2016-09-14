@@ -497,3 +497,5 @@
 # Improved ZFS pool reporting
 # 2.4.8: Tue 13 Sep 2016 20:26:12 AEST
 # Fixed Memory reporting for E450
+# 2.4.9: Thu 15 Sep 2016 07:50:05 AEST
+# Added df report

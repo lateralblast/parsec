@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.4.8
+# Version:      2.4.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -543,9 +543,9 @@ end
 # Pause mode
 
 if option["pause"]
-  pause_mode = 1
+  $pause_mode = 1
 else
-  pause_mode = 0
+  $pause_mode = 0
 end
 
 # Mask data

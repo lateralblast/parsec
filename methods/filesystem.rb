@@ -1,5 +1,7 @@
 # Filesystem related code
 
+# Get vfstab info
+
 def get_vfstab()
   file_name  = "/etc/vfstab"
   file_array = exp_file_to_array(file_name)
@@ -15,8 +17,8 @@ def process_file_systems()
     handle_output("\n")
     counter = 0
     title   = "File Systems ("+file_name+")"
-    row   = [ 'Device', 'Mount', 'Type' ]
-    table = handle_table("title",title,row,"")
+    row     = [ 'Device', 'Mount', 'Type' ]
+    table   = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
       if line.match(/^\/dev/)
@@ -35,6 +37,56 @@ def process_file_systems()
         end
         row   = [fs_dev,fs_mount,fs_type]
         table = handle_table("row","",row,table)
+      end
+    end
+    table = handle_table("end","","",table)
+  else
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No filesystem information available\n")
+    else
+      table = ""
+      table = handle_output("\n")
+      table = handle_output("No filesystem information available\n")
+    end
+  end
+  return table
+end
+
+# Get df info
+
+def get_vfstab()
+  file_name  = "/disks/df-kl.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process df info
+
+def process_df()
+  file_name  = "/etc/vfstab"
+  file_array = get_vfstab()
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title   = "File System Usage"
+    row     = [ 'Device', 'Size', 'Used', 'Available', 'Capacity', 'Mount' ]
+    table   = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      if line.match(/^\/dev|pool/)
+        items  = line.split(/\s+/)
+        fs_dev = items[0]
+        if !fs_dev.match(/devices$|dev$/)
+          fs_tkb = items[1]
+          fs_ukb = items[2]
+          fs_akb = items[3]
+          fs_per = items[4]
+          fs_mnt = items[5]
+          fs_tgb = (fs_tkb.to_f/1024/1024).round(2).to_s+"G"
+          fs_ugb = (fs_ukb.to_f/1024/1024).round(2).to_s+"G"
+          fs_agb = (fs_akb.to_f/1024/1024).round(2).to_s+"G"
+          row    = [ fs_dev, fs_tgb, fs_ugb, fs_agb, fs_per, fs_mnt ]
+          table  = handle_table("row","",row,table)
+        end
       end
     end
     table = handle_table("end","","",table)
