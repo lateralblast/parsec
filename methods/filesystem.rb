@@ -72,15 +72,15 @@ def process_df()
     table   = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
-      if line.match(/^\/dev|pool/)
+      if !line.match(/^Filesystem/)
         items  = line.split(/\s+/)
         fs_dev = items[0]
-        if !fs_dev.match(/devices$|dev$/)
-          fs_tkb = items[1]
-          fs_ukb = items[2]
-          fs_akb = items[3]
-          fs_per = items[4]
-          fs_mnt = items[5]
+        fs_tkb = items[1]
+        fs_ukb = items[2]
+        fs_akb = items[3]
+        fs_per = items[4]
+        fs_mnt = items[5]
+        if !fs_tkb.match(/^0$/)
           fs_tgb = (fs_tkb.to_f/1024/1024).round(2).to_s+"G"
           fs_ugb = (fs_ukb.to_f/1024/1024).round(2).to_s+"G"
           fs_agb = (fs_akb.to_f/1024/1024).round(2).to_s+"G"

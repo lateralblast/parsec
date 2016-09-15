@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.4.9
+# Version:      2.5.0
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -531,6 +531,7 @@ end
 
 if option["format"]
   $output_format = option["format"].downcase
+  $output_format = $output_format.gsub(/textcsv|csv/,"pipecsv")
   $output_format = $output_format.gsub(/text/,"pipe")
   check_output_format()
 else

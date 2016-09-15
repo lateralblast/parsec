@@ -296,11 +296,19 @@ def handle_output(output)
         output.each do |line|
           line = line.gsub(/^\s+/,"")
           if line.match(/[0-9]|[A-Z]|[a-z]/)
-            puts line
+            if $output_format.match(/csv/) and !line.match(/::/)
+              puts line.gsub(/\s+/,",").gsub(/\,$/,"")
+            else
+              puts line
+            end
           end
         end
       else
-        print output
+        if $output_format.match(/csv/) and !line.match(/::/)
+          print output.gsub(/\s+/,",").gsub(/\,$/,"")
+        else
+          print output
+        end
       end
     end
     if $output_format.match(/html/)

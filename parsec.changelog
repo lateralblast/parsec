@@ -499,3 +499,5 @@
 # Fixed Memory reporting for E450
 # 2.4.9: Thu 15 Sep 2016 07:50:05 AEST
 # Added df report
+# 2.5.0: Thu 15 Sep 2016 12:30:50 AES
+# Fixed CSV output
