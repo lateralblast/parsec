@@ -80,7 +80,7 @@ def process_df()
         fs_akb = items[3]
         fs_per = items[4]
         fs_mnt = items[5]
-        if !fs_tkb.match(/^0$/)
+        if !fs_tkb.match(/^0$/) and !fs_dev.match(/^\/platform/)
           fs_tgb = (fs_tkb.to_f/1024/1024).round(2).to_s+"G"
           fs_ugb = (fs_ukb.to_f/1024/1024).round(2).to_s+"G"
           fs_agb = (fs_akb.to_f/1024/1024).round(2).to_s+"G"
