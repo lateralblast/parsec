@@ -67,8 +67,11 @@ def process_df()
   file_name  = "/etc/vfstab"
   file_array = get_vfstab()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    t_size  = 0
+    t_used  = 0
+    t_avail = 0
     title   = "File System Usage"
-    row     = [ 'Device', 'Size', 'Used', 'Available', 'Capacity', 'Mount' ]
+    row     = [ 'Device', 'Size (GB)', 'Used (GB)', 'Available (GB)', 'Capacity (%)', 'Mount' ]
     table   = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
@@ -81,14 +84,76 @@ def process_df()
         fs_per = items[4]
         fs_mnt = items[5]
         if !fs_tkb.match(/^0$/) and !fs_dev.match(/^\/platform/)
-          fs_tgb = (fs_tkb.to_f/1024/1024).round(2).to_s+"G"
-          fs_ugb = (fs_ukb.to_f/1024/1024).round(2).to_s+"G"
-          fs_agb = (fs_akb.to_f/1024/1024).round(2).to_s+"G"
-          row    = [ fs_dev, fs_tgb, fs_ugb, fs_agb, fs_per, fs_mnt ]
-          table  = handle_table("row","",row,table)
+          fs_tgb  = (fs_tkb.to_f/1024/1024)
+          fs_ugb  = (fs_ukb.to_f/1024/1024)
+          fs_agb  = (fs_akb.to_f/1024/1024)
+          row     = [ fs_dev, fs_tgb.round(2).to_s, fs_ugb.round(2).to_s, fs_agb.round(2).to_s, fs_per, fs_mnt ]
+          table   = handle_table("row","",row,table)
         end
       end
     end
+    table = handle_table("end","","",table)
+  else
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No filesystem information available\n")
+    else
+      table = ""
+      table = handle_output("\n")
+      table = handle_output("No filesystem information available\n")
+    end
+  end
+  return table
+end
+
+# Process df info with totals and transfer estimates
+
+def process_dfx()
+  file_name  = "/etc/vfstab"
+  file_array = get_vfstab()
+  t_size  = 0
+  t_used  = 0
+  t_avail = 0
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title   = "File System Usage"
+    row     = [ 'Device', 'Size (GB)', 'Used (GB)', 'Available (GB)', 'Capacity (%)', 'Mount' ]
+    table   = handle_table("title",title,row,"")
+    file_array.each do |line|
+      line = line.chomp
+      if !line.match(/^Filesystem/)
+        items  = line.split(/\s+/)
+        fs_dev = items[0]
+        fs_tkb = items[1]
+        fs_ukb = items[2]
+        fs_akb = items[3]
+        fs_per = items[4]
+        fs_mnt = items[5]
+        if !fs_tkb.match(/^0$/) and !fs_dev.match(/^\/platform/)
+          fs_tgb  = (fs_tkb.to_f/1024/1024)
+          fs_ugb  = (fs_ukb.to_f/1024/1024)
+          fs_agb  = (fs_akb.to_f/1024/1024)
+          if !fs_dev.match(/swap/)
+            t_size  = t_size.to_f+fs_tgb.to_f
+            t_used  = t_used.to_f+fs_ugb.to_f
+            t_avail = t_avail.to_f+fs_agb.to_f
+          end
+          row     = [ fs_dev, fs_tgb.round(2).to_s, fs_ugb.round(2).to_s, fs_agb.round(2).to_s, fs_per, fs_mnt ]
+          table   = handle_table("row","",row,table)
+        end
+      end
+    end
+    table = handle_table("line","",row,table)
+    row   = [ "Totals", t_size.to_f.round(2).to_s, t_used.to_f.round(2).to_s, t_avail.to_f.round(2).to_s, "", "" ]
+    table = handle_table("row","",row,table)
+    table = handle_table("line","",row,table)
+    row   = [ "Transfer Time (hours)  - 100MB", "", (t_used.to_f*1.25*0.01666.to_f).round(2).to_s, "", "" , "" ]
+    table = handle_table("row","",row,table)
+    table = handle_table("line","",row,table)
+    row   = [ "Transfer Time (hours)  - 1GB", "", (t_used.to_f*0.125*0.01666.to_f).round(2).to_s, "", "" , "" ]
+    table = handle_table("row","",row,table)
+    table = handle_table("line","",row,table)
+    row   = [ "Transfer Time (hours)  - 10GB", "", (t_used.to_f*0.125*0.01666*0.1.to_f).round(2).to_s, "", "" , "" ]
+    table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
     if $output_format.match(/table|pipe/)

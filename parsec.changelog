@@ -505,3 +505,5 @@
 # Removed /platform from df report
 # 2.5.2: Fri 16 Sep 2016 12:52:27 AEST
 # Fixed reporting for 'all' as a server name and using an explorer file as input
+# 2.5.3: Fri 16 Sep 2016 17:18:49 AEST
+# Added dfx report to estimate data transfer times
