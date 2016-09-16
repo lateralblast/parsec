@@ -509,3 +509,5 @@
 # Added dfx report to estimate data transfer times
 # 2.5.4: Sat 17 Sep 2016 08:18:24 AEST
 # Improved CPU report on T series
+# 2.5.5: Sat 17 Sep 2016 08:30:41 AEST
+# Improved hardware determination for listing
