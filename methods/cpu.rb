@@ -113,6 +113,7 @@ def process_cpu()
     cp_cache   = ""
     cpu_type   = ""
     cpu_ids    = ""
+    temp_no    = "0"
     cpu_info.each do |line|
       line = line.chomp
       if line.match(/[0-9][0-9]/)
@@ -228,6 +229,14 @@ def process_cpu()
         when /US-I/
           cpu_thread = "1"
           core_no    = "1"
+        end
+        if cpu_type.match(/SPARC-T/)
+          if core_no.to_i > 0
+            if core_no.to_i > temp_no.to_i
+              table = handle_table("line","",row,table)
+              temp_no = core_no
+            end
+          end
         end
         row   = [ board_no, cpu_module, cpu_no, core_no, cpu_thread, cpu_status, cpu_speed, cpu_mask, cpu_cache, cpu_type, cpu_ids ]
         table = handle_table("row","",row,table)

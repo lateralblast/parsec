@@ -507,3 +507,5 @@
 # Fixed reporting for 'all' as a server name and using an explorer file as input
 # 2.5.3: Fri 16 Sep 2016 17:18:49 AEST
 # Added dfx report to estimate data transfer times
+# 2.5.4: Sat 17 Sep 2016 08:18:24 AEST
+# Improved CPU report on T series
