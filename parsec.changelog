@@ -503,3 +503,5 @@
 # Fixed CSV output
 # 2.5.1: Thu 15 Sep 2016 13:42:18 AEST
 # Removed /platform from df report
+# 2.5.2: Fri 16 Sep 2016 12:52:27 AEST
+# Fixed reporting for 'all' as a server name and using an explorer file as input

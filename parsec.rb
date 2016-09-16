@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.5.1
+# Version:      2.5.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -642,10 +642,7 @@ if option["input"]
     puts "Input file: "+$exp_file+" does not exist"
     exit
   end
-  host_name  = get_hostname_from_explorer_File()
-  exp_data[host_name]["file"] = $exp_file
-  host_names = []
-  host_names.push(host_name)
+  search_name  = get_hostname_from_explorer_file($exp_file)
 else
   if !option["server"]
     if !option["help"]
@@ -658,7 +655,6 @@ else
   $exp_dir    = $base_dir.chomp()
   $exp_dir    = $exp_dir+"/explorers"
   search_name = option["server"]
-  file_list   = get_explorer_file_list(search_model,search_date,search_year,search_name)
 end
 
 # Set work directory
@@ -699,5 +695,14 @@ end
 # Handle explorer output
 
 if input_type.match(/explorer/)
- handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
+  if search_name.match(/\,/)
+    search_names = search_name.split(/\,/)
+    search_names.each do |search_name|
+      file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
+      handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
+    end
+  else
+    file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
+    handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
+  end
 end

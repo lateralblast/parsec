@@ -46,6 +46,7 @@ def handle_explorer(report,file_list,search_model,search_date,search_year,search
         if search_name.match(/^all$/)
           puts "Host: "+exp_name+" Report: "+$report_type
         end
+        $exp_file_list = []
         config_report(report,exp_name)
         if search_name.match(/^all$/) and $pause_mode == 1
            print "continue (y/n)? "
