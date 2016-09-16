@@ -230,6 +230,14 @@ def process_cpu()
           cpu_thread = "1"
           core_no    = "1"
         end
+        if cpu_type.match(/SPARC-M7/)
+          if (cpu_thread.to_i-1).modulo(8).zero?
+            table   = handle_table("line","",row,table)
+            core_no = temp_no
+            temp_no = temp_no.to_i+1
+            cpu_no  = ((cpu_thread.to_i+1)/256).round(0)
+          end
+        end
         if cpu_type.match(/SPARC-T/)
           if core_no.to_i > 0
             if core_no.to_i > temp_no.to_i
