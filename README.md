@@ -122,6 +122,7 @@ The reporting options include:
 - Report on Crypto information
 - Report on CUPS information
 - Report on Disks
+- Report on Disk / Filesystem Usage
 - Report on Dumpadm information
 - Report on EEPROM
 - Report on Elfsign information
@@ -164,6 +165,7 @@ The reporting options include:
 - Report on Component Serial information
 - Report on Services information
 - Report on SNMP information
+- Report on SPEC information
 - Report on SSH information
 - Report on SU information
 - Report on Suspend information
