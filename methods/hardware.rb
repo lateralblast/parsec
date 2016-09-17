@@ -4,7 +4,9 @@
 
 def get_model_from_hostid(hostid)
   case hostid
-  when /^00cf/
+  when /^8626/
+    model = "M6-32"
+  when /^00c/
     model = "VMware"
   when /^809a3/
     model = "E450"
@@ -50,11 +52,9 @@ def get_model_from_hostid(hostid)
     model = "T4-1"
   when /^85[a,b]|^84f87/
     model = "T3-1"
-  when /^8626/
-    model = "M6-32"
   when /^864/
     model = "M7-8"
-  when /^008|^00cf/
+  when /^008|^00[0,c]/
     model = "x86"
   when /^00019f/
     model = "IBM System x3200 M3"
