@@ -513,3 +513,5 @@
 # Improved hardware determination for listing
 # 2.5.6: Sat 17 Sep 2016 09:04:52 AEST
 # Improved CPU report on M7-8
+# 2.5.7: Sat 17 Sep 2016 10:18:35 AEST
+# Improved CPU report for T2 systems

@@ -238,13 +238,21 @@ def process_cpu()
             cpu_no  = ((cpu_thread.to_i+1)/256).round(0)
           end
         end
-        if cpu_type.match(/SPARC-T/)
+        if cpu_type.match(/SPARC-T1/)
           if core_no.to_i > 0
             if core_no.to_i > temp_no.to_i
               table = handle_table("line","",row,table)
               temp_no = core_no
             end
           end
+        end
+        if cpu_type.match(/SPARC-T2/)
+          cpu_no  = ((cpu_thread.to_i)/64).round(0)
+          if (cpu_thread.to_i).modulo(8).zero? and !cpu_thread.match(/^0$/)
+            table   = handle_table("line","",row,table)
+            temp_no = temp_no.to_i+1
+          end
+          core_no = temp_no
         end
         row   = [ board_no, cpu_module, cpu_no, core_no, cpu_thread, cpu_status, cpu_speed, cpu_mask, cpu_cache, cpu_type, cpu_ids ]
         table = handle_table("row","",row,table)
