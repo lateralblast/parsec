@@ -28,6 +28,7 @@ end
 def get_full_report_list()
   report_list = []
   report_list.push("host")
+  report_list.push("spec")
   if $output_format.match(/serverhtml/)
     report_list.push("photos")
   end

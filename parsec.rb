@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.5.7
+# Version:      2.5.8
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -19,6 +19,7 @@ require 'rubygems'
 require 'pathname'
 require 'etc'
 require 'date'
+require 'csv'
 
 def install_gem(gem_name)
   puts "Information:\tInstalling #{gem_name}"
