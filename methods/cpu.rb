@@ -1,5 +1,64 @@
 # CPU related code
 
+# Get processor info
+
+def get_psrinfo()
+  file_name  = "/sysconfig/psrinfo-pv.out"
+  file_array = exp_file_to_array(file_name)
+  return file_array
+end
+
+# Process processor info
+
+def process_psrinfo()
+  file_array = get_psrinfo()
+  t_p_cpu    = 0
+  t_v_cpu    = 0
+  t_cores    = 0
+  if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
+    title  = "Processor Information"
+    row    = [ 'Type', 'Physical', 'Cores', 'Virtual', 'IDs' ]
+    table  = handle_table("title",title,row,"")
+    p_cpu  = file_array.grep(/SPARC/)[0].split(/\s+/).grep(/SPARC/)[0]
+    file_array.each do |line|
+      if line.match(/^The/)
+        v_cpu = ""
+        cores = ""
+        ids   = ""
+        line  = line.chomp
+        if line.match(/\(/)
+          ids = line.split(/\(/)[1].split(/\)/)[0]
+        end
+        if line.match(/virtual/)
+          v_cpu = line.split(/ virtual/)[0].split(/ /)[-1]
+        end
+        if line.match(/core/)
+          cores = line.split(/ core/)[0].split(/ /)[-1]
+        end
+        row     = [ p_cpu, "1", cores, v_cpu, ids ]
+        table   = handle_table("row","",row,table)
+        t_p_cpu = t_p_cpu+1
+        t_v_cpu = t_v_cpu+v_cpu.to_i
+        t_cores = t_cores+cores.to_i
+      end
+    end
+    table = handle_table("line","","",table)
+    row   = [ "Totals", t_p_cpu, t_cores, t_v_cpu, "" ]
+    table = handle_table("row","",row,table)
+    table = handle_table("end","","",table)
+  else
+    if $output_format.match(/table|pipe/)
+      handle_output("\n")
+      handle_output("No psrinfo\n")
+    else
+      table = ""
+      table = handle_output("\n")
+      table = handle_output("No psrinfo\n")
+    end
+  end
+  return
+end 
+
 # Get number of cores
 
 def get_core_no()

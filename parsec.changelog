@@ -519,3 +519,5 @@
 # Added SPEC report
 # 2.5.9: Sat 17 Sep 2016 14:16:44 AEST
 # Added CPU model to host report
+# 2.6.0: Sun 18 Sep 2016 10:36:23 AEST
+# Added simple psrinfo report
