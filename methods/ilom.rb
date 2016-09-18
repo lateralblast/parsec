@@ -26,12 +26,14 @@ def process_ilom_ver(table)
     if ilom_ver
       table = handle_table("row","Installed ILOM Version",ilom_ver,table)
       table = handle_table("row","Installed ILOM Build",ilom_rev,table)
-      avail_ilom  = get_avail_ilom_ver(model_name)
-      latest_ilom = compare_ver(ilom_ver,avail_ilom)
-      if latest_ilom == avail_ilom
-        avail_ilom = avail_ilom+" (Newer)"
+      if $nocheck == 0
+        avail_ilom  = get_avail_ilom_ver(model_name)
+        latest_ilom = compare_ver(ilom_ver,avail_ilom)
+        if latest_ilom == avail_ilom
+          avail_ilom = avail_ilom+" (Newer)"
+        end
+        table = handle_table("row","Available ILOM Version",avail_ilom,table)
       end
-      table = handle_table("row","Available ILOM Version",avail_ilom,table)
     end
   end
   return table

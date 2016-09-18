@@ -187,12 +187,16 @@ def process_ctlr_info(table,io_name,io_path,ctlr_no)
     end
     if io_path.match(/emlxs/)
       if hba_fw_ver
-        table = process_avail_em_fw(table,io_name,hba_fw_ver)
+        if $nocheck == 0
+          table = process_avail_em_fw(table,io_name,hba_fw_ver)
+        end
       end
     end
     if io_path.match(/qlc|fibre-channel/)
       if hba_fw_ver
-        table = process_avail_ql_fw(table,hba_part_no,hba_fw_ver)
+        if $nocheck == 0
+          table = process_avail_ql_fw(table,hba_part_no,hba_fw_ver)
+        end
       end
     end
     if hba_part_desc

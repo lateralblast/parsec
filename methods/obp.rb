@@ -93,17 +93,21 @@ def process_obp_ver(table)
       bios_ver = get_bios_ver()
       table    = handle_table("row","BIOS Version",bios_ver,table)
     else
-      avail_obp  = get_avail_obp_ver(model_name)
-      latest_obp = compare_ver(curr_obp,avail_obp)
-      if latest_obp == avail_obp
-        avail_obp = avail_obp+" (Newer)"
+      if $nocheck == 0
+        avail_obp  = get_avail_obp_ver(model_name)
+        latest_obp = compare_ver(curr_obp,avail_obp)
+        if latest_obp == avail_obp
+          avail_obp = avail_obp+" (Newer)"
+        end
       end
       if curr_obp
         table = handle_table("row","Installed OBP/BIOS Version",curr_obp,table)
       end
-      if avail_obp
-        if avail_obp.match(/[0-9]/)
-          table = handle_table("row","Available OBP/BIOS Version",avail_obp,table)
+      if $nocheck == 0
+        if avail_obp
+          if avail_obp.match(/[0-9]/)
+            table = handle_table("row","Available OBP/BIOS Version",avail_obp,table)
+          end
         end
       end
     end

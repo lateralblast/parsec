@@ -196,11 +196,11 @@ def create_front_page_preparedby(pdf,customer_name)
     pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*2], :size => font_size
     if $partner_address.match(/[A-Z]|[a-z]|[0-9]/)
       text_string = $partner_address
-      pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*2], :size => font_size
+      pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*3], :size => font_size
     end
     if $partner_city.match(/[A-Z]|[a-z]|[0-9]/)
       text_string = $partner_city
-      pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*2], :size => font_size
+      pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*4], :size => font_size
     end
   else
     text_string = "Lateral Blast Pty Ltd"

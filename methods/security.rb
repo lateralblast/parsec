@@ -64,7 +64,11 @@ def process_security(report_type)
         end
         curr_name  = file_name
         title      = "Security Settings ("+file_name+")"
-        row        = ['Item', 'Current','Recommended','Complies']
+        if $nocheck == 1
+          row = [ 'Item', 'Value' ]
+        else
+          row = [ 'Item', 'Current', 'Recommended', 'Complies' ]
+        end
         table      = handle_table("title",title,row,"")
         file_array = exp_file_to_array(file_name)
         curr_name  = file_name
@@ -82,7 +86,11 @@ def process_security(report_type)
               else
                 comment = "*No*"
               end
-              row   = [param_name,curr_val,rec_val,comment]
+              if $nocheck == 1
+                row = [ param_name, curr_val ]
+              else
+                row = [ param_name, curr_val, rec_val, comment ]
+              end
               table = handle_table("row","",row,table)
             end
           end
@@ -91,7 +99,11 @@ def process_security(report_type)
       if found == 0
         curr_val = "N/A"
         comment  = "*No*"
-        row      = [param_name,curr_val,rec_val,comment]
+        if $nocheck == 1
+          row      = [ param_name, curr_val ]
+        else
+          row      = [ param_name, curr_val, rec_val, comment ]
+        end
         table    = handle_table("row","",row,table)
       end
     end

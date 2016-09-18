@@ -194,8 +194,10 @@ def process_iostat_info(table,disk_name)
     if disk_model.match(/SUN/)
       disk_model = disk_model.split(/SUN/)[0]
     end
-    if !disk_fw.match(/0000/)
-      table = process_avail_disk_fw(table,disk_model,disk_fw)
+    if $nocheck == 0
+      if !disk_fw.match(/0000/)
+        table = process_avail_disk_fw(table,disk_model,disk_fw)
+      end
     end
     if disk_serial
       table = handle_table("row","Serial",disk_serial,table)

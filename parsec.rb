@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.6.2
+# Version:      2.6.3
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -270,6 +270,8 @@ report["zone"]     = "Report on Zone information"
 begin
   option = Getopt::Long.getopts(
     [ "--prefix",       "-b", Getopt::REQUIRED ],   # Set base/prefix directory
+    [ "--address",      "-A", Getopt::REQUIRED ],   # Set Partner Address
+    [ "--city",         "-S", Getopt::REQUIRED ],   # Set Partner City
     [ "--customer",     "-C", Getopt::REQUIRED ],   # Set customer name
     [ "--date",         "-T", Getopt::REQUIRED ],   # Set date (used in conjunction with list)
     [ "--dir",          "-d", Getopt::BOOLEAN ],    # Specify directory where explorers are (default is ./explorers)
@@ -278,6 +280,7 @@ begin
     [ "--logo",         "-L", Getopt::REQUIRED ],   # Set Partner Logo
     [ "--list",         "-l", Getopt::BOOLEAN ],    # List explorers (also lists dmidecodes and facters if present)
     [ "--masked",       "-m", Getopt::BOOLEAN ],    # Mask hostnames, IPs, MAC addresses etc
+    [ "--nocheck",      "-m", Getopt::BOOLEAN ],    # Don't do security checks
     [ "--model",        "-M", Getopt::REQUIRED ],   # Set model (used in conjunction with list)
     [ "--input",        "-i", Getopt::REQUIRED ],   # Input file
     [ "--output",       "-o", Getopt::REQUIRED ],   # Output file
@@ -405,6 +408,14 @@ def print_usage(usage,report)
   end
   puts
   return
+end
+
+# Set nocheck flag to ignore security checks
+
+if option["nocheck"]
+  $nocheck = 1
+else
+  $nocheck = 0
 end
 
 # Set logo for PDF report

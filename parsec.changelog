@@ -523,3 +523,7 @@
 # Added simple psrinfo report
 # 2.6.1: Sun 18 Sep 2016 11:36:20 AEST
 # Fixed PDF report
+# 2.6.2: Sun 18 Sep 2016 16:30:07 AEST
+# Added ability to change logo and set partner name for PDF report
+# 2.6.3: Sun 18 Sep 2016 17:32:08 AEST
+# Added nocheck switch to ignore Security and other recommendations

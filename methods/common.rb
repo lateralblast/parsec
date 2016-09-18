@@ -66,6 +66,7 @@ end
 
 $work_dir      = ""
 $verbose       = 0
+$nocheck       = 0
 $base_dir      = ""
 $do_disks      = 0
 $host_info     = {}
