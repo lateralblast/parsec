@@ -110,7 +110,7 @@ def process_zfs_volumes()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No ZFS volume information available\n")
     else
@@ -149,7 +149,7 @@ def process_zfs_list()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No ZFS filesystem information available\n")
     else
@@ -192,7 +192,7 @@ def process_zfs_snapshots()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No ZFS snapshot information available\n")
     else
@@ -255,7 +255,7 @@ def process_zpool_list()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No ZFS pool information available\n")
     else

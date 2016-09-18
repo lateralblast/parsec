@@ -47,7 +47,7 @@ def process_psrinfo()
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No psrinfo\n")
     else
@@ -348,7 +348,7 @@ def process_cpu()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No CPU information available\n")
     else

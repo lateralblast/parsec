@@ -120,7 +120,7 @@ def process_pkg_properties()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
     table = handle_output("\n")
     table = handle_output("No package property information available\n")
     else
@@ -168,7 +168,7 @@ def process_pkg_publisher()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No package publisher information available\n")
     else
@@ -223,7 +223,7 @@ def process_pkg_ips()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No IPS package information available\n")
     else
@@ -302,7 +302,7 @@ def process_packages()
       table = table + t_table
     end
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No IPS package information available\n")
     else

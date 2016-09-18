@@ -111,7 +111,7 @@ def process_vnic()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No VNIC information available\n")
     else
@@ -159,7 +159,7 @@ def process_link_slots()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No link slot information available\n")
     else
@@ -201,7 +201,7 @@ def process_link_speed()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No link information available\n")
     else
@@ -315,7 +315,7 @@ def process_aggregation()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
      handle_output("\n")
      handle_output("No aggregate configuration information available\n")
     else
@@ -361,7 +361,7 @@ def process_dladm_aggr_config()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No dladm aggregate configuration information available\n")
     else
@@ -417,7 +417,7 @@ def process_dladm_aggr_detail()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No dladm aggregate detailed information available\n")
     else
@@ -659,7 +659,7 @@ def process_network()
       process_ndd_nic_driver(nic_name)
     end
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No network interface information available\n")
     else
@@ -694,7 +694,7 @@ def process_network_info(type)
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No #{type.upcase} kernel information available\n")
     else

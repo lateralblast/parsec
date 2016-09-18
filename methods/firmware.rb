@@ -52,7 +52,7 @@ def process_hardware_revision_info()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No hardware revision information\n")
     else
@@ -109,7 +109,7 @@ def process_firmware_update_info()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No firmware information available\n")
     else

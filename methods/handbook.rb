@@ -45,7 +45,7 @@ def process_handbook_info_file(info_file)
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No handbook information available\n")
     else

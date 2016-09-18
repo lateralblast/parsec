@@ -476,7 +476,7 @@ def list_explorers(search_model,search_date,search_year,search_name)
       table     = new_table
     end
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No explorer information available\n")
     else 

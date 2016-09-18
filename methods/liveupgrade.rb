@@ -147,7 +147,7 @@ def process_liveupgrade()
       end
       table = handle_table("end","","",table)
     else
-      if $output_format.match(/table|pipe/)
+      if $output_format.match(/table|pipe|pdf/)
         handle_output("\n")
         handle_output("No Live Upgrade filesystem information available\n")
       else

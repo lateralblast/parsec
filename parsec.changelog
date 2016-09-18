@@ -521,3 +521,5 @@
 # Added CPU model to host report
 # 2.6.0: Sun 18 Sep 2016 10:36:23 AEST
 # Added simple psrinfo report
+# 2.6.1: Sun 18 Sep 2016 11:36:20 AEST
+# Fixed PDF report

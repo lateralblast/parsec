@@ -92,7 +92,7 @@ def process_zone_configs()
       end
     end
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No configured zone information available\n")
     else
@@ -130,7 +130,7 @@ def process_configured_zones()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No configured zone information available\n")
     else

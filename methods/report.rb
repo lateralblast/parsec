@@ -38,7 +38,6 @@ def get_full_report_list()
   report_list.push("obp")
   report_list.push("eeprom")
   report_list.push("cpu")
-  report_list.push("psrinfo")
   report_list.push("memory")
   report_list.push("hardware")
   report_list.push("coreadm")
@@ -52,7 +51,10 @@ def get_full_report_list()
   report_list.push("zones")
   report_list.push("filesystem")
   report_list.push("df")
-  report_list.push("dfx")
+  if !$output_format.match(/pdf/)
+    report_list.push("psrinfo")
+    report_list.push("dfx")
+  end
   report_list.push("services")
   report_list.push("liveupgrade")
   report_list.push("beadm")
@@ -478,7 +480,9 @@ def handle_table(type,title,row,table)
         table.push("</tr>")
       end
     else
-      table.add_row(row)
+      if row.class == Array
+        table.add_row(row)
+      end
     end
   end
   return table

@@ -25,7 +25,7 @@ def process_slots()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No Upgradeable slot information available\n")
     else
@@ -99,7 +99,7 @@ def process_fru()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No FRU information available\n")
     else
@@ -237,7 +237,7 @@ def process_sensors()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No sensor information available\n")
     else

@@ -39,7 +39,7 @@ def process_service_deps()
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No service dependency information available\n")
     else
@@ -89,7 +89,7 @@ def process_service_descs()
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No service description information available\n")
     else
@@ -174,7 +174,7 @@ def process_service_status()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No service manifest information available\n")
     else

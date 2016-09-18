@@ -60,7 +60,7 @@ def process_md()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No Solaris Volume Manager information available\n")
     else
@@ -90,7 +90,7 @@ def process_mddb()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No Solaris Volume Manager information available\n")
     else

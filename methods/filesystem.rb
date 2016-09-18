@@ -41,7 +41,7 @@ def process_file_systems()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No filesystem information available\n")
     else
@@ -94,7 +94,7 @@ def process_df()
     end
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No filesystem information available\n")
     else
@@ -156,7 +156,7 @@ def process_dfx()
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else
-    if $output_format.match(/table|pipe/)
+    if $output_format.match(/table|pipe|pdf/)
       handle_output("\n")
       handle_output("No filesystem information available\n")
     else
