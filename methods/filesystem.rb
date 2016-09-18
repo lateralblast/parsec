@@ -21,11 +21,21 @@ def process_file_systems()
     table   = handle_table("title",title,row,"")
     file_array.each do |line|
       line = line.chomp
-      if line.match(/^\/dev/)
+      if line.match(/^\/dev\/|^rpool/)
         items    = line.split(/\s+/)
         fs_dev   = items[0]
         fs_mount = items[2]
-        fs_type  = items[3]
+        if !fs_mount.match(/\//)
+          fs_mount = items[-1]
+        end
+        if fs_dev.match(/^rpool/)
+          fs_type = "zfs"
+        else
+          fs_type  = items[3]
+          if !fs_type.match(/[a-z]/)
+            fs_type = "ufs"
+          end
+        end
         if $masked == 1 and fs_type != "swap"
           if fs_type == "vxfs"
             fs_dev = "/dev/vx/dsk/disk#{counter}"

@@ -231,7 +231,11 @@ def create_footers(pdf,document_title)
   pdf.font font_name
   pdf.fill_color $black
   font_size    = $default_font_size
-  logo         = "images/LB_50.png"
+  if $partner_logo.match(/[A-Z]|[a-z]|[0-9]/)
+    logo = $partner_logo
+  else
+    logo = "images/LB_50.png"
+  end
   scale_factor = 0.1
   pdf.repeat lambda { |pg| pg != 1 } do
     # footer
