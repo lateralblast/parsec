@@ -19,6 +19,10 @@ $gzip_bin = %x[which pigz].chomp
 $methods_dir     = ""
 $information_dir = ""
 $firmware_dir    = ""
+$partner_logo    = ""
+$partner_name    = ""
+$partner_address = ""
+$partner_city    = ""
 
 # Set up script dir
 

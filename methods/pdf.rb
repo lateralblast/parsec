@@ -66,14 +66,24 @@ def create_font_page_header(pdf)
   # put a white block across the top of the page
   create_bounding_box(pdf, pdf.bounds.left, pdf.bounds.height, pdf.bounds.width,
     $white, 0, pdf.bounds.width, 30, $white)
-  pdf.fill_color $blue
-  pdf.draw_text "Lateral", :at => [pdf.bounds.right-270, pdf.bounds.height-23], :size => 34
-  pdf.fill_color $red
-  pdf.draw_text "Blast", :at => [pdf.bounds.right-170, pdf.bounds.height-23], :size => 34
-  pdf.fill_color $black
-  pdf.draw_text "Pty Ltd", :at => [pdf.bounds.right-93, pdf.bounds.height-23], :size => 34
+  if $partner_name.match(/[A-Z]|[a-z]|[0-9]/)
+    pdf.fill_color $black
+    partner_name_length = get_ttf_string_length(pdf,34,$partner_name)
+    pdf.draw_text $partner_name, :at => [pdf.bounds.right-partner_name_length, pdf.bounds.height-23], :size => 34
+  else
+    pdf.fill_color $blue
+    pdf.draw_text "Lateral", :at => [pdf.bounds.right-270, pdf.bounds.height-23], :size => 34
+    pdf.fill_color $red
+    pdf.draw_text "Blast", :at => [pdf.bounds.right-170, pdf.bounds.height-23], :size => 34
+    pdf.fill_color $black
+    pdf.draw_text "Pty Ltd", :at => [pdf.bounds.right-93, pdf.bounds.height-23], :size => 34
+  end
   # put logo in top left corner
-  logo = "images/LB_50.png"
+  if $partner_logo.match(/[A-Z]|[a-z]|[0-9]/)
+    logo = $partner_logo
+  else
+    logo = "images/LB_50.png"
+  end
   pdf.image logo, :at => [pdf.bounds.left,pdf.bounds.height], :scale => 0.225
   return pdf
 end
@@ -181,12 +191,25 @@ def create_front_page_preparedby(pdf,customer_name)
   font_size   = 15
   text_string = "#{creator_name}"
   pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size], :size => font_size
-  text_string = "Lateral Blast Pty Ltd"
-  pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*2], :size => font_size
-  text_string = "P.O. Box 768"
-  pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*3], :size => font_size
-  text_string = "South Yarra 3141"
-  pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*4], :size => font_size
+  if $partner_name.match(/[A-Z]|[a-z]|[0-9]/)
+    text_string = $partner_name
+    pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*2], :size => font_size
+    if $partner_address.match(/[A-Z]|[a-z]|[0-9]/)
+      text_string = $partner_address
+      pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*2], :size => font_size
+    end
+    if $partner_city.match(/[A-Z]|[a-z]|[0-9]/)
+      text_string = $partner_city
+      pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*2], :size => font_size
+    end
+  else
+    text_string = "Lateral Blast Pty Ltd"
+    pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*2], :size => font_size
+    text_string = "P.O. Box 768"
+    pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*3], :size => font_size
+    text_string = "South Yarra 3141"
+    pdf.draw_text text_string, :at => [pdf.bounds.width/2+10,pdf.bounds.bottom+100-font_size*4], :size => font_size
+  end
   return pdf
 end
 

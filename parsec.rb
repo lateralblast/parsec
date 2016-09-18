@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.6.1
+# Version:      2.6.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -275,11 +275,13 @@ begin
     [ "--dir",          "-d", Getopt::BOOLEAN ],    # Specify directory where explorers are (default is ./explorers)
     [ "--dodisks",      "-D", Getopt::BOOLEAN ],    # Do disks (reports information on all disks)
     [ "--format",       "-f", Getopt::REQUIRED ],   # Output format
+    [ "--logo",         "-L", Getopt::REQUIRED ],   # Set Partner Logo
     [ "--list",         "-l", Getopt::BOOLEAN ],    # List explorers (also lists dmidecodes and facters if present)
     [ "--masked",       "-m", Getopt::BOOLEAN ],    # Mask hostnames, IPs, MAC addresses etc
     [ "--model",        "-M", Getopt::REQUIRED ],   # Set model (used in conjunction with list)
     [ "--input",        "-i", Getopt::REQUIRED ],   # Input file
     [ "--output",       "-o", Getopt::REQUIRED ],   # Output file
+    [ "--partner",      "-P", Getopt::REQUIRED ],   # Set Partner Name
     [ "--pause",        "-p", Getopt::BOOLEAN ],    # Pause between each report when running against all hosts (useful for debugging)
     [ "--report",       "-R", Getopt::REQUIRED ],   # Report type (e.g. all, cpu, memory)
     [ "--server",       "-s", Getopt::REQUIRED ],   # Server to run explorer report for
@@ -403,6 +405,41 @@ def print_usage(usage,report)
   end
   puts
   return
+end
+
+# Set logo for PDF report
+
+if option["logo"]
+  $partner_logo = option["logo"]
+  if !File.exist?($partner_logo)
+    $partner_logo = ""
+  end
+else
+  $partner_logo = ""
+end
+
+# Set partner for PDF report
+
+if option["partner"]
+  $partner_name = option["partner"]
+else
+  $partner_name = ""
+end
+
+# Set address for PDF report
+
+if option["address"]
+  $partner_address = option["address"]
+else
+  $partner_address = ""
+end
+
+# Set city for PDF report
+
+if option["city"]
+  $partner_city = option["city"]
+else
+  $partner_city = ""
 end
 
 # Overide defaults
