@@ -125,7 +125,11 @@ def process_service_status()
   if file_array.to_s.match(/[A-Z]|[a-z]|[0-9]/)
     handle_output("\n")
     title = "Service Statuses"
-    row   = [ 'Service', 'Status', 'Recommended', 'Complies' ]
+    if $nocheck == 0
+      row = [ 'Service', 'Status', 'Recommended', 'Complies' ]
+    else
+      row = [ 'Service', 'Status', ]
+    end
     table = handle_table("title",title,row,"")
     file_array.each do |line|
       line    = line.chomp
@@ -168,7 +172,11 @@ def process_service_status()
         complies = "N/A"
       end
       if !service.match(/FMRI/)
-        row   = [service,curr_val,rec_val,complies]
+        if $nocheck == 0
+          row = [ service, curr_val, rec_val, complies ]
+        else
+          row = [ service, curr_val ]
+        end
         table = handle_table("row","",row,table)
       end
     end

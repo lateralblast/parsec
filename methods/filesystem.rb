@@ -142,7 +142,7 @@ def process_dfx()
           fs_tgb  = (fs_tkb.to_f/1024/1024)
           fs_ugb  = (fs_ukb.to_f/1024/1024)
           fs_agb  = (fs_akb.to_f/1024/1024)
-          if !fs_dev.match(/swap/)
+          if !fs_dev.match(/swap/) and !fs_mnt.match(/dbkup/)
             t_size  = t_size.to_f+fs_tgb.to_f
             t_used  = t_used.to_f+fs_ugb.to_f
             t_avail = t_avail.to_f+fs_agb.to_f
@@ -153,16 +153,20 @@ def process_dfx()
       end
     end
     table = handle_table("line","",row,table)
-    row   = [ "Totals", t_size.to_f.round(2).to_s, t_used.to_f.round(2).to_s, t_avail.to_f.round(2).to_s, "", "" ]
+    row   = [ "Totals (not including backup volumes)", t_size.to_f.round(2).to_s, t_used.to_f.round(2).to_s, t_avail.to_f.round(2).to_s, "", "" ]
     table = handle_table("row","",row,table)
     table = handle_table("line","",row,table)
-    row   = [ "Transfer Time (hours)  - 100MB", "", (t_used.to_f*1.25*0.01666.to_f).round(2).to_s, "", "" , "" ]
+    row   = [ "Data Transfer Time (hours)  - 100Mbps", "", (t_used.to_f*0.02222.to_f).round(2).to_s, "", "" , "" ]
     table = handle_table("row","",row,table)
     table = handle_table("line","",row,table)
-    row   = [ "Transfer Time (hours)  - 1GB", "", (t_used.to_f*0.125*0.01666.to_f).round(2).to_s, "", "" , "" ]
+    # 1Gbps link can do 1/8 GBps - Can do 1/8/60 GBpm or 1/8/60/60 GBph
+    # If we have 1GB, multiple by 8 to get Gb
+    # then divide by 60 to get transfer time in mins, then by 60 again for hours
+    # 8/60/60 = 0.00222222
+    row   = [ "Data Transfer Time (hours)  - 1Gbps", "", (t_used.to_f*0.00222.to_f).round(2).to_s, "", "" , "" ]
     table = handle_table("row","",row,table)
     table = handle_table("line","",row,table)
-    row   = [ "Transfer Time (hours)  - 10GB", "", (t_used.to_f*0.125*0.01666*0.1.to_f).round(2).to_s, "", "" , "" ]
+    row   = [ "Data Transfer Time (hours)  - 10Gbps", "", (t_used.to_f*0.00022.to_f).round(2).to_s, "", "" , "" ]
     table = handle_table("row","",row,table)
     table = handle_table("end","","",table)
   else

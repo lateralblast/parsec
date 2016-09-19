@@ -16,10 +16,10 @@ def process_eeprom()
     table = handle_table("title","EEPROM Information","","")
     file_array.each do |line|
       line = line.chomp
+      line = line.unpack("C*").pack("U*")
       if !line.match(/data not available/)
         (parameter,value) = line.split(/\=/)
         if value
-          #value = value.remove_non_ascii
           if $masked == 1 and parameter.match(/nvramrc/) and value.match(/[A-Z]|[a-z]|[0-9]/)
             value = "MASKED"
           else

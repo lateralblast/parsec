@@ -171,3 +171,37 @@ def process_sys_model(table)
   end
   return table
 end
+
+# Get Rack Units
+
+def get_units(type,model_name)
+  file_name  = "./information/#{type}_units.csv"
+  file_array = File.readlines(file_name)
+  unit_info  = file_array.grep(/"#{model_name}"/)[0]
+  if unit_info
+    units = unit_info.split(/\,/)[1].gsub(/"/,"")
+  end
+  return units
+end
+
+# Get Rack units
+
+def process_rack_units(table)
+  model_name = get_model_name()
+  rack_units = get_units("rack",model_name)
+  if rack_units
+    table = handle_table("row","Rack Units",rack_units,table)
+  end
+  return table
+end
+
+# Get Rack units
+
+def process_power_units(table)
+  model_name  = get_model_name()
+  power_units = get_units("Power",model_name)
+  if power_units
+    table = handle_table("row","Power",power_units,table)
+  end
+  return table
+end

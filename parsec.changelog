@@ -527,3 +527,8 @@
 # Added ability to change logo and set partner name for PDF report
 # 2.6.3: Sun 18 Sep 2016 17:32:08 AEST
 # Added nocheck switch to ignore Security and other recommendations
+# 2.6.4: Sun 18 Sep 2016 21:17:05 AEST
+# Fixed bug with filesystem report on some systems
+# 2.6.5: Mon 19 Sep 2016 08:41:16 AEST
+# Improved data transfer calculations
+# 2.6.6: Fixed UTF8 error due to non ASCII characters
