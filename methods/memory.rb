@@ -128,11 +128,12 @@ def process_memory()
     block_count    = 0
     mem_module     = ""
     mem_modules    = []
+    mem_search     = ""
     if sys_model.match(/^T5-/)
       mem_dimm_no = 0
     end
     mem_info.each_with_index do |line,index|
-      if line.match(/[0-9][0-9]|D[0-9]$/) or line.match(/^DDR|OK$/)
+      if line.match(/[0-9][0-9]|D[0-9]$/) or line.match(/^DDR|OK$|Bank/)
         counter       = counter+1
         sys_board_no  = "1"
         if line.match(/in use/)
@@ -312,12 +313,12 @@ def process_memory()
             mem_dimms      = mem_line[4]
             mem_dimm_no    = mem_dimms.split(/,/)[0]
             if line.match(/^0x0/)
-              mem_search=mem_dimms
+              mem_search = mem_dimms
             end
             file_name      = "/sysconfig/prtdiag-v.out"
             file_array     = exp_file_to_array(file_name)
             mem_dimm_size  = file_array.grep(/#{mem_search}/)
-            mem_dimm_size  = mem_dimm_size.grep(/MB/)
+            mem_dimm_size  = mem_dimm_size.grep(/MB|GB/)
             mem_dimm_size  = mem_dimm_size.grep(/^#{mem_dimm_no}/)[0].split(/\s+/)[3]
             mem_group      = file_array.grep(/C[0-9]\/P[0-9]/)
             mem_group      = mem_group.grep(/^#{mem_group_no}/)
@@ -398,7 +399,7 @@ def process_memory()
             if block_count < base_length and !sys_model.match(/VMware/)
               table = handle_table("line","","",table)
             end
-          when /V440/
+          when /V44/
             if line.match(/^[0-9,A-F]x/)
               block_count = block_count+1
             end
