@@ -406,8 +406,8 @@ def process_model_info(pdf,toc,model)
     image_name = image_info[0]
     image_file = image_info[1]
     if File.exist?(image_file)
-      if $verbose == 1
-        handle_output("Processing image: #{image_file}\n")
+      if $verbose_mode == 1
+        puts "Processing image: #{image_file}"
       end
       if counter == 0
         toc.push("Model Information,#{pdf.page_count}")

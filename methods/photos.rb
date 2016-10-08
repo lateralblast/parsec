@@ -13,6 +13,7 @@ end
 def get_photo_list()
   model       = get_sys_model()
   header      = get_handbook_header(model)
+  sub_dir     = ""
   photo_list  = []
   photos_dir  = $base_dir+"/photos"
   dir_list    = Dir.entries(photos_dir)
@@ -28,33 +29,59 @@ def get_photo_list()
       if image_view.match(/_/)
         jpg_file    = header+"_"+image_name.gsub(/ /,"")+".jpg"
         jpg_file_lc = header+"_"+image_name.downcase.gsub(/ /,"")+".jpg"
-        gif_file    = header+"_"+image_name.gsub(/ /,"")+".gif"
-        gif_file_lc = header+"_"+image_name.downcase.gsub(/ /,"")+".gif"
         photo_name  = image_name.gsub(/FrontOpen/,"Front Open").capitalize
       else
         jpg_file    = header+"_"+image_name.gsub(/ /,"").gsub(/Service/,"_Service").gsub(/service/,"_service")+"_"+image_view+".jpg"
         jpg_file_lc = header+"_"+image_name.downcase.gsub(/ /,"").gsub(/Service/,"_Service").gsub(/service/,"_service")+"_"+image_view.downcase+".jpg"
-        gif_file    = header+"_"+image_name.gsub(/ /,"").gsub(/Service/,"_Service").gsub(/service/,"_service")+"_"+image_view+".gif"
-        gif_file_lc = header+"_"+image_name.downcase.gsub(/ /,"").gsub(/Service/,"_Service").gsub(/service/,"_service")+"_"+image_view.downcase+".gif"
         photo_name  = image_name.gsub(/FrontOpen/,"Front Open")+" "+image_view
         photo_name  = photo_name.capitalize
       end
       jpg_file    = jpg_file.gsub(/__/,"_")
       jpg_file_lc = jpg_file_lc.gsub(/__/,"_")
-      gif_file    = gif_file.gsub(/__/,"_")
-      gif_file_lc = gif_file_lc.gsub(/__/,"_")
-      test_jpg    = photos_dir+"/"+jpg_file
-      test_jpg_lc = photos_dir+"/"+jpg_file_lc
-      test_gif    = photos_dir+"/"+gif_file
-      test_gif_lc = photos_dir+"/"+gif_file_lc
-      test_files  = [ test_jpg, test_jpg_lc, test_gif, test_gif_lc ]
+      case  header
+      when /^c/
+        sub_dir = "c-series"
+      when /lade/
+        sub_dir = "blade"
+      when /^E|SunFire[2,3,4,6]8|E25/
+        sub_dir = "e-series"
+      when /PCI/
+        sub_dir = "iou"
+      when /SE_M|SPARC_M|flat/
+        sub_dir = "m-series"
+      when /Netra/
+        sub_dir = "netra"
+      when /SPARC_S/
+        sub_dir = "s-series"
+      when /SE_T|SPARC_T|SunFireT|sparc-t/
+        sub_dir = "t-series"
+      when /^U/
+        sub_dir = "ultra"
+      when /FunFire8|SunFireV/
+        sub_dir = "v-series"
+      when /^W/
+        sub_dir = "workstation"
+      when /^L|^OA|^OD|^OV|Server_X|SunFireX|^X|sparc-x/
+        sub_dir = "x-series"
+      when /^Z/
+        sub_dir = "z-series"
+      else
+        sub_dir = "other"
+      end
+      test_jpg    = photos_dir+"/"+sub_dir+"/"+jpg_file
+      test_jpg_lc = photos_dir+"/"+sub_dir+"/"+jpg_file_lc
+      test_files  = [ test_jpg, test_jpg_lc ]
+      used_files  = []
       test_files.each do |image_file|
-        test_dir  = Pathname.new(image_file)
         test_file = File.basename(image_file)
-        if dir_list.to_s.match(/#{test_file}/)
-          file_type = get_file_type(image_file)
-          if file_type.match(/jpeg|gif/)
-            photo_list.push([photo_name,image_file])
+        test_file = test_file.downcase
+        if !used_files.to_s.match(/#{test_file}/)
+          if File.exist?(image_file)
+            file_type = get_file_type(image_file)
+            if file_type.match(/jpeg/)
+              photo_list.push([photo_name,image_file])
+              used_files.push(test_file)
+            end
           end
         end
       end

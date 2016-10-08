@@ -535,3 +535,5 @@
 # Fixed UTF8 error due to non ASCII characters and added power and rack unit calculations
 # 2.6.7: Tue 20 Sep 2016 05:36:38 AEST
 # Fixed memory report for V445
+# 2.6.8: Fri 23 Sep 2016 05:48:51 AEST
+# Fixed image inclusion in PDF report

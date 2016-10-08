@@ -28,7 +28,6 @@ end
 def get_full_report_list()
   report_list = []
   report_list.push("host")
-  report_list.push("spec")
   if $output_format.match(/serverhtml/)
     report_list.push("photos")
   end
@@ -52,6 +51,7 @@ def get_full_report_list()
   report_list.push("filesystem")
   report_list.push("df")
   if !$output_format.match(/pdf/)
+    report_list.push("spec")
     report_list.push("psrinfo")
     report_list.push("dfx")
   end
