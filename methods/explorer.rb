@@ -118,7 +118,11 @@ def get_extracted_file_date(file_name)
   if !File.exist?(ext_file)
     extract_exp_file(ext_file)
   end
-  file_date = File.mtime(ext_file)
+  if File.exist?(ext_file)
+    file_date = File.mtime(ext_file)
+  else
+    file_date = "NA"
+  end
   return(file_date)
 end
 

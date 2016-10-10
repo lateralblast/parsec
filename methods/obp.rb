@@ -70,7 +70,9 @@ end
 
 def process_obp_ver(table)
   curr_obp   = get_obp_ver()
-  curr_obp   = curr_obp.split(/ /)[1]
+  if !curr_obp.match(/Unknow/)
+    curr_obp   = curr_obp.split(/ /)[1]
+  end
   model_name = get_model_name()
   if model_name.match(/^M10-/)
     curr_xcp   = get_xcp_ver()
@@ -89,24 +91,28 @@ def process_obp_ver(table)
       table = handle_table("row","Installed OBP Version",curr_obp,table)
     end
   else
-    if model_name.match(/O\.E.M\./)
-      bios_ver = get_bios_ver()
-      table    = handle_table("row","BIOS Version",bios_ver,table)
+    if curr_obp.match(/Unknown/)
+      table = handle_table("row","Installed OBP/BIOS Version",curr_obp,table)
     else
-      if $nocheck == 0
-        avail_obp  = get_avail_obp_ver(model_name)
-        latest_obp = compare_ver(curr_obp,avail_obp)
-        if latest_obp == avail_obp
-          avail_obp = avail_obp+" (Newer)"
+      if model_name.match(/O\.E.M\./)
+        bios_ver = get_bios_ver()
+        table    = handle_table("row","BIOS Version",bios_ver,table)
+      else
+        if $nocheck == 0
+          avail_obp  = get_avail_obp_ver(model_name)
+          latest_obp = compare_ver(curr_obp,avail_obp)
+          if latest_obp == avail_obp
+            avail_obp = avail_obp+" (Newer)"
+          end
         end
-      end
-      if curr_obp
-        table = handle_table("row","Installed OBP/BIOS Version",curr_obp,table)
-      end
-      if $nocheck == 0
-        if avail_obp
-          if avail_obp.match(/[0-9]/)
-            table = handle_table("row","Available OBP/BIOS Version",avail_obp,table)
+        if curr_obp
+          table = handle_table("row","Installed OBP/BIOS Version",curr_obp,table)
+        end
+        if $nocheck == 0
+          if avail_obp
+            if avail_obp.match(/[0-9]/)
+              table = handle_table("row","Available OBP/BIOS Version",avail_obp,table)
+            end
           end
         end
       end
@@ -128,20 +134,27 @@ end
 # Get OBP version.
 
 def get_obp_ver()
+  obp_ver    = "Unknown"
   model_name = get_model_name()
-  if model_name.match(/T3/)
-    file_name = "/sysconfig/prtdiag-v.out"
-    file_array = exp_file_to_array(file_name)
-    obp_ver    = file_array.grep(/^OBP/)[0]
-    if !obp_ver
-      file_name  = "/sysconfig/prtconf-vp.out"
+  if model_name
+    if model_name.match(/T3/)
+      file_name = "/sysconfig/prtdiag-v.out"
       file_array = exp_file_to_array(file_name)
-      obp_ver    = file_array.grep(/OBP/)[0].split(/\s+/)[2..3].join(" ")
+      obp_ver    = file_array.grep(/^OBP/)[0]
+      if !obp_ver
+        file_name  = "/sysconfig/prtconf-vp.out"
+        file_array = exp_file_to_array(file_name)
+        obp_ver    = file_array.grep(/OBP/)[0].split(/\s+/)[2..3].join(" ")
+      end
+    else
+      file_name  = "/sysconfig/prtconf-V.out"
+      file_array = exp_file_to_array(file_name)
+      if !file_array.to_s.match(/[0-9]/)
+        obp_ver = "Unknown"
+      else
+        obp_ver = file_array[0].chomp
+      end
     end
-  else
-    file_name  = "/sysconfig/prtconf-V.out"
-    file_array = exp_file_to_array(file_name)
-    obp_ver    = file_array[0].chomp
-  end
+  end 
   return obp_ver
 end

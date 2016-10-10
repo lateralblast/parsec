@@ -25,6 +25,7 @@ def process_sys_boot(table)
   file_date = get_extracted_file_date("/sysconfig/who-b.out")
   file_year = file_date.to_s.split(/ /)[0].split(/-/)[0].chomp
   boot_time = boot_time+" "+file_year
+  boot_time = boot_time.gsub(/^\s+/,"")
   if boot_time
     table = handle_table("row","Boot Time",boot_time,table)
   end

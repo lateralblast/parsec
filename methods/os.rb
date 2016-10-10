@@ -7,12 +7,16 @@ def search_uname(field)
   file_array  = exp_file_to_array(file_name)
   uname_array = file_array[0]
   if !uname_array
-    os_name = "Unknown"
+    os_field = "Unknown"
   else
-    uname_array = uname_array.split(" ")
-    os_name     = uname_array[field]
+    if !uname_array.to_s.match(/[a-z]|[0-9]/)
+      os_field = "Unknown"
+    else
+      uname_array = uname_array.split(" ")
+      os_field    = uname_array[field]
+    end
   end
-  return os_name
+  return os_field
 end
 
 # Get OS name
@@ -50,16 +54,20 @@ end
 
 def get_os_build()
   os_date = get_os_date()
-  if os_date.match(/^11/) and os_date.match(/\./)
-    os_build = os_date.split(".")[1]
+  if !os_date
+    os_date = "Unknown"
   else
-    os_build = search_release(3)
-    if os_build.match(/\//)
-      os_build = search_release(4)
+    if os_date.match(/^11/) and os_date.match(/\./)
+      os_build = os_date.split(".")[1]
+    else
+      os_build = search_release(3)
+      if os_build.match(/\//)
+        os_build = search_release(4)
+      end
     end
-  end
-  if !os_build
-    os_build = "Unknown"
+    if !os_build
+      os_build = "Unknown"
+    end
   end
   return os_build
 end
@@ -77,6 +85,9 @@ end
 
 def get_os_date()
   os_date = search_release(2)
+  if !os_date
+    os_date = "Unknown"
+  end
   return os_date
 end
 
@@ -162,14 +173,18 @@ def search_release(field)
   file_name     = "/etc/release"
   file_array    = exp_file_to_array(file_name)
   release_array = file_array[0]
-  if release_array.match(/HW/)
-    field = field+1
-  end
-  if release_array.match(/[0-9]/)
-    release_array = release_array.split(" ")
-    search_result = release_array[field].to_s
-  else
+  if !release_array
     search_result = "Unknown"
+  else
+    if release_array.match(/HW/)
+      field = field+1
+    end
+    if release_array.match(/[0-9]/)
+      release_array = release_array.split(" ")
+      search_result = release_array[field].to_s
+    else
+      search_result = "Unknown"
+    end
   end
   return search_result
 end

@@ -537,3 +537,5 @@
 # Fixed memory report for V445
 # 2.6.8: Fri 23 Sep 2016 05:48:51 AEST
 # Fixed image inclusion in PDF report
+# 2.6.9: Mon 10 Oct 2016 16:00:01 AEDT
+# Added additional error handling for some reports
