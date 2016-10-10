@@ -256,16 +256,23 @@ end
 def search_exp_defaults(search_val)
   file_name  = "/defaults"
   file_array = exp_file_to_array(file_name)
-  file_array.each do |line|
-    line = line.chomp
-    if !line.match(/^#/)
-      exp_info = line.split("=")
-      exp_val  = exp_info[1].to_s.gsub(/"/,"")
-      exp_info = exp_info[0].to_s
-      if exp_info.match(/#{search_val}/)
-        return exp_val
+  if file_array.to_s.match(/[A-Z]/)
+    file_array.each do |line|
+      line = line.chomp.gsub(/^\s+/,"")
+      if !line.match(/^#/)
+        exp_info = line.split("=")
+        exp_val  = exp_info[1].to_s.gsub(/"/,"")
+        exp_info = exp_info[0].to_s
+        if exp_info.match(/#{search_val}/)
+          if exp_val.class == "Array"
+            exp_val = exp_val[0]
+          end
+          return exp_val
+        end
       end
     end
+  else
+    exp_val = "None"
   end
 end
 
