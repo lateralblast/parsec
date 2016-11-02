@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.6
+# Version:      0.1.7
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -315,8 +315,18 @@ get '/list' do
   else
     search_name = ""
   end
+  if params['search']
+    search_param = params['search']
+  else
+    search_param = ""
+  end
+  if params['value']
+    search_value = params['value']
+  else
+    search_value = ""
+  end
   head  = File.readlines("./views/layout.html")
-  body  = list_explorers(search_model,search_date,search_year,search_name)
+  body  = list_explorers(search_model,search_date,search_year,search_name,search_param,search_value)
   array = head + body
   array = array.join("\n")
   "#{array}"

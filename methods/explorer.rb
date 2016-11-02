@@ -381,9 +381,45 @@ def process_exp_modules(table)
   return table
 end
 
+# Search explorer files for a specific value
+
+def search_exp_files(search_param,search_value,file_name)
+  search_result  = ""
+  $exp_info      = {}
+  $exp_file      = file_name
+  $exp_file_list = []
+  $sys_config    = {}
+  case search_param.downcase
+  when /customer/
+    search_result = search_exp_defaults("EXP_CUSTOMER_NAME")
+  when /country/
+    search_result = search_exp_defaults("EXP_ADDRESS_COUNTRY")
+  when /phone/
+    search_result = search_exp_defaults("EXP_PHONE")
+  when /email/
+    search_result = search_exp_defaults("EXP_USER_EMAIL")
+  when /user/
+    search_result = search_exp_defaults("EXP_USER_NAME")
+  when /contract/
+    search_result = search_exp_defaults("EXP_CONTRACT_ID")
+  when /serial/
+    search_result = get_chassis_serial()
+  else
+    result = 0
+    return result
+  end
+  if search_result.match(/[A-Z,a-z,0-9]/)
+    if search_result.match(/#{search_value}/)
+      result = 1
+    else result = 0
+    end
+  end
+  return result
+end
+
 # Get a list of explorers based on search strings
 
-def get_explorer_file_list(search_model,search_date,search_year,search_name)
+def get_explorer_file_list(search_model,search_date,search_year,search_name,search_param,search_value)
   exp_list  = []
   host_list = []
   if Dir.exist?($exp_dir) or File.symlink?($exp_dir)
@@ -407,11 +443,27 @@ def get_explorer_file_list(search_model,search_date,search_year,search_name)
               if !search_name.match(/[a-z]/) or exp_name.match(/^#{search_name}$/) or search_name.match(/^all$/)
                 if search_name.match(/^all$/)
                   if !host_list.include?(exp_name)
-                    exp_list.push(file_name)
-                    host_list.push(exp_name)
+                    if search_param.match(/[a-z,A-Z,0-9]/)
+                      result = search_exp_files(search_param,search_value,file_name)
+                      if result == 1
+                        exp_list.push(file_name)
+                        host_list.push(exp_name)
+                      end
+                    else
+                      exp_list.push(file_name)
+                      host_list.push(exp_name)
+                    end
                   end
                 else
-                  exp_list.push(file_name)
+                  if search_param.match(/[a-z,A-Z,0-9]/)
+                    result = search_exp_files(search_param,search_value,file_name)
+                    if result == 1
+                      exp_list.push(file_name)
+                      host_list.push(exp_name)
+                    end
+                  else
+                    exp_list.push(file_name)
+                  end
                 end
               end
             end
@@ -437,9 +489,9 @@ end
 
 # List explorers
 
-def list_explorers(search_model,search_date,search_year,search_name)
+def list_explorers(search_model,search_date,search_year,search_name,search_param,search_value)
   counter   = 0
-  file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
+  file_list = get_explorer_file_list(search_model,search_date,search_year,search_name,search_param,search_value)
   if file_list.to_s.match(/explorer/)
     if $output_format.match(/serverhtml/)
       title = "Explorers:"

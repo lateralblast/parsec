@@ -288,12 +288,14 @@ begin
     [ "--pause",        "-p", Getopt::BOOLEAN ],    # Pause between each report when running against all hosts (useful for debugging)
     [ "--report",       "-R", Getopt::REQUIRED ],   # Report type (e.g. all, cpu, memory)
     [ "--server",       "-s", Getopt::REQUIRED ],   # Server to run explorer report for
+    [ "--search",       "-S", Getopt::REQUIRED ],   # Search term (currently used with list to do some simple searching)
     [ "--type",         "-t", Getopt::REQUIRED ],   # Type of report (default is explorer)
-    [ "--date",         "-T", Getopt::REQUIRED ],   # Set date (used in conjunction with list)
+    [ "--value",        "-T", Getopt::REQUIRED ],   # Value to search for (used in conjunction with search and list)
     [ "--temp",         "-w", Getopt::REQUIRED ],   # Work directory
     [ "--usage",        "-u", Getopt::REQUIRED ],   # Display usage information
     [ "--use",          "-U", Getopt::REQUIRED ],   # Override defaults, e.g. use gzip rather than pgiz
     [ "--year",         "-Y", Getopt::REQUIRED ],   # Set year(used in conjunction with list)
+    [ "--date",         "-y", Getopt::REQUIRED ],   # Set date (used in conjunction with list)
     [ "--help",         "-h", Getopt::BOOLEAN ],    # Display help information
     [ "--verbose",      "-v", Getopt::BOOLEAN ],    # Verbose output
     [ "--version",      "-V", Getopt::BOOLEAN ],    # Display version
@@ -576,6 +578,32 @@ if option["changelog"]
   exit
 end
 
+# Set work directory
+
+if option["temp"]
+  $work_dir = option["temp"]
+else
+  if !$work_dir.match(/[A-z]/)
+    $work_dir = "/tmp"
+  end
+end
+
+# Handle search term / value
+
+if option["search"]
+  search_param = option["search"]
+else
+  search_param = ""
+end
+
+# Handle search value
+
+if option["value"]
+  search_value = option["value"]
+else
+  search_value = ""
+end
+
 # Set format of report
 
 if option["format"]
@@ -662,7 +690,7 @@ if option["list"]
     if !host_name
       host_name = ""
     end
-    list_explorers(search_model,search_date,search_year,host_name)
+    list_explorers(search_model,search_date,search_year,host_name,search_param,search_value)
   end
   if input_type.match(/all|facter/)
     list_facters()
@@ -704,16 +732,6 @@ else
   $exp_dir    = $base_dir.chomp()
   $exp_dir    = $exp_dir+"/explorers"
   search_name = option["server"]
-end
-
-# Set work directory
-
-if option["temp"]
-  $work_dir = option["temp"]
-else
-  if !$work_dir.match(/[A-z]/)
-    $work_dir = "/tmp"
-  end
 end
 
 # Get report type
