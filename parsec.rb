@@ -765,11 +765,11 @@ if input_type.match(/explorer/)
   if search_name.match(/\,/)
     search_names = search_name.split(/\,/)
     search_names.each do |search_name|
-      file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
+      file_list = get_explorer_file_list(search_model,search_date,search_year,search_name,search_param,search_value)
       handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
     end
   else
-    file_list = get_explorer_file_list(search_model,search_date,search_year,search_name)
+    file_list = get_explorer_file_list(search_model,search_date,search_year,search_name,search_param,search_value)
     handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
   end
 end
