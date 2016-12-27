@@ -10,6 +10,7 @@ if [ $id == 0 ]; then
   apt-get install -y gcc
   apt-get install -y libmagickwand-dev imagemagick
   apt-get install -y libxml2
+  apt-get install -y libxslt-dev
   apt-get install -y pigz
   apt-get install -y wget
   apt-get install -y pkg-config
@@ -29,6 +30,7 @@ else
   sudo sh -c "apt-get install -y gcc"
   sudo sh -c "apt-get install -y libmagickwand-dev imagemagick"
   sudo sh -c "apt-get install -y libxml2"
+  sudo sh -c "apt-get install -y libxslt-dev"
   sudo sh -c "apt-get install -y pigz"
   sudo sh -c "apt-get install -y wget"
   sudo sh -c "apt-get install -y pkg-config"
@@ -38,5 +40,5 @@ else
   else
     wget -O /tmp/star.deb https://launchpad.net/ubuntu/+source/star/1.5final-2ubuntu2/+build/1586992/+files/star_1.5final-2ubuntu2_i386.deb
   fi
-  dpkg -i /tmp/star.deb
+  sudo sh -c "dpkg -i /tmp/star.deb"
 fi  

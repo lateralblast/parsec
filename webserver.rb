@@ -23,7 +23,7 @@ require 'socket'
 
 def install_gem(gem_name)
   puts "Information:\tInstalling #{gem_name}"
-  %x[gem install #{gem_name}]
+  %x[gem install --no-document #{gem_name}]
   Gem.clear_paths
   return
 end
@@ -88,6 +88,13 @@ $ssl_password      = "123456"
 frontend_ip = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
 frontend_ip = frontend_ip.ip_address
 
+# If we are on AWS set default bind to front-end IP
+
+uname_r = %x[uname -r].chomp
+if uname_r.match(/amzn/)
+  default_bind = frontend_ip
+end
+
 # Only allow uploads if we has authentication
 
 if !enable_auth == true
@@ -95,7 +102,7 @@ if !enable_auth == true
 end
 
 set :port,            default_port
-set :bind,            frontend_ip
+set :bind,            default_bind
 set :sessions,        default_sessions
 set :dump_errors,     default_errors
 set :show_exceptions, default_exceptions
