@@ -175,7 +175,7 @@ end
 # Get Rack Units
 
 def get_units(type,model_name)
-  file_name  = "./information/#{type}_units.csv"
+  file_name  = "./information/#{type.downcase}_units.csv"
   file_array = File.readlines(file_name)
   unit_info  = file_array.grep(/"#{model_name}"/)[0]
   if unit_info

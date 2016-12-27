@@ -3,7 +3,7 @@
 # Get SPEC Value
 
 def get_spec_value(spec_type,model_name)
-  file_array = File.readlines("Information/spec#{spec_type}.csv")
+  file_array = File.readlines("information/spec#{spec_type}.csv")
   spec_array = file_array.grep(/#{model_name}/)[0]
   if spec_array
     spec_info  = CSV.parse(spec_array)[0]

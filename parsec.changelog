@@ -541,3 +541,5 @@
 # Added additional error handling for some reports
 # 2.7.0: Thu  3 Nov 2016 05:36:20 AEDT
 # Added ability to search by customer and some other fields to explorer list view
+# 2.7.1: Wed 28 Dec 2016 10:19:50 AEDT
+# Fixed bugs with SPEC and Power units reporting
