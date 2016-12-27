@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.7
+# Version:      0.1.9
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -19,6 +19,7 @@ require 'rubygems'
 require 'pathname'
 require 'etc'
 require 'date'
+require 'socket'
 
 def install_gem(gem_name)
   puts "Information:\tInstalling #{gem_name}"
@@ -82,6 +83,11 @@ ssl_certificate    = "ssl/cert.crt"
 ssl_key            = "ssl/pkey.pem"
 $ssl_password      = "123456"
 
+# Get front end IP
+
+frontend_ip = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
+frontend_ip = frontend_ip.ip_address
+
 # Only allow uploads if we has authentication
 
 if !enable_auth == true
@@ -89,7 +95,7 @@ if !enable_auth == true
 end
 
 set :port,            default_port
-set :bind,            default_bind
+set :bind,            frontend_ip
 set :sessions,        default_sessions
 set :dump_errors,     default_errors
 set :show_exceptions, default_exceptions
@@ -377,9 +383,19 @@ get '/report' do
   else
     $search_name = ""
   end
+  if params['search']
+    $search_param = params['search']
+  else
+    $search_param = ""
+  end
+  if params['value']
+    $search_value = params['value']
+  else
+    $search_value = ""
+  end
   $host_info  = {}
   $sys_config = {}
-  file_array = get_explorer_file_list($search_model,$search_date,$search_year,$search_name) 
+  file_array = get_explorer_file_list($search_model,$search_date,$search_year,$search_name,$search_param,$search_value) 
   file_name  = file_array[0]
   $exp_file  = file_name
   layout = $base_dir+"/views/layout.html"

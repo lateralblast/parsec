@@ -32,3 +32,5 @@
 # Fix issue with configs not loading after inital load
 # 0.1.7: Thu  3 Nov 2016 05:36:20 AEDT
 # Added ability to search by customer and some other fields to explorer list view
+# 0.1.8: Tue 27 Dec 2016 15:01:33 AEDT
+# Fixed bug and added code to get front-end IP and set it to bind IP
