@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.7.1
+# Version:      2.7.2
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -46,63 +46,63 @@ end
 
 begin
   require 'iconv'
-rescue LoadError
+rescue
   install_gem("iconv")
 end
 begin
   require 'getopt/long'
-rescue LoadError
+rescue
   install_gem("getopt")
 end
 begin
   require 'fileutils'
-rescue LoadError
+rescue
   install_gem("fileutils")
 end
 begin
   require 'hex_string'
-rescue LoadError
+rescue
   install_gem("hex_string")
 end
 begin
   require 'terminal-table'
-rescue LoadError
+rescue
   install_gem("terminal-table")
 end
 begin
   require 'unpack'
-rescue LoadError
+rescue
   install_gem("unpack")
 end
 begin
   require 'enumerate'
-rescue LoadError
+rescue
   install_gem("enumerate")
 end
 begin
   require 'prawn'
-rescue LoadError
+rescue
   install_gem("prawn")
 end
 begin
   require 'prawn/table'
-rescue LoadError
+rescue
   install_gem("prawn-table")
 end
 begin
   require 'fastimage'
-rescue LoadError
+rescue
   install_gem("fastimage")
 end
 begin
   require 'nokogiri'
-rescue LoadError
+rescue
   install_gem("nokogiri -- --use-system-libraries")
 end
 begin
   require 'rmagick'
   include Magick
-rescue LoadError
+rescue
   install_pkg("imagemagick")
   install_gem("rmagick")
   require 'rmagick'

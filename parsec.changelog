@@ -456,7 +456,7 @@
 # 2.2.7: Thu 11 Aug 2016 08:53:30 AEST
 # Added photos
 # 2.2.8: Thu 11 Aug 2016 09:32:06 AEST
-# Fixed bug with photos code and some model header determination 
+# Fixed bug with photos code and some model header determination
 # 2.2.9: Thu 11 Aug 2016 10:48:13 AEST
 # Photo file determination improvements
 # 2.3.0: Sat 13 Aug 2016 17:54:26 AEST
@@ -543,3 +543,5 @@
 # Added ability to search by customer and some other fields to explorer list view
 # 2.7.1: Wed 28 Dec 2016 10:19:50 AEDT
 # Fixed bugs with SPEC and Power units reporting
+# 2.7.2: Wed 28 Dec 2016 15:04:37 AEDT
+# Fixed psrinfo report for Intel

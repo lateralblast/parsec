@@ -19,21 +19,21 @@ def process_psrinfo()
     title  = "Processor Information"
     row    = [ 'Type', 'Physical', 'Cores', 'Virtual', 'IDs' ]
     table  = handle_table("title",title,row,"")
-    p_cpu  = file_array.grep(/SPARC/)[0].split(/\s+/).grep(/SPARC/)[0]
+    p_cpu  = file_array.grep(/SPARC|Intel/)[1].gsub(/^\s+|\s+$/,"")
     file_array.each do |line|
       if line.match(/^The/)
         v_cpu = ""
-        cores = ""
+        cores = "1"
         ids   = ""
         line  = line.chomp
         if line.match(/\(/)
-          ids = line.split(/\(/)[1].split(/\)/)[0]
+          ids = line.split(/\(/)[1].split(/\)/)[0].gsub(/\s+/,"")
         end
         if line.match(/virtual/)
-          v_cpu = line.split(/ virtual/)[0].split(/ /)[-1]
+          v_cpu = line.split(/ virtual/)[0].split(/ /)[-1].gsub(/\s+/,"")
         end
         if line.match(/core/)
-          cores = line.split(/ core/)[0].split(/ /)[-1]
+          cores = line.split(/ core/)[0].split(/ /)[-1].gsub(/\s+/,"")
         end
         row     = [ p_cpu, "1", cores, v_cpu, ids ]
         table   = handle_table("row","",row,table)
@@ -57,7 +57,7 @@ def process_psrinfo()
     end
   end
   return
-end 
+end
 
 # Get number of cores
 
@@ -297,7 +297,7 @@ def process_cpu()
             cpu_type = get_cpu_type(cpu_id)
           end
         end
-        if sys_model.match(/T[0-9]|M10-/) 
+        if sys_model.match(/T[0-9]|M10-/)
           if !sys_model.match(/T200/)
             cpu_no  = (t_count / c_ratio)
           end
