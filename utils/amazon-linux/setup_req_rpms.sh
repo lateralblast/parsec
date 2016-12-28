@@ -9,7 +9,9 @@ if [ $id == 0 ]; then
 	yum -y install gcc
 	yum -y install libxml2-devel
 	yum -y install libxslt-devel
-	yum -y install ruby-devel
+	yum -y remove ruby
+	yum -y install ruby23
+	yum -y install ruby23-devel
 	yum -y install ImageMagick
 	yum -y install ImageMagick-devel
 	yum -y install pigz
@@ -22,7 +24,9 @@ else
 	sudo sh -c "yum -y install gcc"
 	sudo sh -c "yum -y install libxml2-devel"
 	sudo sh -c "yum -y install libxslt-devel"
-	sudo sh -c "yum -y install ruby-devel"
+	sudo sh -c "yum -y remove ruby"
+	sudo sh -c "yum -y install ruby23"
+	sudo sh -c "yum -y install ruby23-devel"
 	sudo sh -c "yum -y install ImageMagick"
 	sudo sh -c "yum -y install ImageMagick-devel"
 	sudo sh -c "yum -y install pigz"
