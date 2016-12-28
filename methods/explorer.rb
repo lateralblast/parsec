@@ -129,7 +129,7 @@ end
 def check_exp_file_exists(file_name)
   if !$exp_file_list[0]
     if $tar_bin.match(/star/)
-      command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t"
+      command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -t 2>&1 |tee"
     else
       command = "cd #{$work_dir} ; #{$gzip_bin} -dc #{$exp_file} | #{$tar_bin} -tf -"
     end

@@ -545,3 +545,5 @@
 # Fixed bugs with SPEC and Power units reporting
 # 2.7.2: Wed 28 Dec 2016 15:04:37 AEDT
 # Fixed psrinfo report for Intel
+# 2.7.3: Thu 29 Dec 2016 04:16:00 AEDT
+# Fixed star STDOUT capture on Amazon Linux
