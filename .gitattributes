@@ -1,2 +1,3 @@
 special-vendored-path/* linguist-vendored
 views/* linguist-vendored=false
+presentation/* linguist-vendored=false
