@@ -547,3 +547,5 @@
 # Fixed psrinfo report for Intel
 # 2.7.3: Thu 29 Dec 2016 04:16:00 AEDT
 # Fixed star STDOUT capture on Amazon Linux
+# 2.7.4: Sat 20 Apr 2019 10:12:12 AEST
+# Fixed gem installation and imagemagick installation

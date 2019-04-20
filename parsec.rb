@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.7.3
+# Version:      2.7.4
 # Release:      1
 # License:      CC-BA (Creative Commons By Attribution)
 #               http://creativecommons.org/licenses/by/4.0/legalcode
@@ -17,6 +17,7 @@
 
 require 'rubygems'
 require 'pathname'
+require 'fileutils'
 require 'etc'
 require 'date'
 require 'csv'
@@ -31,6 +32,9 @@ end
 def install_pkg(pkg_name)
   $os_name = %[uname -a].chomp
   if $os_name.match(/SunOS/) and $os_name.match(/5\.11/)
+    if pkg_name.match(/\@/)
+      pkg_name = pkg_name.split(/\@/)[0]
+    end
     puts "Information:\tInstalling #{pkg_name}"
     %x[pkg install #{pkg_name}]
   else
@@ -46,64 +50,76 @@ end
 
 begin
   require 'iconv'
-rescue
+rescue LoadError
+  install_pkg("libiconv")
   install_gem("iconv")
 end
+
 begin
   require 'getopt/long'
-rescue
+rescue LoadError
   install_gem("getopt")
 end
+
 begin
   require 'fileutils'
-rescue
+rescue LoadError
   install_gem("fileutils")
 end
+
 begin
   require 'hex_string'
-rescue
+rescue LoadError
   install_gem("hex_string")
 end
+
 begin
   require 'terminal-table'
-rescue
+rescue LoadError
   install_gem("terminal-table")
 end
+
 begin
   require 'unpack'
-rescue
+rescue LoadError
   install_gem("unpack")
 end
+
 begin
   require 'enumerate'
-rescue
+rescue LoadError
   install_gem("enumerate")
 end
+
 begin
   require 'prawn'
-rescue
+rescue LoadError
   install_gem("prawn")
 end
+
 begin
   require 'prawn/table'
-rescue
+rescue LoadError
   install_gem("prawn-table")
 end
+
 begin
   require 'fastimage'
-rescue
+rescue LoadError
   install_gem("fastimage")
 end
+
 begin
   require 'nokogiri'
-rescue
+rescue LoadError
   install_gem("nokogiri -- --use-system-libraries")
 end
+
 begin
   require 'rmagick'
   include Magick
-rescue
-  install_pkg("imagemagick")
+rescue LoadError
+  install_pkg("imagemagick@6")
   install_gem("rmagick")
   require 'rmagick'
   include Magick
