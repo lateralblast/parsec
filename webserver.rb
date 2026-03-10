@@ -70,6 +70,7 @@ rescue LoadError
 end
 
 # Some webserver defaults
+# The SSL password for the cert generation should be changed
 
 default_bind       = "127.0.0.1"
 default_exceptions = false
