@@ -75,6 +75,8 @@ total 16
 ```
 
 If they don't exist the script will try to create them on startup.
+The server includes a default password for the certificate generation, 
+which should be changed if you want the server to generate the certificate.
 
 Otherwise use the openssl command:
 
