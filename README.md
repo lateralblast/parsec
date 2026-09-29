@@ -26,6 +26,14 @@ Some of the features include:
   - Wiki output
 - A Sinatra based webserver to serve up configs
 
+Version
+-------
+
+- parsec.rb: 2.7.6
+- webserver.rb: 0.2.1
+
+See [CHANGELOG.md](CHANGELOG.md) for full version history. Run `./parsec.rb --version` or `./parsec.rb --changelog` to check the version and changelog from the CLI.
+
 Usage
 -----
 

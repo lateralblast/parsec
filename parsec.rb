@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.7.6
+# Version:      2.7.7
 # Release:      1
 # License:      CC BY-NC-SA (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
 #               https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode

@@ -9,6 +9,10 @@ historical and independent per component (`parsec.rb` and `webserver.rb`).
 
 ## Parsec (`parsec.rb`)
 
+## [2.7.7] - 2026-09-29
+### Changed
+- Removed duplicate script-directory detection in `methods/common.rb`; it now reuses the `$script_dir` global already set by `parsec.rb`/`webserver.rb` instead of recomputing it independently
+
 ## [2.7.6] - 2026-09-29
 ### Fixed
 - Fixed script directory detection in `methods/common.rb` (was `File.basename($0)`, should have been `File.dirname($0)`), which forced parsec.rb/webserver.rb to only work when invoked with the current directory equal to the repo root
@@ -1125,6 +1129,17 @@ historical and independent per component (`parsec.rb` and `webserver.rb`).
 - Initial working version
 
 ## Webserver (`webserver.rb`)
+
+## [0.2.3] - 2026-09-29
+### Fixed
+- Fixed startup crash (`uninitialized constant Rack::Handler`) against current `sinatra`/`rack` (Rack 3 moved server handlers, including WEBrick, into the separate `rackup` gem as `Rackup::Handler`); the custom SSL `run!` override now uses `Rackup::Handler::WEBrick`
+- Added `webrick` and `rackup` to `requirements.txt` (`webrick` stopped being a default Ruby gem as of Ruby 3.0; `rackup` provides the Rack 3 server handlers Sinatra now depends on)
+
+## [0.2.2] - 2026-09-29
+### Fixed
+- Fixed `ssl_certificate`/`ssl_key` paths, which were still hardcoded as `ssl/cert.crt` and `ssl/pkey.pem` (resolved against the current working directory) after `$ssl_dir` was made script-relative; the server would look for (and regenerate) the TLS cert/key in the wrong place when started from any directory other than its own
+### Changed
+- Removed duplicate script-directory detection in `methods/common.rb`; it now reuses the `$script_dir` global already set by `parsec.rb`/`webserver.rb` instead of recomputing it independently
 
 ## [0.2.1] - 2026-09-29
 ### Fixed

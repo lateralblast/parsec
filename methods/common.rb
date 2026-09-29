@@ -25,8 +25,10 @@ $partner_address = ""
 $partner_city    = ""
 
 # Set up script dir
+# $script_dir is set by parsec.rb/webserver.rb before methods are required;
+# fall back to computing it here if this file is ever required standalone.
 
-script_dir = File.dirname(File.expand_path($0))
+script_dir = defined?($script_dir) && $script_dir ? $script_dir : File.dirname(File.expand_path($0))
 
 # Set up directories
 

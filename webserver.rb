@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.2.1
+# Version:      0.2.3
 # Release:      1
 # License:      CC BY-NC-SA (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
 #               https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -32,6 +32,16 @@ begin
   require 'sinatra'
 rescue LoadError
   install_gem("sinatra")
+end
+begin
+  require 'webrick'
+rescue LoadError
+  install_gem("webrick")
+end
+begin
+  require 'rackup'
+rescue LoadError
+  install_gem("rackup")
 end
 begin
   require 'fileutils'
@@ -80,8 +90,6 @@ default_errors     = "false"
 enable_ssl         = true
 enable_auth        = false
 enable_upload      = false
-ssl_certificate    = "ssl/cert.crt"
-ssl_key            = "ssl/pkey.pem"
 $ssl_password      = "123456"
 
 # Get front end IP
@@ -127,6 +135,8 @@ end
 if enable_ssl == true
   require 'webrick/ssl'
   require 'webrick/https'
+  ssl_certificate = $ssl_dir+"/cert.crt"
+  ssl_key         = $ssl_dir+"/pkey.pem"
   if !File.directory?($ssl_dir)
     puts "Information: Creating "+$ssl_dir
     Dir.mkdir($ssl_dir)
@@ -150,7 +160,7 @@ if enable_ssl == true
           :SSLPrivateKey => OpenSSL::PKey::RSA.new(key_content,$ssl_password)
         }
   
-        Rack::Handler::WEBrick.run self, server_options do |server|
+        Rackup::Handler::WEBrick.run self, **server_options do |server|
           [:INT, :TERM].each { |sig| trap(sig) { server.stop } }
           server.threaded = settings.threaded if server.respond_to? :threaded=
           set :running, true
