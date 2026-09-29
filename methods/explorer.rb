@@ -3,16 +3,9 @@
 # Handle explorer
 
 def handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
-  if !file_list
-    file_list = get_explorer_file_list(search_model,search_date,search_year,search_name,search_param,search_value)
-  else
-    if !file_list[0]
-      file_list = get_explorer_file_list(search_model,search_date,search_year,search_name,search_param,search_value)
-      if file_list[0] == nil
-        puts "No explorer files found"
-        exit
-      end
-    end
+  if !file_list or !file_list[0]
+    puts "No explorer files found"
+    exit
   end
   file_list.each do |file_name|
     if File.exist?(file_name)

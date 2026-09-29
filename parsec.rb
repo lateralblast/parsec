@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.7.4
+# Version:      2.7.6
 # Release:      1
-# License:      CC-BA (Creative Commons By Attribution)
-#               http://creativecommons.org/licenses/by/4.0/legalcode
+# License:      CC BY-NC-SA (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
+#               https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 # Group:        System
 # Source:       N/A
 # URL:          http://lateralblast.com.au/
@@ -201,11 +201,14 @@ end
 
 # Load methods
 
-if Dir.exist?("./methods")
-  file_list = Dir.entries("./methods")
+$script_dir = File.dirname(File.expand_path($script))
+methods_dir = $script_dir+"/methods"
+
+if Dir.exist?(methods_dir)
+  file_list = Dir.entries(methods_dir)
   for file in file_list
     if file =~ /rb$/
-      require "./methods/#{file}"
+      require "#{methods_dir}/#{file}"
     end
   end
 end
@@ -325,17 +328,11 @@ end
 # Print Changelog
 
 def print_changelog()
-  if File.exist?("changelog")
-    changelog = File.readlines("changelog")
-    changelog = changelog.reverse
-    changelog.each_with_index do |line, index|
-      line = line.gsub(/^# /,"")
-      if line.match(/^[0-9]/)
-        puts line
-        puts changelog[index-1].gsub(/^# /,"")
-        puts
-      end
-    end
+  changelog_file = $script_dir+"/CHANGELOG.md"
+  if File.exist?(changelog_file)
+    puts File.read(changelog_file)
+  else
+    puts "CHANGELOG.md not found"
   end
   return
 end
@@ -778,7 +775,10 @@ end
 # Handle explorer output
 
 if input_type.match(/explorer/)
-  if search_name.match(/\,/)
+  if option["input"]
+    file_list = [ $exp_file ]
+    handle_explorer(report,file_list,search_model,search_date,search_year,search_name)
+  elsif search_name.match(/\,/)
     search_names = search_name.split(/\,/)
     search_names.each do |search_name|
       file_list = get_explorer_file_list(search_model,search_date,search_year,search_name,search_param,search_value)

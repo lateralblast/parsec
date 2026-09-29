@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.1.9
+# Version:      0.2.1
 # Release:      1
-# License:      CC-BA (Creative Commons By Attribution)
-#               http://creativecommons.org/licenses/by/4.0/legalcode
+# License:      CC BY-NC-SA (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
+#               https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 # Group:        System
 # Source:       N/A
 # URL:          http://lateralblast.com.au/
@@ -110,11 +110,14 @@ set :show_exceptions, default_exceptions
 
 # Load methods
 
-if Dir.exist?("./methods")
-  file_list = Dir.entries("./methods")
+$script_dir = File.dirname(File.expand_path($0))
+methods_dir = $script_dir+"/methods"
+
+if Dir.exist?(methods_dir)
+  file_list = Dir.entries(methods_dir)
   for file in file_list
     if file =~ /rb$/
-      require "./methods/#{file}"
+      require "#{methods_dir}/#{file}"
     end
   end
 end

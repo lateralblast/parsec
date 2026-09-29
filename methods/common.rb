@@ -26,10 +26,7 @@ $partner_city    = ""
 
 # Set up script dir
 
-script_dir = File.basename($0)
-if !script_dir.match(/\//)
-  script_dir = Dir.pwd
-end
+script_dir = File.dirname(File.expand_path($0))
 
 # Set up directories
 
