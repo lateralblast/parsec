@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec webserver (Explorer Parser)
-# Version:      0.2.3
+# Version:      0.2.4
 # Release:      1
 # License:      CC BY-NC-SA (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
 #               https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -122,11 +122,8 @@ $script_dir = File.dirname(File.expand_path($0))
 methods_dir = $script_dir+"/methods"
 
 if Dir.exist?(methods_dir)
-  file_list = Dir.entries(methods_dir)
-  for file in file_list
-    if file =~ /rb$/
-      require "#{methods_dir}/#{file}"
-    end
+  Dir.glob("#{methods_dir}/*.rb").sort.each do |file|
+    require file
   end
 end
 

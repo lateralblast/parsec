@@ -9,6 +9,15 @@ historical and independent per component (`parsec.rb` and `webserver.rb`).
 
 ## Parsec (`parsec.rb`)
 
+## [2.7.8] - 2026-10-03
+### Changed
+- Cleaned up `parsec.rb`: methods files are now loaded via sorted `Dir.glob` (deterministic order), removed a duplicate `fileutils` require, collapsed simple option defaults, and use `FileUtils.mkdir_p` for output directories
+### Fixed
+- Fixed `install_pkg` OS detection (`%[uname -a]` is a string literal, now `%x[uname -a]`)
+- Fixed `[A-z]` regexes (which also match punctuation) to `[A-Za-z]`
+- Fixed `--masked` customer name check comparing `$masked` to the string `"1"` instead of `1`
+- Fixed `--nocheck` short switch clashing with `--masked` (`-m`); it is now `-n`
+
 ## [2.7.7] - 2026-09-29
 ### Changed
 - Removed duplicate script-directory detection in `methods/common.rb`; it now reuses the `$script_dir` global already set by `parsec.rb`/`webserver.rb` instead of recomputing it independently
@@ -1129,6 +1138,10 @@ historical and independent per component (`parsec.rb` and `webserver.rb`).
 - Initial working version
 
 ## Webserver (`webserver.rb`)
+
+## [0.2.4] - 2026-10-03
+### Changed
+- Methods files are now loaded via sorted `Dir.glob` (deterministic order) instead of `Dir.entries` with a `for` loop
 
 ## [0.2.3] - 2026-09-29
 ### Fixed

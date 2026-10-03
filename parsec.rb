@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Name:         parsec (Explorer Parser)
-# Version:      2.7.7
+# Version:      2.7.8
 # Release:      1
 # License:      CC BY-NC-SA (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
 #               https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -30,7 +30,7 @@ def install_gem(gem_name)
 end
 
 def install_pkg(pkg_name)
-  $os_name = %[uname -a].chomp
+  $os_name = %x[uname -a].chomp
   if $os_name.match(/SunOS/) and $os_name.match(/5\.11/)
     if pkg_name.match(/\@/)
       pkg_name = pkg_name.split(/\@/)[0]
@@ -59,12 +59,6 @@ begin
   require 'getopt/long'
 rescue LoadError
   install_gem("getopt")
-end
-
-begin
-  require 'fileutils'
-rescue LoadError
-  install_gem("fileutils")
 end
 
 begin
@@ -205,11 +199,8 @@ $script_dir = File.dirname(File.expand_path($script))
 methods_dir = $script_dir+"/methods"
 
 if Dir.exist?(methods_dir)
-  file_list = Dir.entries(methods_dir)
-  for file in file_list
-    if file =~ /rb$/
-      require "#{methods_dir}/#{file}"
-    end
+  Dir.glob("#{methods_dir}/*.rb").sort.each do |file|
+    require file
   end
 end
 
@@ -299,7 +290,7 @@ begin
     [ "--logo",         "-L", Getopt::REQUIRED ],   # Set Partner Logo
     [ "--list",         "-l", Getopt::BOOLEAN ],    # List explorers (also lists dmidecodes and facters if present)
     [ "--masked",       "-m", Getopt::BOOLEAN ],    # Mask hostnames, IPs, MAC addresses etc
-    [ "--nocheck",      "-m", Getopt::BOOLEAN ],    # Don't do security checks
+    [ "--nocheck",      "-n", Getopt::BOOLEAN ],    # Don't do security checks
     [ "--model",        "-M", Getopt::REQUIRED ],   # Set model (used in conjunction with list)
     [ "--input",        "-i", Getopt::REQUIRED ],   # Input file
     [ "--output",       "-o", Getopt::REQUIRED ],   # Output file
@@ -446,27 +437,15 @@ end
 
 # Set partner for PDF report
 
-if option["partner"]
-  $partner_name = option["partner"]
-else
-  $partner_name = ""
-end
+$partner_name = option["partner"] || ""
 
 # Set address for PDF report
 
-if option["address"]
-  $partner_address = option["address"]
-else
-  $partner_address = ""
-end
+$partner_address = option["address"] || ""
 
 # Set city for PDF report
 
-if option["city"]
-  $partner_city = option["city"]
-else
-  $partner_city = ""
-end
+$partner_city = option["city"] || ""
 
 # Overide defaults
 
@@ -524,11 +503,7 @@ end
 
 # Get model type
 
-if option["model"]
-  search_model = option["model"]
-else
-  search_model = ""
-end
+search_model = option["model"] || ""
 
 # Get date string
 
@@ -596,26 +571,18 @@ end
 if option["temp"]
   $work_dir = option["temp"]
 else
-  if !$work_dir.match(/[A-z]/)
+  if !$work_dir.match(/[A-Za-z]/)
     $work_dir = "/tmp"
   end
 end
 
 # Handle search term / value
 
-if option["search"]
-  search_param = option["search"]
-else
-  search_param = ""
-end
+search_param = option["search"] || ""
 
 # Handle search value
 
-if option["value"]
-  search_value = option["value"]
-else
-  search_value = ""
-end
+search_value = option["value"] || ""
 
 # Set format of report
 
@@ -653,7 +620,7 @@ end
 if option["dir"]
   $exp_dir = opt["dir"]
 else
-  if !$exp_dir.match(/[A-z]/)
+  if !$exp_dir.match(/[A-Za-z]/)
     $exp_dir = Dir.pwd+"/explorers"
   end
 end
@@ -672,22 +639,18 @@ if option["output"]
   $output_file = option["output"]
   $output_dir  = File.dirname($output_file)
   if !File.directory?($output_dir) and !File.symlink?($output_dir)
-    Dir.mkdir($output_dir)
+    FileUtils.mkdir_p($output_dir)
   end
   if $verbose_mode == 1 and !host_name.match(/^all$/)
     puts "Setting output file to: "+$output_file
   end
-  if File.exist?($output_file)
-    File.delete($output_file)
-    FileUtils.touch($output_file)
-  else
-    FileUtils.touch($output_file)
-  end
+  File.delete($output_file) if File.exist?($output_file)
+  FileUtils.touch($output_file)
 else
   $output_file = ""
   $output_dir  = $base_dir+"/output"
   if !File.directory?($output_dir) and !File.symlink?($output_dir)
-    Dir.mkdir($output_dir)
+    FileUtils.mkdir_p($output_dir)
   end
   if $output_format.match(/pdf/)
     if !host_name.match(/^all$/)
@@ -763,7 +726,7 @@ end
 # Get customer name
 
 if option["customer"]
-  if $masked == "1"
+  if $masked == 1
     customer_name = "Masked"
   else
     customer_name = option["customer"]
